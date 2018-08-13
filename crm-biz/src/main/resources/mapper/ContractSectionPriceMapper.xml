@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jaagro.crm.biz.mapper.ContractSectionPriceMapper">
+  <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.ContractSectionPrice">
+    <id column="selection_id" jdbcType="INTEGER" property="selectionId" />
+    <result column="contract_price_id" jdbcType="BIGINT" property="contractPriceId" />
+    <result column="section_type" jdbcType="INTEGER" property="sectionType" />
+    <result column="upper_limit" jdbcType="DECIMAL" property="upperLimit" />
+    <result column="lower_limit" jdbcType="DECIMAL" property="lowerLimit" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="selection_status" jdbcType="INTEGER" property="selectionStatus" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    selection_id, contract_price_id, section_type, upper_limit, lower_limit, price, selection_status
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from contract_section_price
+    where selection_id = #{selectionId,jdbcType=INTEGER}
+  </select>
+  <select id="listByPriceId"
+          resultType="com.jaagro.crm.api.dto.response.ContractSectionPriceReturnDto">
+    select
+    <include refid="Base_Column_List"></include>
+    from contract_section_price
+    where contract_price_id = #{priceId}
+  </select>
+  <select id="getByLimit"
+          resultType="com.jaagro.crm.biz.entity.ContractSectionPrice">
+    select
+    <include refid="Base_Column_List"></include>
+    from contract_section_price
+    where contract_price_id = #{contractPriceId} and #{value} between upper_limit and lower_limit
+    order by selection_id desc limit 1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from contract_section_price
+    where selection_id = #{selectionId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.ContractSectionPrice" useGeneratedKeys="true" keyProperty="selectionId" keyColumn="selection_id">
+    insert into contract_section_price (selection_id, contract_price_id, section_type, 
+      upper_limit, lower_limit, price, 
+      selection_status)
+    values (#{selectionId,jdbcType=INTEGER}, #{contractPriceId,jdbcType=BIGINT}, #{sectionType,jdbcType=INTEGER}, 
+      #{upperLimit,jdbcType=DECIMAL}, #{lowerLimit,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL}, 
+      #{selectionStatus,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.ContractSectionPrice" useGeneratedKeys="true" keyProperty="selectionId" keyColumn="selection_id">
+    insert into contract_section_price
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="selectionId != null">
+        selection_id,
+      </if>
+      <if test="contractPriceId != null">
+        contract_price_id,
+      </if>
+      <if test="sectionType != null">
+        section_type,
+      </if>
+      <if test="upperLimit != null">
+        upper_limit,
+      </if>
+      <if test="lowerLimit != null">
+        lower_limit,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="selectionStatus != null">
+        selection_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="selectionId != null">
+        #{selectionId,jdbcType=INTEGER},
+      </if>
+      <if test="contractPriceId != null">
+        #{contractPriceId,jdbcType=BIGINT},
+      </if>
+      <if test="sectionType != null">
+        #{sectionType,jdbcType=INTEGER},
+      </if>
+      <if test="upperLimit != null">
+        #{upperLimit,jdbcType=DECIMAL},
+      </if>
+      <if test="lowerLimit != null">
+        #{lowerLimit,jdbcType=DECIMAL},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="selectionStatus != null">
+        #{selectionStatus,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.ContractSectionPrice">
+    update contract_section_price
+    <set>
+      <if test="contractPriceId != null">
+        contract_price_id = #{contractPriceId,jdbcType=BIGINT},
+      </if>
+      <if test="sectionType != null">
+        section_type = #{sectionType,jdbcType=INTEGER},
+      </if>
+      <if test="upperLimit != null">
+        upper_limit = #{upperLimit,jdbcType=DECIMAL},
+      </if>
+      <if test="lowerLimit != null">
+        lower_limit = #{lowerLimit,jdbcType=DECIMAL},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="selectionStatus != null">
+        selection_status = #{selectionStatus,jdbcType=INTEGER},
+      </if>
+    </set>
+    where selection_id = #{selectionId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.ContractSectionPrice">
+    update contract_section_price
+    set contract_price_id = #{contractPriceId,jdbcType=BIGINT},
+      section_type = #{sectionType,jdbcType=INTEGER},
+      upper_limit = #{upperLimit,jdbcType=DECIMAL},
+      lower_limit = #{lowerLimit,jdbcType=DECIMAL},
+      price = #{price,jdbcType=DECIMAL},
+      selection_status = #{selectionStatus,jdbcType=INTEGER}
+    where selection_id = #{selectionId,jdbcType=INTEGER}
+  </update>
+  <delete id="deleteByPriceId" parameterType="java.lang.Long">
+    delete from contract_section_price
+    where contract_price_id = #{contractPriceId,jdbcType=BIGINT}
+  </delete>
+</mapper>
