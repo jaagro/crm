@@ -1,7 +1,7 @@
 package com.jaagro.crm.biz.service.impl;
 
-import com.jaagro.crm.api.dto.response.TokenInfo;
-import com.jaagro.crm.api.service.TokenInfoClient;
+import com.jaagro.crm.api.dto.response.UserDto;
+import com.jaagro.crm.api.service.UserClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +14,12 @@ import javax.servlet.http.HttpServletRequest;
 @Service
 public class CurrentUserService {
     @Autowired
-    private TokenInfoClient tokenClient;
+    private UserClientService tokenClient;
     @Autowired
     private HttpServletRequest request;
 
-    public TokenInfo getCurrentUser(){
+    public UserDto getCurrentUser(){
         String token = request.getHeader("token");
-        return tokenClient.getTokenInfo(token);
+        return tokenClient.getUserByToken(token);
     }
 }

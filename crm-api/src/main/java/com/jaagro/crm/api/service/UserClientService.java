@@ -1,6 +1,6 @@
 package com.jaagro.crm.api.service;
 
-import com.jaagro.crm.api.dto.response.TokenInfo;
+import com.jaagro.crm.api.dto.response.UserDto;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author tony
  */
 @FeignClient(value = "auth")
-public interface TokenInfoClient {
+public interface UserClientService {
     /**
      * 获取token相关的用户信息
      * 提供给其他微服务使用
      * @param token
      * @return
      */
-    @PostMapping("/getTokenInfo")
-    TokenInfo getTokenInfo(@RequestParam("token") String token);
+    @PostMapping("/getUserByToken")
+    UserDto getUserByToken(@RequestParam("token") String token);
 }

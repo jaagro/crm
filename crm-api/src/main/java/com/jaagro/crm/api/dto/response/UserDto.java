@@ -11,7 +11,7 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-public class TokenInfo implements Serializable {
+public class UserDto implements Serializable {
 
     private Long id;
 

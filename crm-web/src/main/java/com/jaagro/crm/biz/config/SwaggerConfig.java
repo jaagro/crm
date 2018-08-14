@@ -25,7 +25,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.jaagro.microservice.platform.biz.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.jaagro.crm.biz.controller"))
                 .paths(PathSelectors.any())
                 .build().securitySchemes(Lists.newArrayList(apiKey()));
     }
