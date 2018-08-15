@@ -9,20 +9,51 @@ import java.util.List;
 public interface ContractMapper {
 
     /**
+     * 主键删除
      *
      * @param id
      * @return
      */
     int deleteByPrimaryKey(Long id);
 
+    /**
+     * 新增
+     *
+     * @param record
+     * @return
+     */
     int insert(Contract record);
 
+    /**
+     * 动态新增
+     *
+     * @param record
+     * @return
+     */
     int insertSelective(Contract record);
 
+    /**
+     * 主键查询
+     *
+     * @param id
+     * @return
+     */
     Contract selectByPrimaryKey(Long id);
 
+    /**
+     * 动态更新
+     *
+     * @param record
+     * @return
+     */
     int updateByPrimaryKeySelective(Contract record);
 
+    /**
+     * 主键更新
+     *
+     * @param record
+     * @return
+     */
     int updateByPrimaryKey(Contract record);
 
     /**
@@ -31,7 +62,7 @@ public interface ContractMapper {
      * @param id
      * @return
      */
-    ContractReturnDto getByPrimaryKey(Long id);
+    ContractReturnDto getById(Long id);
 
     /**
      * 分页查询

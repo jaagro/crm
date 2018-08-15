@@ -1,4 +1,4 @@
-package com.jaagro.crm.biz.config;
+package com.jaagro.crm.web.config;
 
 import com.google.common.collect.Lists;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +25,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.jaagro.crm.biz.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.jaagro.crm.web.controller"))
                 .paths(PathSelectors.any())
                 .build().securitySchemes(Lists.newArrayList(apiKey()));
     }

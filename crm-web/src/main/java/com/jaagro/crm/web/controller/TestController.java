@@ -1,4 +1,4 @@
-package com.jaagro.crm.biz.controller;
+package com.jaagro.crm.web.controller;
 
 import com.jaagro.crm.api.dto.response.UserDto;
 import com.jaagro.crm.api.service.UserClientService;

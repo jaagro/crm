@@ -1,4 +1,4 @@
-package com.jaagro.crm.biz.controller;
+package com.jaagro.crm.web.controller;
 
 import com.jaagro.crm.api.dto.request.CreateContractDto;
 import com.jaagro.crm.api.dto.request.ContractCriteriaDto;
@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import utils.BaseResponse;
 import utils.ResponseStatusCode;
 import utils.ServiceResult;
 
@@ -32,55 +33,54 @@ public class ContractController {
 
     @ApiOperation("合同新增")
     @PostMapping("/contract")
-    public Map<String, Object> createContract(@RequestBody CreateContractDto dto) {
+    public BaseResponse createContract(@RequestBody CreateContractDto dto) {
 
         if (StringUtils.isEmpty(dto.getCustomerId())) {
-            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同客户不能为空");
+            return BaseResponse.idError("合同客户不能为空");
         }
-        Map<String, Object> result = null;
+        Map<String, Object> result;
         try {
             result = contractService.createContract(dto);
         } catch (Exception e) {
             e.printStackTrace();
-            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), e.getMessage());
+            return BaseResponse.errorInstance(e.getMessage());
         }
-        return result;
+        return BaseResponse.service(result);
     }
 
     @ApiOperation("合同修改")
     @PutMapping("/contract")
-    public Map<String, Object> updateContract(@RequestBody CreateContractDto dto) {
+    public BaseResponse updateContract(@RequestBody CreateContractDto dto) {
 
         if (contractMapper.selectByPrimaryKey(dto.getId()) == null) {
-            return ServiceResult.error(ResponseStatusCode.ID_VALUE_NULL.getCode(), dto.getId() + " :合同不存在");
+            return BaseResponse.idError("合同不存在");
         }
         if (StringUtils.isEmpty(dto.getCustomerId())) {
-            return ServiceResult.error(ResponseStatusCode.ID_VALUE_ERROR.getCode(), "合同客户不能为空");
+            return BaseResponse.idError("合同客户不能为空");
         }
-        Map<String, Object> result = null;
+        Map<String, Object> result;
         try {
             result = contractService.updateContract(dto);
         } catch (Exception e) {
             e.printStackTrace();
-            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), e.getMessage());
+            return BaseResponse.errorInstance(e.getMessage());
         }
-        return result;
+        return BaseResponse.service(result);
     }
 
     @ApiOperation("查询单个合同")
     @GetMapping("/contract/{id}")
-    public Map<String, Object> getById(@PathVariable Long id) {
-        Map<String, Object> result = null;
-        result = contractService.getById(id);
-        return result;
+    public BaseResponse getById(@PathVariable Long id) {
+        if (this.contractMapper.selectByPrimaryKey(id) == null) {
+            return BaseResponse.queryDataEmpty();
+        }
+        Map<String, Object> result = contractService.getById(id);
+        return BaseResponse.service(result);
     }
 
     @ApiOperation("分页查询合同")
     @PostMapping("/listByCriteria")
-    @ApiImplicitParams({@ApiImplicitParam(name = "pageNum", value = "起始页 [默认1]", paramType = "query", required = false),
-            @ApiImplicitParam(name = "pageSize", value = "分页大小[默认10]", paramType = "query", required = false)})
-    public Map<String, Object> listByCriteria(@RequestBody ContractCriteriaDto dto) {
-        return contractService.listByCriteria(dto);
+    public BaseResponse listByCriteria(@RequestBody ContractCriteriaDto dto) {
+        return BaseResponse.service(contractService.listByCriteria(dto));
     }
-
 }
