@@ -68,19 +68,20 @@ public class ContractController {
     }
 
     @ApiOperation("查询单个合同")
-    @GetMapping("/contract/{id}")
-    public Map<String, Object> getById(@PathVariable Long id) {
+    @GetMapping("getById")
+    @ApiImplicitParam(name = "id", value = "合同主键id", required = true, dataType = "long", paramType = "path")
+    public Map<String, Object> getContractById(@PathVariable Long id) {
         Map<String, Object> result = null;
-        result = contractService.getById(id);
+        result = contractService.getByPrimaryKey(id);
         return result;
     }
 
     @ApiOperation("分页查询合同")
-    @PostMapping("/listByCriteria")
+    @PostMapping("listByCriteriaDto")
     @ApiImplicitParams({@ApiImplicitParam(name = "pageNum", value = "起始页 [默认1]", paramType = "query", required = false),
             @ApiImplicitParam(name = "pageSize", value = "分页大小[默认10]", paramType = "query", required = false)})
-    public Map<String, Object> listByCriteria(@RequestBody ContractCriteriaDto dto) {
-        return contractService.listByCriteria(dto);
+    public Map<String, Object> getContractByDto(@RequestBody ContractCriteriaDto dto) {
+        return contractService.listByPage(dto);
     }
 
 }
