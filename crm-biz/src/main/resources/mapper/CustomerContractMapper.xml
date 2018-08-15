@@ -4,14 +4,13 @@
   <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.CustomerContract" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="customer_id" property="customerId" jdbcType="BIGINT" />
-    <result column="person" property="person" jdbcType="VARCHAR" />
-    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="contract_name" property="contractName" jdbcType="VARCHAR" />
     <result column="phone" property="phone" jdbcType="VARCHAR" />
     <result column="position" property="position" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, customer_id, person, mobile, phone, position, status
+    id, customer_id, contract_name, phone, position, status
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -23,13 +22,13 @@
     delete from customer_contract
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.CustomerContract" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-    insert into customer_contract (id, customer_id, person, 
-      mobile, phone, position, 
-      status)
-    values (#{id,jdbcType=BIGINT}, #{customerId,jdbcType=BIGINT}, #{person,jdbcType=VARCHAR}, 
-      #{mobile,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{position,jdbcType=VARCHAR}, 
-      #{status,jdbcType=INTEGER})
+  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.CustomerContract" >
+    insert into customer_contract (id, customer_id, contract_name, 
+      phone, position, status
+      )
+    values (#{id,jdbcType=BIGINT}, #{customerId,jdbcType=BIGINT}, #{contractName,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{position,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.CustomerContract" >
     insert into customer_contract
@@ -40,11 +39,8 @@
       <if test="customerId != null" >
         customer_id,
       </if>
-      <if test="person != null" >
-        person,
-      </if>
-      <if test="mobile != null" >
-        mobile,
+      <if test="contractName != null" >
+        contract_name,
       </if>
       <if test="phone != null" >
         phone,
@@ -63,11 +59,8 @@
       <if test="customerId != null" >
         #{customerId,jdbcType=BIGINT},
       </if>
-      <if test="person != null" >
-        #{person,jdbcType=VARCHAR},
-      </if>
-      <if test="mobile != null" >
-        #{mobile,jdbcType=VARCHAR},
+      <if test="contractName != null" >
+        #{contractName,jdbcType=VARCHAR},
       </if>
       <if test="phone != null" >
         #{phone,jdbcType=VARCHAR},
@@ -86,11 +79,8 @@
       <if test="customerId != null" >
         customer_id = #{customerId,jdbcType=BIGINT},
       </if>
-      <if test="person != null" >
-        person = #{person,jdbcType=VARCHAR},
-      </if>
-      <if test="mobile != null" >
-        mobile = #{mobile,jdbcType=VARCHAR},
+      <if test="contractName != null" >
+        contract_name = #{contractName,jdbcType=VARCHAR},
       </if>
       <if test="phone != null" >
         phone = #{phone,jdbcType=VARCHAR},
@@ -107,8 +97,7 @@
   <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.CustomerContract" >
     update customer_contract
     set customer_id = #{customerId,jdbcType=BIGINT},
-      person = #{person,jdbcType=VARCHAR},
-      mobile = #{mobile,jdbcType=VARCHAR},
+      contract_name = #{contractName,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       position = #{position,jdbcType=VARCHAR},
       status = #{status,jdbcType=INTEGER}

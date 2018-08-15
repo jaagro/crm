@@ -6,7 +6,6 @@
     <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
     <result column="customer_type" property="customerType" jdbcType="INTEGER" />
     <result column="customer_status" property="customerStatus" jdbcType="INTEGER" />
-    <result column="branch_id" property="branchId" jdbcType="BIGINT" />
     <result column="city" property="city" jdbcType="VARCHAR" />
     <result column="province" property="province" jdbcType="VARCHAR" />
     <result column="county" property="county" jdbcType="VARCHAR" />
@@ -27,8 +26,8 @@
     <result column="enable" property="enable" jdbcType="TINYINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, customer_name, customer_type, customer_status, branch_id, city, province, county, 
-    address, latitude, longitude, billing_period, enable_invoice, invoice_type, invoice_header, 
+    id, customer_name, customer_type, customer_status, city, province, county, address, 
+    latitude, longitude, billing_period, enable_invoice, invoice_type, invoice_header, 
     tax_number, notes, created_time, modify_time, created_user_id, modify_user_id, scale_message, 
     enable
   </sql>
@@ -44,21 +43,21 @@
   </delete>
   <insert id="insert" parameterType="com.jaagro.crm.biz.entity.Customer" >
     insert into customer (id, customer_name, customer_type, 
-      customer_status, branch_id, city, 
-      province, county, address, 
-      latitude, longitude, billing_period, 
-      enable_invoice, invoice_type, invoice_header, 
-      tax_number, notes, created_time, 
-      modify_time, created_user_id, modify_user_id, 
-      scale_message, enable)
+      customer_status, city, province, 
+      county, address, latitude, 
+      longitude, billing_period, enable_invoice, 
+      invoice_type, invoice_header, tax_number, 
+      notes, created_time, modify_time, 
+      created_user_id, modify_user_id, scale_message, 
+      enable)
     values (#{id,jdbcType=BIGINT}, #{customerName,jdbcType=VARCHAR}, #{customerType,jdbcType=INTEGER}, 
-      #{customerStatus,jdbcType=INTEGER}, #{branchId,jdbcType=BIGINT}, #{city,jdbcType=VARCHAR}, 
-      #{province,jdbcType=VARCHAR}, #{county,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
-      #{latitude,jdbcType=DECIMAL}, #{longitude,jdbcType=DECIMAL}, #{billingPeriod,jdbcType=INTEGER}, 
-      #{enableInvoice,jdbcType=TINYINT}, #{invoiceType,jdbcType=INTEGER}, #{invoiceHeader,jdbcType=VARCHAR}, 
-      #{taxNumber,jdbcType=VARCHAR}, #{notes,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}, 
-      #{modifyTime,jdbcType=TIMESTAMP}, #{createdUserId,jdbcType=BIGINT}, #{modifyUserId,jdbcType=BIGINT}, 
-      #{scaleMessage,jdbcType=VARCHAR}, #{enable,jdbcType=TINYINT})
+      #{customerStatus,jdbcType=INTEGER}, #{city,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
+      #{county,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{latitude,jdbcType=DECIMAL}, 
+      #{longitude,jdbcType=DECIMAL}, #{billingPeriod,jdbcType=INTEGER}, #{enableInvoice,jdbcType=TINYINT}, 
+      #{invoiceType,jdbcType=INTEGER}, #{invoiceHeader,jdbcType=VARCHAR}, #{taxNumber,jdbcType=VARCHAR}, 
+      #{notes,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, 
+      #{createdUserId,jdbcType=BIGINT}, #{modifyUserId,jdbcType=BIGINT}, #{scaleMessage,jdbcType=VARCHAR}, 
+      #{enable,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.Customer" >
     insert into customer
@@ -74,9 +73,6 @@
       </if>
       <if test="customerStatus != null" >
         customer_status,
-      </if>
-      <if test="branchId != null" >
-        branch_id,
       </if>
       <if test="city != null" >
         city,
@@ -146,9 +142,6 @@
       <if test="customerStatus != null" >
         #{customerStatus,jdbcType=INTEGER},
       </if>
-      <if test="branchId != null" >
-        #{branchId,jdbcType=BIGINT},
-      </if>
       <if test="city != null" >
         #{city,jdbcType=VARCHAR},
       </if>
@@ -217,9 +210,6 @@
       <if test="customerStatus != null" >
         customer_status = #{customerStatus,jdbcType=INTEGER},
       </if>
-      <if test="branchId != null" >
-        branch_id = #{branchId,jdbcType=BIGINT},
-      </if>
       <if test="city != null" >
         city = #{city,jdbcType=VARCHAR},
       </if>
@@ -282,7 +272,6 @@
     set customer_name = #{customerName,jdbcType=VARCHAR},
       customer_type = #{customerType,jdbcType=INTEGER},
       customer_status = #{customerStatus,jdbcType=INTEGER},
-      branch_id = #{branchId,jdbcType=BIGINT},
       city = #{city,jdbcType=VARCHAR},
       province = #{province,jdbcType=VARCHAR},
       county = #{county,jdbcType=VARCHAR},

@@ -21,11 +21,12 @@
     <result column="modify_time" property="modifyTime" jdbcType="VARCHAR" />
     <result column="created_user_id" property="createdUserId" jdbcType="BIGINT" />
     <result column="modify_user_id" property="modifyUserId" jdbcType="BIGINT" />
+    <result column="enable" property="enable" jdbcType="TINYINT" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, site_type, customer_id, site_name, site_status, contact, phone, province, city, 
     county, detailed_address, latitude, longitude, shipment_require, notes, created_time, 
-    modify_time, created_user_id, modify_user_id
+    modify_time, created_user_id, modify_user_id, enable
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -44,14 +45,14 @@
       county, detailed_address, latitude, 
       longitude, shipment_require, notes, 
       created_time, modify_time, created_user_id, 
-      modify_user_id)
+      modify_user_id, enable)
     values (#{id,jdbcType=BIGINT}, #{siteType,jdbcType=INTEGER}, #{customerId,jdbcType=BIGINT}, 
       #{siteName,jdbcType=VARCHAR}, #{siteStatus,jdbcType=INTEGER}, #{contact,jdbcType=VARCHAR}, 
       #{phone,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
       #{county,jdbcType=VARCHAR}, #{detailedAddress,jdbcType=VARCHAR}, #{latitude,jdbcType=DECIMAL}, 
       #{longitude,jdbcType=DECIMAL}, #{shipmentRequire,jdbcType=VARCHAR}, #{notes,jdbcType=VARCHAR}, 
       #{createdTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=VARCHAR}, #{createdUserId,jdbcType=BIGINT}, 
-      #{modifyUserId,jdbcType=BIGINT})
+      #{modifyUserId,jdbcType=BIGINT}, #{enable,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.CustomerSite" >
     insert into customer_site
@@ -113,6 +114,9 @@
       <if test="modifyUserId != null" >
         modify_user_id,
       </if>
+      <if test="enable != null" >
+        enable,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -171,6 +175,9 @@
       </if>
       <if test="modifyUserId != null" >
         #{modifyUserId,jdbcType=BIGINT},
+      </if>
+      <if test="enable != null" >
+        #{enable,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
@@ -231,6 +238,9 @@
       <if test="modifyUserId != null" >
         modify_user_id = #{modifyUserId,jdbcType=BIGINT},
       </if>
+      <if test="enable != null" >
+        enable = #{enable,jdbcType=TINYINT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -253,7 +263,8 @@
       created_time = #{createdTime,jdbcType=TIMESTAMP},
       modify_time = #{modifyTime,jdbcType=VARCHAR},
       created_user_id = #{createdUserId,jdbcType=BIGINT},
-      modify_user_id = #{modifyUserId,jdbcType=BIGINT}
+      modify_user_id = #{modifyUserId,jdbcType=BIGINT},
+      enable = #{enable,jdbcType=TINYINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

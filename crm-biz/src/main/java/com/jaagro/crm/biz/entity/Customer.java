@@ -35,11 +35,6 @@ public class Customer implements Serializable {
     private Integer customerStatus;
 
     /**
-     * 归属网点(References: branch)
-     */
-    private Long branchId;
-
-    /**
      * 所属城市
      */
     private String city;
@@ -76,7 +71,7 @@ public class Customer implements Serializable {
 
     /**
      * 是否开票
-     0:否 1:是
+ 0:否 1:是
      */
     private Byte enableInvoice;
 
@@ -97,7 +92,7 @@ public class Customer implements Serializable {
     private String taxNumber;
 
     /**
-     * 备注信息
+     * 备注信息(用车要求)
      */
     private String notes;
 
@@ -122,8 +117,13 @@ public class Customer implements Serializable {
     private Long modifyUserId;
 
     /**
-     * 规模信息
+     * 规模信息(信息描述)
      */
     private String scaleMessage;
+
+    /**
+     * 是否删除 0:否 1:是
+     */
+    private Byte enable;
 
 }

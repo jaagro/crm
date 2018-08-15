@@ -28,21 +28,6 @@ public class QualificationCertific implements Serializable {
     private Integer certificateType;
 
     /**
-     * 创建人(References: user)
-     */
-    private Long createdUserId;
-
-    /**
-     * 创建时间
-     */
-    private Date createdTime;
-
-    /**
-     * 修改时间
-     */
-    private Date modifyTime;
-
-    /**
      * 证件图片地址
      */
     private String certificateImageUrl;
@@ -53,11 +38,6 @@ public class QualificationCertific implements Serializable {
     private Integer certificateStatus;
 
     /**
-     * 修改人(References: user)
-     */
-    private Long modifyUserId;
-
-    /**
      * 外键关联客户ID(References customer)
      */
     private Long customerId;
@@ -66,5 +46,25 @@ public class QualificationCertific implements Serializable {
      * 描述信息
      */
     private String desc;
+
+    /**
+     * 创建人(References: user)
+     */
+    private Long createdUserId;
+
+    /**
+     * 创建时间
+     */
+    private Date createdTime;
+
+    /**
+     * 修改人(References: user)
+     */
+    private Long modifyUserId;
+
+    /**
+     * 修改时间
+     */
+    private Date modifyTime;
 
 }
