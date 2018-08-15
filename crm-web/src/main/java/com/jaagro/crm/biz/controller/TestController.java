@@ -24,4 +24,8 @@ public class TestController {
         String token = request.getHeader("token");
         return userClientService.getUserByToken(token);
     }
+    @GetMapping("/test2")
+    public String test(){
+        return "success";
+    }
 }

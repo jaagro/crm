@@ -22,7 +22,7 @@ import java.util.Map;
  * @author liqiangping
  */
 @RestController
-@Api(value = "contract", description = "合同管理", produces = MediaType.APPLICATION_JSON_VALUE)
+@Api(value = "contract", description = "客户管理", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ContractController {
 
     @Autowired
@@ -31,7 +31,7 @@ public class ContractController {
     private ContractMapper contractMapper;
 
     @ApiOperation("合同新增")
-    @PostMapping("/createContract")
+    @PostMapping("/contract")
     public Map<String, Object> createContract(@RequestBody CreateContractDto dto) {
 
         if (StringUtils.isEmpty(dto.getCustomerId())) {
@@ -48,7 +48,7 @@ public class ContractController {
     }
 
     @ApiOperation("合同修改")
-    @PutMapping("/updateContract")
+    @PutMapping("/contract")
     public Map<String, Object> updateContract(@RequestBody CreateContractDto dto) {
 
         if (contractMapper.selectByPrimaryKey(dto.getId()) == null) {
@@ -68,16 +68,16 @@ public class ContractController {
     }
 
     @ApiOperation("查询单个合同")
-    @GetMapping("getByContract/{id}")
+    @GetMapping("getContractByPK")
     @ApiImplicitParam(name = "id", value = "合同主键id", paramType = "query", required = true)
-    public Map<String, Object> getContractByPK(@PathVariable(value = "id") Long id) {
+    public Map<String, Object> getContractByPK(Long id) {
         Map<String, Object> result = null;
         result = contractService.getContractByPk(id);
         return result;
     }
 
     @ApiOperation("分页查询合同")
-    @GetMapping("listByContract")
+    @PostMapping("getPage")
     @ApiImplicitParams({@ApiImplicitParam(name = "pageNum", value = "起始页 [默认1]", paramType = "query", required = false),
             @ApiImplicitParam(name = "pageSize", value = "分页大小[默认10]", paramType = "query", required = false)})
     public Map<String, Object> getContractByDto(@RequestBody ContractCriteriaDto dto) {
