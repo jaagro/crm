@@ -83,5 +83,4 @@ public class ContractController {
     public BaseResponse listByCriteria(@RequestBody ContractCriteriaDto dto) {
         return BaseResponse.service(contractService.listByCriteria(dto));
     }
-
 }
