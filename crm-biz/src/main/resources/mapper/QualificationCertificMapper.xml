@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jaagro.crm.biz.mapper.QualificationCertificMapper" >
+  <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.QualificationCertific" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="breed_days" property="breedDays" jdbcType="VARCHAR" />
+    <result column="certificate_type" property="certificateType" jdbcType="INTEGER" />
+    <result column="created_user_id" property="createdUserId" jdbcType="BIGINT" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="certificate_image_url" property="certificateImageUrl" jdbcType="VARCHAR" />
+    <result column="certificate_status" property="certificateStatus" jdbcType="INTEGER" />
+    <result column="modify_user_id" property="modifyUserId" jdbcType="BIGINT" />
+    <result column="customer_id" property="customerId" jdbcType="BIGINT" />
+    <result column="desc" property="desc" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, breed_days, certificate_type, created_user_id, created_time, modify_time, certificate_image_url, 
+    certificate_status, modify_user_id, customer_id, desc
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from qualification_certific
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from qualification_certific
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.QualificationCertific" >
+    insert into qualification_certific (id, breed_days, certificate_type, 
+      created_user_id, created_time, modify_time, 
+      certificate_image_url, certificate_status, 
+      modify_user_id, customer_id, desc
+      )
+    values (#{id,jdbcType=BIGINT}, #{breedDays,jdbcType=VARCHAR}, #{certificateType,jdbcType=INTEGER}, 
+      #{createdUserId,jdbcType=BIGINT}, #{createdTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, 
+      #{certificateImageUrl,jdbcType=VARCHAR}, #{certificateStatus,jdbcType=INTEGER}, 
+      #{modifyUserId,jdbcType=BIGINT}, #{customerId,jdbcType=BIGINT}, #{desc,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.QualificationCertific" >
+    insert into qualification_certific
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="breedDays != null" >
+        breed_days,
+      </if>
+      <if test="certificateType != null" >
+        certificate_type,
+      </if>
+      <if test="createdUserId != null" >
+        created_user_id,
+      </if>
+      <if test="createdTime != null" >
+        created_time,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+      <if test="certificateImageUrl != null" >
+        certificate_image_url,
+      </if>
+      <if test="certificateStatus != null" >
+        certificate_status,
+      </if>
+      <if test="modifyUserId != null" >
+        modify_user_id,
+      </if>
+      <if test="customerId != null" >
+        customer_id,
+      </if>
+      <if test="desc != null" >
+        desc,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="breedDays != null" >
+        #{breedDays,jdbcType=VARCHAR},
+      </if>
+      <if test="certificateType != null" >
+        #{certificateType,jdbcType=INTEGER},
+      </if>
+      <if test="createdUserId != null" >
+        #{createdUserId,jdbcType=BIGINT},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="certificateImageUrl != null" >
+        #{certificateImageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="certificateStatus != null" >
+        #{certificateStatus,jdbcType=INTEGER},
+      </if>
+      <if test="modifyUserId != null" >
+        #{modifyUserId,jdbcType=BIGINT},
+      </if>
+      <if test="customerId != null" >
+        #{customerId,jdbcType=BIGINT},
+      </if>
+      <if test="desc != null" >
+        #{desc,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.QualificationCertific" >
+    update qualification_certific
+    <set >
+      <if test="breedDays != null" >
+        breed_days = #{breedDays,jdbcType=VARCHAR},
+      </if>
+      <if test="certificateType != null" >
+        certificate_type = #{certificateType,jdbcType=INTEGER},
+      </if>
+      <if test="createdUserId != null" >
+        created_user_id = #{createdUserId,jdbcType=BIGINT},
+      </if>
+      <if test="createdTime != null" >
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="certificateImageUrl != null" >
+        certificate_image_url = #{certificateImageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="certificateStatus != null" >
+        certificate_status = #{certificateStatus,jdbcType=INTEGER},
+      </if>
+      <if test="modifyUserId != null" >
+        modify_user_id = #{modifyUserId,jdbcType=BIGINT},
+      </if>
+      <if test="customerId != null" >
+        customer_id = #{customerId,jdbcType=BIGINT},
+      </if>
+      <if test="desc != null" >
+        desc = #{desc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.QualificationCertific" >
+    update qualification_certific
+    set breed_days = #{breedDays,jdbcType=VARCHAR},
+      certificate_type = #{certificateType,jdbcType=INTEGER},
+      created_user_id = #{createdUserId,jdbcType=BIGINT},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      certificate_image_url = #{certificateImageUrl,jdbcType=VARCHAR},
+      certificate_status = #{certificateStatus,jdbcType=INTEGER},
+      modify_user_id = #{modifyUserId,jdbcType=BIGINT},
+      customer_id = #{customerId,jdbcType=BIGINT},
+      desc = #{desc,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
