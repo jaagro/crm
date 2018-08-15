@@ -255,7 +255,7 @@
     </if>
     order by create_time desc
   </select>
-  <select id="getByPrimaryKey" parameterType="java.lang.Long" resultMap="DetailInfo">
+  <select id="getById" parameterType="java.lang.Long" resultMap="DetailInfo">
     select
     <include refid="Base_Column_List"/>
     from contract
