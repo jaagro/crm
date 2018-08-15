@@ -128,7 +128,7 @@ public class ContractServiceImpl implements ContractService {
      * @return
      */
     @Override
-    public Map<String, Object> getContractByPk(Long contractId) {
+    public Map<String, Object> getByPrimaryKey(Long contractId) {
         if (contractMapper.getByPrimaryKey(contractId) == null) {
             return ServiceResult.error(ResponseStatusCode.ID_VALUE_ERROR.getCode(), "id: " + contractId + "不存在");
         }

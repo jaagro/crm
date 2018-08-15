@@ -12,6 +12,7 @@ public interface ContractService {
 
     /**
      * 创建合同
+     *
      * @param dto
      * @return
      */
@@ -20,6 +21,7 @@ public interface ContractService {
 
     /**
      * 修改合同
+     *
      * @param dto
      * @return
      */
@@ -31,7 +33,7 @@ public interface ContractService {
      * @param contractId
      * @return
      */
-    Map<String, Object> getContractByPk(Long contractId);
+    Map<String, Object> getByPrimaryKey(Long contractId);
 
     /**
      * 分页查询
