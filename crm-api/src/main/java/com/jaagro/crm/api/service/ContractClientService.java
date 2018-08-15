@@ -18,6 +18,6 @@ public interface ContractClientService {
      * @param dto
      * @return
      */
-    @PostMapping("/contract")
+    @PostMapping("/createContract")
     Map<String, Object> createContract(@RequestBody CreateContractDto dto);
 }
