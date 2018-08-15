@@ -32,7 +32,7 @@ public interface ContractService {
      * @param contractId
      * @return
      */
-    Map<String, Object> getById(Long contractId);
+    Map<String, Object> getContractByPk(Long contractId);
 
     /**
      * 分页查询
@@ -40,6 +40,6 @@ public interface ContractService {
      * @param dto
      * @return
      */
-    Map<String, Object> listByCriteria(ContractCriteriaDto dto);
+    Map<String, Object> listByPage(ContractCriteriaDto dto);
 
 }
