@@ -97,6 +97,33 @@ public class ContractServiceImpl implements ContractService {
         return ServiceResult.toResult("合同修改成功");
     }
 
+    /**
+     * 查询单个合同
+     *
+     * @param contractId
+     * @return
+     */
+    @Override
+    public Map<String, Object> getContractByPk(Long contractId) {
+        if (contractMapper.getByPrimaryKey(contractId) == null) {
+            return ServiceResult.error(ResponseStatusCode.ID_VALUE_ERROR.getCode(), "id: " + contractId + "不存在");
+        }
+        return ServiceResult.toResult(contractMapper.getByPrimaryKey(contractId));
+    }
+
+    /**
+     * 分页查询
+     *
+     * @param dto
+     * @return
+     */
+    @Override
+    public Map<String, Object> listByPage(ContractCriteriaDto dto) {
+        PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
+        List<ContractReturnDto> contracts = contractMapper.listByPage(dto);
+        return ServiceResult.toResult(new PageInfo<>(contracts));
+    }
+
     private void createPrice(CreateContractDto dto, Contract contract) {
         //创建contractPrice对象
         if (dto.getPrice() != null && dto.getPrice().size() > 0) {
@@ -119,33 +146,6 @@ public class ContractServiceImpl implements ContractService {
                 }
             }
         }
-    }
-
-    /**
-     * 查询单个合同
-     *
-     * @param contractId
-     * @return
-     */
-    @Override
-    public Map<String, Object> getById(Long contractId) {
-        if (contractMapper.getByPrimaryKey(contractId) == null) {
-            return ServiceResult.error(ResponseStatusCode.ID_VALUE_ERROR.getCode(), "id: " + contractId + "不存在");
-        }
-        return ServiceResult.toResult(contractMapper.getByPrimaryKey(contractId));
-    }
-
-    /**
-     * 分页查询
-     *
-     * @param dto
-     * @return
-     */
-    @Override
-    public Map<String, Object> listByCriteria(ContractCriteriaDto dto) {
-        PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
-        List<ContractReturnDto> contracts = contractMapper.listByPage(dto);
-        return ServiceResult.toResult(new PageInfo<>(contracts));
     }
 
 }
