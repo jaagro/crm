@@ -2,10 +2,10 @@ package com.jaagro.crm.biz.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.jaagro.crm.api.dto.request.ContractPriceDto;
+import com.jaagro.crm.api.dto.request.contract.ContractPriceDto;
 import com.jaagro.crm.api.dto.response.ContractSectionPriceDto;
-import com.jaagro.crm.api.dto.request.CreateContractDto;
-import com.jaagro.crm.api.dto.request.ContractCriteriaDto;
+import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
+import com.jaagro.crm.api.dto.request.contract.ContractCriteriaDto;
 import com.jaagro.crm.api.dto.response.ContractReturnDto;
 import com.jaagro.crm.api.service.ContractService;
 import com.jaagro.crm.biz.entity.Contract;
@@ -97,7 +97,7 @@ public class ContractServiceImpl implements ContractService {
         return ServiceResult.toResult("合同修改成功");
     }
 
-    private void createPrice(CreateContractDto dto, Contract contract) {
+    public void createPrice(CreateContractDto dto, Contract contract) {
         //创建contractPrice对象
         if (dto.getPrice() != null && dto.getPrice().size() > 0) {
             for (ContractPriceDto cp : dto.getPrice()) {

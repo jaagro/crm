@@ -1,4 +1,4 @@
-package com.jaagro.crm.api.dto.request;
+package com.jaagro.crm.api.dto.request.customer;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 @Data
 @Accessors(chain = true)
-public class CustomerContractDto implements Serializable {
+public class CreateCustomerContractDto implements Serializable {
     /**
      * 客户审核记录主键id
      */

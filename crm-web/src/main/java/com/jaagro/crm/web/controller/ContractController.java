@@ -1,7 +1,7 @@
 package com.jaagro.crm.web.controller;
 
-import com.jaagro.crm.api.dto.request.ContractCriteriaDto;
-import com.jaagro.crm.api.dto.request.CreateContractDto;
+import com.jaagro.crm.api.dto.request.contract.ContractCriteriaDto;
+import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
 import com.jaagro.crm.api.service.ContractService;
 import com.jaagro.crm.biz.mapper.ContractMapper;
 import io.swagger.annotations.Api;

@@ -2,55 +2,40 @@ package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.biz.entity.QualificationCertific;
 
-/**
- * @author baiyiran
- */
 public interface QualificationCertificMapper {
     /**
-     * 主键删除
      *
-     * @param id
-     * @return
+     * @mbggenerated 2018-08-16
      */
     int deleteByPrimaryKey(Long id);
 
     /**
-     * 新增
      *
-     * @param record
-     * @return
+     * @mbggenerated 2018-08-16
      */
     int insert(QualificationCertific record);
 
     /**
-     * 动态新增
      *
-     * @param record
-     * @return
+     * @mbggenerated 2018-08-16
      */
     int insertSelective(QualificationCertific record);
 
     /**
-     * 主键查询
      *
-     * @param id
-     * @return
+     * @mbggenerated 2018-08-16
      */
     QualificationCertific selectByPrimaryKey(Long id);
 
     /**
-     * 动态更新
      *
-     * @param record
-     * @return
+     * @mbggenerated 2018-08-16
      */
     int updateByPrimaryKeySelective(QualificationCertific record);
 
     /**
-     * 主键更新
      *
-     * @param record
-     * @return
+     * @mbggenerated 2018-08-16
      */
     int updateByPrimaryKey(QualificationCertific record);
 }

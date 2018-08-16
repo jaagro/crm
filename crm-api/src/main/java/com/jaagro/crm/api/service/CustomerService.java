@@ -1,8 +1,8 @@
 package com.jaagro.crm.api.service;
 
-import com.jaagro.crm.api.dto.request.CreateCustomerDto;
-import com.jaagro.crm.api.dto.request.ListCustomerCriteriaDto;
-import com.jaagro.crm.api.dto.request.UpdateCustomerDto;
+import com.jaagro.crm.api.dto.request.customer.CreateCustomerDto;
+import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
+import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
 
 import java.util.Map;
 
@@ -13,6 +13,7 @@ public interface CustomerService {
     /**
      * 创建客户
      * 该api有图片上传的功能，图片删除用的是oss
+     *
      * @param dto 注意customer对象的子对象的插入
      * @return
      */
@@ -21,6 +22,7 @@ public interface CustomerService {
     /**
      * 修改客户
      * 该api有图片上传的功能，图片删除用的是oss
+     *
      * @param dto 注意子对象的修改
      * @return
      */
@@ -28,6 +30,7 @@ public interface CustomerService {
 
     /**
      * 获取单条
+     *
      * @param id
      * @return
      */
@@ -35,6 +38,7 @@ public interface CustomerService {
 
     /**
      * 分页获取list，注意criteria查询条件
+     *
      * @param dto
      * @return
      */
@@ -42,6 +46,7 @@ public interface CustomerService {
 
     /**
      * 审核客户，注意需要修改的字段有哪些，插入的表有哪些
+     *
      * @param id
      * @param auditResult
      * @return
@@ -50,6 +55,7 @@ public interface CustomerService {
 
     /**
      * 逻辑删除
+     *
      * @param id
      * @return
      */

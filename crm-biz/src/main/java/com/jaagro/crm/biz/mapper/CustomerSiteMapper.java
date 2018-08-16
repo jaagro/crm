@@ -2,55 +2,40 @@ package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.biz.entity.CustomerSite;
 
-/**
- * @author baiyiran
- */
 public interface CustomerSiteMapper {
     /**
-     * 主键删除
      *
-     * @param id
-     * @return
+     * @mbggenerated 2018-08-16
      */
     int deleteByPrimaryKey(Long id);
 
     /**
-     * 新增
      *
-     * @param record
-     * @return
+     * @mbggenerated 2018-08-16
      */
     int insert(CustomerSite record);
 
     /**
-     * 动态新增
      *
-     * @param record
-     * @return
+     * @mbggenerated 2018-08-16
      */
     int insertSelective(CustomerSite record);
 
     /**
-     * 主键查询
      *
-     * @param id
-     * @return
+     * @mbggenerated 2018-08-16
      */
     CustomerSite selectByPrimaryKey(Long id);
 
     /**
-     * 动态更新
      *
-     * @param record
-     * @return
+     * @mbggenerated 2018-08-16
      */
     int updateByPrimaryKeySelective(CustomerSite record);
 
     /**
-     * 主键更新
      *
-     * @param record
-     * @return
+     * @mbggenerated 2018-08-16
      */
     int updateByPrimaryKey(CustomerSite record);
 }

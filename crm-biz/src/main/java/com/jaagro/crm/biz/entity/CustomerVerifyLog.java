@@ -7,8 +7,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 审核表
- *
  * @author baiyiran
  */
 @Data
@@ -25,7 +23,7 @@ public class CustomerVerifyLog implements Serializable {
     private Integer verifyType;
 
     /**
-     * 审核结果(1-审核通过 2-审核不通过(不通过类型再商议))
+     * 审核结果(1-审核通过 2-审核不通过(客户信息和资质证照不匹配，客户信息和合同信息不匹配))
      */
     private Integer auditResult;
 
@@ -45,7 +43,9 @@ public class CustomerVerifyLog implements Serializable {
     private Integer auditType;
 
     /**
-     * 审核不通过描述信息
+     * 审核不通过描述信息(1、客户姓名与图片不符
+ 2、客户身份证号码与图片不符
+ 3、客户姓名与身份证号与合同信息不符)
      */
     private String desc;
 

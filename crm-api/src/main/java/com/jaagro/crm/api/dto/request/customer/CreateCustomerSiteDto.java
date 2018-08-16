@@ -1,4 +1,4 @@
-package com.jaagro.crm.biz.entity;
+package com.jaagro.crm.api.dto.request.customer;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -12,21 +12,18 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-public class CustomerSite implements Serializable {
-    /**
-     * 客户发货ID
-     */
-    private Long id;
-
+public class CreateCustomerSiteDto implements Serializable {
     /**
      * 地址类型
- 1-装货点，2-卸货点
+     1-装货点，2-卸货点
      */
     private Integer siteType;
 
     /**
      * 外键关联客户ID
- ( References customer)
+     ( References customer)
+
+
      */
     private Long customerId;
 
@@ -98,7 +95,7 @@ public class CustomerSite implements Serializable {
     /**
      * 修改时间
      */
-    private Date modifyTime;
+    private String modifyTime;
 
     /**
      * 创建人(References: user)
@@ -109,5 +106,4 @@ public class CustomerSite implements Serializable {
      * 修改人(References: user)
      */
     private Long modifyUserId;
-
 }

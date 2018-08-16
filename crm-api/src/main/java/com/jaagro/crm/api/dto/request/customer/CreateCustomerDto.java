@@ -1,22 +1,19 @@
-package com.jaagro.crm.biz.entity;
+package com.jaagro.crm.api.dto.request.customer;
 
+import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
- * @author baiyiran
+ * @author liqiangping
  */
 @Data
 @Accessors(chain = true)
-public class Customer implements Serializable {
-    /**
-     * 客户主键id
-     */
-    private Long id;
-
+public class CreateCustomerDto implements Serializable {
     /**
      * 客户名称
      */
@@ -24,13 +21,13 @@ public class Customer implements Serializable {
 
     /**
      * 客户类型
- (1:个体客户 2:企业客户 )
+     * (1:个体客户 2:企业客户 )
      */
     private Integer customerType;
 
     /**
      * 审核状态
- (0未审核，1正常合作 2审核未通过，4停止合作)
+     * (0未审核，1正常合作 2审核未通过，4停止合作)
      */
     private Integer customerStatus;
 
@@ -71,13 +68,13 @@ public class Customer implements Serializable {
 
     /**
      * 是否开票
- 0:否 1:是
+     * 0:否 1:是
      */
     private Byte enableInvoice;
 
     /**
      * 发票类型
- 1:增值税普通发票 2:增值税专用发票
+     * 1:增值税普通发票 2:增值税专用发票
      */
     private Integer invoiceType;
 
@@ -120,5 +117,26 @@ public class Customer implements Serializable {
      * 是否删除 0:否 1:是
      */
     private Byte enable;
+
+    /**
+     * 客户联系人
+     */
+    private List<CreateCustomerContractDto> contracts;
+
+    /**
+     * 收发货地址
+     */
+    private List<CreateCustomerSiteDto> customerSites;
+
+    /**
+     * 资质证件照
+     */
+    private List<CreateQualificationCertificDto> qualificationCertificDtos;
+
+    /**
+     * 客户合同
+     */
+    private List<CreateContractDto> createContractDtos;
+
 
 }

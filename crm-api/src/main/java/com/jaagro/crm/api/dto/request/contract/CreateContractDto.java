@@ -1,6 +1,5 @@
-package com.jaagro.crm.api.dto.request;
+package com.jaagro.crm.api.dto.request.contract;
 
-import com.jaagro.crm.api.dto.request.ContractPriceDto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

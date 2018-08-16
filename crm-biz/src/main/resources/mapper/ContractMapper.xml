@@ -242,15 +242,15 @@
       version = #{version,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="listByPage" parameterType="com.jaagro.crm.api.dto.request.ContractCriteriaDto" resultMap="DetailInfo">
+  <select id="listByPage" parameterType="com.jaagro.crm.api.dto.request.contract.ContractCriteriaDto" resultMap="DetailInfo">
     select
     <include refid="Base_Column_List"/>
     from contract
     where 1 = 1
-    <if test="#{endDate != null}">
+    <if test="endDate != null">
       <![CDATA[and create_time <= #{endDate}]]>
     </if>
-    <if test="#{startDate != null}">
+    <if test="startDate != null">
       <![CDATA[and create_time >= #{startDate}]]>
     </if>
     order by create_time desc

@@ -1,6 +1,6 @@
 package com.jaagro.crm.biz.mapper;
 
-import com.jaagro.crm.api.dto.request.ContractCriteriaDto;
+import com.jaagro.crm.api.dto.request.contract.ContractCriteriaDto;
 import com.jaagro.crm.biz.entity.Contract;
 import com.jaagro.crm.api.dto.response.ContractReturnDto;
 
