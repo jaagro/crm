@@ -13,16 +13,16 @@ public final class CustomerStatus {
     /**
      * 正常合作
      */
-    public static final Integer NORMALCOOPERATION = 1;
+    public static final Integer NORMAL_COOPERATION = 1;
 
     /**
      * 审核未通过
      */
-    public static final Integer AUDITFAILED = 2;
+    public static final Integer AUDIT_FAILED = 2;
 
     /**
      * 停止合作
      */
-    public static final Integer STOPCOOPERATION = 3;
+    public static final Integer STOP_COOPERATION = 3;
 
 }
