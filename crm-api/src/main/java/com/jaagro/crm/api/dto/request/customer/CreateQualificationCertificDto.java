@@ -1,4 +1,4 @@
-package com.jaagro.crm.biz.entity;
+package com.jaagro.crm.api.dto.request.customer;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -11,7 +11,8 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-public class QualificationCertific implements Serializable {
+public class CreateQualificationCertificDto implements Serializable{
+
     /**
      * 客户资质证照主键id
      */
@@ -40,7 +41,7 @@ public class QualificationCertific implements Serializable {
     /**
      * 描述信息
      */
-    private String description;
+    private String desc;
 
     /**
      * 创建人(References: user)
@@ -65,6 +66,5 @@ public class QualificationCertific implements Serializable {
     /**
      * 是否可用（0不可用 1可用）
      */
-    private Boolean enabled;
-
+    private Byte enabled;
 }

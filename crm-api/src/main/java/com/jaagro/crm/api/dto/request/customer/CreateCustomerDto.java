@@ -1,17 +1,18 @@
-package com.jaagro.crm.biz.entity;
+package com.jaagro.crm.api.dto.request.customer;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author liqiangping
  */
 @Data
 @Accessors(chain = true)
-public class Customer implements Serializable {
+public class CreateCustomerDto implements Serializable {
     /**
      * 客户主键id
      */
@@ -73,7 +74,7 @@ public class Customer implements Serializable {
      * 是否开票
      0:否 1:是
      */
-    private Boolean enableInvoice;
+    private Byte enableInvoice;
 
     /**
      * 发票类型
@@ -119,6 +120,8 @@ public class Customer implements Serializable {
     /**
      * 是否删除 0:否 1:是
      */
-    private Boolean enable;
+    private Byte enable;
+
+    private List<CreateCustomerContractDto> contracts;
 
 }
