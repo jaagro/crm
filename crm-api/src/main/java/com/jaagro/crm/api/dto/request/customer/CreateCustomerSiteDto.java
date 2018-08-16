@@ -22,8 +22,6 @@ public class CreateCustomerSiteDto implements Serializable {
     /**
      * 外键关联客户ID
      ( References customer)
-
-
      */
     private Long customerId;
 

@@ -6,6 +6,10 @@ import com.jaagro.crm.api.dto.request.contract.ContractPriceDto;
 import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
 import com.jaagro.crm.api.dto.request.customer.*;
 import com.jaagro.crm.api.dto.response.ContractSectionPriceDto;
+import com.jaagro.crm.api.dto.request.customer.CreateCustomerDto;
+import com.jaagro.crm.api.dto.request.customer.CreateCustomerContractDto;
+import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
+import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
 import com.jaagro.crm.api.service.CustomerService;
 import com.jaagro.crm.biz.entity.*;
 import com.jaagro.crm.biz.mapper.*;
@@ -14,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import utils.ResponseStatusCode;
 import utils.ServiceResult;
 
 import java.util.Date;
@@ -179,7 +184,10 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public Map<String, Object> getById(Long id) {
-        return null;
+        if (customerMapper.selectByPrimaryKey(id) == null) {
+            return ServiceResult.error(ResponseStatusCode.ID_VALUE_ERROR.getCode(), "id: " + id + "不存在");
+        }
+        return ServiceResult.toResult(customerMapper.getById(id));
     }
 
     /**

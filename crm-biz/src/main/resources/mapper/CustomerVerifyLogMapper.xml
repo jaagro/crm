@@ -15,7 +15,7 @@
     id, verify_type, audit_result, auditor, audit_time, audit_type, description, references_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from customer_verify_log
     where id = #{id,jdbcType=BIGINT}
@@ -25,103 +25,103 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.jaagro.crm.biz.entity.CustomerVerifyLog" useGeneratedKeys="true" keyProperty="id" keyColumn="id" >
-    insert into customer_verify_log (id, verify_type, audit_result, 
-      auditor, audit_time, audit_type, 
+    insert into customer_verify_log (id, verify_type, audit_result,
+      auditor, audit_time, audit_type,
       description, references_id)
-    values (#{id,jdbcType=BIGINT}, #{verifyType,jdbcType=INTEGER}, #{auditResult,jdbcType=INTEGER}, 
-      #{auditor,jdbcType=VARCHAR}, #{auditTime,jdbcType=TIMESTAMP}, #{auditType,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=BIGINT}, #{verifyType,jdbcType=INTEGER}, #{auditResult,jdbcType=INTEGER},
+      #{auditor,jdbcType=VARCHAR}, #{auditTime,jdbcType=TIMESTAMP}, #{auditType,jdbcType=INTEGER},
       #{description,jdbcType=VARCHAR}, #{referencesId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.CustomerVerifyLog" useGeneratedKeys="true" keyProperty="id" keyColumn="id" >
     insert into customer_verify_log
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
         id,
       </if>
-      <if test="verifyType != null" >
+      <if test="verifyType != null">
         verify_type,
       </if>
-      <if test="auditResult != null" >
+      <if test="auditResult != null">
         audit_result,
       </if>
-      <if test="auditor != null" >
+      <if test="auditor != null">
         auditor,
       </if>
-      <if test="auditTime != null" >
+      <if test="auditTime != null">
         audit_time,
       </if>
-      <if test="auditType != null" >
+      <if test="auditType != null">
         audit_type,
       </if>
       <if test="description != null" >
         description,
       </if>
-      <if test="referencesId != null" >
+      <if test="referencesId != null">
         references_id,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="verifyType != null" >
+      <if test="verifyType != null">
         #{verifyType,jdbcType=INTEGER},
       </if>
-      <if test="auditResult != null" >
+      <if test="auditResult != null">
         #{auditResult,jdbcType=INTEGER},
       </if>
-      <if test="auditor != null" >
+      <if test="auditor != null">
         #{auditor,jdbcType=VARCHAR},
       </if>
-      <if test="auditTime != null" >
+      <if test="auditTime != null">
         #{auditTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="auditType != null" >
+      <if test="auditType != null">
         #{auditType,jdbcType=INTEGER},
       </if>
       <if test="description != null" >
         #{description,jdbcType=VARCHAR},
       </if>
-      <if test="referencesId != null" >
+      <if test="referencesId != null">
         #{referencesId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.CustomerVerifyLog" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.CustomerVerifyLog">
     update customer_verify_log
-    <set >
-      <if test="verifyType != null" >
+    <set>
+      <if test="verifyType != null">
         verify_type = #{verifyType,jdbcType=INTEGER},
       </if>
-      <if test="auditResult != null" >
+      <if test="auditResult != null">
         audit_result = #{auditResult,jdbcType=INTEGER},
       </if>
-      <if test="auditor != null" >
+      <if test="auditor != null">
         auditor = #{auditor,jdbcType=VARCHAR},
       </if>
-      <if test="auditTime != null" >
+      <if test="auditTime != null">
         audit_time = #{auditTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="auditType != null" >
+      <if test="auditType != null">
         audit_type = #{auditType,jdbcType=INTEGER},
       </if>
       <if test="description != null" >
         description = #{description,jdbcType=VARCHAR},
       </if>
-      <if test="referencesId != null" >
+      <if test="referencesId != null">
         references_id = #{referencesId,jdbcType=BIGINT},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.CustomerVerifyLog" >
+  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.CustomerVerifyLog">
     update customer_verify_log
     set verify_type = #{verifyType,jdbcType=INTEGER},
       audit_result = #{auditResult,jdbcType=INTEGER},
       auditor = #{auditor,jdbcType=VARCHAR},
       audit_time = #{auditTime,jdbcType=TIMESTAMP},
       audit_type = #{auditType,jdbcType=INTEGER},
-      description = #{description,jdbcType=VARCHAR},
+      desc = #{desc,jdbcType=VARCHAR},
       references_id = #{referencesId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>

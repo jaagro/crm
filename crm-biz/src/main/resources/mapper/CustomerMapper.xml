@@ -24,13 +24,67 @@
     <result column="modify_user_id" property="modifyUserId" jdbcType="BIGINT" />
     <result column="enable" property="enable" jdbcType="TINYINT" />
   </resultMap>
+  <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.customer.CustomerReturnDto" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+    <result column="customer_type" property="customerType" jdbcType="INTEGER" />
+    <result column="customer_status" property="customerStatus" jdbcType="INTEGER" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="county" property="county" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="latitude" property="latitude" jdbcType="DECIMAL" />
+    <result column="longitude" property="longitude" jdbcType="DECIMAL" />
+    <result column="billing_period" property="billingPeriod" jdbcType="INTEGER" />
+    <result column="enable_invoice" property="enableInvoice" jdbcType="TINYINT" />
+    <result column="invoice_type" property="invoiceType" jdbcType="INTEGER" />
+    <result column="invoice_header" property="invoiceHeader" jdbcType="VARCHAR" />
+    <result column="tax_number" property="taxNumber" jdbcType="VARCHAR" />
+    <result column="notes" property="notes" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="created_user_id" property="createdUserId" jdbcType="BIGINT" />
+    <result column="modify_user_id" property="modifyUserId" jdbcType="BIGINT" />
+    <result column="enable" property="enable" jdbcType="TINYINT" />
+    <collection property="contracts" column="id"
+                select="com.jaagro.crm.biz.mapper.ContractMapper.getByCustomerId"/>
+    <collection property="sites" column="id"
+                select="com.jaagro.crm.biz.mapper.CustomerSiteMapper.getByCustomerSiteId"/>
+    <collection property="qualifications" column="id"
+                select="com.jaagro.crm.biz.mapper.QualificationCertificMapper.getByCustomerQualificationId"/>
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jaagro.crm.biz.mapper.CustomerMapper" >
+  <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.Customer" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+    <result column="customer_type" property="customerType" jdbcType="INTEGER" />
+    <result column="customer_status" property="customerStatus" jdbcType="INTEGER" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="county" property="county" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="latitude" property="latitude" jdbcType="DECIMAL" />
+    <result column="longitude" property="longitude" jdbcType="DECIMAL" />
+    <result column="billing_period" property="billingPeriod" jdbcType="INTEGER" />
+    <result column="enable_invoice" property="enableInvoice" jdbcType="TINYINT" />
+    <result column="invoice_type" property="invoiceType" jdbcType="INTEGER" />
+    <result column="invoice_header" property="invoiceHeader" jdbcType="VARCHAR" />
+    <result column="tax_number" property="taxNumber" jdbcType="VARCHAR" />
+    <result column="notes" property="notes" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="created_user_id" property="createdUserId" jdbcType="BIGINT" />
+    <result column="modify_user_id" property="modifyUserId" jdbcType="BIGINT" />
+    <result column="enable" property="enable" jdbcType="TINYINT" />
+  </resultMap>
   <sql id="Base_Column_List" >
-    id, customer_name, customer_type, customer_status, city, province, county, address, 
-    latitude, longitude, billing_period, enable_invoice, invoice_type, invoice_header, 
+    id, customer_name, customer_type, customer_status, city, province, county, address,
+    latitude, longitude, billing_period, enable_invoice, invoice_type, invoice_header,
     tax_number, notes, create_time, modify_time, created_user_id, modify_user_id, enable
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from customer
     where id = #{id,jdbcType=BIGINT}
@@ -40,20 +94,20 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.jaagro.crm.biz.entity.Customer" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-    insert into customer (id, customer_name, customer_type, 
-      customer_status, city, province, 
-      county, address, latitude, 
-      longitude, billing_period, enable_invoice, 
-      invoice_type, invoice_header, tax_number, 
-      notes, create_time, modify_time, 
+    insert into customer (id, customer_name, customer_type,
+      customer_status, city, province,
+      county, address, latitude,
+      longitude, billing_period, enable_invoice,
+      invoice_type, invoice_header, tax_number,
+      notes, create_time, modify_time,
       created_user_id, modify_user_id, enable
       )
-    values (#{id,jdbcType=BIGINT}, #{customerName,jdbcType=VARCHAR}, #{customerType,jdbcType=INTEGER}, 
-      #{customerStatus,jdbcType=INTEGER}, #{city,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
-      #{county,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{latitude,jdbcType=DECIMAL}, 
-      #{longitude,jdbcType=DECIMAL}, #{billingPeriod,jdbcType=INTEGER}, #{enableInvoice,jdbcType=TINYINT}, 
-      #{invoiceType,jdbcType=INTEGER}, #{invoiceHeader,jdbcType=VARCHAR}, #{taxNumber,jdbcType=VARCHAR}, 
-      #{notes,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, 
+    values (#{id,jdbcType=BIGINT}, #{customerName,jdbcType=VARCHAR}, #{customerType,jdbcType=INTEGER},
+      #{customerStatus,jdbcType=INTEGER}, #{city,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR},
+      #{county,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{latitude,jdbcType=DECIMAL},
+      #{longitude,jdbcType=DECIMAL}, #{billingPeriod,jdbcType=INTEGER}, #{enableInvoice,jdbcType=TINYINT},
+      #{invoiceType,jdbcType=INTEGER}, #{invoiceHeader,jdbcType=VARCHAR}, #{taxNumber,jdbcType=VARCHAR},
+      #{notes,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP},
       #{createdUserId,jdbcType=BIGINT}, #{modifyUserId,jdbcType=BIGINT}, #{enable,jdbcType=TINYINT}
       )
   </insert>
@@ -232,7 +286,7 @@
       <if test="invoiceHeader != null" >
         invoice_header = #{invoiceHeader,jdbcType=VARCHAR},
       </if>
-      <if test="taxNumber != null" >
+      <if test="taxNumber != null">
         tax_number = #{taxNumber,jdbcType=VARCHAR},
       </if>
       <if test="notes != null" >
@@ -280,4 +334,10 @@
       enable = #{enable,jdbcType=TINYINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="getById" parameterType="java.lang.Long" resultMap="DetailInfo">
+    select
+    <include refid="Base_Column_List"/>
+    from customer
+    where id = #{id,jdbcType=BIGINT}
+  </select>
 </mapper>
