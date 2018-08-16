@@ -1,8 +1,8 @@
 package com.jaagro.crm.api.service;
 
-import com.jaagro.crm.api.dto.request.CreateCustomerDto;
-import com.jaagro.crm.api.dto.request.ListCustomerCriteriaDto;
-import com.jaagro.crm.api.dto.request.UpdateCustomerDto;
+import com.jaagro.crm.api.dto.request.customer.CreateCustomerDto;
+import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
+import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
 
 import java.util.Map;
 
@@ -54,4 +54,5 @@ public interface CustomerService {
      * @return
      */
     Map<String, Object> disableCustomer(Long id);
+
 }

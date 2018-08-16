@@ -1,4 +1,4 @@
-package com.jaagro.crm.api.dto.request.customer;
+package com.jaagro.crm.api.dto.response.customer;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -12,8 +12,7 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-public class CreateCustomerSiteDto implements Serializable {
-
+public class CustomerSiteReturnDto implements Serializable {
     /**
      * 客户发货ID
      */
