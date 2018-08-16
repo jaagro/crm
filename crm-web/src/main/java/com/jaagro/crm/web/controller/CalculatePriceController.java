@@ -25,7 +25,6 @@ public class CalculatePriceController {
     @PostMapping("/calculatePrice")
     public BaseResponse calculatePrice(@RequestBody PriceCriteriaDto dto){
 
-        //全部需要改成从数据库中验证
         if(StringUtils.isEmpty(dto.getContractId())){
             return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "请选择计费合同编号"));
         }

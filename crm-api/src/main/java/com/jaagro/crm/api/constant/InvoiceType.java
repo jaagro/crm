@@ -8,10 +8,10 @@ public final class InvoiceType {
     /**
      * 普通发票
      */
-    public static final Integer PLAININVOICE = 1;
+    public static final Integer PLAIN_INVOICE = 1;
 
     /**
      * 专用发票
      */
-    public static final Integer SPECIALINVOICE = 2;
+    public static final Integer SPECIAL_INVOICE = 2;
 }

@@ -18,7 +18,7 @@ public final class CertificateStatus {
     /**
      * 审核未通过
      */
-    public static final Integer AUDITFAILED = 2;
+    public static final Integer AUDIT_FAILED = 2;
 
     /**
      * 不可用
