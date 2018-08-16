@@ -1,6 +1,6 @@
 package com.jaagro.crm.web.controller;
 
-import com.jaagro.crm.api.dto.request.PriceCriteriaDto;
+import com.jaagro.crm.api.dto.request.contract.PriceCriteriaDto;
 import com.jaagro.crm.api.service.CalculatePriceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import utils.BaseResponse;
 import utils.ResponseStatusCode;
 import utils.ServiceResult;
-
-import java.util.Map;
 
 /**
  * @author tony
@@ -25,7 +23,6 @@ public class CalculatePriceController {
     @PostMapping("/calculatePrice")
     public BaseResponse calculatePrice(@RequestBody PriceCriteriaDto dto){
 
-        //全部需要改成从数据库中验证
         if(StringUtils.isEmpty(dto.getContractId())){
             return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "请选择计费合同编号"));
         }

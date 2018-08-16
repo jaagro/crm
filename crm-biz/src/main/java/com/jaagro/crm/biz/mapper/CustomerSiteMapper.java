@@ -1,16 +1,16 @@
 package com.jaagro.crm.biz.mapper;
 
+import com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto;
 import com.jaagro.crm.biz.entity.CustomerSite;
+
+import java.util.List;
 
 /**
  * @author baiyiran
  */
 public interface CustomerSiteMapper {
     /**
-     * 主键删除
-     *
-     * @param id
-     * @return
+     * @mbggenerated 2018-08-16
      */
     int deleteByPrimaryKey(Long id);
 
@@ -48,9 +48,14 @@ public interface CustomerSiteMapper {
 
     /**
      * 主键更新
-     *
-     * @param record
-     * @return
      */
     int updateByPrimaryKey(CustomerSite record);
+
+    /**
+     * 查询客户Id查询收发货地址
+     *
+     * @param dto
+     * @return
+     */
+    List<CustomerSiteReturnDto> getByCustomerSiteId(Long customer_id);
 }

@@ -20,7 +20,7 @@
     where selection_id = #{selectionId,jdbcType=INTEGER}
   </select>
   <select id="listByPriceId"
-          resultType="com.jaagro.crm.api.dto.response.ContractSectionPriceReturnDto">
+          resultType="com.jaagro.crm.api.dto.response.contract.ContractSectionPriceReturnDto">
     select
     <include refid="Base_Column_List"></include>
     from contract_section_price

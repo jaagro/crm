@@ -1,6 +1,9 @@
 package com.jaagro.crm.biz.mapper;
 
+import com.jaagro.crm.api.dto.response.customer.QualificationCertificReturnDto;
 import com.jaagro.crm.biz.entity.QualificationCertific;
+
+import java.util.List;
 
 /**
  * @author baiyiran
@@ -53,4 +56,12 @@ public interface QualificationCertificMapper {
      * @return
      */
     int updateByPrimaryKey(QualificationCertific record);
+
+    /**
+     * 查询客户Id查询资质证明
+     *
+     * @param dto
+     * @return
+     */
+    List<QualificationCertificReturnDto> getByCustomerQualificationId(Long id);
 }

@@ -1,17 +1,18 @@
-package com.jaagro.crm.biz.entity;
+package com.jaagro.crm.api.dto.response.customer;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
- * @author baiyiran
+ * @author liqiangping
  */
 @Data
 @Accessors(chain = true)
-public class Customer implements Serializable {
+public class CustomerReturnDto implements Serializable {
     /**
      * 客户主键id
      */
@@ -30,7 +31,7 @@ public class Customer implements Serializable {
 
     /**
      * 审核状态
-     * (0未审核，1正常合作 2审核未通过，4停止合作)
+     (0未审核，1正常合作 2审核未通过，4停止合作)
      */
     private Integer customerStatus;
 
@@ -121,4 +122,18 @@ public class Customer implements Serializable {
      */
     private Boolean enabled;
 
+    /**
+     * 查询客户合同
+     */
+    private List<CustomerContractReturnDto> contracts;
+
+    /**
+     * 查询客户收发货地
+     */
+    private List<CustomerSiteReturnDto> sites;
+
+    /**
+     * 查询客户资质证件照
+     */
+    private List<QualificationCertificReturnDto> qualifications;
 }

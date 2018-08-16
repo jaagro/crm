@@ -1,7 +1,8 @@
 package com.jaagro.crm.api.service;
 
-import com.jaagro.crm.api.dto.request.CreateContractDto;
-import com.jaagro.crm.api.dto.request.ContractCriteriaDto;
+import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
+import com.jaagro.crm.api.dto.request.contract.ContractCriteriaDto;
+import feign.Contract;
 
 import java.util.Map;
 
@@ -32,7 +33,7 @@ public interface ContractService {
      * @param contractId
      * @return
      */
-    Map<String, Object> getContractByPk(Long contractId);
+    Map<String, Object> getById(Long contractId);
 
     /**
      * 分页查询
@@ -40,6 +41,6 @@ public interface ContractService {
      * @param dto
      * @return
      */
-    Map<String, Object> listByPage(ContractCriteriaDto dto);
+    Map<String, Object> listByCriteria(ContractCriteriaDto dto);
 
 }

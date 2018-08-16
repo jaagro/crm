@@ -1,55 +1,45 @@
 package com.jaagro.crm.biz.mapper;
 
+import com.jaagro.crm.api.dto.response.customer.CustomerReturnDto;
 import com.jaagro.crm.biz.entity.Customer;
 
-/**
- * @author baiyiran
- */
 public interface CustomerMapper {
     /**
-     * 主键删除
-     * @param id
-     * @return
+     * @mbggenerated 2018-08-16
      */
     int deleteByPrimaryKey(Long id);
 
     /**
-     * 新增
-     *
-     * @param record
-     * @return
+     * @mbggenerated 2018-08-16
      */
     int insert(Customer record);
 
     /**
-     * 动态新增
-     *
-     * @param record
-     * @return
+     * @mbggenerated 2018-08-16
      */
     int insertSelective(Customer record);
 
     /**
-     * 主键查询
-     *
-     * @param id
-     * @return
+     * @mbggenerated 2018-08-16
      */
     Customer selectByPrimaryKey(Long id);
 
     /**
-     * 动态更新
-     *
-     * @param record
-     * @return
+     * @mbggenerated 2018-08-16
      */
     int updateByPrimaryKeySelective(Customer record);
 
     /**
-     * 主键更新
-     *
-     * @param record
-     * @return
+     * @mbggenerated 2018-08-16
      */
     int updateByPrimaryKey(Customer record);
+
+    /**
+     * 查询单个客户Dto
+     *
+     * @param id
+     * @return
+     */
+    CustomerReturnDto getById(Long id);
+
 }

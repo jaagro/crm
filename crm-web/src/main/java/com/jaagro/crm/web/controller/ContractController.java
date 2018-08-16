@@ -1,21 +1,16 @@
 package com.jaagro.crm.web.controller;
 
-import com.jaagro.crm.api.dto.request.CreateContractDto;
-import com.jaagro.crm.api.dto.request.ContractCriteriaDto;
+import com.jaagro.crm.api.dto.request.contract.ContractCriteriaDto;
+import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
 import com.jaagro.crm.api.service.ContractService;
 import com.jaagro.crm.biz.mapper.ContractMapper;
-
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import utils.BaseResponse;
-import utils.ResponseStatusCode;
-import utils.ServiceResult;
 
 import java.util.Map;
 
@@ -23,7 +18,7 @@ import java.util.Map;
  * @author liqiangping
  */
 @RestController
-@Api(value = "contract", description = "客户管理", produces = MediaType.APPLICATION_JSON_VALUE)
+@Api(value = "contract", description = "客户合同管理", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ContractController {
 
     @Autowired

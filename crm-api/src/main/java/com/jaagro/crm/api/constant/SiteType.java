@@ -8,10 +8,10 @@ public final class SiteType {
     /**
      * 装货点
      */
-    public static final Integer LOADINGPOINT = 1;
+    public static final Integer LOAD_SITE = 1;
 
     /**
      * 卸货点
      */
-    public static final Integer UNLOADINGPOINT = 2;
+    public static final Integer UNLOAD_SITE = 2;
 }

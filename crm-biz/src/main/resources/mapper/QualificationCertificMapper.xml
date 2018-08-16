@@ -14,9 +14,9 @@
     <result column="modify_user_id" jdbcType="BIGINT" property="modifyUserId" />
     <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
   </resultMap>
-  <sql id="Base_Column_List">
-    id, breed_days, certificate_type, certificate_image_url, certificate_status, customer_id,
-    desc, created_user_id, created_time, modify_user_id, modify_time
+  <sql id="Base_Column_List" >
+    id, certificate_type, certificate_image_url, certificate_status, customer_id, description,
+    create_user_id, create_time, modify_user_id, modify_time, enabled
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select
@@ -28,19 +28,17 @@
     delete from qualification_certific
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.QualificationCertific">
-    insert into qualification_certific (id, breed_days, certificate_type,
-      certificate_image_url, certificate_status,
-      customer_id, desc, created_user_id,
-      created_time, modify_user_id, modify_time
-      )
-    values (#{id,jdbcType=BIGINT}, #{breedDays,jdbcType=VARCHAR}, #{certificateType,jdbcType=INTEGER},
-      #{certificateImageUrl,jdbcType=VARCHAR}, #{certificateStatus,jdbcType=INTEGER},
-      #{customerId,jdbcType=BIGINT}, #{desc,jdbcType=VARCHAR}, #{createdUserId,jdbcType=BIGINT},
-      #{createdTime,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=BIGINT}, #{modifyTime,jdbcType=TIMESTAMP}
-      )
+  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.QualificationCertific" useGeneratedKeys="true" keyProperty="id" keyColumn="id" >
+    insert into qualification_certific (id, certificate_type, certificate_image_url,
+      certificate_status, customer_id, description,
+      create_user_id, create_time, modify_user_id,
+      modify_time, enabled)
+    values (#{id,jdbcType=BIGINT}, #{certificateType,jdbcType=INTEGER}, #{certificateImageUrl,jdbcType=VARCHAR},
+      #{certificateStatus,jdbcType=INTEGER}, #{customerId,jdbcType=BIGINT}, #{description,jdbcType=VARCHAR},
+      #{createUserId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=BIGINT},
+      #{modifyTime,jdbcType=TIMESTAMP}, #{enabled,jdbcType=TINYINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.QualificationCertific">
+  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.QualificationCertific" useGeneratedKeys="true" keyProperty="id" keyColumn="id" >
     insert into qualification_certific
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -75,6 +73,9 @@
       </if>
       <if test="modifyTime != null">
         modify_time,
+      </if>
+      <if test="enabled != null" >
+        enabled,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -111,6 +112,9 @@
       <if test="modifyTime != null">
         #{modifyTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="enabled != null" >
+        #{enabled,jdbcType=TINYINT},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.QualificationCertific">
@@ -146,21 +150,30 @@
       <if test="modifyTime != null">
         modify_time = #{modifyTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="enabled != null" >
+        enabled = #{enabled,jdbcType=TINYINT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.QualificationCertific">
+  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.QualificationCertific" >
     update qualification_certific
-    set breed_days = #{breedDays,jdbcType=VARCHAR},
-      certificate_type = #{certificateType,jdbcType=INTEGER},
+    set certificate_type = #{certificateType,jdbcType=INTEGER},
       certificate_image_url = #{certificateImageUrl,jdbcType=VARCHAR},
       certificate_status = #{certificateStatus,jdbcType=INTEGER},
       customer_id = #{customerId,jdbcType=BIGINT},
-      desc = #{desc,jdbcType=VARCHAR},
-      created_user_id = #{createdUserId,jdbcType=BIGINT},
-      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      description = #{description,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
       modify_user_id = #{modifyUserId,jdbcType=BIGINT},
-      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      enabled = #{enabled,jdbcType=TINYINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="getByCustomerQualificationId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from qualification_certific
+    where customer_id = #{id,jdbcType=BIGINT}
+  </select>
 </mapper>

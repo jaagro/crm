@@ -1,11 +1,14 @@
 package com.jaagro.crm.biz.mapper;
 
-import com.jaagro.crm.api.dto.request.ContractCriteriaDto;
+import com.jaagro.crm.api.dto.request.contract.ContractCriteriaDto;
 import com.jaagro.crm.biz.entity.Contract;
-import com.jaagro.crm.api.dto.response.ContractReturnDto;
+import com.jaagro.crm.api.dto.response.contract.ContractReturnDto;
 
 import java.util.List;
 
+/**
+ * @author baiyiran
+ */
 public interface ContractMapper {
 
     /**
@@ -71,4 +74,12 @@ public interface ContractMapper {
      * @return
      */
     List<ContractReturnDto> listByPage(ContractCriteriaDto dto);
+
+    /**
+     * 查询客户Id查询合同
+     *
+     * @param dto
+     * @return
+     */
+    List<ContractReturnDto> getByCustomerId(Long id);
 }

@@ -8,17 +8,17 @@ public final class CertificateType {
     /**
      * 工商执照
      */
-    public static final Integer BUSINESSLICENSE = 1;
+    public static final Integer BUSINESS_LICENSE = 1;
 
     /**
      * 身份证正面
      */
-    public static final Integer FRONTIDCARD = 2;
+    public static final Integer FRONT_ID_CARD = 2;
 
     /**
      * 身份证反面
      */
-    public static final Integer BACKIDCARD = 3;
+    public static final Integer BACK_ID_CARD = 3;
 
     /**
      * 其他
