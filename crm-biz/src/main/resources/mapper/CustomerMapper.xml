@@ -22,7 +22,7 @@
     <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
     <result column="created_user_id" property="createdUserId" jdbcType="BIGINT" />
     <result column="modify_user_id" property="modifyUserId" jdbcType="BIGINT" />
-    <result column="enable" property="enable" jdbcType="TINYINT" />
+    <result column="enabled" property="enabled" jdbcType="TINYINT" />
   </resultMap>
   <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.customer.CustomerReturnDto" >
     <id column="id" property="id" jdbcType="BIGINT" />
@@ -45,7 +45,7 @@
     <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
     <result column="created_user_id" property="createdUserId" jdbcType="BIGINT" />
     <result column="modify_user_id" property="modifyUserId" jdbcType="BIGINT" />
-    <result column="enable" property="enable" jdbcType="TINYINT" />
+    <result column="enabled" property="enabled" jdbcType="TINYINT" />
     <collection property="contracts" column="id"
                 select="com.jaagro.crm.biz.mapper.ContractMapper.getByCustomerId"/>
     <collection property="sites" column="id"
@@ -56,7 +56,7 @@
   <sql id="Base_Column_List" >
     id, customer_name, customer_type, customer_status, city, province, county, address, 
     latitude, longitude, billing_period, enable_invoice, invoice_type, invoice_header, 
-    tax_number, notes, create_time, modify_time, created_user_id, modify_user_id, enable
+    tax_number, notes, create_time, modify_time, created_user_id, modify_user_id, enabled
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -75,7 +75,7 @@
       longitude, billing_period, enable_invoice, 
       invoice_type, invoice_header, tax_number, 
       notes, create_time, modify_time, 
-      created_user_id, modify_user_id, enable
+      created_user_id, modify_user_id, enabled
       )
     values (#{id,jdbcType=BIGINT}, #{customerName,jdbcType=VARCHAR}, #{customerType,jdbcType=INTEGER}, 
       #{customerStatus,jdbcType=INTEGER}, #{city,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
@@ -83,7 +83,7 @@
       #{longitude,jdbcType=DECIMAL}, #{billingPeriod,jdbcType=INTEGER}, #{enableInvoice,jdbcType=TINYINT}, 
       #{invoiceType,jdbcType=INTEGER}, #{invoiceHeader,jdbcType=VARCHAR}, #{taxNumber,jdbcType=VARCHAR}, 
       #{notes,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, 
-      #{createdUserId,jdbcType=BIGINT}, #{modifyUserId,jdbcType=BIGINT}, #{enable,jdbcType=TINYINT}
+      #{createdUserId,jdbcType=BIGINT}, #{modifyUserId,jdbcType=BIGINT}, #{enabled,jdbcType=TINYINT}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.Customer" >
@@ -149,8 +149,8 @@
       <if test="modifyUserId != null" >
         modify_user_id,
       </if>
-      <if test="enable != null" >
-        enable,
+      <if test="enabled != null" >
+        enabled,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -214,8 +214,8 @@
       <if test="modifyUserId != null" >
         #{modifyUserId,jdbcType=BIGINT},
       </if>
-      <if test="enable != null" >
-        #{enable,jdbcType=TINYINT},
+      <if test="enabled != null" >
+        #{enabled,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
@@ -279,8 +279,8 @@
       <if test="modifyUserId != null" >
         modify_user_id = #{modifyUserId,jdbcType=BIGINT},
       </if>
-      <if test="enable != null" >
-        enable = #{enable,jdbcType=TINYINT},
+      <if test="enabled != null" >
+        enabled = #{enabled,jdbcType=TINYINT},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -306,7 +306,7 @@
       modify_time = #{modifyTime,jdbcType=TIMESTAMP},
       created_user_id = #{createdUserId,jdbcType=BIGINT},
       modify_user_id = #{modifyUserId,jdbcType=BIGINT},
-      enable = #{enable,jdbcType=TINYINT}
+      enabled = #{enabled,jdbcType=TINYINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="getById" parameterType="java.lang.Long" resultMap="DetailInfo">
