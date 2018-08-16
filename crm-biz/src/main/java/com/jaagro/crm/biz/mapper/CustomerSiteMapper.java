@@ -1,14 +1,15 @@
 package com.jaagro.crm.biz.mapper;
 
-import com.jaagro.crm.api.dto.response.contract.ContractReturnDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto;
 import com.jaagro.crm.biz.entity.CustomerSite;
 
 import java.util.List;
 
+/**
+ * @author baiyiran
+ */
 public interface CustomerSiteMapper {
     /**
-     *
      * @mbggenerated 2018-08-16
      */
     int deleteByPrimaryKey(Long id);
@@ -47,7 +48,6 @@ public interface CustomerSiteMapper {
 
     /**
      * 主键更新
-     *
      */
     int updateByPrimaryKey(CustomerSite record);
 

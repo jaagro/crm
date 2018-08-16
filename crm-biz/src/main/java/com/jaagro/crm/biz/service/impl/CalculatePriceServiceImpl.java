@@ -1,9 +1,6 @@
 package com.jaagro.crm.biz.service.impl;
 
-import com.jaagro.crm.api.dto.request.contract.ContractPriceDto;
-import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
 import com.jaagro.crm.api.dto.request.contract.PriceCriteriaDto;
-import com.jaagro.crm.api.dto.response.ContractSectionPriceDto;
 import com.jaagro.crm.api.dto.response.PriceReturnDto;
 import com.jaagro.crm.api.service.CalculatePriceService;
 import com.jaagro.crm.biz.entity.ContractPrice;
@@ -11,7 +8,6 @@ import com.jaagro.crm.biz.mapper.ContractSectionPriceMapper;
 import com.jaagro.crm.api.constant.PricingType;
 import com.jaagro.crm.biz.entity.ContractSectionPrice;
 import com.jaagro.crm.biz.mapper.ContractPriceMapper;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;

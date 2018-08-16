@@ -93,17 +93,17 @@ public class CustomerSite implements Serializable {
     /**
      * 创建时间
      */
-    private Date createdTime;
+    private Date createTime;
 
     /**
      * 修改时间
      */
-    private String modifyTime;
+    private Date modifyTime;
 
     /**
      * 创建人(References: user)
      */
-    private Long createdUserId;
+    private Long createUserId;
 
     /**
      * 修改人(References: user)

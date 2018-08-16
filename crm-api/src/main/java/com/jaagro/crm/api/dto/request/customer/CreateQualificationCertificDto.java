@@ -60,5 +60,5 @@ public class CreateQualificationCertificDto implements Serializable {
     /**
      * 是否可用（0不可用 1可用）
      */
-    private Byte enabled;
+    private Boolean enabled;
 }

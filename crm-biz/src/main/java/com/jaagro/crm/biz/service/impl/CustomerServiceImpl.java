@@ -1,15 +1,18 @@
 package com.jaagro.crm.biz.service.impl;
 
 import com.jaagro.crm.api.constant.CertificateStatus;
+import com.jaagro.crm.api.constant.ContractStatus;
+import com.jaagro.crm.api.constant.CustomerStatus;
 import com.jaagro.crm.api.constant.SiteStatus;
 import com.jaagro.crm.api.dto.request.contract.ContractPriceDto;
 import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
 import com.jaagro.crm.api.dto.request.customer.*;
-import com.jaagro.crm.api.dto.response.ContractSectionPriceDto;
+import com.jaagro.crm.api.dto.response.contract.ContractSectionPriceDto;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerContractDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
+import com.jaagro.crm.api.dto.response.customer.CustomerReturnDto;
 import com.jaagro.crm.api.service.CustomerService;
 import com.jaagro.crm.biz.entity.*;
 import com.jaagro.crm.biz.mapper.*;
@@ -62,7 +65,10 @@ public class CustomerServiceImpl implements CustomerService {
         //创建客户对象
         Customer customer = new Customer();
         BeanUtils.copyProperties(dto, customer);
+        System.err.println(userService.getCurrentUser().getId());
         customer
+                .setCustomerStatus(CustomerStatus.UNCHECKED)
+                .setEnable(false)
                 .setCreateTime(new Date())
                 .setCreatedUserId(userService.getCurrentUser().getId());
         customerMapper.insert(customer);
@@ -71,19 +77,22 @@ public class CustomerServiceImpl implements CustomerService {
             for (CreateCustomerContractDto cc : dto.getContracts()) {
                 CustomerContract customerContract = new CustomerContract();
                 BeanUtils.copyProperties(cc, customerContract);
-                customerContract.setCustomerId(customer.getId());
+                customerContract
+                        .setCustomerId(customer.getId())
+                        .setStatus(ContractStatus.ACTIVE);
                 customerContractMapper.insert(customerContract);
             }
         }
 
         //新增客户合同
-        if (dto.getCreateContractDtos().size() > 0) {
+        if (dto.getCreateContractDtos() != null && dto.getCreateContractDtos().size() > 0) {
             for (CreateContractDto contractDto : dto.getCreateContractDtos()) {
                 //创建contract对象
                 Contract contract = new Contract();
-                BeanUtils.copyProperties(dto, contract);
+                BeanUtils.copyProperties(contractDto, contract);
                 contract
                         .setCreateTime(new Date())
+                        .setContractStatus(ContractStatus.ACTIVE)
                         .setCreateUser(userService.getCurrentUser().getId())
                         .setCustomerId(customer.getId());
                 contractMapper.insert(contract);
@@ -93,12 +102,13 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         //新增客户资质证件照
-        if (dto.getQualificationCertificDtos().size() > 0) {
+        if (dto.getQualificationCertificDtos() != null && dto.getQualificationCertificDtos().size() > 0) {
             for (CreateQualificationCertificDto certificDto : dto.getQualificationCertificDtos()) {
                 QualificationCertific qc = new QualificationCertific();
                 BeanUtils.copyProperties(certificDto, qc);
                 qc
                         .setCustomerId(customer.getId())
+                        .setEnabled(false)
                         .setCertificateStatus(CertificateStatus.UNCHECKED)
                         .setCreateUserId(userService.getCurrentUser().getId())
                         .setCreateTime(new Date());
@@ -107,7 +117,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         //新增收发货地址
-        if (dto.getCustomerSites().size() > 0) {
+        if (dto.getCustomerSites() != null && dto.getCustomerSites().size() > 0) {
             for (CreateCustomerSiteDto siteDto : dto.getCustomerSites()) {
                 CustomerSite site = new CustomerSite();
                 BeanUtils.copyProperties(siteDto, site);
@@ -141,7 +151,7 @@ public class CustomerServiceImpl implements CustomerService {
             this.customerMapper.updateByPrimaryKeySelective(customer);
 
             //修改合同表
-            if (dto.getCreateContractDtos().size() > 0) {
+            if (dto.getCreateContractDtos() != null && dto.getCreateContractDtos().size() > 0) {
                 for (CreateContractDto contractDto : dto.getCreateContractDtos()) {
                     //创建contract对象
                     Contract contract = new Contract();
@@ -152,7 +162,7 @@ public class CustomerServiceImpl implements CustomerService {
                 }
             }
             //修改收发货地址
-            if (dto.getCustomerSites().size() > 0) {
+            if (dto.getCustomerSites() != null && dto.getCustomerSites().size() > 0) {
                 for (CreateCustomerSiteDto siteDto : dto.getCustomerSites()) {
                     CustomerSite site = new CustomerSite();
                     BeanUtils.copyProperties(siteDto, site);
@@ -163,7 +173,7 @@ public class CustomerServiceImpl implements CustomerService {
             }
 
             //修改资质证件照
-            if (dto.getQualificationCertificDtos().size() > 0) {
+            if (dto.getQualificationCertificDtos() != null && dto.getQualificationCertificDtos().size() > 0) {
                 for (CreateQualificationCertificDto certificDto : dto.getQualificationCertificDtos()) {
                     QualificationCertific qc = new QualificationCertific();
                     BeanUtils.copyProperties(certificDto, qc);
@@ -221,17 +231,17 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public Map<String, Object> disableCustomer(Long id) {
-//        CustomerReturnDto customerDto = this.getById(id);
-//        Customer customer = new Customer();
-//        BeanUtils.copyProperties(customerDto, customer);
-//        if (customer != null) {
-//            customer.setCustomerStatus(CustomerStatus.STOP_COOPERATION);
-//            this.customerMapper.updateByPrimaryKeySelective(customer);
-//            //逻辑删除关联表
-//            if(customerDto.get){
-//
-//            }
-//        }
+        CustomerReturnDto customerDto = customerMapper.getById(id);
+        Customer customer = new Customer();
+        BeanUtils.copyProperties(customerDto, customer);
+        if (customer != null) {
+            customer.setCustomerStatus(CustomerStatus.STOP_COOPERATION);
+            this.customerMapper.updateByPrimaryKeySelective(customer);
+            //逻辑删除关联表
+            if (customerDto.getSites() != null && customerDto.getSites().size() > 0) {
+
+            }
+        }
         return ServiceResult.toResult("客户删除成功");
     }
 

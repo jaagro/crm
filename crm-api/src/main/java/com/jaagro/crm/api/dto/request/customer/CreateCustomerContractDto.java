@@ -24,7 +24,7 @@ public class CreateCustomerContractDto implements Serializable {
     /**
      * 联系人员
      */
-    private String person;
+    private String contractName;
 
     /**
      * 联系电话

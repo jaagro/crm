@@ -18,7 +18,7 @@ import java.util.Map;
  * @author liqiangping
  */
 @RestController
-@Api(value = "contract", description = "客户管理", produces = MediaType.APPLICATION_JSON_VALUE)
+@Api(value = "contract", description = "客户合同管理", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ContractController {
 
     @Autowired

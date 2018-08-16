@@ -1,4 +1,4 @@
-package com.jaagro.crm.api.dto.response;
+package com.jaagro.crm.api.dto.response.customer;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

@@ -1,11 +1,13 @@
 package com.jaagro.crm.biz.mapper;
 
-import com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto;
 import com.jaagro.crm.api.dto.response.customer.QualificationCertificReturnDto;
 import com.jaagro.crm.biz.entity.QualificationCertific;
 
 import java.util.List;
 
+/**
+ * @author baiyiran
+ */
 public interface QualificationCertificMapper {
     /**
      * 主键删除
@@ -50,6 +52,8 @@ public interface QualificationCertificMapper {
     /**
      * 主键更新
      *
+     * @param record
+     * @return
      */
     int updateByPrimaryKey(QualificationCertific record);
 

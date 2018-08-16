@@ -2,7 +2,7 @@ package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.api.dto.request.contract.PriceCriteriaDto;
 import com.jaagro.crm.biz.entity.ContractPrice;
-import com.jaagro.crm.api.dto.response.ContractPriceReturnDto;
+import com.jaagro.crm.api.dto.response.contract.ContractPriceReturnDto;
 
 import java.util.List;
 

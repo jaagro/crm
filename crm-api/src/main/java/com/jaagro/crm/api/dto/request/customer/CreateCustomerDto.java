@@ -70,7 +70,7 @@ public class CreateCustomerDto implements Serializable {
      * 是否开票
      * 0:否 1:是
      */
-    private Byte enableInvoice;
+    private Boolean enableInvoice;
 
     /**
      * 发票类型
