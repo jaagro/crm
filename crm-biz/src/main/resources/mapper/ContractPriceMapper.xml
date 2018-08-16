@@ -19,7 +19,7 @@
     <result column="price_status" jdbcType="INTEGER" property="priceStatus"/>
   </resultMap>
 
-  <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.ContractPriceReturnDto">
+  <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.contract.ContractPriceReturnDto">
     <id column="id" jdbcType="BIGINT" property="id"/>
     <result column="contract_id" jdbcType="BIGINT" property="contractId"/>
     <result column="pricing_type" jdbcType="INTEGER" property="pricingType"/>

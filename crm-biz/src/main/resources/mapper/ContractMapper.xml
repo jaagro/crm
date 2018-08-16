@@ -19,7 +19,7 @@
     <result column="new_update_user" jdbcType="BIGINT" property="newUpdateUser"/>
     <result column="version" jdbcType="INTEGER" property="version"/>
   </resultMap>
-  <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.ContractReturnDto">
+  <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.contract.ContractReturnDto">
     <id column="id" jdbcType="BIGINT" property="id"/>
     <result column="customer_id" jdbcType="BIGINT" property="customerId"/>
     <result column="contract_status" jdbcType="INTEGER" property="contractStatus"/>
@@ -242,7 +242,7 @@
       version = #{version,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="listByPage" parameterType="com.jaagro.crm.api.dto.request.ContractCriteriaDto" resultMap="DetailInfo">
+  <select id="listByPage" parameterType="com.jaagro.crm.api.dto.request.contract.ContractCriteriaDto" resultMap="DetailInfo">
     select
     <include refid="Base_Column_List"/>
     from contract
@@ -256,9 +256,15 @@
     order by create_time desc
   </select>
   <select id="getById" parameterType="java.lang.Long" resultMap="DetailInfo">
+  select
+  <include refid="Base_Column_List"/>
+  from contract
+  where id = #{id,jdbcType=BIGINT}
+</select>
+  <select id="getByCustomerId" parameterType="java.lang.Long" resultMap="DetailInfo">
     select
     <include refid="Base_Column_List"/>
     from contract
-    where id = #{id,jdbcType=BIGINT}
+    where customer_id = #{id,jdbcType=BIGINT}
   </select>
 </mapper>

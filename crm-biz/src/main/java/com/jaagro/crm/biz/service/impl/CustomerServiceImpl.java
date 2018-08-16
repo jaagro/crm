@@ -1,7 +1,9 @@
 package com.jaagro.crm.biz.service.impl;
 
-import com.jaagro.crm.api.dto.request.CreateCustomerDto;
-import com.jaagro.crm.api.dto.request.CustomerContractDto;
+import com.jaagro.crm.api.dto.request.customer.CreateCustomerDto;
+import com.jaagro.crm.api.dto.request.customer.CreateCustomerContractDto;
+import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
+import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
 import com.jaagro.crm.api.service.CustomerService;
 import com.jaagro.crm.biz.entity.Customer;
 import com.jaagro.crm.biz.entity.CustomerContract;
@@ -10,6 +12,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import utils.ResponseStatusCode;
 import utils.ServiceResult;
 
 import java.util.Date;
@@ -46,12 +49,12 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer=new Customer();
         BeanUtils.copyProperties(dto,customer);
         customer
-                .setCreatedTime(new Date())
+                .setCreateTime(new Date())
                 .setCreatedUserId(userService.getCurrentUser().getId());
         customerMapper.insert(customer);
         //创建联系人对象
         if(dto.getContracts() != null && dto.getContracts().size() > 0){
-            for(CustomerContractDto cc: dto.getContracts()){
+            for(CreateCustomerContractDto cc: dto.getContracts()){
                 CustomerContract customerContract=new CustomerContract();
                 BeanUtils.copyProperties(cc,customerContract);
                 System.out.println(customerContract);
@@ -60,5 +63,39 @@ public class CustomerServiceImpl implements CustomerService {
             }
         }
         return ServiceResult.toResult("客户创建成功");
+    }
+
+    @Override
+    public Map<String, Object> updateById(UpdateCustomerDto dto) {
+        return null;
+    }
+
+    /**
+     * 查询单个客户
+     *
+     * @param customerId
+     * @return
+     */
+    @Override
+    public Map<String, Object> getById(Long id) {
+        if (customerMapper.selectByPrimaryKey(id) == null) {
+            return ServiceResult.error(ResponseStatusCode.ID_VALUE_ERROR.getCode(), "id: " + id + "不存在");
+        }
+        return ServiceResult.toResult(customerMapper.getById(id));
+    }
+
+    @Override
+    public Map<String, Object> listByCriteria(ListCustomerCriteriaDto dto) {
+        return null;
+    }
+
+    @Override
+    public Map<String, Object> auditCustomer(Long id, String auditResult) {
+        return null;
+    }
+
+    @Override
+    public Map<String, Object> disableCustomer(Long id) {
+        return null;
     }
 }
