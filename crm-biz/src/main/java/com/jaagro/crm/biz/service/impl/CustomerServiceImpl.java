@@ -68,7 +68,7 @@ public class CustomerServiceImpl implements CustomerService {
         System.err.println(userService.getCurrentUser().getId());
         customer
                 .setCustomerStatus(CustomerStatus.UNCHECKED)
-                .setEnable(false)
+                .setEnabled(false)
                 .setCreateTime(new Date())
                 .setCreatedUserId(userService.getCurrentUser().getId());
         customerMapper.insert(customer);
