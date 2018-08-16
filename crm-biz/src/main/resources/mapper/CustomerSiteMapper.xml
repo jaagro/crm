@@ -18,17 +18,17 @@
     <result column="shipment_require" property="shipmentRequire" jdbcType="VARCHAR" />
     <result column="notes" property="notes" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="modify_time" property="modifyTime" jdbcType="VARCHAR" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
     <result column="create_user_id" property="createUserId" jdbcType="BIGINT" />
     <result column="modify_user_id" property="modifyUserId" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, site_type, customer_id, site_name, site_status, contact, phone, province, city, 
-    county, detailed_address, latitude, longitude, shipment_require, notes, create_time, 
+    id, site_type, customer_id, site_name, site_status, contact, phone, province, city,
+    county, detailed_address, latitude, longitude, shipment_require, notes, create_time,
     modify_time, create_user_id, modify_user_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from customer_site
     where id = #{id,jdbcType=BIGINT}
@@ -38,19 +38,19 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.jaagro.crm.biz.entity.CustomerSite" >
-    insert into customer_site (id, site_type, customer_id, 
-      site_name, site_status, contact, 
-      phone, province, city, 
-      county, detailed_address, latitude, 
-      longitude, shipment_require, notes, 
-      create_time, modify_time, create_user_id, 
+    insert into customer_site (id, site_type, customer_id,
+      site_name, site_status, contact,
+      phone, province, city,
+      county, detailed_address, latitude,
+      longitude, shipment_require, notes,
+      create_time, modify_time, create_user_id,
       modify_user_id)
-    values (#{id,jdbcType=BIGINT}, #{siteType,jdbcType=INTEGER}, #{customerId,jdbcType=BIGINT}, 
-      #{siteName,jdbcType=VARCHAR}, #{siteStatus,jdbcType=INTEGER}, #{contact,jdbcType=VARCHAR}, 
-      #{phone,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
-      #{county,jdbcType=VARCHAR}, #{detailedAddress,jdbcType=VARCHAR}, #{latitude,jdbcType=DECIMAL}, 
-      #{longitude,jdbcType=DECIMAL}, #{shipmentRequire,jdbcType=VARCHAR}, #{notes,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=VARCHAR}, #{createUserId,jdbcType=BIGINT}, 
+    values (#{id,jdbcType=BIGINT}, #{siteType,jdbcType=INTEGER}, #{customerId,jdbcType=BIGINT},
+      #{siteName,jdbcType=VARCHAR}, #{siteStatus,jdbcType=INTEGER}, #{contact,jdbcType=VARCHAR},
+      #{phone,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR},
+      #{county,jdbcType=VARCHAR}, #{detailedAddress,jdbcType=VARCHAR}, #{latitude,jdbcType=DECIMAL},
+      #{longitude,jdbcType=DECIMAL}, #{shipmentRequire,jdbcType=VARCHAR}, #{notes,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=BIGINT},
       #{modifyUserId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.CustomerSite" >
@@ -164,7 +164,7 @@
         #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="modifyTime != null" >
-        #{modifyTime,jdbcType=VARCHAR},
+        #{modifyTime,jdbcType=TIMESTAMP},
       </if>
       <if test="createUserId != null" >
         #{createUserId,jdbcType=BIGINT},
@@ -223,7 +223,7 @@
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="modifyTime != null" >
-        modify_time = #{modifyTime,jdbcType=VARCHAR},
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
       </if>
       <if test="createUserId != null" >
         create_user_id = #{createUserId,jdbcType=BIGINT},
@@ -251,7 +251,7 @@
       shipment_require = #{shipmentRequire,jdbcType=VARCHAR},
       notes = #{notes,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      modify_time = #{modifyTime,jdbcType=VARCHAR},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
       create_user_id = #{createUserId,jdbcType=BIGINT},
       modify_user_id = #{modifyUserId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}

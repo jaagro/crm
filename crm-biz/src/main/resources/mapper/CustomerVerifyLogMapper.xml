@@ -8,11 +8,11 @@
     <result column="auditor" property="auditor" jdbcType="VARCHAR" />
     <result column="audit_time" property="auditTime" jdbcType="TIMESTAMP" />
     <result column="audit_type" property="auditType" jdbcType="INTEGER" />
-    <result column="desc" property="desc" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
     <result column="references_id" property="referencesId" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, verify_type, audit_result, auditor, audit_time, audit_type, desc, references_id
+    id, verify_type, audit_result, auditor, audit_time, audit_type, description, references_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -27,10 +27,10 @@
   <insert id="insert" parameterType="com.jaagro.crm.biz.entity.CustomerVerifyLog" >
     insert into customer_verify_log (id, verify_type, audit_result, 
       auditor, audit_time, audit_type, 
-      desc, references_id)
+      description, references_id)
     values (#{id,jdbcType=BIGINT}, #{verifyType,jdbcType=INTEGER}, #{auditResult,jdbcType=INTEGER}, 
       #{auditor,jdbcType=VARCHAR}, #{auditTime,jdbcType=TIMESTAMP}, #{auditType,jdbcType=INTEGER}, 
-      #{desc,jdbcType=VARCHAR}, #{referencesId,jdbcType=BIGINT})
+      #{description,jdbcType=VARCHAR}, #{referencesId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.CustomerVerifyLog" >
     insert into customer_verify_log
@@ -53,8 +53,8 @@
       <if test="auditType != null" >
         audit_type,
       </if>
-      <if test="desc != null" >
-        desc,
+      <if test="description != null" >
+        description,
       </if>
       <if test="referencesId != null" >
         references_id,
@@ -79,8 +79,8 @@
       <if test="auditType != null" >
         #{auditType,jdbcType=INTEGER},
       </if>
-      <if test="desc != null" >
-        #{desc,jdbcType=VARCHAR},
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
       </if>
       <if test="referencesId != null" >
         #{referencesId,jdbcType=BIGINT},
@@ -105,8 +105,8 @@
       <if test="auditType != null" >
         audit_type = #{auditType,jdbcType=INTEGER},
       </if>
-      <if test="desc != null" >
-        desc = #{desc,jdbcType=VARCHAR},
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
       </if>
       <if test="referencesId != null" >
         references_id = #{referencesId,jdbcType=BIGINT},
@@ -121,7 +121,7 @@
       auditor = #{auditor,jdbcType=VARCHAR},
       audit_time = #{auditTime,jdbcType=TIMESTAMP},
       audit_type = #{auditType,jdbcType=INTEGER},
-      desc = #{desc,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
       references_id = #{referencesId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>

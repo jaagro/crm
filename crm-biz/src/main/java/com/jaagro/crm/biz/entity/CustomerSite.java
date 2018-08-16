@@ -98,7 +98,7 @@ public class CustomerSite implements Serializable {
     /**
      * 修改时间
      */
-    private String modifyTime;
+    private Date modifyTime;
 
     /**
      * 创建人(References: user)
