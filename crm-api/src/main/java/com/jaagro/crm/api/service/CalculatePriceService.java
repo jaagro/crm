@@ -1,6 +1,6 @@
 package com.jaagro.crm.api.service;
 
-import com.jaagro.crm.api.dto.request.PriceCriteriaDto;
+import com.jaagro.crm.api.dto.request.contract.PriceCriteriaDto;
 
 import java.util.Map;
 
@@ -16,4 +16,5 @@ public interface CalculatePriceService {
      * @return
      */
     Map<String, Object> calculatePrice(PriceCriteriaDto dto);
+
 }

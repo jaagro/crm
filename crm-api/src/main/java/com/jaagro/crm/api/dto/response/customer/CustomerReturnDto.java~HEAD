@@ -1,4 +1,4 @@
-package com.jaagro.crm.api.dto.request;
+package com.jaagro.crm.api.dto.response.customer;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
-public class CreateCustomerDto implements Serializable {
+public class CustomerReturnDto implements Serializable {
     /**
      * 客户主键id
      */
@@ -34,11 +34,6 @@ public class CreateCustomerDto implements Serializable {
      (0未审核，1正常合作 2审核未通过，4停止合作)
      */
     private Integer customerStatus;
-
-    /**
-     * 归属网点(References: branch)
-     */
-    private Long branchId;
 
     /**
      * 所属城市
@@ -79,7 +74,7 @@ public class CreateCustomerDto implements Serializable {
      * 是否开票
      0:否 1:是
      */
-    private Byte makeInvoice;
+    private Boolean enableInvoice;
 
     /**
      * 发票类型
@@ -98,14 +93,14 @@ public class CreateCustomerDto implements Serializable {
     private String taxNumber;
 
     /**
-     * 备注信息
+     * 备注信息(用车要求)
      */
     private String notes;
 
     /**
      * 创建日期
      */
-    private Date createdTime;
+    private Date createTime;
 
     /**
      * 修改日期
@@ -123,15 +118,22 @@ public class CreateCustomerDto implements Serializable {
     private Long modifyUserId;
 
     /**
-     * 规模信息
+     * 是否可用（0不可用 1可用）
      */
-    private String scaleMessage;
+    private Boolean enabled;
 
     /**
-     * 客户合同
+     * 查询客户合同
      */
-    private List<CustomerContractDto> contracts;
+    private List<CustomerContractReturnDto> contracts;
 
+    /**
+     * 查询客户收发货地
+     */
+    private List<CustomerSiteReturnDto> sites;
 
-
+    /**
+     * 查询客户资质证件照
+     */
+    private List<QualificationCertificReturnDto> qualifications;
 }

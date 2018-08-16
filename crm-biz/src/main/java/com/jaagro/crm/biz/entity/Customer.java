@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @author liqiangping
+ * @author baiyiran
  */
 @Data
 @Accessors(chain = true)
@@ -30,7 +30,7 @@ public class Customer implements Serializable {
 
     /**
      * 审核状态
-     (0未审核，1正常合作 2审核未通过，4停止合作)
+     * (0未审核，1正常合作 2审核未通过，4停止合作)
      */
     private Integer customerStatus;
 

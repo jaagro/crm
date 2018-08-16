@@ -118,9 +118,9 @@ public class CustomerReturnDto implements Serializable {
     private Long modifyUserId;
 
     /**
-     * 是否可用（0不可用 1可用）
+     * 是否删除 0:否 1:是
      */
-    private Boolean enabled;
+    private Boolean enable;
 
     /**
      * 查询客户合同

@@ -247,10 +247,10 @@
     <include refid="Base_Column_List"/>
     from contract
     where 1 = 1
-    <if test="#{endDate != null}">
+    <if test="endDate != null">
       <![CDATA[and create_time <= #{endDate}]]>
     </if>
-    <if test="#{startDate != null}">
+    <if test="startDate != null">
       <![CDATA[and create_time >= #{startDate}]]>
     </if>
     order by create_time desc

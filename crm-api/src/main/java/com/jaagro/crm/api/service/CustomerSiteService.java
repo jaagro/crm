@@ -1,6 +1,6 @@
 package com.jaagro.crm.api.service;
 
-import com.jaagro.crm.api.dto.request.ListSiteCriteriaDto;
+import com.jaagro.crm.api.dto.request.customer.ListSiteCriteriaDto;
 
 import java.util.Map;
 

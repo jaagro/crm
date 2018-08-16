@@ -1,7 +1,8 @@
 package com.jaagro.crm.api.service;
 
-import com.jaagro.crm.api.dto.request.CreateContractDto;
-import com.jaagro.crm.api.dto.request.ContractCriteriaDto;
+import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
+import com.jaagro.crm.api.dto.request.contract.ContractCriteriaDto;
+import feign.Contract;
 
 import java.util.Map;
 

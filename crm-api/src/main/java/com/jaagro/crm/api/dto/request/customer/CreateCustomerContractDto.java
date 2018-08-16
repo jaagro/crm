@@ -29,6 +29,11 @@ public class CreateCustomerContractDto implements Serializable {
     /**
      * 联系电话
      */
+    private String mobile;
+
+    /**
+     * 手机号码
+     */
     private String phone;
 
     /**

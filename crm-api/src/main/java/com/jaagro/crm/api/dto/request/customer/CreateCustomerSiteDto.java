@@ -8,17 +8,11 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * @author liqiangping
+ * @author baiyiran
  */
 @Data
 @Accessors(chain = true)
 public class CreateCustomerSiteDto implements Serializable {
-
-    /**
-     * 客户发货ID
-     */
-    private Long id;
-
     /**
      * 地址类型
      1-装货点，2-卸货点

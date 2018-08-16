@@ -13,7 +13,7 @@
     id, customer_id, contract_name, phone, position, status
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from customer_contract
     where id = #{id,jdbcType=BIGINT}
@@ -22,15 +22,15 @@
     delete from customer_contract
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.CustomerContract" >
-    insert into customer_contract (id, customer_id, contract_name, 
+  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.CustomerContract" useGeneratedKeys="true" keyProperty="id" keyColumn="id" >
+    insert into customer_contract (id, customer_id, contract_name,
       phone, position, status
       )
-    values (#{id,jdbcType=BIGINT}, #{customerId,jdbcType=BIGINT}, #{contractName,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=BIGINT}, #{customerId,jdbcType=BIGINT}, #{contractName,jdbcType=VARCHAR},
       #{phone,jdbcType=VARCHAR}, #{position,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.CustomerContract" >
+  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.CustomerContract" useGeneratedKeys="true" keyProperty="id" keyColumn="id" >
     insert into customer_contract
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

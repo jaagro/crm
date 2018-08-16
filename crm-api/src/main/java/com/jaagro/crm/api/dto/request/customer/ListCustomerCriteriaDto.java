@@ -6,6 +6,4 @@ import java.io.Serializable;
  * @author tony
  */
 public class ListCustomerCriteriaDto implements Serializable {
-
-
 }

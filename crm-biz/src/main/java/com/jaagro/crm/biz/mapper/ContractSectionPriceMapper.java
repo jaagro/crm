@@ -1,6 +1,6 @@
 package com.jaagro.crm.biz.mapper;
 
-import com.jaagro.crm.api.dto.response.ContractSectionPriceReturnDto;
+import com.jaagro.crm.api.dto.response.contract.ContractSectionPriceReturnDto;
 import com.jaagro.crm.biz.entity.ContractSectionPrice;
 import org.apache.ibatis.annotations.Param;
 

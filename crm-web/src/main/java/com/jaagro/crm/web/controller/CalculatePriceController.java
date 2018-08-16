@@ -1,6 +1,6 @@
 package com.jaagro.crm.web.controller;
 
-import com.jaagro.crm.api.dto.request.PriceCriteriaDto;
+import com.jaagro.crm.api.dto.request.contract.PriceCriteriaDto;
 import com.jaagro.crm.api.service.CalculatePriceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import utils.BaseResponse;
 import utils.ResponseStatusCode;
 import utils.ServiceResult;
-
-import java.util.Map;
 
 /**
  * @author tony

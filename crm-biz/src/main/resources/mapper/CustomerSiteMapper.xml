@@ -37,7 +37,7 @@
     delete from customer_site
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.CustomerSite" >
+  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.CustomerSite" useGeneratedKeys="true" keyProperty="id" keyColumn="id" >
     insert into customer_site (id, site_type, customer_id,
       site_name, site_status, contact,
       phone, province, city,

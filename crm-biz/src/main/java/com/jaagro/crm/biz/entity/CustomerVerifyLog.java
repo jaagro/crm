@@ -7,7 +7,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @author liqiangping
+ * 审核表
+ *
+ * @author baiyiran
  */
 @Data
 @Accessors(chain = true)

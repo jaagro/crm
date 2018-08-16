@@ -1,11 +1,14 @@
 package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.api.dto.request.contract.ContractCriteriaDto;
-import com.jaagro.crm.api.dto.response.contract.ContractReturnDto;
 import com.jaagro.crm.biz.entity.Contract;
+import com.jaagro.crm.api.dto.response.contract.ContractReturnDto;
 
 import java.util.List;
 
+/**
+ * @author baiyiran
+ */
 public interface ContractMapper {
 
     /**
