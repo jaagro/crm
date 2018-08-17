@@ -1,6 +1,8 @@
 package com.jaagro.crm.api.constant;
 
-/**地址类型
+/**
+ * 地址类型
+ *
  * @author liqiangping
  */
 public final class SiteType {

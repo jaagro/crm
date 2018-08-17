@@ -1,34 +1,30 @@
 package com.jaagro.crm.biz.service.impl;
 
-import com.jaagro.crm.api.constant.CertificateStatus;
-import com.jaagro.crm.api.constant.ContractStatus;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.constant.CustomerStatus;
-import com.jaagro.crm.api.constant.SiteStatus;
-import com.jaagro.crm.api.dto.request.contract.ContractPriceDto;
 import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
 import com.jaagro.crm.api.dto.request.customer.*;
-import com.jaagro.crm.api.dto.response.contract.ContractSectionPriceDto;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerDto;
-import com.jaagro.crm.api.dto.request.customer.CreateCustomerContractDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerReturnDto;
-import com.jaagro.crm.api.service.CustomerService;
+import com.jaagro.crm.api.service.*;
 import com.jaagro.crm.biz.entity.*;
 import com.jaagro.crm.biz.mapper.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import utils.ResponseStatusCode;
 import utils.ServiceResult;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
- * @author liqiangping
+ * @author baiyiran
  */
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -36,21 +32,15 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private CustomerMapper customerMapper;
     @Autowired
-    private CustomerContractMapper customerContractMapper;
-    @Autowired
     private CurrentUserService userService;
     @Autowired
-    private CustomerSiteMapper customerSiteMapper;
+    private CustomerSiteService siteService;
     @Autowired
-    private CustomerVerifyLogMapper customerVerifyLogMapper;
+    private ContractService contractService;
     @Autowired
-    private QualificationCertificMapper qualificationCertificMapper;
+    private QualificationCertificService certificService;
     @Autowired
-    private ContractMapper contractMapper;
-    @Autowired
-    private ContractPriceMapper contractPriceMapper;
-    @Autowired
-    private ContractSectionPriceMapper contractSectionPriceMapper;
+    private CustomerContractService customerContractService;
 
     /**
      * 创建客户
@@ -65,69 +55,30 @@ public class CustomerServiceImpl implements CustomerService {
         //创建客户对象
         Customer customer = new Customer();
         BeanUtils.copyProperties(dto, customer);
-        System.err.println(userService.getCurrentUser().getId());
         customer
                 .setCustomerStatus(CustomerStatus.UNCHECKED)
-                .setEnabled(false)
+                .setEnabled(true)
                 .setCreateTime(new Date())
                 .setCreatedUserId(userService.getCurrentUser().getId());
         customerMapper.insert(customer);
         //新增联系人对象
         if (dto.getContracts() != null && dto.getContracts().size() > 0) {
-            for (CreateCustomerContractDto cc : dto.getContracts()) {
-                CustomerContract customerContract = new CustomerContract();
-                BeanUtils.copyProperties(cc, customerContract);
-                customerContract
-                        .setCustomerId(customer.getId())
-                        .setStatus(ContractStatus.ACTIVE);
-                customerContractMapper.insert(customerContract);
-            }
+            this.customerContractService.createCustomerContract(dto.getContracts(), customer.getId());
         }
 
         //新增客户合同
         if (dto.getCreateContractDtos() != null && dto.getCreateContractDtos().size() > 0) {
-            for (CreateContractDto contractDto : dto.getCreateContractDtos()) {
-                //创建contract对象
-                Contract contract = new Contract();
-                BeanUtils.copyProperties(contractDto, contract);
-                contract
-                        .setCreateTime(new Date())
-                        .setContractStatus(ContractStatus.ACTIVE)
-                        .setCreateUser(userService.getCurrentUser().getId())
-                        .setCustomerId(customer.getId());
-                contractMapper.insert(contract);
-                //创建contractPrice对象
-                createPrice(contractDto, contract);
-            }
+            this.contractService.createContract(dto.getCreateContractDtos(), customer.getId());
         }
 
         //新增客户资质证件照
         if (dto.getQualificationCertificDtos() != null && dto.getQualificationCertificDtos().size() > 0) {
-            for (CreateQualificationCertificDto certificDto : dto.getQualificationCertificDtos()) {
-                QualificationCertific qc = new QualificationCertific();
-                BeanUtils.copyProperties(certificDto, qc);
-                qc
-                        .setCustomerId(customer.getId())
-                        .setEnabled(false)
-                        .setCertificateStatus(CertificateStatus.UNCHECKED)
-                        .setCreateUserId(userService.getCurrentUser().getId())
-                        .setCreateTime(new Date());
-                qualificationCertificMapper.insert(qc);
-            }
+            certificService.createQualificationCertific(dto.getQualificationCertificDtos(), customer.getId());
         }
 
         //新增收发货地址
         if (dto.getCustomerSites() != null && dto.getCustomerSites().size() > 0) {
-            for (CreateCustomerSiteDto siteDto : dto.getCustomerSites()) {
-                CustomerSite site = new CustomerSite();
-                BeanUtils.copyProperties(siteDto, site);
-                site
-                        .setCustomerId(customer.getId())
-                        .setCreateTime(new Date())
-                        .setSiteStatus(SiteStatus.ACTIVE)
-                        .setCreateUserId(userService.getCurrentUser().getId());
-                customerSiteMapper.insert(site);
-            }
+            siteService.createSite(dto.getCustomerSites(), customer.getId());
         }
         return ServiceResult.toResult("客户创建成功");
     }
@@ -152,35 +103,21 @@ public class CustomerServiceImpl implements CustomerService {
 
             //修改合同表
             if (dto.getCreateContractDtos() != null && dto.getCreateContractDtos().size() > 0) {
-                for (CreateContractDto contractDto : dto.getCreateContractDtos()) {
-                    //创建contract对象
-                    Contract contract = new Contract();
-                    BeanUtils.copyProperties(contractDto, contract);
-                    contract
-                            .setNewUpdateTime(new Date())
-                            .setNewUpdateUser(userService.getCurrentUser().getId());
-                }
+                this.contractService.updateContract(dto.getCreateContractDtos());
             }
             //修改收发货地址
             if (dto.getCustomerSites() != null && dto.getCustomerSites().size() > 0) {
-                for (CreateCustomerSiteDto siteDto : dto.getCustomerSites()) {
-                    CustomerSite site = new CustomerSite();
-                    BeanUtils.copyProperties(siteDto, site);
-                    site
-                            .setModifyTime(new Date())
-                            .setModifyUserId(userService.getCurrentUser().getId());
-                }
+                this.siteService.updateSite(dto.getCustomerSites());
             }
 
             //修改资质证件照
             if (dto.getQualificationCertificDtos() != null && dto.getQualificationCertificDtos().size() > 0) {
-                for (CreateQualificationCertificDto certificDto : dto.getQualificationCertificDtos()) {
-                    QualificationCertific qc = new QualificationCertific();
-                    BeanUtils.copyProperties(certificDto, qc);
-                    qc
-                            .setModifyTime(new Date())
-                            .setModifyUserId(userService.getCurrentUser().getId());
-                }
+                this.certificService.updateQualificationCertific(dto.getQualificationCertificDtos());
+            }
+
+            //修改联系人
+            if (dto.getCreateContractDtos() != null && dto.getCreateContractDtos().size() > 0) {
+                this.customerContractService.updateCustomerContract(dto.getCustomerContractDtos());
             }
         }
         return ServiceResult.toResult("客户修改成功");
@@ -208,7 +145,10 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public Map<String, Object> listByCriteria(ListCustomerCriteriaDto dto) {
-        return null;
+        PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
+        List<CustomerReturnDto> customerReturnDtos = this.customerMapper.getByCriteriDto(dto);
+        return ServiceResult.toResult(new PageInfo<>(customerReturnDtos));
+
     }
 
     /**
@@ -235,37 +175,26 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = new Customer();
         BeanUtils.copyProperties(customerDto, customer);
         if (customer != null) {
-            customer.setCustomerStatus(CustomerStatus.STOP_COOPERATION);
+            //逻辑删除 客户
+            customer.setEnabled(false);
             this.customerMapper.updateByPrimaryKeySelective(customer);
-            //逻辑删除关联表
+            //逻辑删除 地址
             if (customerDto.getSites() != null && customerDto.getSites().size() > 0) {
-
+                this.siteService.disableSite(customerDto.getSites());
+            }
+            //逻辑删除 联系人
+            if (customerDto.getCustomerContractReturnDtos() != null && customerDto.getCustomerContractReturnDtos().size() > 0) {
+                this.customerContractService.disableCustomerContract(customerDto.getCustomerContractReturnDtos());
+            }
+            //逻辑删除 证件照
+            if (customerDto.getQualifications() != null && customerDto.getQualifications().size() > 0) {
+                this.certificService.disableQualificationCertific(customerDto.getQualifications());
+            }
+            //逻辑删除 合同
+            if (customerDto.getContractReturnDtos() != null && customerDto.getContractReturnDtos().size() > 0) {
+                this.contractService.disableByID(customerDto.getContractReturnDtos());
             }
         }
         return ServiceResult.toResult("客户删除成功");
-    }
-
-    public void createPrice(CreateContractDto dto, Contract contract) {
-        //创建contractPrice对象
-        if (dto.getPrice() != null && dto.getPrice().size() > 0) {
-            for (ContractPriceDto cp : dto.getPrice()) {
-                ContractPrice contractPrice = new ContractPrice();
-                BeanUtils.copyProperties(cp, contractPrice);
-                contractPrice.setContractId(contract.getId());
-                if (StringUtils.isEmpty(contractPrice.getPricingType())) {
-                    throw new RuntimeException("计价模式不能为空");
-                }
-                contractPriceMapper.insert(contractPrice);
-                //创建contractSectionPrice对象
-                if (cp.getSectionPrice() != null && cp.getSectionPrice().size() > 0) {
-                    for (ContractSectionPriceDto cspDto : cp.getSectionPrice()) {
-                        ContractSectionPrice csp = new ContractSectionPrice();
-                        BeanUtils.copyProperties(cspDto, csp);
-                        csp.setContractPriceId(contractPrice.getId());
-                        contractSectionPriceMapper.insert(csp);
-                    }
-                }
-            }
-        }
     }
 }

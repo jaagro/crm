@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * 返回的资质证件照
+ *
  * @author liqiangping
  */
 @Data
@@ -45,12 +47,12 @@ public class QualificationCertificReturnDto implements Serializable {
     /**
      * 创建人(References: user)
      */
-    private Long createUserId;
+    private Long createdUserId;
 
     /**
      * 创建时间
      */
-    private Date createTime;
+    private Date createdTime;
 
     /**
      * 修改人(References: user)

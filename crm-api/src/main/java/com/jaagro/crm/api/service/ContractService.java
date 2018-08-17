@@ -2,8 +2,11 @@ package com.jaagro.crm.api.service;
 
 import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
 import com.jaagro.crm.api.dto.request.contract.ContractCriteriaDto;
+import com.jaagro.crm.api.dto.response.contract.ContractReturnDto;
+import com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto;
 import feign.Contract;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,12 +23,28 @@ public interface ContractService {
     Map<String, Object> createContract(CreateContractDto dto);
 
     /**
+     * 创建合同列表
+     *
+     * @param dtos
+     * @return
+     */
+    Map<String, Object> createContract(List<CreateContractDto> dtos,Long CustomerId);
+
+    /**
      * 修改合同
      *
      * @param dto
      * @return
      */
     Map<String, Object> updateContract(CreateContractDto dto);
+
+    /**
+     * 修改合同列表
+     *
+     * @param dtos
+     * @return
+     */
+    Map<String, Object> updateContract(List<CreateContractDto> dtos);
 
     /**
      * 查询单个（含详细子表信息）
@@ -42,5 +61,21 @@ public interface ContractService {
      * @return
      */
     Map<String, Object> listByCriteria(ContractCriteriaDto dto);
+
+    /**
+     * 删除，注意逻辑删除
+     *
+     * @param id
+     * @return
+     */
+    Map<String, Object> disableById(Long id);
+
+    /**
+     * 删除，注意逻辑删除
+     *
+     * @param id
+     * @return
+     */
+    Map<String, Object> disableByID(List<ContractReturnDto> dtos);
 
 }

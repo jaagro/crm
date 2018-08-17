@@ -7,13 +7,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 收发货地址分页查询帮助类
+ * 客户联系人分页查询帮助类
  *
- * @author tony
+ * @author baiyiran
  */
 @Data
 @Accessors(chain = true)
-public class ListSiteCriteriaDto implements Serializable {
+public class ListCustomerContractCriteriaDto implements Serializable {
 
     /**
      * 起始页
@@ -26,26 +26,13 @@ public class ListSiteCriteriaDto implements Serializable {
     private Integer pageSize;
 
     /**
+     * 客户id
+     */
+    private Long customerId;
+
+    /**
      * 关键字
      */
     private String keywords;
 
-    /**
-     * 客户id
-     */
-    private Long customerId;
-    /**
-     * 地点类型
-     */
-    private Integer siteType;
-
-    /**
-     * 开始日期
-     */
-    private Date startDate;
-
-    /**
-     * 结束日期
-     */
-    private Date endDate;
 }

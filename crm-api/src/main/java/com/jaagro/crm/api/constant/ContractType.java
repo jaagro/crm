@@ -1,6 +1,8 @@
 package com.jaagro.crm.api.constant;
 
 /**
+ * 合同类型
+ *
  * @author tony
  */
 public final class ContractType {

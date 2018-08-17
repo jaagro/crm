@@ -1,25 +1,19 @@
-package com.jaagro.crm.api.dto.response.customer;
+package com.jaagro.crm.api.dto.request.customer;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
- * 返回的客户收发货地址
+ * 修改收发货帮助类
  *
- * @author liqiangping
+ * @author baiyiran
  */
 @Data
 @Accessors(chain = true)
-public class CustomerSiteReturnDto implements Serializable {
-    /**
-     * 客户地址ID
-     */
-    private Long id;
-
+public class UpdateCustomerSiteDto implements Serializable {
     /**
      * 地址类型
      * 1-装货点，2-卸货点
@@ -92,23 +86,4 @@ public class CustomerSiteReturnDto implements Serializable {
      */
     private String notes;
 
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 修改时间
-     */
-    private Date modifyTime;
-
-    /**
-     * 创建人(References: user)
-     */
-    private Long createUserId;
-
-    /**
-     * 修改人(References: user)
-     */
-    private Long modifyUserId;
 }
