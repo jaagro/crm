@@ -6,15 +6,13 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 
 /**
+ * 客户联系人新增dto
+ *
  * @author liqiangping
  */
 @Data
 @Accessors(chain = true)
 public class CreateCustomerContractDto implements Serializable {
-    /**
-     * 客户审核记录主键id
-     */
-    private Long id;
 
     /**
      * 外键关联客户ID(References customer)
@@ -28,11 +26,6 @@ public class CreateCustomerContractDto implements Serializable {
 
     /**
      * 联系电话
-     */
-    private String mobile;
-
-    /**
-     * 手机号码
      */
     private String phone;
 

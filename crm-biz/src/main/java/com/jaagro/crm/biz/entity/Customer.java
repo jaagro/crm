@@ -24,7 +24,7 @@ public class Customer implements Serializable {
 
     /**
      * 客户类型
-     (1:个体客户 2:企业客户 )
+     * (1:个体客户 2:企业客户 )
      */
     private Integer customerType;
 
@@ -71,13 +71,13 @@ public class Customer implements Serializable {
 
     /**
      * 是否开票
-     0:否 1:是
+     * 0:否 1:是
      */
     private Boolean enableInvoice;
 
     /**
      * 发票类型
-     1:增值税普通发票 2:增值税专用发票
+     * 1:增值税普通发票 2:增值税专用发票
      */
     private Integer invoiceType;
 

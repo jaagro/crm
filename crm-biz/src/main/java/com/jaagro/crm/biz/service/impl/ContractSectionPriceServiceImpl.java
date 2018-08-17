@@ -1,0 +1,36 @@
+package com.jaagro.crm.biz.service.impl;
+
+import com.jaagro.crm.api.dto.response.contract.ContractSectionPriceReturnDto;
+import com.jaagro.crm.api.service.ContractSectionPriceService;
+import com.jaagro.crm.biz.entity.ContractSectionPrice;
+import com.jaagro.crm.biz.mapper.ContractSectionPriceMapper;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import utils.ServiceResult;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @author baiyiran
+ */
+@Service
+public class ContractSectionPriceServiceImpl implements ContractSectionPriceService {
+
+    @Autowired
+    private ContractSectionPriceMapper sectionPriceMapper;
+
+    @Override
+    public Map<String, Object> disableByPriceId(Long priceId) {
+        List<ContractSectionPriceReturnDto> contractSectionPriceReturnDto = this.sectionPriceMapper.listByPriceId(priceId);
+        for (ContractSectionPriceReturnDto returnDto : contractSectionPriceReturnDto
+        ) {
+            ContractSectionPrice sectionPrice = new ContractSectionPrice();
+            BeanUtils.copyProperties(returnDto, sectionPrice);
+            sectionPrice.setSelectionStatus(0);
+            this.sectionPriceMapper.updateByPrimaryKeySelective(sectionPrice);
+        }
+        return ServiceResult.toResult("删除成功");
+    }
+}

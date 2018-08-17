@@ -1,5 +1,6 @@
 package com.jaagro.crm.api.dto.response.customer;
 
+import com.jaagro.crm.api.dto.response.contract.ContractReturnDto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -8,6 +9,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * 返回的客户
+ *
  * @author liqiangping
  */
 @Data
@@ -25,13 +28,13 @@ public class CustomerReturnDto implements Serializable {
 
     /**
      * 客户类型
-     (1:个体客户 2:企业客户 )
+     * (1:个体客户 2:企业客户 )
      */
     private Integer customerType;
 
     /**
      * 审核状态
-     (0未审核，1正常合作 2审核未通过，4停止合作)
+     * (0未审核，1正常合作 2审核未通过，4停止合作)
      */
     private Integer customerStatus;
 
@@ -72,13 +75,13 @@ public class CustomerReturnDto implements Serializable {
 
     /**
      * 是否开票
-     0:否 1:是
+     * 0:否 1:是
      */
     private Boolean enableInvoice;
 
     /**
      * 发票类型
-     1:增值税普通发票 2:增值税专用发票
+     * 1:增值税普通发票 2:增值税专用发票
      */
     private Integer invoiceType;
 
@@ -118,14 +121,19 @@ public class CustomerReturnDto implements Serializable {
     private Long modifyUserId;
 
     /**
-     * 是否删除 0:否 1:是
+     * 是否可用（0不可用 1可用）
      */
-    private Boolean enable;
+    private Boolean enabled;
+
+    /**
+     * 客户联系人
+     */
+    private List<CustomerContractReturnDto> customerContractReturnDtos;
 
     /**
      * 查询客户合同
      */
-    private List<CustomerContractReturnDto> contracts;
+    private List<ContractReturnDto> contractReturnDtos;
 
     /**
      * 查询客户收发货地

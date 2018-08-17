@@ -2,6 +2,8 @@ package com.jaagro.crm.api.constant;
 
 
 /**
+ * 客户收发货地址使用状态
+ *
  * @author baiyiran
  */
 public final class SiteStatus {
@@ -12,5 +14,5 @@ public final class SiteStatus {
     /**
      * 不可用
      */
-    public static final Integer DISABLE = 2;
+    public static final Integer DISABLE = 0;
 }

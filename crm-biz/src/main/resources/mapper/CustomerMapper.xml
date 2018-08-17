@@ -1,74 +1,76 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jaagro.crm.biz.mapper.CustomerMapper" >
-  <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.Customer" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
-    <result column="customer_type" property="customerType" jdbcType="INTEGER" />
-    <result column="customer_status" property="customerStatus" jdbcType="INTEGER" />
-    <result column="city" property="city" jdbcType="VARCHAR" />
-    <result column="province" property="province" jdbcType="VARCHAR" />
-    <result column="county" property="county" jdbcType="VARCHAR" />
-    <result column="address" property="address" jdbcType="VARCHAR" />
-    <result column="latitude" property="latitude" jdbcType="DECIMAL" />
-    <result column="longitude" property="longitude" jdbcType="DECIMAL" />
-    <result column="billing_period" property="billingPeriod" jdbcType="INTEGER" />
-    <result column="enable_invoice" property="enableInvoice" jdbcType="TINYINT" />
-    <result column="invoice_type" property="invoiceType" jdbcType="INTEGER" />
-    <result column="invoice_header" property="invoiceHeader" jdbcType="VARCHAR" />
-    <result column="tax_number" property="taxNumber" jdbcType="VARCHAR" />
-    <result column="notes" property="notes" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
-    <result column="created_user_id" property="createdUserId" jdbcType="BIGINT" />
-    <result column="modify_user_id" property="modifyUserId" jdbcType="BIGINT" />
-    <result column="enabled" property="enabled" jdbcType="TINYINT" />
-  </resultMap>
-  <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.customer.CustomerReturnDto" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
-    <result column="customer_type" property="customerType" jdbcType="INTEGER" />
-    <result column="customer_status" property="customerStatus" jdbcType="INTEGER" />
-    <result column="city" property="city" jdbcType="VARCHAR" />
-    <result column="province" property="province" jdbcType="VARCHAR" />
-    <result column="county" property="county" jdbcType="VARCHAR" />
-    <result column="address" property="address" jdbcType="VARCHAR" />
-    <result column="latitude" property="latitude" jdbcType="DECIMAL" />
-    <result column="longitude" property="longitude" jdbcType="DECIMAL" />
-    <result column="billing_period" property="billingPeriod" jdbcType="INTEGER" />
-    <result column="enable_invoice" property="enableInvoice" jdbcType="TINYINT" />
-    <result column="invoice_type" property="invoiceType" jdbcType="INTEGER" />
-    <result column="invoice_header" property="invoiceHeader" jdbcType="VARCHAR" />
-    <result column="tax_number" property="taxNumber" jdbcType="VARCHAR" />
-    <result column="notes" property="notes" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
-    <result column="created_user_id" property="createdUserId" jdbcType="BIGINT" />
-    <result column="modify_user_id" property="modifyUserId" jdbcType="BIGINT" />
-    <result column="enabled" property="enabled" jdbcType="TINYINT" />
-    <collection property="contracts" column="id"
-                select="com.jaagro.crm.biz.mapper.ContractMapper.getByCustomerId"/>
-    <collection property="sites" column="id"
-                select="com.jaagro.crm.biz.mapper.CustomerSiteMapper.getByCustomerSiteId"/>
-    <collection property="qualifications" column="id"
-                select="com.jaagro.crm.biz.mapper.QualificationCertificMapper.getByCustomerQualificationId"/>
-  </resultMap>
-  <sql id="Base_Column_List" >
+<mapper namespace="com.jaagro.crm.biz.mapper.CustomerMapper">
+    <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.Customer">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="customer_name" property="customerName" jdbcType="VARCHAR"/>
+        <result column="customer_type" property="customerType" jdbcType="INTEGER"/>
+        <result column="customer_status" property="customerStatus" jdbcType="INTEGER"/>
+        <result column="city" property="city" jdbcType="VARCHAR"/>
+        <result column="province" property="province" jdbcType="VARCHAR"/>
+        <result column="county" property="county" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="latitude" property="latitude" jdbcType="DECIMAL"/>
+        <result column="longitude" property="longitude" jdbcType="DECIMAL"/>
+        <result column="billing_period" property="billingPeriod" jdbcType="INTEGER"/>
+        <result column="enable_invoice" property="enableInvoice" jdbcType="TINYINT"/>
+        <result column="invoice_type" property="invoiceType" jdbcType="INTEGER"/>
+        <result column="invoice_header" property="invoiceHeader" jdbcType="VARCHAR"/>
+        <result column="tax_number" property="taxNumber" jdbcType="VARCHAR"/>
+        <result column="notes" property="notes" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+        <result column="created_user_id" property="createdUserId" jdbcType="BIGINT"/>
+        <result column="modify_user_id" property="modifyUserId" jdbcType="BIGINT"/>
+        <result column="enabled" property="enabled" jdbcType="TINYINT"/>
+    </resultMap>
+    <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.customer.CustomerReturnDto">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="customer_name" property="customerName" jdbcType="VARCHAR"/>
+        <result column="customer_type" property="customerType" jdbcType="INTEGER"/>
+        <result column="customer_status" property="customerStatus" jdbcType="INTEGER"/>
+        <result column="city" property="city" jdbcType="VARCHAR"/>
+        <result column="province" property="province" jdbcType="VARCHAR"/>
+        <result column="county" property="county" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="latitude" property="latitude" jdbcType="DECIMAL"/>
+        <result column="longitude" property="longitude" jdbcType="DECIMAL"/>
+        <result column="billing_period" property="billingPeriod" jdbcType="INTEGER"/>
+        <result column="enable_invoice" property="enableInvoice" jdbcType="TINYINT"/>
+        <result column="invoice_type" property="invoiceType" jdbcType="INTEGER"/>
+        <result column="invoice_header" property="invoiceHeader" jdbcType="VARCHAR"/>
+        <result column="tax_number" property="taxNumber" jdbcType="VARCHAR"/>
+        <result column="notes" property="notes" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+        <result column="created_user_id" property="createdUserId" jdbcType="BIGINT"/>
+        <result column="modify_user_id" property="modifyUserId" jdbcType="BIGINT"/>
+        <result column="enabled" property="enabled" jdbcType="TINYINT"/>
+        <collection property="customerContractReturnDtos" column="id"
+                    select="com.jaagro.crm.biz.mapper.CustomerContractMapper.getByCustomerId"/>
+        <collection property="contractReturnDtos" column="id"
+                    select="com.jaagro.crm.biz.mapper.ContractMapper.getByCustomerId"/>
+        <collection property="sites" column="id"
+                    select="com.jaagro.crm.biz.mapper.CustomerSiteMapper.getByCustomerSiteId"/>
+        <collection property="qualifications" column="id"
+                    select="com.jaagro.crm.biz.mapper.QualificationCertificMapper.getByCustomerQualificationId"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, customer_name, customer_type, customer_status, city, province, county, address, 
     latitude, longitude, billing_period, enable_invoice, invoice_type, invoice_header, 
     tax_number, notes, create_time, modify_time, created_user_id, modify_user_id, enabled
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
-    <include refid="Base_Column_List" />
-    from customer
-    where id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from customer
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from customer
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.Customer" >
+    <insert id="insert" parameterType="com.jaagro.crm.biz.entity.Customer" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into customer (id, customer_name, customer_type, 
       customer_status, city, province, 
       county, address, latitude, 
@@ -86,206 +88,206 @@
       #{createdUserId,jdbcType=BIGINT}, #{modifyUserId,jdbcType=BIGINT}, #{enabled,jdbcType=TINYINT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.Customer" >
-    insert into customer
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="customerName != null" >
-        customer_name,
-      </if>
-      <if test="customerType != null" >
-        customer_type,
-      </if>
-      <if test="customerStatus != null" >
-        customer_status,
-      </if>
-      <if test="city != null" >
-        city,
-      </if>
-      <if test="province != null" >
-        province,
-      </if>
-      <if test="county != null" >
-        county,
-      </if>
-      <if test="address != null" >
-        address,
-      </if>
-      <if test="latitude != null" >
-        latitude,
-      </if>
-      <if test="longitude != null" >
-        longitude,
-      </if>
-      <if test="billingPeriod != null" >
-        billing_period,
-      </if>
-      <if test="enableInvoice != null" >
-        enable_invoice,
-      </if>
-      <if test="invoiceType != null" >
-        invoice_type,
-      </if>
-      <if test="invoiceHeader != null" >
-        invoice_header,
-      </if>
-      <if test="taxNumber != null" >
-        tax_number,
-      </if>
-      <if test="notes != null" >
-        notes,
-      </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="modifyTime != null" >
-        modify_time,
-      </if>
-      <if test="createdUserId != null" >
-        created_user_id,
-      </if>
-      <if test="modifyUserId != null" >
-        modify_user_id,
-      </if>
-      <if test="enabled != null" >
-        enabled,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="customerName != null" >
-        #{customerName,jdbcType=VARCHAR},
-      </if>
-      <if test="customerType != null" >
-        #{customerType,jdbcType=INTEGER},
-      </if>
-      <if test="customerStatus != null" >
-        #{customerStatus,jdbcType=INTEGER},
-      </if>
-      <if test="city != null" >
-        #{city,jdbcType=VARCHAR},
-      </if>
-      <if test="province != null" >
-        #{province,jdbcType=VARCHAR},
-      </if>
-      <if test="county != null" >
-        #{county,jdbcType=VARCHAR},
-      </if>
-      <if test="address != null" >
-        #{address,jdbcType=VARCHAR},
-      </if>
-      <if test="latitude != null" >
-        #{latitude,jdbcType=DECIMAL},
-      </if>
-      <if test="longitude != null" >
-        #{longitude,jdbcType=DECIMAL},
-      </if>
-      <if test="billingPeriod != null" >
-        #{billingPeriod,jdbcType=INTEGER},
-      </if>
-      <if test="enableInvoice != null" >
-        #{enableInvoice,jdbcType=TINYINT},
-      </if>
-      <if test="invoiceType != null" >
-        #{invoiceType,jdbcType=INTEGER},
-      </if>
-      <if test="invoiceHeader != null" >
-        #{invoiceHeader,jdbcType=VARCHAR},
-      </if>
-      <if test="taxNumber != null" >
-        #{taxNumber,jdbcType=VARCHAR},
-      </if>
-      <if test="notes != null" >
-        #{notes,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifyTime != null" >
-        #{modifyTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createdUserId != null" >
-        #{createdUserId,jdbcType=BIGINT},
-      </if>
-      <if test="modifyUserId != null" >
-        #{modifyUserId,jdbcType=BIGINT},
-      </if>
-      <if test="enabled != null" >
-        #{enabled,jdbcType=TINYINT},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.Customer" >
-    update customer
-    <set >
-      <if test="customerName != null" >
-        customer_name = #{customerName,jdbcType=VARCHAR},
-      </if>
-      <if test="customerType != null" >
-        customer_type = #{customerType,jdbcType=INTEGER},
-      </if>
-      <if test="customerStatus != null" >
-        customer_status = #{customerStatus,jdbcType=INTEGER},
-      </if>
-      <if test="city != null" >
-        city = #{city,jdbcType=VARCHAR},
-      </if>
-      <if test="province != null" >
-        province = #{province,jdbcType=VARCHAR},
-      </if>
-      <if test="county != null" >
-        county = #{county,jdbcType=VARCHAR},
-      </if>
-      <if test="address != null" >
-        address = #{address,jdbcType=VARCHAR},
-      </if>
-      <if test="latitude != null" >
-        latitude = #{latitude,jdbcType=DECIMAL},
-      </if>
-      <if test="longitude != null" >
-        longitude = #{longitude,jdbcType=DECIMAL},
-      </if>
-      <if test="billingPeriod != null" >
-        billing_period = #{billingPeriod,jdbcType=INTEGER},
-      </if>
-      <if test="enableInvoice != null" >
-        enable_invoice = #{enableInvoice,jdbcType=TINYINT},
-      </if>
-      <if test="invoiceType != null" >
-        invoice_type = #{invoiceType,jdbcType=INTEGER},
-      </if>
-      <if test="invoiceHeader != null" >
-        invoice_header = #{invoiceHeader,jdbcType=VARCHAR},
-      </if>
-      <if test="taxNumber != null" >
-        tax_number = #{taxNumber,jdbcType=VARCHAR},
-      </if>
-      <if test="notes != null" >
-        notes = #{notes,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifyTime != null" >
-        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createdUserId != null" >
-        created_user_id = #{createdUserId,jdbcType=BIGINT},
-      </if>
-      <if test="modifyUserId != null" >
-        modify_user_id = #{modifyUserId,jdbcType=BIGINT},
-      </if>
-      <if test="enabled != null" >
-        enabled = #{enabled,jdbcType=TINYINT},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.Customer" >
+    <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.Customer" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into customer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="customerName != null">
+                customer_name,
+            </if>
+            <if test="customerType != null">
+                customer_type,
+            </if>
+            <if test="customerStatus != null">
+                customer_status,
+            </if>
+            <if test="city != null">
+                city,
+            </if>
+            <if test="province != null">
+                province,
+            </if>
+            <if test="county != null">
+                county,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="latitude != null">
+                latitude,
+            </if>
+            <if test="longitude != null">
+                longitude,
+            </if>
+            <if test="billingPeriod != null">
+                billing_period,
+            </if>
+            <if test="enableInvoice != null">
+                enable_invoice,
+            </if>
+            <if test="invoiceType != null">
+                invoice_type,
+            </if>
+            <if test="invoiceHeader != null">
+                invoice_header,
+            </if>
+            <if test="taxNumber != null">
+                tax_number,
+            </if>
+            <if test="notes != null">
+                notes,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="modifyTime != null">
+                modify_time,
+            </if>
+            <if test="createdUserId != null">
+                created_user_id,
+            </if>
+            <if test="modifyUserId != null">
+                modify_user_id,
+            </if>
+            <if test="enabled != null">
+                enabled,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="customerName != null">
+                #{customerName,jdbcType=VARCHAR},
+            </if>
+            <if test="customerType != null">
+                #{customerType,jdbcType=INTEGER},
+            </if>
+            <if test="customerStatus != null">
+                #{customerStatus,jdbcType=INTEGER},
+            </if>
+            <if test="city != null">
+                #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="province != null">
+                #{province,jdbcType=VARCHAR},
+            </if>
+            <if test="county != null">
+                #{county,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="latitude != null">
+                #{latitude,jdbcType=DECIMAL},
+            </if>
+            <if test="longitude != null">
+                #{longitude,jdbcType=DECIMAL},
+            </if>
+            <if test="billingPeriod != null">
+                #{billingPeriod,jdbcType=INTEGER},
+            </if>
+            <if test="enableInvoice != null">
+                #{enableInvoice,jdbcType=TINYINT},
+            </if>
+            <if test="invoiceType != null">
+                #{invoiceType,jdbcType=INTEGER},
+            </if>
+            <if test="invoiceHeader != null">
+                #{invoiceHeader,jdbcType=VARCHAR},
+            </if>
+            <if test="taxNumber != null">
+                #{taxNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="notes != null">
+                #{notes,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyTime != null">
+                #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdUserId != null">
+                #{createdUserId,jdbcType=BIGINT},
+            </if>
+            <if test="modifyUserId != null">
+                #{modifyUserId,jdbcType=BIGINT},
+            </if>
+            <if test="enabled != null">
+                #{enabled,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.Customer">
+        update customer
+        <set>
+            <if test="customerName != null">
+                customer_name = #{customerName,jdbcType=VARCHAR},
+            </if>
+            <if test="customerType != null">
+                customer_type = #{customerType,jdbcType=INTEGER},
+            </if>
+            <if test="customerStatus != null">
+                customer_status = #{customerStatus,jdbcType=INTEGER},
+            </if>
+            <if test="city != null">
+                city = #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="province != null">
+                province = #{province,jdbcType=VARCHAR},
+            </if>
+            <if test="county != null">
+                county = #{county,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="latitude != null">
+                latitude = #{latitude,jdbcType=DECIMAL},
+            </if>
+            <if test="longitude != null">
+                longitude = #{longitude,jdbcType=DECIMAL},
+            </if>
+            <if test="billingPeriod != null">
+                billing_period = #{billingPeriod,jdbcType=INTEGER},
+            </if>
+            <if test="enableInvoice != null">
+                enable_invoice = #{enableInvoice,jdbcType=TINYINT},
+            </if>
+            <if test="invoiceType != null">
+                invoice_type = #{invoiceType,jdbcType=INTEGER},
+            </if>
+            <if test="invoiceHeader != null">
+                invoice_header = #{invoiceHeader,jdbcType=VARCHAR},
+            </if>
+            <if test="taxNumber != null">
+                tax_number = #{taxNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="notes != null">
+                notes = #{notes,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdUserId != null">
+                created_user_id = #{createdUserId,jdbcType=BIGINT},
+            </if>
+            <if test="modifyUserId != null">
+                modify_user_id = #{modifyUserId,jdbcType=BIGINT},
+            </if>
+            <if test="enabled != null">
+                enabled = #{enabled,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.Customer">
     update customer
     set customer_name = #{customerName,jdbcType=VARCHAR},
       customer_type = #{customerType,jdbcType=INTEGER},
@@ -309,10 +311,42 @@
       enabled = #{enabled,jdbcType=TINYINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="getById" parameterType="java.lang.Long" resultMap="DetailInfo">
-    select
-    <include refid="Base_Column_List"/>
-    from customer
-    where id = #{id,jdbcType=BIGINT}
-  </select>
+    <select id="getById" parameterType="java.lang.Long" resultMap="DetailInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from customer
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="getByCriteriDto" resultMap="DetailInfo"
+            parameterType="com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto">
+        select
+        <include refid="Base_Column_List"/>
+        from customer
+        where 1=1
+        <if test="customerType != null">
+            and customer_type = #{customerType}
+        </if>
+        <if test="customerStatus != null">
+            and customer_status = #{customerStatus}
+        </if>
+        <if test="invoiceType != null">
+            and invoice_type = #{invoiceType }
+        </if>
+        <if test="endDate != null">
+            <![CDATA[and create_time <= #{endDate}]]>
+        </if>
+        <if test="startDate != null">
+            <![CDATA[and create_time >= #{startDate}]]>
+        </if>
+        <if test="keywords != null">
+            and (
+            customer_name like "%"+#{keywords}+"%" or
+            city like "%"+#{keywords}+"%" or
+            province like "%"+#{keywords}+"%" or
+            county like "%"+#{keywords}+"%" or
+            address like "%"+#{keywords}+"%"
+        </if>
+        and enabled = 1
+        order by create_time desc
+    </select>
 </mapper>

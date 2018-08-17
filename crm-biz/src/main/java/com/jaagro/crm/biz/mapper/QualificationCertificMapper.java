@@ -1,5 +1,6 @@
 package com.jaagro.crm.biz.mapper;
 
+import com.jaagro.crm.api.dto.request.customer.ListQualificationCertificDto;
 import com.jaagro.crm.api.dto.response.customer.QualificationCertificReturnDto;
 import com.jaagro.crm.biz.entity.QualificationCertific;
 
@@ -60,8 +61,17 @@ public interface QualificationCertificMapper {
     /**
      * 查询客户Id查询资质证明
      *
-     * @param dto
+     * @param id
      * @return
      */
     List<QualificationCertificReturnDto> getByCustomerQualificationId(Long id);
+
+    /**
+     * 分页查询
+     *
+     * @param certificDto
+     * @return
+     */
+    List<QualificationCertificReturnDto> getByQualificationCriteriDto(ListQualificationCertificDto certificDto);
+
 }

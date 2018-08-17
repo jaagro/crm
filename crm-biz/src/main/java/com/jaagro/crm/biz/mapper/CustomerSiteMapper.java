@@ -1,5 +1,6 @@
 package com.jaagro.crm.biz.mapper;
 
+import com.jaagro.crm.api.dto.request.customer.ListSiteCriteriaDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto;
 import com.jaagro.crm.biz.entity.CustomerSite;
 
@@ -58,4 +59,12 @@ public interface CustomerSiteMapper {
      * @return
      */
     List<CustomerSiteReturnDto> getByCustomerSiteId(Long customer_id);
+
+    /**
+     * 查询客户Id查询收发货地址
+     *
+     * @param dto
+     * @return
+     */
+    List<CustomerSiteReturnDto> getByCriteriDto(ListSiteCriteriaDto criteriaDto);
 }

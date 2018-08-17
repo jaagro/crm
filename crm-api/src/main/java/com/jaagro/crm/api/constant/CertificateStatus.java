@@ -1,6 +1,8 @@
 package com.jaagro.crm.api.constant;
 
-/**证件状态
+/**
+ * 证件审核状态
+ *
  * @author liqiangping
  */
 public final class CertificateStatus {
@@ -23,5 +25,5 @@ public final class CertificateStatus {
     /**
      * 不可用
      */
-    public static final Integer DISABLED= 4;
+    public static final Integer DISABLED = 4;
 }

@@ -1,6 +1,8 @@
 package com.jaagro.crm.api.constant;
 
-/**发票类型
+/**
+ * 发票类型
+ *
  * @author liqiangping
  */
 public final class InvoiceType {

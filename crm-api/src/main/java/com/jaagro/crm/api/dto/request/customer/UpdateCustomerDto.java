@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * 修改客户帮助类
+ *
  * @author tony
  */
 @Data
@@ -113,20 +115,21 @@ public class UpdateCustomerDto implements Serializable {
      * 是否删除 0:否 1:是
      */
     private Byte enable;
+
     /**
      * 客户联系人
      */
-    private List<CreateCustomerContractDto> contracts;
+    private List<UpdateCustomerContractDto> customerContractDtos;
 
     /**
      * 收发货地址
      */
-    private List<CreateCustomerSiteDto> customerSites;
+    private List<UpdateCustomerSiteDto> customerSites;
 
     /**
      * 资质证件照
      */
-    private List<CreateQualificationCertificDto> qualificationCertificDtos;
+    private List<UpdateQualificationCertificDto> qualificationCertificDtos;
 
     /**
      * 客户合同
