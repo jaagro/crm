@@ -18,7 +18,7 @@ public final class ProductType {
     /**
      * 公猪
      */
-    public static final Integer BOAR  = 4;
+    public static final Integer BOAR = 4;
 
     /**
      * 母猪

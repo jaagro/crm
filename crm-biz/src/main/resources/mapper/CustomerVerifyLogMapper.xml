@@ -121,7 +121,7 @@
       auditor = #{auditor,jdbcType=VARCHAR},
       audit_time = #{auditTime,jdbcType=TIMESTAMP},
       audit_type = #{auditType,jdbcType=INTEGER},
-      desc = #{desc,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
       references_id = #{referencesId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>

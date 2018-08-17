@@ -1,6 +1,8 @@
 package com.jaagro.crm.api.constant;
 
-/**证件类型
+/**
+ * 证件类型
+ *
  * @author liqiangping
  */
 public final class CertificateType {

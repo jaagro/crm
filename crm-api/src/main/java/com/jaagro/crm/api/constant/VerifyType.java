@@ -1,6 +1,8 @@
 package com.jaagro.crm.api.constant;
 
-/**验证状态
+/**
+ * 验证状态
+ *
  * @author liqiangping
  */
 public final class VerifyType {

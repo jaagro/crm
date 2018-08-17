@@ -47,12 +47,12 @@ public class QualificationCertific implements Serializable {
     /**
      * 创建人(References: user)
      */
-    private Long createUserId;
+    private Long createdUserId;
 
     /**
      * 创建时间
      */
-    private Date createTime;
+    private Date createdTime;
 
     /**
      * 修改人(References: user)

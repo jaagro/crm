@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Accessors(chain = true)
 public class CustomerContract implements Serializable {
     /**
-     * 客户审核记录主键id
+     * 客户联系人主键id
      */
     private Long id;
 

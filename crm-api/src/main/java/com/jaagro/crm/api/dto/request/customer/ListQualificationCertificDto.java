@@ -7,13 +7,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 收发货地址分页查询帮助类
+ * 资质证件照分页查询帮助类
  *
- * @author tony
+ * @author baiyiran
  */
 @Data
 @Accessors(chain = true)
-public class ListSiteCriteriaDto implements Serializable {
+public class ListQualificationCertificDto implements Serializable {
 
     /**
      * 起始页
@@ -26,18 +26,9 @@ public class ListSiteCriteriaDto implements Serializable {
     private Integer pageSize;
 
     /**
-     * 关键字
-     */
-    private String keywords;
-
-    /**
      * 客户id
      */
     private Long customerId;
-    /**
-     * 地点类型
-     */
-    private Integer siteType;
 
     /**
      * 开始日期
@@ -48,4 +39,19 @@ public class ListSiteCriteriaDto implements Serializable {
      * 结束日期
      */
     private Date endDate;
+
+    /**
+     * 证件类型(1-工商执照 2-身份证正面 3-身份证反面 4-......)
+     */
+    private Integer certificateType;
+
+    /**
+     * 证件状态(0-未审核。1-正常 2-审核未通过审核 4-不可用)
+     */
+    private Integer certificateStatus;
+
+    /**
+     * 是否可用（0不可用 1可用）
+     */
+    private Boolean enabled;
 }
