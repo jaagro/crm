@@ -52,21 +52,6 @@ public class ListCustomerCriteriaDto implements Serializable {
     private Integer customerStatus;
 
     /**
-     * 所属城市
-     */
-    private String city;
-
-    /**
-     * 所属省份
-     */
-    private String province;
-
-    /**
-     * 所属区县
-     */
-    private String county;
-
-    /**
      * 发票类型
      * 1:增值税普通发票 2:增值税专用发票
      */
