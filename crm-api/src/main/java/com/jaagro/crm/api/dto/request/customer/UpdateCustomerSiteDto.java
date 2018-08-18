@@ -14,6 +14,12 @@ import java.math.BigDecimal;
 @Data
 @Accessors(chain = true)
 public class UpdateCustomerSiteDto implements Serializable {
+
+    /**
+     * 地址主键id
+     */
+    private Long Id;
+
     /**
      * 地址类型
      * 1-装货点，2-卸货点

@@ -40,5 +40,9 @@ public class ContractPriceReturnDto implements Serializable {
 
     private BigDecimal minWeight;
 
+    private BigDecimal minMoney;
+
+    private Integer priceStatus;
+
     private List<ContractSectionPriceReturnDto> sectionPrice;
 }

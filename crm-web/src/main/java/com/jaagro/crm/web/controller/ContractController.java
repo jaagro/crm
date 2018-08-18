@@ -74,7 +74,7 @@ public class ContractController {
     }
 
     @ApiOperation("分页查询合同")
-    @PostMapping("/listByCriteria")
+    @PostMapping("/listContractByCriteria")
     public BaseResponse listByCriteria(@RequestBody ContractCriteriaDto dto) {
         return BaseResponse.service(contractService.listByCriteria(dto));
     }
