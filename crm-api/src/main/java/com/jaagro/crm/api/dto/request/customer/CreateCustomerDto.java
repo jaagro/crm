@@ -94,26 +94,6 @@ public class CreateCustomerDto implements Serializable {
     private String notes;
 
     /**
-     * 创建日期
-     */
-    private Date createTime;
-
-    /**
-     * 修改日期
-     */
-    private Date modifyTime;
-
-    /**
-     * 创建人(References: user)
-     */
-    private Long createdUserId;
-
-    /**
-     * 修改人(References: user)
-     */
-    private Long modifyUserId;
-
-    /**
      * 是否删除 0:否 1:是
      */
     private Byte enable;

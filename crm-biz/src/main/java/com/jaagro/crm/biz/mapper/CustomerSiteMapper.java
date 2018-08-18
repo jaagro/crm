@@ -67,4 +67,11 @@ public interface CustomerSiteMapper {
      * @return
      */
     List<CustomerSiteReturnDto> getByCriteriDto(ListSiteCriteriaDto criteriaDto);
+
+    /**
+     * 根据地址名称查询
+     *
+     * @param siteName
+     */
+    CustomerSiteReturnDto getSiteName(String siteName);
 }

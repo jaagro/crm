@@ -4,7 +4,6 @@ import com.jaagro.crm.api.dto.request.customer.CreateCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerSiteDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
-import com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto;
 import com.jaagro.crm.api.service.CustomerService;
 import com.jaagro.crm.api.service.CustomerSiteService;
 import com.jaagro.crm.biz.mapper.CustomerMapper;
@@ -25,7 +24,7 @@ import java.util.Map;
  * @author baiyiran
  */
 @RestController
-@Api(value = "site", description = "客户地址管理", produces = MediaType.APPLICATION_JSON_VALUE)
+@Api(value = "customer", description = "客户地址管理", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CustomerSiteController {
 
     @Autowired
@@ -36,6 +35,24 @@ public class CustomerSiteController {
     private CustomerSiteService siteService;
     @Autowired
     private CustomerSiteMapper siteMapper;
+
+    @ApiOperation("新增单个地址")
+    @PostMapping("/site")
+    public BaseResponse insertCustomer(@RequestBody CreateCustomerSiteDto siteDto) {
+        if (siteDto.getCustomerId() == null) {
+            return BaseResponse.idNull("客户id:[customerId]不能为空");
+        }
+        if (siteDto.getSiteType() == null) {
+            return BaseResponse.idNull("地址类型:[siteType]不能为空");
+        }
+        if (siteDto.getSiteName() == null) {
+            return BaseResponse.idNull("地址名称:[siteName]不能为空");
+        }
+        if(this.siteMapper.getSiteName(siteDto.getSiteName()) != null){
+            return BaseResponse.errorInstance("地址名称:[siteName]已存在");
+        }
+        return BaseResponse.service(siteService.createSite(siteDto));
+    }
 
     @ApiOperation("删除单个地址[逻辑]")
     @DeleteMapping("/deleteSiteById/{id}")

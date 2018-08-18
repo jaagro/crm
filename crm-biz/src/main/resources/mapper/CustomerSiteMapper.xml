@@ -306,4 +306,10 @@
         </if>
         order by create_time desc
     </select>
+    <select id="getSiteName" parameterType="java.lang.String" parameterMap="ReturnMap" >
+        select
+        <include refid="Base_Column_List"/>
+        from customer_site
+        where site_name = #{siteName}
+    </select>
 </mapper>

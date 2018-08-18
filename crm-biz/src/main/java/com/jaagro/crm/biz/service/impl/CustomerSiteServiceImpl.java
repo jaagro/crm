@@ -121,4 +121,10 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
         }
         return ServiceResult.toResult("地址删除成功");
     }
+
+    @Override
+    public Map<String, Object> getBySiteName(String siteName) {
+        this.siteMapper.getSiteName(siteName);
+        return null;
+    }
 }
