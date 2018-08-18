@@ -1,7 +1,6 @@
 package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.api.dto.request.customer.ListSiteCriteriaDto;
-import com.jaagro.crm.api.dto.request.customer.SiteDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerSiteDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto;
 import com.jaagro.crm.biz.entity.CustomerSite;
