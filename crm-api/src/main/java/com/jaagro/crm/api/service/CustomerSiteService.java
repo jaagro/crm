@@ -2,6 +2,7 @@ package com.jaagro.crm.api.service;
 
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerSiteDto;
 import com.jaagro.crm.api.dto.request.customer.ListSiteCriteriaDto;
+import com.jaagro.crm.api.dto.request.customer.SiteDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerSiteDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto;
 
@@ -84,7 +85,6 @@ public interface CustomerSiteService {
      * @param id
      * @return
      */
-    Map<String, Object> getBySiteName(String siteName);
-
+    Map<String, Object> getBySiteDto(UpdateCustomerSiteDto siteDto);
 
 }

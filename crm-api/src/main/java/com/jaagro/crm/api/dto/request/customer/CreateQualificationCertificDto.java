@@ -24,11 +24,6 @@ public class CreateQualificationCertificDto implements Serializable {
     private String certificateImageUrl;
 
     /**
-     * 证件状态(0-未审核。1-正常 2-审核未通过审核 4-不可用)
-     */
-    private Integer certificateStatus;
-
-    /**
      * 外键关联客户ID(References customer)
      */
     private Long customerId;
@@ -38,8 +33,4 @@ public class CreateQualificationCertificDto implements Serializable {
      */
     private String description;
 
-    /**
-     * 是否可用（0不可用 1可用）
-     */
-    private Boolean enabled;
 }

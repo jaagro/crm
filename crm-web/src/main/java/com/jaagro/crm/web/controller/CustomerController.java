@@ -32,6 +32,17 @@ public class CustomerController {
     @ApiOperation("新增客户")
     @PostMapping("/customer")
     public BaseResponse insertCustomer(@RequestBody CreateCustomerDto customer) {
+        if (customer.getCustomerType() == null) {
+            return BaseResponse.errorInstance("客户类型:[customerType]不能为空");
+        }
+        if (customer.getCustomerName() == null) {
+            return BaseResponse.errorInstance("客户名称:[customerName]不能为空");
+        }
+        UpdateCustomerDto updateCustomerDto = new UpdateCustomerDto();
+        updateCustomerDto.setCustomerName(customer.getCustomerName());
+        if (this.customerMapper.getByCustomerDto(updateCustomerDto) != null) {
+            return BaseResponse.idNull("客户名称:[customerName]已存在");
+        }
         return BaseResponse.service(customerService.createCustomer(customer));
     }
 
@@ -49,6 +60,9 @@ public class CustomerController {
     public BaseResponse updateCustomer(@RequestBody UpdateCustomerDto customer) {
         if (this.customerMapper.selectByPrimaryKey(customer.getId()) == null) {
             return BaseResponse.queryDataEmpty();
+        }
+        if (this.customerMapper.getByCustomerDto(customer) != null) {
+            return BaseResponse.errorInstance("客户名称:[customerName]已存在");
         }
         return BaseResponse.service(customerService.updateById(customer));
     }

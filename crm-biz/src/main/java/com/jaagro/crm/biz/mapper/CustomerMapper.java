@@ -1,6 +1,8 @@
 package com.jaagro.crm.biz.mapper;
 
+import com.jaagro.crm.api.dto.request.customer.CreateCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
+import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerReturnDto;
 import com.jaagro.crm.biz.entity.Customer;
 
@@ -52,4 +54,12 @@ public interface CustomerMapper {
      * @return
      */
     List<CustomerReturnDto> getByCriteriDto(ListCustomerCriteriaDto dto);
+
+    /**
+     * 新增时判断名称是否重复
+     *
+     * @param customer
+     * @return
+     */
+    Customer getByCustomerDto(UpdateCustomerDto customer);
 }

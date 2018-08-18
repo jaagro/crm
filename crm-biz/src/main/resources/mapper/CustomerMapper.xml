@@ -349,4 +349,15 @@
         and enabled = 1
         order by create_time desc
     </select>
+    <select id="getByCustomerDto" resultMap="BaseResultMap"
+            parameterType="com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto">
+        select
+        <include refid="Base_Column_List"/>
+        from customer
+        where customer_name = #{customerName}
+        <if test="id != null">
+            and id != #{id}
+        </if>
+        and enabled = 1
+    </select>
 </mapper>

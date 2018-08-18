@@ -199,6 +199,7 @@
         <if test="startDate != null">
             <![CDATA[and created_time >= #{startDate}]]>
         </if>
+        and enabled = 1
         order by created_time desc
     </select>
 

@@ -123,8 +123,8 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
     }
 
     @Override
-    public Map<String, Object> getBySiteName(String siteName) {
-        this.siteMapper.getSiteName(siteName);
-        return null;
+    public Map<String, Object> getBySiteDto(UpdateCustomerSiteDto siteDto) {
+        return ServiceResult.toResult(this.siteMapper.getSiteDto(siteDto));
     }
+
 }
