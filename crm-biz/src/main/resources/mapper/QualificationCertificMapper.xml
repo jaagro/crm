@@ -49,7 +49,7 @@
       modify_time, enabled)
     values (#{id,jdbcType=BIGINT}, #{certificateType,jdbcType=INTEGER}, #{certificateImageUrl,jdbcType=VARCHAR},
       #{certificateStatus,jdbcType=INTEGER}, #{customerId,jdbcType=BIGINT}, #{description,jdbcType=VARCHAR},
-      #{createUserId,jdbcType=BIGINT}, #{createdTime,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=BIGINT},
+      #{createdUserId,jdbcType=BIGINT}, #{createdTime,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=BIGINT},
       #{modifyTime,jdbcType=TIMESTAMP}, #{enabled,jdbcType=TINYINT})
   </insert>
     <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.QualificationCertific" useGeneratedKeys="true"
@@ -169,7 +169,7 @@
       certificate_status = #{certificateStatus,jdbcType=INTEGER},
       customer_id = #{customerId,jdbcType=BIGINT},
       description = #{description,jdbcType=VARCHAR},
-      created_user_id = #{createUserId,jdbcType=BIGINT},
+      created_user_id = #{createdUserId,jdbcType=BIGINT},
       created_time = #{createdTime,jdbcType=TIMESTAMP},
       modify_user_id = #{modifyUserId,jdbcType=BIGINT},
       modify_time = #{modifyTime,jdbcType=TIMESTAMP},

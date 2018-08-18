@@ -16,6 +16,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import utils.ResponseStatusCode;
 import utils.ServiceResult;
 
@@ -60,6 +61,9 @@ public class CustomerServiceImpl implements CustomerService {
                 .setEnabled(true)
                 .setCreateTime(new Date())
                 .setCreatedUserId(userService.getCurrentUser().getId());
+        if (StringUtils.isEmpty(customer.getCustomerType())) {
+            throw new RuntimeException("客户类型不能为空");
+        }
         customerMapper.insert(customer);
         //新增联系人对象
         if (dto.getContracts() != null && dto.getContracts().size() > 0) {
