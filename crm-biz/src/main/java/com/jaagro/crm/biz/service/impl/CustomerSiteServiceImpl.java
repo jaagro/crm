@@ -13,6 +13,7 @@ import com.jaagro.crm.biz.mapper.CustomerSiteMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import utils.ServiceResult;
 
 import java.util.Date;
@@ -70,10 +71,14 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
         return ServiceResult.toResult("地址修改成功");
     }
 
+    @Transactional
     @Override
     public Map<String, Object> updateSite(List<UpdateCustomerSiteDto> customerSiteDtos) {
         if (customerSiteDtos.size() > 0) {
             for (UpdateCustomerSiteDto customerSiteDto : customerSiteDtos) {
+                if (customerSiteDto.getId() == null) {
+//                    throw RuntimeException();
+                }
                 CustomerSite site = new CustomerSite();
                 BeanUtils.copyProperties(customerSiteDto, site);
                 site

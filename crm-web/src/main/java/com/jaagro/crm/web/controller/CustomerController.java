@@ -36,7 +36,7 @@ public class CustomerController {
     }
 
     @ApiOperation("删除客户[逻辑]")
-    @DeleteMapping("/deleteById/{id}")
+    @DeleteMapping("/deleteCustomerById/{id}")
     public BaseResponse deleteById(@PathVariable Long id) {
         if (this.customerMapper.selectByPrimaryKey(id) == null) {
             return BaseResponse.errorInstance("查询不到相应数据");
@@ -64,7 +64,7 @@ public class CustomerController {
     }
 
     @ApiOperation("分页查询客户")
-    @PostMapping("/getByCriteria")
+    @PostMapping("/listCustomerByCriteria")
     public BaseResponse listByCriteria(@RequestBody ListCustomerCriteriaDto criteriaDto) {
         return BaseResponse.service(this.customerService.listByCriteria(criteriaDto));
     }
