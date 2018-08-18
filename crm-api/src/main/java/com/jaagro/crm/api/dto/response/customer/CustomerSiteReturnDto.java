@@ -40,7 +40,7 @@ public class CustomerSiteReturnDto implements Serializable {
     /**
      * 系统状态
      */
-    private Integer siteStatus;
+    private Boolean siteStatus;
 
     /**
      * 联系人

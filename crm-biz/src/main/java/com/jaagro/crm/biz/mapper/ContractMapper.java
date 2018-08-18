@@ -1,6 +1,7 @@
 package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.api.dto.request.contract.ContractCriteriaDto;
+import com.jaagro.crm.api.dto.request.contract.UpdateContractDto;
 import com.jaagro.crm.biz.entity.Contract;
 import com.jaagro.crm.api.dto.response.contract.ContractReturnDto;
 
@@ -82,4 +83,12 @@ public interface ContractMapper {
      * @return
      */
     List<ContractReturnDto> getByCustomerId(Long id);
+
+    /**
+     * 新增时判断是否存在
+     *
+     * @param updateContractDto
+     * @return
+     */
+    Contract getByUpdateDto(UpdateContractDto updateContractDto);
 }

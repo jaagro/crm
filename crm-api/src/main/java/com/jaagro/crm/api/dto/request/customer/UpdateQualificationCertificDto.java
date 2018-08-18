@@ -43,9 +43,4 @@ public class UpdateQualificationCertificDto implements Serializable {
      */
     private String description;
 
-    /**
-     * 是否可用（0不可用 1可用）
-     */
-    private Boolean enabled;
-
 }

@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -92,26 +91,6 @@ public class CreateCustomerDto implements Serializable {
      * 备注信息(用车要求)
      */
     private String notes;
-
-    /**
-     * 创建日期
-     */
-    private Date createTime;
-
-    /**
-     * 修改日期
-     */
-    private Date modifyTime;
-
-    /**
-     * 创建人(References: user)
-     */
-    private Long createdUserId;
-
-    /**
-     * 修改人(References: user)
-     */
-    private Long modifyUserId;
 
     /**
      * 是否删除 0:否 1:是

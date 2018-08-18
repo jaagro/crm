@@ -1,6 +1,7 @@
 package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.api.dto.request.customer.ListSiteCriteriaDto;
+import com.jaagro.crm.api.dto.request.customer.UpdateCustomerSiteDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto;
 import com.jaagro.crm.biz.entity.CustomerSite;
 
@@ -67,4 +68,13 @@ public interface CustomerSiteMapper {
      * @return
      */
     List<CustomerSiteReturnDto> getByCriteriDto(ListSiteCriteriaDto criteriaDto);
+
+    /**
+     * 根据地址名称查询
+     *
+     * @param siteName
+     */
+    CustomerSiteReturnDto getSiteDto(UpdateCustomerSiteDto siteDto);
+
+
 }

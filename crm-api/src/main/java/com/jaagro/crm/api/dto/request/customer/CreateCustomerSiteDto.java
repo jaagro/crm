@@ -30,11 +30,6 @@ public class CreateCustomerSiteDto implements Serializable {
     private String siteName;
 
     /**
-     * 系统状态
-     */
-    private Integer siteStatus;
-
-    /**
      * 联系人
      */
     private String contact;

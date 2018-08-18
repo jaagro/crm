@@ -77,4 +77,13 @@ public interface CustomerSiteService {
      * @return
      */
     Map<String, Object> disableSite(List<CustomerSiteReturnDto> siteReturnDtos);
+
+    /**
+     * 验证名称是否重复
+     *
+     * @param id
+     * @return
+     */
+    Map<String, Object> getBySiteDto(UpdateCustomerSiteDto siteDto);
+
 }

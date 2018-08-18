@@ -8,8 +8,8 @@
         <result column="certificate_status" jdbcType="INTEGER" property="certificateStatus"/>
         <result column="customer_id" jdbcType="BIGINT" property="customerId"/>
         <result column="description" jdbcType="VARCHAR" property="description"/>
-        <result column="created_user_id" jdbcType="BIGINT" property="createdUserId"/>
-        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="modify_user_id" jdbcType="BIGINT" property="modifyUserId"/>
         <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime"/>
         <result column="enabled" property="enabled" jdbcType="TINYINT" />
@@ -21,15 +21,15 @@
         <result column="certificate_status" jdbcType="INTEGER" property="certificateStatus"/>
         <result column="customer_id" jdbcType="BIGINT" property="customerId"/>
         <result column="description" jdbcType="VARCHAR" property="description"/>
-        <result column="created_user_id" jdbcType="BIGINT" property="createdUserId"/>
-        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="modify_user_id" jdbcType="BIGINT" property="modifyUserId"/>
         <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime"/>
         <result column="enabled" property="enabled" jdbcType="TINYINT" />
     </resultMap>
     <sql id="Base_Column_List">
     id, certificate_type, certificate_image_url, certificate_status, customer_id, description,
-    created_user_id, created_time, modify_user_id, modify_time, enabled
+    create_user_id, create_time, modify_user_id, modify_time, enabled
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
@@ -45,11 +45,11 @@
             keyProperty="id" keyColumn="id">
     insert into qualification_certific (id, certificate_type, certificate_image_url,
       certificate_status, customer_id, description,
-      created_user_id, created_time, modify_user_id,
+      create_user_id, create_time, modify_user_id,
       modify_time, enabled)
     values (#{id,jdbcType=BIGINT}, #{certificateType,jdbcType=INTEGER}, #{certificateImageUrl,jdbcType=VARCHAR},
       #{certificateStatus,jdbcType=INTEGER}, #{customerId,jdbcType=BIGINT}, #{description,jdbcType=VARCHAR},
-      #{createdUserId,jdbcType=BIGINT}, #{createdTime,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=BIGINT},
+      #{createUserId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=BIGINT},
       #{modifyTime,jdbcType=TIMESTAMP}, #{enabled,jdbcType=TINYINT})
   </insert>
     <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.QualificationCertific" useGeneratedKeys="true"
@@ -74,11 +74,11 @@
             <if test="description != null">
                 description,
             </if>
-            <if test="createdUserId != null">
-                created_user_id,
+            <if test="createUserId != null">
+                create_user_id,
             </if>
-            <if test="createdTime != null">
-                created_time,
+            <if test="createTime != null">
+                create_time,
             </if>
             <if test="modifyUserId != null">
                 modify_user_id,
@@ -109,11 +109,11 @@
             <if test="description != null">
                 #{description,jdbcType=VARCHAR},
             </if>
-            <if test="createdUserId != null">
-                #{createdUserId,jdbcType=BIGINT},
+            <if test="createUserId != null">
+                #{createUserId,jdbcType=BIGINT},
             </if>
-            <if test="createdTime != null">
-                #{createdTime,jdbcType=TIMESTAMP},
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
             </if>
             <if test="modifyUserId != null">
                 #{modifyUserId,jdbcType=BIGINT},
@@ -144,11 +144,11 @@
             <if test="description != null">
                 description = #{description,jdbcType=VARCHAR},
             </if>
-            <if test="createdUserId != null">
-                created_user_id = #{createdUserId,jdbcType=BIGINT},
+            <if test="createUserId != null">
+                create_user_id = #{createUserId,jdbcType=BIGINT},
             </if>
-            <if test="createdTime != null">
-                created_time = #{createdTime,jdbcType=TIMESTAMP},
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
             <if test="modifyUserId != null">
                 modify_user_id = #{modifyUserId,jdbcType=BIGINT},
@@ -169,8 +169,8 @@
       certificate_status = #{certificateStatus,jdbcType=INTEGER},
       customer_id = #{customerId,jdbcType=BIGINT},
       description = #{description,jdbcType=VARCHAR},
-      created_user_id = #{createdUserId,jdbcType=BIGINT},
-      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      create_user_id = #{createUserId,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
       modify_user_id = #{modifyUserId,jdbcType=BIGINT},
       modify_time = #{modifyTime,jdbcType=TIMESTAMP},
       enabled = #{enabled,jdbcType=TINYINT}
@@ -194,12 +194,13 @@
             and certificate_status = #{certificateStatus}
         </if>
         <if test="endDate != null">
-            <![CDATA[and created_time <= #{endDate}]]>
+            <![CDATA[and create_time <= #{endDate}]]>
         </if>
         <if test="startDate != null">
-            <![CDATA[and created_time >= #{startDate}]]>
+            <![CDATA[and create_time >= #{startDate}]]>
         </if>
-        order by created_time desc
+        and enabled = 1
+        order by create_time desc
     </select>
 
 </mapper>

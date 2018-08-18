@@ -1,6 +1,5 @@
 package com.jaagro.crm.web.controller;
 
-import com.jaagro.crm.api.constant.SiteStatus;
 import com.jaagro.crm.api.dto.response.UserDto;
 import com.jaagro.crm.api.service.UserClientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +28,5 @@ public class TestController {
     public String test(){
         return "success";
     }
-
-    public static  void  main(String args[]){
-        System.out.println("SiteStatus.ACTIVE:"+SiteStatus.ACTIVE);
-    }
-
 
 }

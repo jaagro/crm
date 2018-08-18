@@ -37,8 +37,8 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
         qc
                 .setEnabled(true)
                 .setCertificateStatus(CertificateStatus.UNCHECKED)
-                .setCreatedUserId(userService.getCurrentUser().getId())
-                .setCreatedTime(new Date());
+                .setCreateUserId(userService.getCurrentUser().getId())
+                .setCreateTime(new Date());
         this.certificMapper.insert(qc);
         return ServiceResult.toResult("资质证件照创建成功");
     }
@@ -53,8 +53,8 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
                         .setEnabled(true)
                         .setCustomerId(CustomerId)
                         .setCertificateStatus(CertificateStatus.UNCHECKED)
-                        .setCreatedUserId(userService.getCurrentUser().getId())
-                        .setCreatedTime(new Date());
+                        .setCreateUserId(userService.getCurrentUser().getId())
+                        .setCreateTime(new Date());
                 this.certificMapper.insert(qc);
             }
         }

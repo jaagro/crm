@@ -60,7 +60,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .setCustomerStatus(CustomerStatus.UNCHECKED)
                 .setEnabled(true)
                 .setCreateTime(new Date())
-                .setCreatedUserId(userService.getCurrentUser().getId());
+                .setCreateUserId(userService.getCurrentUser().getId());
         if (StringUtils.isEmpty(customer.getCustomerType())) {
             throw new RuntimeException("客户类型不能为空");
         }
