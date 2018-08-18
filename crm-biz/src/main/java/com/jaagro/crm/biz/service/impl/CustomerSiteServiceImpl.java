@@ -2,7 +2,6 @@ package com.jaagro.crm.biz.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.jaagro.crm.api.constant.SiteStatus;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerSiteDto;
 import com.jaagro.crm.api.dto.request.customer.ListSiteCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerSiteDto;
@@ -37,7 +36,7 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
         BeanUtils.copyProperties(customerSiteDto, site);
         site
                 .setCreateTime(new Date())
-                .setSiteStatus(SiteStatus.ACTIVE)
+                .setSiteStatus(true)
                 .setCreateUserId(userService.getCurrentUser().getId());
         siteMapper.insert(site);
         return ServiceResult.toResult("地址创建成功");
@@ -52,7 +51,7 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
                 site
                         .setCustomerId(CustomerId)
                         .setCreateTime(new Date())
-                        .setSiteStatus(SiteStatus.ACTIVE)
+                        .setSiteStatus(true)
                         .setCreateUserId(userService.getCurrentUser().getId());
                 siteMapper.insert(site);
             }
@@ -105,7 +104,7 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
     @Override
     public Map<String, Object> disableSite(Long id) {
         CustomerSite site = this.siteMapper.selectByPrimaryKey(id);
-        site.setSiteStatus(SiteStatus.DISABLE);
+        site.setSiteStatus(false);
         this.siteMapper.updateByPrimaryKeySelective(site);
         return ServiceResult.toResult("地址删除成功");
     }
@@ -115,7 +114,7 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
         if (siteReturnDtos != null && siteReturnDtos.size() > 0) {
             for (CustomerSiteReturnDto siteDto : siteReturnDtos) {
                 CustomerSite site = this.siteMapper.selectByPrimaryKey(siteDto.getId());
-                site.setSiteStatus(SiteStatus.DISABLE);
+                site.setSiteStatus(false);
                 this.siteMapper.updateByPrimaryKeySelective(site);
             }
         }

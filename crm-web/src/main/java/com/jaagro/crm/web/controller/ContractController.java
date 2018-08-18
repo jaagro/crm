@@ -2,8 +2,10 @@ package com.jaagro.crm.web.controller;
 
 import com.jaagro.crm.api.dto.request.contract.ContractCriteriaDto;
 import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
+import com.jaagro.crm.api.dto.request.contract.UpdateContractDto;
 import com.jaagro.crm.api.service.ContractService;
 import com.jaagro.crm.biz.mapper.ContractMapper;
+import com.jaagro.crm.biz.mapper.CustomerMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +27,23 @@ public class ContractController {
     private ContractService contractService;
     @Autowired
     private ContractMapper contractMapper;
+    @Autowired
+    private CustomerMapper customerMapper;
 
     @ApiOperation("合同新增")
     @PostMapping("/contract")
     public BaseResponse createContract(@RequestBody CreateContractDto dto) {
 
         if (StringUtils.isEmpty(dto.getCustomerId())) {
-            return BaseResponse.idError("合同客户不能为空");
+            return BaseResponse.idNull("合同客户不能为空");
+        }
+        if (this.customerMapper.selectByPrimaryKey(dto.getCustomerId()) == null) {
+            return BaseResponse.errorInstance("客户不存在");
+        }
+        UpdateContractDto updateContractDto = new UpdateContractDto();
+        updateContractDto.setContractNumber(dto.getContractNumber());
+        if (this.contractMapper.getByUpdateDto(updateContractDto) != null) {
+            return BaseResponse.errorInstance("合同编号[contractumber]已存在");
         }
         Map<String, Object> result;
         try {
@@ -45,13 +57,16 @@ public class ContractController {
 
     @ApiOperation("合同修改")
     @PutMapping("/contract")
-    public BaseResponse updateContract(@RequestBody CreateContractDto dto) {
+    public BaseResponse updateContract(@RequestBody UpdateContractDto dto) {
 
         if (contractMapper.selectByPrimaryKey(dto.getId()) == null) {
             return BaseResponse.idError("合同不存在");
         }
         if (StringUtils.isEmpty(dto.getCustomerId())) {
             return BaseResponse.idError("合同客户不能为空");
+        }
+        if (this.contractMapper.getByUpdateDto(dto) != null) {
+            return BaseResponse.errorInstance("合同编号[contractumber]已存在");
         }
         Map<String, Object> result;
         try {

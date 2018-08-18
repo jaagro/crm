@@ -113,7 +113,7 @@ public class CustomerReturnDto implements Serializable {
     /**
      * 创建人(References: user)
      */
-    private Long createdUserId;
+    private Long createUserId;
 
     /**
      * 修改人(References: user)

@@ -2,7 +2,6 @@ package com.jaagro.crm.biz.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.jaagro.crm.api.constant.ContractStatus;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerContractDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerContractCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerContractDto;
@@ -32,7 +31,7 @@ public class CustomerContractServiceImpl implements CustomerContractService {
         CustomerContract customerContract = new CustomerContract();
         BeanUtils.copyProperties(dto, customerContract);
         customerContract
-                .setStatus(ContractStatus.ACTIVE);
+                .setStatus(true);
         customerContractMapper.insert(customerContract);
         return ServiceResult.toResult("客户联系人创建成功");
     }
@@ -44,7 +43,7 @@ public class CustomerContractServiceImpl implements CustomerContractService {
                 CustomerContract customerContract = new CustomerContract();
                 BeanUtils.copyProperties(dto, customerContract);
                 customerContract
-                        .setStatus(ContractStatus.ACTIVE)
+                        .setStatus(true)
                         .setCustomerId(CustomerId);
                 customerContractMapper.insert(customerContract);
             }
@@ -87,7 +86,7 @@ public class CustomerContractServiceImpl implements CustomerContractService {
     @Override
     public Map<String, Object> disableCustomerContract(Long id) {
         CustomerContract customerContract = this.customerContractMapper.selectByPrimaryKey(id);
-        customerContract.setStatus(ContractStatus.DISABLE);
+        customerContract.setStatus(false);
         return ServiceResult.toResult("客户联系人停用成功");
     }
 
@@ -96,7 +95,7 @@ public class CustomerContractServiceImpl implements CustomerContractService {
         if (customerContractReturnDtos != null && customerContractReturnDtos.size() > 0) {
             for (CustomerContractReturnDto contractReturnDto : customerContractReturnDtos) {
                 CustomerContract customerContract = this.customerContractMapper.selectByPrimaryKey(contractReturnDto.getId());
-                customerContract.setStatus(ContractStatus.DISABLE);
+                customerContract.setStatus(false);
                 this.customerContractMapper.updateByPrimaryKeySelective(customerContract);
             }
         }

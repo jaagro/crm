@@ -2,6 +2,7 @@ package com.jaagro.crm.api.service;
 
 import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
 import com.jaagro.crm.api.dto.request.contract.ContractCriteriaDto;
+import com.jaagro.crm.api.dto.request.contract.UpdateContractDto;
 import com.jaagro.crm.api.dto.response.contract.ContractReturnDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto;
 import feign.Contract;
@@ -36,7 +37,7 @@ public interface ContractService {
      * @param dto
      * @return
      */
-    Map<String, Object> updateContract(CreateContractDto dto);
+    Map<String, Object> updateContract(UpdateContractDto dto);
 
     /**
      * 修改合同列表
@@ -44,7 +45,7 @@ public interface ContractService {
      * @param dtos
      * @return
      */
-    Map<String, Object> updateContract(List<CreateContractDto> dtos);
+    Map<String, Object> updateContract(List<UpdateContractDto> dtos);
 
     /**
      * 查询单个（含详细子表信息）

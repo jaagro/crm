@@ -1,21 +1,19 @@
-package com.jaagro.crm.biz.entity;
+package com.jaagro.crm.api.dto.request.contract;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
- * @author tony
+ * @author baiyiran
  */
 @Data
 @Accessors(chain = true)
-public class Contract implements Serializable {
+public class UpdateContractDto implements Serializable {
 
-    /**
-     * id
-     */
     private Long id;
 
     private Long customerId;
@@ -38,13 +36,7 @@ public class Contract implements Serializable {
 
     private String remark;
 
-    private Date createTime;
-
-    private Long createUser;
-
-    private Date newUpdateTime;
-
-    private Long newUpdateUser;
-
     private Integer version;
+
+    private List<ContractPriceDto> price;
 }

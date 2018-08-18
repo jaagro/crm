@@ -47,12 +47,12 @@ public class QualificationCertificReturnDto implements Serializable {
     /**
      * 创建人(References: user)
      */
-    private Long createdUserId;
+    private Long createUserId;
 
     /**
      * 创建时间
      */
-    private Date createdTime;
+    private Date createTime;
 
     /**
      * 修改人(References: user)

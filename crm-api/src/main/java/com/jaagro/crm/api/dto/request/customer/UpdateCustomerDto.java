@@ -1,6 +1,7 @@
 package com.jaagro.crm.api.dto.request.customer;
 
 import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
+import com.jaagro.crm.api.dto.request.contract.UpdateContractDto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -134,5 +135,5 @@ public class UpdateCustomerDto implements Serializable {
     /**
      * 客户合同
      */
-    private List<CreateContractDto> createContractDtos;
+    private List<UpdateContractDto> createContractDtos;
 }

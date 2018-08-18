@@ -14,11 +14,7 @@ import java.util.List;
 @Accessors(chain = true)
 public class CreateContractDto implements Serializable {
 
-    private Long id;
-
     private Long customerId;
-
-    private Integer contractStatus;
 
     private Date startDate;
 
@@ -35,14 +31,6 @@ public class CreateContractDto implements Serializable {
     private String contractNumber;
 
     private String remark;
-
-    private Date createTime;
-
-    private Long createUser;
-
-    private Date newUpdateTime;
-
-    private Long newUpdateUser;
 
     private Integer version;
 

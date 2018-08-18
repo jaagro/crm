@@ -39,6 +39,6 @@ public class CustomerContract implements Serializable {
     /**
      * 状态(0 停用 1 启用)
      */
-    private Integer status;
+    private Boolean status;
 
 }
