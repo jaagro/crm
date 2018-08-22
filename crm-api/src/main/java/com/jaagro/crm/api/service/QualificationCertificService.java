@@ -1,9 +1,9 @@
 package com.jaagro.crm.api.service;
 
-import com.jaagro.crm.api.dto.request.customer.CreateQualificationCertificDto;
-import com.jaagro.crm.api.dto.request.customer.ListQualificationCertificDto;
-import com.jaagro.crm.api.dto.request.customer.UpdateQualificationCertificDto;
-import com.jaagro.crm.api.dto.response.customer.QualificationCertificReturnDto;
+import com.jaagro.crm.api.dto.request.customer.CreateCustomerQualificationDto;
+import com.jaagro.crm.api.dto.request.customer.ListCustomerQualificationCriteriaDto;
+import com.jaagro.crm.api.dto.request.customer.UpdateCustomerQualificationDto;
+import com.jaagro.crm.api.dto.response.customer.CustomerQualificationReturnDto;
 
 import java.util.List;
 import java.util.Map;
@@ -21,7 +21,7 @@ public interface QualificationCertificService {
      * @param qualificationCertificDto
      * @return
      */
-    Map<String, Object> createQualificationCertific(CreateQualificationCertificDto qualificationCertificDto);
+    Map<String, Object> createQualificationCertific(CreateCustomerQualificationDto qualificationCertificDto);
 
     /**
      * 新增资质证件照列表
@@ -29,14 +29,14 @@ public interface QualificationCertificService {
      * @param qualificationCertificDtos
      * @return
      */
-    Map<String, Object> createQualificationCertific(List<CreateQualificationCertificDto> qualificationCertificDtos, Long CustomerId);
+    Map<String, Object> createQualificationCertific(List<CreateCustomerQualificationDto> qualificationCertificDtos, Integer CustomerId);
 
     /**
      * 修改单个资质证件照，注意新增updateDto
      *
      * @return
      */
-    Map<String, Object> updateQualificationCertific(UpdateQualificationCertificDto qualificationCertificDto);
+    Map<String, Object> updateQualificationCertific(UpdateCustomerQualificationDto qualificationCertificDto);
 
     /**
      * 修改资质证件照列表
@@ -44,7 +44,7 @@ public interface QualificationCertificService {
      * @param qualificationCertificDtos
      * @return
      */
-    Map<String, Object> updateQualificationCertific(List<UpdateQualificationCertificDto> qualificationCertificDtos);
+    Map<String, Object> updateQualificationCertific(List<UpdateCustomerQualificationDto> qualificationCertificDtos);
 
     /**
      * 获取单条记录
@@ -52,7 +52,7 @@ public interface QualificationCertificService {
      * @param id
      * @return
      */
-    Map<String, Object> getById(Long id);
+    Map<String, Object> getById(Integer id);
 
     /**
      * 根据条件分页获取
@@ -60,7 +60,7 @@ public interface QualificationCertificService {
      * @param dto
      * @return
      */
-    Map<String, Object> listByCriteria(ListQualificationCertificDto dto);
+    Map<String, Object> listByCriteria(ListCustomerQualificationCriteriaDto dto);
 
     /**
      * 删除资质证件照，注意逻辑删除
@@ -68,7 +68,7 @@ public interface QualificationCertificService {
      * @param id
      * @return
      */
-    Map<String, Object> disableQualificationCertific(Long id);
+    Map<String, Object> disableQualificationCertific(Integer id);
 
     /**
      * 删除资质证件照，注意逻辑删除
@@ -76,5 +76,5 @@ public interface QualificationCertificService {
      * @param id
      * @return
      */
-    Map<String, Object> disableQualificationCertific(List<QualificationCertificReturnDto> qualifications);
+    Map<String, Object> disableQualificationCertific(List<CustomerQualificationReturnDto> qualifications);
 }

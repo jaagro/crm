@@ -1,9 +1,9 @@
 package com.jaagro.crm.biz.mapper;
 
-import com.jaagro.crm.api.dto.request.contract.ContractCriteriaDto;
+import com.jaagro.crm.api.dto.request.contract.ListContractCriteriaDto;
 import com.jaagro.crm.api.dto.request.contract.UpdateContractDto;
 import com.jaagro.crm.biz.entity.Contract;
-import com.jaagro.crm.api.dto.response.contract.ContractReturnDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public interface ContractMapper {
      * @param id
      * @return
      */
-    int deleteByPrimaryKey(Long id);
+    int deleteByPrimaryKey(Integer id);
 
     /**
      * 新增
@@ -42,7 +42,7 @@ public interface ContractMapper {
      * @param id
      * @return
      */
-    Contract selectByPrimaryKey(Long id);
+    Contract selectByPrimaryKey(Integer id);
 
     /**
      * 动态更新
@@ -66,7 +66,7 @@ public interface ContractMapper {
      * @param id
      * @return
      */
-    ContractReturnDto getById(Long id);
+    ReturnContractDto getById(Integer id);
 
     /**
      * 分页查询
@@ -74,7 +74,7 @@ public interface ContractMapper {
      * @param dto
      * @return
      */
-    List<ContractReturnDto> listByPage(ContractCriteriaDto dto);
+    List<ReturnContractDto> listByPage(ListContractCriteriaDto dto);
 
     /**
      * 查询客户Id查询合同
@@ -82,7 +82,7 @@ public interface ContractMapper {
      * @param dto
      * @return
      */
-    List<ContractReturnDto> getByCustomerId(Long id);
+    List<ReturnContractDto> getByCustomerId(Integer id);
 
     /**
      * 新增时判断是否存在

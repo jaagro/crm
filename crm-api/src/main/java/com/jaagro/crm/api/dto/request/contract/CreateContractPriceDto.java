@@ -1,17 +1,18 @@
-package com.jaagro.crm.biz.entity;
+package com.jaagro.crm.api.dto.request.contract;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
- * @author tony
+ * @author baiyiran
  */
 @Data
 @Accessors(chain = true)
-public class ContractPrice implements Serializable {
+public class CreateContractPriceDto implements Serializable {
 
     /**
      * 客户合同报价
@@ -102,4 +103,6 @@ public class ContractPrice implements Serializable {
      * 是否有效
      */
     private Integer priceStatus;
+
+    private List<CreateContractSectionPriceDto> sectionPrice;
 }

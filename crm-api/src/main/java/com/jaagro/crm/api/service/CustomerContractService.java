@@ -28,7 +28,7 @@ public interface CustomerContractService {
      * @param dtos
      * @return
      */
-    Map<String, Object> createCustomerContract(List<CreateCustomerContractDto> dtos,Long CustomerId);
+    Map<String, Object> createCustomerContract(List<CreateCustomerContractDto> dtos,Integer CustomerId);
 
     /**
      * 修改单个客户联系人，注意新增updateDto
@@ -52,7 +52,7 @@ public interface CustomerContractService {
      * @param id
      * @return
      */
-    Map<String, Object> getById(Long id);
+    Map<String, Object> getById(Integer id);
 
     /**
      * 根据条件分页获取
@@ -68,7 +68,7 @@ public interface CustomerContractService {
      * @param id
      * @return
      */
-    Map<String, Object> disableCustomerContract(Long id);
+    Map<String, Object> disableCustomerContract(Integer id);
 
     /**
      * 删除客户联系人，注意逻辑删除

@@ -12,7 +12,7 @@ public interface CustomerMapper {
     /**
      * @mbggenerated 2018-08-16
      */
-    int deleteByPrimaryKey(Long id);
+    int deleteByPrimaryKey(Integer id);
 
     /**
      * @mbggenerated 2018-08-16
@@ -27,7 +27,7 @@ public interface CustomerMapper {
     /**
      * @mbggenerated 2018-08-16
      */
-    Customer selectByPrimaryKey(Long id);
+    Customer selectByPrimaryKey(Integer id);
 
     /**
      * @mbggenerated 2018-08-16
@@ -45,7 +45,7 @@ public interface CustomerMapper {
      * @param id
      * @return
      */
-    CustomerReturnDto getById(Long id);
+    CustomerReturnDto getById(Integer id);
 
     /**
      * 分页查询

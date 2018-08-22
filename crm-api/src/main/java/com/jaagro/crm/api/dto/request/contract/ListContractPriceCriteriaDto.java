@@ -5,14 +5,14 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
- * 计算运费相关条件dto
  * @author tony
  */
 @Data
 @Accessors(chain = true)
-public class PriceCriteriaDto implements Serializable {
+public class ListContractPriceCriteriaDto implements Serializable {
 
     /**
      * 合同id
@@ -68,4 +68,5 @@ public class PriceCriteriaDto implements Serializable {
      * 需计算的里程
      */
     private BigDecimal mileage;
+
 }

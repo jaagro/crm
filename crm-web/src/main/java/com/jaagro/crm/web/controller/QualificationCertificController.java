@@ -1,13 +1,10 @@
 package com.jaagro.crm.web.controller;
 
 import com.jaagro.crm.api.dto.request.customer.*;
-import com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto;
 import com.jaagro.crm.api.service.CustomerService;
-import com.jaagro.crm.api.service.CustomerSiteService;
 import com.jaagro.crm.api.service.QualificationCertificService;
 import com.jaagro.crm.biz.mapper.CustomerMapper;
-import com.jaagro.crm.biz.mapper.CustomerSiteMapper;
-import com.jaagro.crm.biz.mapper.QualificationCertificMapper;
+import com.jaagro.crm.biz.mapper.CustomerQualificationMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +28,11 @@ public class QualificationCertificController {
     @Autowired
     private QualificationCertificService certificService;
     @Autowired
-    private QualificationCertificMapper certificMapper;
+    private CustomerQualificationMapper certificMapper;
 
     @ApiOperation("新增资质")
     @PostMapping("/qualificationCertific")
-    public BaseResponse insertCustomer(@RequestBody CreateQualificationCertificDto certificDto) {
+    public BaseResponse insertCustomer(@RequestBody CreateCustomerQualificationDto certificDto) {
         if (certificDto.getCertificateType() == null) {
             return BaseResponse.idNull("证件类型:[certificateType]不能为空");
         }
@@ -53,7 +50,7 @@ public class QualificationCertificController {
 
     @ApiOperation("删除资质[逻辑]")
     @DeleteMapping("/deleteQualificationCertificById/{id}")
-    public BaseResponse deleteById(@PathVariable Long id) {
+    public BaseResponse deleteById(@PathVariable Integer id) {
         if (this.certificMapper.selectByPrimaryKey(id) == null) {
             return BaseResponse.errorInstance("查询不到相应数据");
         }
@@ -62,7 +59,7 @@ public class QualificationCertificController {
 
     @ApiOperation("修改单个资质")
     @PutMapping("/qualificationCertific")
-    public BaseResponse updateSite(@RequestBody UpdateQualificationCertificDto certificDto) {
+    public BaseResponse updateSite(@RequestBody UpdateCustomerQualificationDto certificDto) {
         if (certificDto.getCertificateType() == null) {
             return BaseResponse.idNull("证件类型:[certificateType]不能为空");
         }
@@ -80,7 +77,7 @@ public class QualificationCertificController {
 
     @ApiOperation("查询单个资质")
     @GetMapping("/qualificationCertific/{id}")
-    public BaseResponse getById(@PathVariable Long id) {
+    public BaseResponse getById(@PathVariable Integer id) {
         if (this.certificMapper.selectByPrimaryKey(id) == null) {
             return BaseResponse.queryDataEmpty();
         }
@@ -89,7 +86,7 @@ public class QualificationCertificController {
 
     @ApiOperation("分页查询资质")
     @PostMapping("/listQualificationCertificByCriteria")
-    public BaseResponse listByCriteria(@RequestBody ListQualificationCertificDto criteriaDto) {
+    public BaseResponse listByCriteria(@RequestBody ListCustomerQualificationCriteriaDto criteriaDto) {
         return BaseResponse.service(this.certificService.listByCriteria(criteriaDto));
     }
 }

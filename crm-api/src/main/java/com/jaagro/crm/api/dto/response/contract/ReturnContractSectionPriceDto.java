@@ -6,12 +6,13 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+
 /**
- * @author tony
+ * @author baiyiran
  */
 @Data
 @Accessors(chain = true)
-public class ContractSectionPriceDto implements Serializable {
+public class ReturnContractSectionPriceDto implements Serializable {
 
     private Integer selectionId;
 

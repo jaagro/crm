@@ -1,11 +1,9 @@
 package com.jaagro.crm.api.service;
 
 import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
-import com.jaagro.crm.api.dto.request.contract.ContractCriteriaDto;
+import com.jaagro.crm.api.dto.request.contract.ListContractCriteriaDto;
 import com.jaagro.crm.api.dto.request.contract.UpdateContractDto;
-import com.jaagro.crm.api.dto.response.contract.ContractReturnDto;
-import com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto;
-import feign.Contract;
+import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
 
 import java.util.List;
 import java.util.Map;
@@ -29,7 +27,7 @@ public interface ContractService {
      * @param dtos
      * @return
      */
-    Map<String, Object> createContract(List<CreateContractDto> dtos,Long CustomerId);
+    Map<String, Object> createContract(List<CreateContractDto> dtos,Integer CustomerId);
 
     /**
      * 修改合同
@@ -53,7 +51,7 @@ public interface ContractService {
      * @param contractId
      * @return
      */
-    Map<String, Object> getById(Long contractId);
+    Map<String, Object> getById(Integer contractId);
 
     /**
      * 分页查询
@@ -61,7 +59,7 @@ public interface ContractService {
      * @param dto
      * @return
      */
-    Map<String, Object> listByCriteria(ContractCriteriaDto dto);
+    Map<String, Object> listByCriteria(ListContractCriteriaDto dto);
 
     /**
      * 删除，注意逻辑删除
@@ -69,7 +67,7 @@ public interface ContractService {
      * @param id
      * @return
      */
-    Map<String, Object> disableById(Long id);
+    Map<String, Object> disableById(Integer id);
 
     /**
      * 删除，注意逻辑删除
@@ -77,6 +75,6 @@ public interface ContractService {
      * @param id
      * @return
      */
-    Map<String, Object> disableByID(List<ContractReturnDto> dtos);
+    Map<String, Object> disableByID(List<ReturnContractDto> dtos);
 
 }

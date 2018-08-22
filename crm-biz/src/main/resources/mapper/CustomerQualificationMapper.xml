@@ -1,60 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jaagro.crm.biz.mapper.QualificationCertificMapper">
-    <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.QualificationCertific">
-        <id column="id" jdbcType="BIGINT" property="id"/>
-        <result column="certificate_type" jdbcType="INTEGER" property="certificateType"/>
-        <result column="certificate_image_url" jdbcType="VARCHAR" property="certificateImageUrl"/>
-        <result column="certificate_status" jdbcType="INTEGER" property="certificateStatus"/>
-        <result column="customer_id" jdbcType="BIGINT" property="customerId"/>
-        <result column="description" jdbcType="VARCHAR" property="description"/>
-        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
-        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
-        <result column="modify_user_id" jdbcType="BIGINT" property="modifyUserId"/>
-        <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime"/>
-        <result column="enabled" property="enabled" jdbcType="TINYINT" />
+<mapper namespace="com.jaagro.crm.biz.mapper.CustomerQualificationMapper">
+    <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.CustomerQualification">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="certificate_type" property="certificateType" jdbcType="INTEGER"/>
+        <result column="certificate_image_url" property="certificateImageUrl" jdbcType="VARCHAR"/>
+        <result column="certificate_status" property="certificateStatus" jdbcType="INTEGER"/>
+        <result column="customer_id" property="customerId" jdbcType="INTEGER"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="create_user_id" property="createUserId" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+        <result column="enabled" property="enabled" jdbcType="TINYINT"/>
     </resultMap>
-    <resultMap id="ReturnMap" type="com.jaagro.crm.api.dto.response.customer.QualificationCertificReturnDto">
-        <id column="id" jdbcType="BIGINT" property="id"/>
-        <result column="certificate_type" jdbcType="INTEGER" property="certificateType"/>
-        <result column="certificate_image_url" jdbcType="VARCHAR" property="certificateImageUrl"/>
-        <result column="certificate_status" jdbcType="INTEGER" property="certificateStatus"/>
-        <result column="customer_id" jdbcType="BIGINT" property="customerId"/>
-        <result column="description" jdbcType="VARCHAR" property="description"/>
-        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
-        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
-        <result column="modify_user_id" jdbcType="BIGINT" property="modifyUserId"/>
-        <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime"/>
-        <result column="enabled" property="enabled" jdbcType="TINYINT" />
+    <resultMap id="ReturnMap" type="com.jaagro.crm.api.dto.response.customer.CustomerQualificationReturnDto">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="certificate_type" property="certificateType" jdbcType="INTEGER"/>
+        <result column="certificate_image_url" property="certificateImageUrl" jdbcType="VARCHAR"/>
+        <result column="certificate_status" property="certificateStatus" jdbcType="INTEGER"/>
+        <result column="customer_id" property="customerId" jdbcType="INTEGER"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="create_user_id" property="createUserId" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+        <result column="enabled" property="enabled" jdbcType="TINYINT"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, certificate_type, certificate_image_url, certificate_status, customer_id, description,
     create_user_id, create_time, modify_user_id, modify_time, enabled
   </sql>
-    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
-        from qualification_certific
-        where id = #{id,jdbcType=BIGINT}
+        from customer_qualification
+        where id = #{id,jdbcType=INTEGER}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from qualification_certific
-    where id = #{id,jdbcType=BIGINT}
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from customer_qualification
+    where id = #{id,jdbcType=INTEGER}
   </delete>
-    <insert id="insert" parameterType="com.jaagro.crm.biz.entity.QualificationCertific" useGeneratedKeys="true"
+    <insert id="insert" parameterType="com.jaagro.crm.biz.entity.CustomerQualification" useGeneratedKeys="true"
             keyProperty="id" keyColumn="id">
-    insert into qualification_certific (id, certificate_type, certificate_image_url,
+    insert into customer_qualification (id, certificate_type, certificate_image_url,
       certificate_status, customer_id, description,
       create_user_id, create_time, modify_user_id,
       modify_time, enabled)
-    values (#{id,jdbcType=BIGINT}, #{certificateType,jdbcType=INTEGER}, #{certificateImageUrl,jdbcType=VARCHAR},
-      #{certificateStatus,jdbcType=INTEGER}, #{customerId,jdbcType=BIGINT}, #{description,jdbcType=VARCHAR},
-      #{createUserId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=BIGINT},
+    values (#{id,jdbcType=INTEGER}, #{certificateType,jdbcType=INTEGER}, #{certificateImageUrl,jdbcType=VARCHAR},
+      #{certificateStatus,jdbcType=INTEGER}, #{customerId,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR},
+      #{createUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=INTEGER},
       #{modifyTime,jdbcType=TIMESTAMP}, #{enabled,jdbcType=TINYINT})
   </insert>
-    <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.QualificationCertific" useGeneratedKeys="true"
+    <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.CustomerQualification" useGeneratedKeys="true"
             keyProperty="id" keyColumn="id">
-        insert into qualification_certific
+        insert into customer_qualification
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 id,
@@ -92,7 +92,7 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
-                #{id,jdbcType=BIGINT},
+                #{id,jdbcType=INTEGER},
             </if>
             <if test="certificateType != null">
                 #{certificateType,jdbcType=INTEGER},
@@ -104,19 +104,19 @@
                 #{certificateStatus,jdbcType=INTEGER},
             </if>
             <if test="customerId != null">
-                #{customerId,jdbcType=BIGINT},
+                #{customerId,jdbcType=INTEGER},
             </if>
             <if test="description != null">
                 #{description,jdbcType=VARCHAR},
             </if>
             <if test="createUserId != null">
-                #{createUserId,jdbcType=BIGINT},
+                #{createUserId,jdbcType=INTEGER},
             </if>
             <if test="createTime != null">
                 #{createTime,jdbcType=TIMESTAMP},
             </if>
             <if test="modifyUserId != null">
-                #{modifyUserId,jdbcType=BIGINT},
+                #{modifyUserId,jdbcType=INTEGER},
             </if>
             <if test="modifyTime != null">
                 #{modifyTime,jdbcType=TIMESTAMP},
@@ -126,8 +126,8 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.QualificationCertific">
-        update qualification_certific
+    <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.CustomerQualification">
+        update customer_qualification
         <set>
             <if test="certificateType != null">
                 certificate_type = #{certificateType,jdbcType=INTEGER},
@@ -139,19 +139,19 @@
                 certificate_status = #{certificateStatus,jdbcType=INTEGER},
             </if>
             <if test="customerId != null">
-                customer_id = #{customerId,jdbcType=BIGINT},
+                customer_id = #{customerId,jdbcType=INTEGER},
             </if>
             <if test="description != null">
                 description = #{description,jdbcType=VARCHAR},
             </if>
             <if test="createUserId != null">
-                create_user_id = #{createUserId,jdbcType=BIGINT},
+                create_user_id = #{createUserId,jdbcType=INTEGER},
             </if>
             <if test="createTime != null">
                 create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
             <if test="modifyUserId != null">
-                modify_user_id = #{modifyUserId,jdbcType=BIGINT},
+                modify_user_id = #{modifyUserId,jdbcType=INTEGER},
             </if>
             <if test="modifyTime != null">
                 modify_time = #{modifyTime,jdbcType=TIMESTAMP},
@@ -160,32 +160,33 @@
                 enabled = #{enabled,jdbcType=TINYINT},
             </if>
         </set>
-        where id = #{id,jdbcType=BIGINT}
+        where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.QualificationCertific">
-    update qualification_certific
+    <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.CustomerQualification">
+    update customer_qualification
     set certificate_type = #{certificateType,jdbcType=INTEGER},
       certificate_image_url = #{certificateImageUrl,jdbcType=VARCHAR},
       certificate_status = #{certificateStatus,jdbcType=INTEGER},
-      customer_id = #{customerId,jdbcType=BIGINT},
+      customer_id = #{customerId,jdbcType=INTEGER},
       description = #{description,jdbcType=VARCHAR},
-      create_user_id = #{createUserId,jdbcType=BIGINT},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      modify_user_id = #{modifyUserId,jdbcType=BIGINT},
+      modify_user_id = #{modifyUserId,jdbcType=INTEGER},
       modify_time = #{modifyTime,jdbcType=TIMESTAMP},
       enabled = #{enabled,jdbcType=TINYINT}
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </update>
-    <select id="getByCustomerQualificationId" resultMap="ReturnMap" parameterType="java.lang.Long">
+    <select id="getByCustomerQualificationId" resultMap="ReturnMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
-        from qualification_certific
-        where customer_id = #{id,jdbcType=BIGINT}
+        from customer_qualification
+        where customer_id = #{id,jdbcType=INTEGER}
     </select>
-    <select id="getByQualificationCriteriDto" resultMap="ReturnMap" parameterType="com.jaagro.crm.api.dto.request.customer.ListQualificationCertificDto">
+    <select id="getByQualificationCriteriDto" resultMap="ReturnMap"
+            parameterType="com.jaagro.crm.api.dto.request.customer.ListCustomerQualificationCriteriaDto">
         select
         <include refid="Base_Column_List"/>
-        from qualification_certific
+        from customer_qualification
         where 1=1
         <if test="certificateType != null">
             and certificate_type = #{certificateType}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jaagro.crm.biz.mapper.CustomerVerifyLogMapper" >
-  <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.CustomerVerifyLog" >
+<mapper namespace="com.jaagro.crm.biz.mapper.QualificationVerifyLogMapper" >
+  <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.QualificationVerifyLog" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="verify_type" property="verifyType" jdbcType="INTEGER" />
     <result column="audit_result" property="auditResult" jdbcType="INTEGER" />
@@ -24,7 +24,7 @@
     delete from customer_verify_log
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.CustomerVerifyLog" useGeneratedKeys="true" keyProperty="id" keyColumn="id" >
+  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.QualificationVerifyLog" useGeneratedKeys="true" keyProperty="id" keyColumn="id" >
     insert into customer_verify_log (id, verify_type, audit_result,
       auditor, audit_time, audit_type,
       description, references_id)
@@ -32,7 +32,7 @@
       #{auditor,jdbcType=VARCHAR}, #{auditTime,jdbcType=TIMESTAMP}, #{auditType,jdbcType=INTEGER},
       #{description,jdbcType=VARCHAR}, #{referencesId,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.CustomerVerifyLog" useGeneratedKeys="true" keyProperty="id" keyColumn="id" >
+  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.QualificationVerifyLog" useGeneratedKeys="true" keyProperty="id" keyColumn="id" >
     insert into customer_verify_log
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -87,7 +87,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.CustomerVerifyLog">
+  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.QualificationVerifyLog">
     update customer_verify_log
     <set>
       <if test="verifyType != null">
@@ -114,7 +114,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.CustomerVerifyLog">
+  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.QualificationVerifyLog">
     update customer_verify_log
     set verify_type = #{verifyType,jdbcType=INTEGER},
       audit_result = #{auditResult,jdbcType=INTEGER},

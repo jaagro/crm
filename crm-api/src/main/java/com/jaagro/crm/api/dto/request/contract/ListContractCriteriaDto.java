@@ -11,7 +11,7 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-public class ContractCriteriaDto implements Serializable {
+public class ListContractCriteriaDto implements Serializable {
 
     /**
      * 当前页
@@ -23,18 +23,18 @@ public class ContractCriteriaDto implements Serializable {
      */
     private int pageSize;
 
-    private Long customerId;
-
+    /**
+     * 合同状态: 1-正常 2-终止
+     */
     private Integer contractStatus;
 
-    private Date startDate;
-
-    private Date endDate;
-
+    /**
+     * 合同类型
+     */
     private Integer type;
 
-    private String theme;
-
-    private Date createTime;
-
+    /**
+     * 关键字
+     */
+    private String keywords;
 }

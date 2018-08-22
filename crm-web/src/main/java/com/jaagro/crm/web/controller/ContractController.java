@@ -1,6 +1,6 @@
 package com.jaagro.crm.web.controller;
 
-import com.jaagro.crm.api.dto.request.contract.ContractCriteriaDto;
+import com.jaagro.crm.api.dto.request.contract.ListContractCriteriaDto;
 import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
 import com.jaagro.crm.api.dto.request.contract.UpdateContractDto;
 import com.jaagro.crm.api.service.ContractService;
@@ -17,7 +17,7 @@ import utils.BaseResponse;
 import java.util.Map;
 
 /**
- * @author liqiangping
+ * @author baiyiran
  */
 @RestController
 @Api(value = "contract", description = "客户合同管理", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -80,7 +80,7 @@ public class ContractController {
 
     @ApiOperation("查询单个合同")
     @GetMapping("/contract/{id}")
-    public BaseResponse getById(@PathVariable Long id) {
+    public BaseResponse getById(@PathVariable Integer id) {
         if (this.contractMapper.selectByPrimaryKey(id) == null) {
             return BaseResponse.queryDataEmpty();
         }
@@ -90,7 +90,7 @@ public class ContractController {
 
     @ApiOperation("分页查询合同")
     @PostMapping("/listContractByCriteria")
-    public BaseResponse listByCriteria(@RequestBody ContractCriteriaDto dto) {
+    public BaseResponse listByCriteria(@RequestBody ListContractCriteriaDto dto) {
         return BaseResponse.service(contractService.listByCriteria(dto));
     }
 }

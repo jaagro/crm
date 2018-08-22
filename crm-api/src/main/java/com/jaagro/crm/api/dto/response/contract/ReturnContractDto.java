@@ -1,4 +1,4 @@
-package com.jaagro.crm.api.dto.request.contract;
+package com.jaagro.crm.api.dto.response.contract;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -7,12 +7,20 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+
 /**
+ * 客户合同分页查询 返回类
+ *
  * @author baiyiran
  */
 @Data
 @Accessors(chain = true)
-public class CreateContractDto implements Serializable {
+
+public class ReturnContractDto implements Serializable {
+    /**
+     * 合同ID
+     */
+    private Integer id;
 
     /**
      * 客户ID
@@ -70,7 +78,33 @@ public class CreateContractDto implements Serializable {
     private String remark;
 
     /**
-     * 报价
+     * 创建时间
      */
-    private List<CreateContractPriceDto> price;
+    private Date createTime;
+
+    /**
+     * 创建人
+     */
+    private Integer createUser;
+
+    /**
+     * 最新修改时间
+     */
+    private Date newUpdateTime;
+
+    /**
+     * 最新修改人
+     */
+    private Integer newUpdateUser;
+
+    /**
+     * version
+     */
+    private Integer version;
+
+    /**
+     * 合同报价
+     */
+    private List<ReturnContractPriceDto> prices;
+
 }

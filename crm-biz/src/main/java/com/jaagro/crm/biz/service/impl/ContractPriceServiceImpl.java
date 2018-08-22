@@ -1,6 +1,6 @@
 package com.jaagro.crm.biz.service.impl;
 
-import com.jaagro.crm.api.dto.response.contract.ContractPriceReturnDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnContractPriceDto;
 import com.jaagro.crm.api.service.ContractPriceService;
 import com.jaagro.crm.api.service.ContractSectionPriceService;
 import com.jaagro.crm.biz.entity.ContractPrice;
@@ -25,9 +25,9 @@ public class ContractPriceServiceImpl implements ContractPriceService {
     private ContractSectionPriceService sectionPriceService;
 
     @Override
-    public Map<String, Object> disableByContractId(Long id) {
-        List<ContractPriceReturnDto> priceReturnDto = this.priceMapper.getByContractId(id);
-        for (ContractPriceReturnDto dto : priceReturnDto) {
+    public Map<String, Object> disableByContractId(Integer id) {
+        List<ReturnContractPriceDto> priceReturnDto = this.priceMapper.getByContractId(id);
+        for (ReturnContractPriceDto dto : priceReturnDto) {
             ContractPrice price = new ContractPrice();
             BeanUtils.copyProperties(dto, price);
             price.setPriceStatus(0);

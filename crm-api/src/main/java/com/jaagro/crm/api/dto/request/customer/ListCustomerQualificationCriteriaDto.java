@@ -13,7 +13,7 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-public class ListQualificationCertificDto implements Serializable {
+public class ListCustomerQualificationCriteriaDto implements Serializable {
 
     /**
      * 起始页
