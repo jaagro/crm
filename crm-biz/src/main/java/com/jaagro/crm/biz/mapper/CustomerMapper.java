@@ -3,6 +3,7 @@ package com.jaagro.crm.biz.mapper;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerReturnDto;
+import com.jaagro.crm.api.dto.response.customer.ListCustomerDto;
 import com.jaagro.crm.biz.entity.Customer;
 
 import java.util.List;
@@ -58,7 +59,7 @@ public interface CustomerMapper {
      * @param dto
      * @return
      */
-    List<CustomerReturnDto> getByCriteriDto(ListCustomerCriteriaDto dto);
+    List<ListCustomerDto> getByCriteriaDto(ListCustomerCriteriaDto dto);
 
     /**
      * 新增时判断名称是否重复

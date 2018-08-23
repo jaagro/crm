@@ -40,12 +40,12 @@ public class ReturnContractPriceDto implements Serializable {
     /**
      * 发货地址id
      */
-    private Integer pickupAddressId;
+    private Integer loadSiteId;
 
     /**
      * 收货地址id
      */
-    private Integer shippingAddressId;
+    private Integer unloadSiteId;
 
     /**
      * 车辆类型

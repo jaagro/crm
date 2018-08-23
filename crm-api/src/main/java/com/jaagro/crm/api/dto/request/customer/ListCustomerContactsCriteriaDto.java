@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 客户联系人分页查询帮助类
@@ -13,7 +12,7 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-public class ListCustomerContractCriteriaDto implements Serializable {
+public class ListCustomerContactsCriteriaDto implements Serializable {
 
     /**
      * 起始页

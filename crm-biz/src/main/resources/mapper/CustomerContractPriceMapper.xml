@@ -5,8 +5,8 @@
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="contract_id" property="contractId" jdbcType="INTEGER"/>
         <result column="pricing_type" property="pricingType" jdbcType="INTEGER"/>
-        <result column="pickup_address_id" property="pickupAddressId" jdbcType="INTEGER"/>
-        <result column="shipping_address_id" property="shippingAddressId" jdbcType="INTEGER"/>
+        <result column="load_site_id" property="loadSiteId" jdbcType="INTEGER"/>
+        <result column="unload_site_id" property="unloadSiteId" jdbcType="INTEGER"/>
         <result column="vehicle_type" property="vehicleType" jdbcType="INTEGER"/>
         <result column="product_type" property="productType" jdbcType="INTEGER"/>
         <result column="specification" property="specification" jdbcType="VARCHAR"/>
@@ -23,8 +23,8 @@
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="contract_id" property="contractId" jdbcType="INTEGER"/>
         <result column="pricing_type" property="pricingType" jdbcType="INTEGER"/>
-        <result column="pickup_address_id" property="pickupAddressId" jdbcType="INTEGER"/>
-        <result column="shipping_address_id" property="shippingAddressId" jdbcType="INTEGER"/>
+        <result column="load_site_id" property="loadSiteId" jdbcType="INTEGER"/>
+        <result column="unload_site_id" property="unloadSiteId" jdbcType="INTEGER"/>
         <result column="vehicle_type" property="vehicleType" jdbcType="INTEGER"/>
         <result column="product_type" property="productType" jdbcType="INTEGER"/>
         <result column="specification" property="specification" jdbcType="VARCHAR"/>
@@ -40,30 +40,30 @@
                     select="com.jaagro.crm.biz.mapper.CustomerContractSectionPriceMapper.listByPriceId"></collection>
     </resultMap>
     <sql id="Base_Column_List">
-    id, contract_id, pricing_type, pickup_address_id, shipping_address_id, vehicle_type,
+    id, contract_id, pricing_type, load_site_id, unload_site_id, vehicle_type,
     product_type, specification, price, has_weight_section_values, has_mile_section_values,
     min_mile, min_weight, min_money, price_status
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
-        from contract_price
+        from customer_contract_price
         where id = #{id,jdbcType=INTEGER}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from contract_price
+    delete from customer_contract_price
     where id = #{id,jdbcType=INTEGER}
   </delete>
     <insert id="insert" parameterType="com.jaagro.crm.biz.entity.CustomerContractPrice" useGeneratedKeys="true" keyProperty="id"
             keyColumn="id">
-    insert into contract_price (id, contract_id, pricing_type,
-      pickup_address_id, shipping_address_id, vehicle_type,
+    insert into customer_contract_price (id, contract_id, pricing_type,
+      load_site_id, unload_site_id, vehicle_type,
       product_type, specification, price,
       has_weight_section_values, has_mile_section_values,
       min_mile, min_weight, min_money,
       price_status)
     values (#{id,jdbcType=INTEGER}, #{contractId,jdbcType=INTEGER}, #{pricingType,jdbcType=INTEGER},
-      #{pickupAddressId,jdbcType=INTEGER}, #{shippingAddressId,jdbcType=INTEGER}, #{vehicleType,jdbcType=INTEGER},
+      #{load_site_id,jdbcType=INTEGER}, #{unload_site_id,jdbcType=INTEGER}, #{vehicleType,jdbcType=INTEGER},
       #{productType,jdbcType=INTEGER}, #{specification,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL},
       #{hasWeightSectionValues,jdbcType=INTEGER}, #{hasMileSectionValues,jdbcType=INTEGER},
       #{minMile,jdbcType=DECIMAL}, #{minWeight,jdbcType=DECIMAL}, #{minMoney,jdbcType=DECIMAL},
@@ -71,7 +71,7 @@
   </insert>
     <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.CustomerContractPrice" useGeneratedKeys="true"
             keyProperty="id" keyColumn="id">
-        insert into contract_price
+        insert into customer_contract_price
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 id,
@@ -82,11 +82,11 @@
             <if test="pricingType != null">
                 pricing_type,
             </if>
-            <if test="pickupAddressId != null">
-                pickup_address_id,
+            <if test="loadSiteId != null">
+                load_site_id,
             </if>
-            <if test="shippingAddressId != null">
-                shipping_address_id,
+            <if test="unloadSiteId != null">
+                unload_site_id,
             </if>
             <if test="vehicleType != null">
                 vehicle_type,
@@ -129,11 +129,11 @@
             <if test="pricingType != null">
                 #{pricingType,jdbcType=INTEGER},
             </if>
-            <if test="pickupAddressId != null">
-                #{pickupAddressId,jdbcType=INTEGER},
+            <if test="loadSiteId != null">
+                #{load_site_id,jdbcType=INTEGER},
             </if>
-            <if test="shippingAddressId != null">
-                #{shippingAddressId,jdbcType=INTEGER},
+            <if test="unloadSiteId != null">
+                #{unload_site_id,jdbcType=INTEGER},
             </if>
             <if test="vehicleType != null">
                 #{vehicleType,jdbcType=INTEGER},
@@ -168,7 +168,7 @@
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.CustomerContractPrice">
-        update contract_price
+        update customer_contract_price
         <set>
             <if test="contractId != null">
                 contract_id = #{contractId,jdbcType=INTEGER},
@@ -176,11 +176,11 @@
             <if test="pricingType != null">
                 pricing_type = #{pricingType,jdbcType=INTEGER},
             </if>
-            <if test="pickupAddressId != null">
-                pickup_address_id = #{pickupAddressId,jdbcType=INTEGER},
+            <if test="loadSiteId != null">
+                load_site_id = #{loadSiteId,jdbcType=INTEGER},
             </if>
-            <if test="shippingAddressId != null">
-                shipping_address_id = #{shippingAddressId,jdbcType=INTEGER},
+            <if test="unloadSiteId != null">
+                unload_site_id = #{unloadSiteId,jdbcType=INTEGER},
             </if>
             <if test="vehicleType != null">
                 vehicle_type = #{vehicleType,jdbcType=INTEGER},
@@ -216,11 +216,11 @@
         where id = #{id,jdbcType=INTEGER}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.CustomerContractPrice">
-    update contract_price
+    update customer_contract_price
     set contract_id = #{contractId,jdbcType=INTEGER},
       pricing_type = #{pricingType,jdbcType=INTEGER},
-      pickup_address_id = #{pickupAddressId,jdbcType=INTEGER},
-      shipping_address_id = #{shippingAddressId,jdbcType=INTEGER},
+      load_site_id = #{loadSiteId,jdbcType=INTEGER},
+      unload_site_id = #{unloadSiteId,jdbcType=INTEGER},
       vehicle_type = #{vehicleType,jdbcType=INTEGER},
       product_type = #{productType,jdbcType=INTEGER},
       specification = #{specification,jdbcType=VARCHAR},
@@ -235,14 +235,14 @@
   </update>
     <select id="getPriceByCriteria" resultMap="DetailInfo"
             parameterType="com.jaagro.crm.api.dto.request.contract.ListContractPriceCriteriaDto">
-        select * from contract_price where
+        select * from customer_contract_price where
         contract_id = #{contractId} and pricing_type = #{pricingType} and product_type = #{productType} and price_status
         = 1
-        <if test="pickupAddressId != null">
-            and pickup_address_id = #{pickupAddressId}
+        <if test="loadSiteId != null">
+            and load_site_id = #{loadSiteId}
         </if>
-        <if test="shippingAddressId != null">
-            and shipping_address_id = #{shippingAddressId}
+        <if test="unloadSiteId != null">
+            and unload_site_id = #{unloadSiteId}
         </if>
         <if test="vehicleType != null">
             and vehicle_type = #{vehicleType}
@@ -255,17 +255,17 @@
     <select id="getByContractId" parameterType="java.lang.Integer" resultMap="DetailInfo">
         select
         <include refid="Base_Column_List"/>
-        from contract_price
+        from customer_contract_price
         where contract_id = #{contractId,jdbcType=INTEGER}
     </select>
     <select id="listByContractId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from contract_price
+        from customer_contract_price
         where contract_id = #{contractId,jdbcType=INTEGER}
     </select>
     <delete id="deleteByContractId" parameterType="java.lang.Integer">
-        delete from contract_price
+        delete from customer_contract_price
         where contract_id = #{contractId,jdbcType=INTEGER}
     </delete>
 </mapper>

@@ -129,7 +129,7 @@ public class CustomerReturnDto implements Serializable {
     /**
      * 客户联系人
      */
-    private List<CustomerContractReturnDto> customerContractReturnDtos;
+    private List<CustomerContactsReturnDto> customerContactsReturnDtos;
 
     /**
      * 查询客户合同

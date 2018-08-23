@@ -50,11 +50,11 @@
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
         select
         <include refid="Base_Column_List" />
-        from customerContract
+        from customer_contract
         where id = #{id,jdbcType=INTEGER}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from customerContract
+    delete from customer_contract
     where id = #{id,jdbcType=INTEGER}
   </delete>
     <insert id="insert" parameterType="com.jaagro.crm.biz.entity.CustomerContract" useGeneratedKeys="true" keyProperty="id"
@@ -74,7 +74,7 @@
   </insert>
     <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.CustomerContract" useGeneratedKeys="true" keyProperty="id"
             keyColumn="id">
-        insert into customerContract
+        insert into customer_contract
         <trim prefix="(" suffix=")" suffixOverrides="," >
             <if test="id != null" >
                 id,
@@ -184,7 +184,7 @@
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.CustomerContract" useGeneratedKeys="true" keyProperty="id"
             keyColumn="id">
-        update customerContract
+        update customer_contract
         <set >
             <if test="customerId != null" >
                 customer_id = #{customerId,jdbcType=INTEGER},
@@ -239,7 +239,7 @@
     </update>
     <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.CustomerContract" useGeneratedKeys="true" keyProperty="id"
             keyColumn="id">
-    update customerContract
+    update customer_contract
     set customer_id = #{customerId,jdbcType=INTEGER},
       contract_status = #{contractStatus,jdbcType=INTEGER},
       start_date = #{startDate,jdbcType=DATE},
@@ -262,7 +262,7 @@
             resultMap="DetailInfo">
         select
         <include refid="Base_Column_List"/>
-        from customerContract
+        from customer_contract
         where 1 = 1
         <if test="endDate != null">
             <![CDATA[and create_time <= #{endDate}]]>
@@ -276,20 +276,20 @@
     <select id="getById" parameterType="java.lang.Integer" resultMap="DetailInfo">
         select
         <include refid="Base_Column_List"/>
-        from customerContract
+        from customer_contract
         where id = #{id,jdbcType=INTEGER}
     </select>
     <select id="getByCustomerId" parameterType="java.lang.Integer" resultMap="DetailInfo">
         select
         <include refid="Base_Column_List"/>
-        from customerContract
+        from customer_contract
         where customer_id = #{id,jdbcType=INTEGER}
     </select>
     <select id="getByUpdateDto" parameterType="com.jaagro.crm.api.dto.request.contract.UpdateContractDto"
             resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from customerContract
+        from customer_contract
         where contract_number = #{contractNumber}
         <if test="id != null">
             and id != #{id}

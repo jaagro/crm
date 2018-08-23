@@ -1,7 +1,7 @@
 package com.jaagro.crm.biz.mapper;
 
-import com.jaagro.crm.api.dto.request.customer.ListCustomerContractCriteriaDto;
-import com.jaagro.crm.api.dto.response.customer.CustomerContractReturnDto;
+import com.jaagro.crm.api.dto.request.customer.ListCustomerContactsCriteriaDto;
+import com.jaagro.crm.api.dto.response.customer.CustomerContactsReturnDto;
 import com.jaagro.crm.biz.entity.CustomerContacts;
 
 import java.util.List;
@@ -49,7 +49,7 @@ public interface CustomerContactsMapper {
      * @param id
      * @return
      */
-    List<CustomerContractReturnDto> getByCustomerId(Integer id);
+    List<CustomerContactsReturnDto> getByCustomerId(Integer id);
 
     /**
      * 分页查询
@@ -57,5 +57,5 @@ public interface CustomerContactsMapper {
      * @param dto
      * @return
      */
-    List<CustomerContractReturnDto> getByCriteriDto(ListCustomerContractCriteriaDto dto);
+    List<CustomerContactsReturnDto> getByCriteriDto(ListCustomerContactsCriteriaDto dto);
 }

@@ -13,10 +13,10 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-public class CustomerContractReturnDto implements Serializable {
+public class CustomerContactsReturnDto implements Serializable {
 
     /**
-     * 客户审核记录主键id
+     *
      */
     private Integer id;
 

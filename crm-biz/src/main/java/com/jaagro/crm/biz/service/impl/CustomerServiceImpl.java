@@ -7,6 +7,7 @@ import com.jaagro.crm.api.dto.request.customer.CreateCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerReturnDto;
+import com.jaagro.crm.api.dto.response.customer.ListCustomerDto;
 import com.jaagro.crm.api.service.*;
 import com.jaagro.crm.biz.entity.Customer;
 import com.jaagro.crm.biz.mapper.CustomerMapper;
@@ -147,7 +148,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Map<String, Object> listByCriteria(ListCustomerCriteriaDto dto) {
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
-        List<CustomerReturnDto> customerReturnDtos = this.customerMapper.getByCriteriDto(dto);
+        List<ListCustomerDto> customerReturnDtos = this.customerMapper.getByCriteriaDto(dto);
         return ServiceResult.toResult(new PageInfo<>(customerReturnDtos));
 
     }
@@ -184,8 +185,8 @@ public class CustomerServiceImpl implements CustomerService {
                 this.siteService.disableSite(customerDto.getSites());
             }
             //逻辑删除 联系人
-            if (customerDto.getCustomerContractReturnDtos() != null && customerDto.getCustomerContractReturnDtos().size() > 0) {
-                this.customerContractService.disableCustomerContract(customerDto.getCustomerContractReturnDtos());
+            if (customerDto.getCustomerContactsReturnDtos() != null && customerDto.getCustomerContactsReturnDtos().size() > 0) {
+                this.customerContractService.disableCustomerContract(customerDto.getCustomerContactsReturnDtos());
             }
             //逻辑删除 证件照
             if (customerDto.getQualifications() != null && customerDto.getQualifications().size() > 0) {

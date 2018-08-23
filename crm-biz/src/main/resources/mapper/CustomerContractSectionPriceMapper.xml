@@ -16,30 +16,30 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from contract_section_price
+    from customer_contract_section_price
     where selection_id = #{selectionId,jdbcType=INTEGER}
   </select>
   <select id="listByPriceId"
           resultType="com.jaagro.crm.api.dto.response.contract.ReturnContractSectionPriceDto">
     select
     <include refid="Base_Column_List"></include>
-    from contract_section_price
+    from customer_contract_section_price
     where contract_price_id = #{priceId}
   </select>
   <select id="getByLimit"
           resultType="com.jaagro.crm.biz.entity.CustomerContractSectionPrice">
     select
     <include refid="Base_Column_List"></include>
-    from contract_section_price
+    from customer_contract_section_price
     where contract_price_id = #{contractPriceId} and #{value} between upper_limit and lower_limit
     order by selection_id desc limit 1
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from contract_section_price
+    delete from customer_contract_section_price
     where selection_id = #{selectionId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.jaagro.crm.biz.entity.CustomerContractSectionPrice" useGeneratedKeys="true" keyProperty="selectionId" keyColumn="selection_id">
-    insert into contract_section_price (selection_id, contract_price_id, section_type, 
+    insert into customer_contract_section_price (selection_id, contract_price_id, section_type,
       upper_limit, lower_limit, price, 
       selection_status)
     values (#{selectionId,jdbcType=INTEGER}, #{contractPriceId,jdbcType=INTEGER}, #{sectionType,jdbcType=INTEGER}, 
@@ -47,7 +47,7 @@
       #{selectionStatus,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.CustomerContractSectionPrice" useGeneratedKeys="true" keyProperty="selectionId" keyColumn="selection_id">
-    insert into contract_section_price
+    insert into customer_contract_section_price
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="selectionId != null">
         selection_id,
@@ -96,7 +96,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.CustomerContractSectionPrice">
-    update contract_section_price
+    update customer_contract_section_price
     <set>
       <if test="contractPriceId != null">
         contract_price_id = #{contractPriceId,jdbcType=INTEGER},
@@ -120,7 +120,7 @@
     where selection_id = #{selectionId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.CustomerContractSectionPrice">
-    update contract_section_price
+    update customer_contract_section_price
     set contract_price_id = #{contractPriceId,jdbcType=INTEGER},
       section_type = #{sectionType,jdbcType=INTEGER},
       upper_limit = #{upperLimit,jdbcType=DECIMAL},
@@ -130,7 +130,7 @@
     where selection_id = #{selectionId,jdbcType=INTEGER}
   </update>
   <delete id="deleteByPriceId" parameterType="java.lang.Long">
-    delete from contract_section_price
+    delete from customer_contract_section_price
     where contract_price_id = #{contractPriceId,jdbcType=INTEGER}
   </delete>
 </mapper>

@@ -2,7 +2,7 @@ package com.jaagro.crm.api.service;
 
 import com.jaagro.crm.api.dto.request.customer.*;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerContractDto;
-import com.jaagro.crm.api.dto.response.customer.CustomerContractReturnDto;
+import com.jaagro.crm.api.dto.response.customer.CustomerContactsReturnDto;
 
 import java.util.List;
 import java.util.Map;
@@ -60,7 +60,7 @@ public interface CustomerContractService {
      * @param dto
      * @return
      */
-    Map<String, Object> listByCriteria(ListCustomerContractCriteriaDto dto);
+    Map<String, Object> listByCriteria(ListCustomerContactsCriteriaDto dto);
 
     /**
      * 删除客户联系人，注意逻辑删除
@@ -76,5 +76,5 @@ public interface CustomerContractService {
      * @param id
      * @return
      */
-    Map<String, Object> disableCustomerContract(List<CustomerContractReturnDto> customerContractReturnDtos);
+    Map<String, Object> disableCustomerContract(List<CustomerContactsReturnDto> customerContactsReturnDtos);
 }

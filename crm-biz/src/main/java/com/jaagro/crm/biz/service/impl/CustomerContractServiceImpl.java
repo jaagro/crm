@@ -3,9 +3,9 @@ package com.jaagro.crm.biz.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerContractDto;
-import com.jaagro.crm.api.dto.request.customer.ListCustomerContractCriteriaDto;
+import com.jaagro.crm.api.dto.request.customer.ListCustomerContactsCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerContractDto;
-import com.jaagro.crm.api.dto.response.customer.CustomerContractReturnDto;
+import com.jaagro.crm.api.dto.response.customer.CustomerContactsReturnDto;
 import com.jaagro.crm.api.service.CustomerContractService;
 import com.jaagro.crm.biz.entity.CustomerContacts;
 import com.jaagro.crm.biz.mapper.CustomerContactsMapper;
@@ -77,9 +77,9 @@ public class CustomerContractServiceImpl implements CustomerContractService {
     }
 
     @Override
-    public Map<String, Object> listByCriteria(ListCustomerContractCriteriaDto dto) {
+    public Map<String, Object> listByCriteria(ListCustomerContactsCriteriaDto dto) {
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
-        List<CustomerContractReturnDto> contractReturnDtos = this.customerContactsMapper.getByCriteriDto(dto);
+        List<CustomerContactsReturnDto> contractReturnDtos = this.customerContactsMapper.getByCriteriDto(dto);
         return ServiceResult.toResult(new PageInfo<>(contractReturnDtos));
     }
 
@@ -91,9 +91,9 @@ public class CustomerContractServiceImpl implements CustomerContractService {
     }
 
     @Override
-    public Map<String, Object> disableCustomerContract(List<CustomerContractReturnDto> customerContractReturnDtos) {
-        if (customerContractReturnDtos != null && customerContractReturnDtos.size() > 0) {
-            for (CustomerContractReturnDto contractReturnDto : customerContractReturnDtos) {
+    public Map<String, Object> disableCustomerContract(List<CustomerContactsReturnDto> customerContactsReturnDtos) {
+        if (customerContactsReturnDtos != null && customerContactsReturnDtos.size() > 0) {
+            for (CustomerContactsReturnDto contractReturnDto : customerContactsReturnDtos) {
                 CustomerContacts customerContacts = this.customerContactsMapper.selectByPrimaryKey(contractReturnDto.getId());
                 customerContacts.setEnabled(false);
                 this.customerContactsMapper.updateByPrimaryKeySelective(customerContacts);
