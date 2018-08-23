@@ -34,7 +34,7 @@
     delete from truck_team
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="entity.TruckTeam" >
+  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.TruckTeam" >
     insert into truck_team (id, team_name, team_type, 
       legal_name, credit_code, team_status, 
       cooperation_type, province, city, 
@@ -48,7 +48,7 @@
       #{modifyTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, #{modifyUserId,jdbcType=INTEGER}, 
       #{notes,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="entity.TruckTeam" >
+  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.TruckTeam" >
     insert into truck_team
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -151,7 +151,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="entity.TruckTeam" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.TruckTeam" >
     update truck_team
     <set >
       <if test="teamName != null" >
@@ -202,7 +202,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="entity.TruckTeam" >
+  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.TruckTeam" >
     update truck_team
     set team_name = #{teamName,jdbcType=VARCHAR},
       team_type = #{teamType,jdbcType=INTEGER},

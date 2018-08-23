@@ -31,7 +31,7 @@
     delete from truck_qualification
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="entity.TruckQualification" >
+  <insert id="insert" parameterType="com.jaagro.crm.entity.TruckQualification" >
     insert into truck_qualification (id, truck_team_id, truck_id, 
       driver_id, certificate_type, certificate_image_url, 
       certificate_status, create_user_id, modify_user_id, 
@@ -43,7 +43,7 @@
       #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, #{notes,jdbcType=VARCHAR}, 
       #{enabled,jdbcType=TINYINT})
   </insert>
-  <insert id="insertSelective" parameterType="entity.TruckQualification" >
+  <insert id="insertSelective" parameterType="com.jaagro.crm.entity.TruckQualification" >
     insert into truck_qualification
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -128,7 +128,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="entity.TruckQualification" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.entity.TruckQualification" >
     update truck_qualification
     <set >
       <if test="truckTeamId != null" >
@@ -170,7 +170,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="entity.TruckQualification" >
+  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.entity.TruckQualification" >
     update truck_qualification
     set truck_team_id = #{truckTeamId,jdbcType=INTEGER},
       truck_id = #{truckId,jdbcType=INTEGER},
