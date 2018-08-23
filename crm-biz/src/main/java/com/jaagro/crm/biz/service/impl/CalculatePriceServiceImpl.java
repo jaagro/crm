@@ -4,10 +4,9 @@ import com.jaagro.crm.api.dto.request.contract.ListContractPriceCriteriaDto;
 import com.jaagro.crm.api.dto.response.PriceReturnDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractPriceDto;
 import com.jaagro.crm.api.service.CalculatePriceService;
-import com.jaagro.crm.biz.entity.ContractPrice;
+import com.jaagro.crm.biz.entity.CustomerContractSectionPrice;
 import com.jaagro.crm.biz.mapper.ContractSectionPriceMapper;
 import com.jaagro.crm.api.constant.PricingType;
-import com.jaagro.crm.biz.entity.ContractSectionPrice;
 import com.jaagro.crm.biz.mapper.ContractPriceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -122,7 +121,7 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
             if (cp == null) {
                 return ServiceResult.error("未找到相应的报价");
             }
-            ContractSectionPrice csp = contractSectionPriceMapper.getByLimit(cp.getId(), dto.getMileage());
+            CustomerContractSectionPrice csp = contractSectionPriceMapper.getByLimit(cp.getId(), dto.getMileage());
             if (csp == null) {
                 return ServiceResult.error("未找到相应的区间报价");
             }

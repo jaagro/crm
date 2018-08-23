@@ -1,7 +1,7 @@
 package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.api.dto.response.contract.ReturnContractSectionPriceDto;
-import com.jaagro.crm.biz.entity.ContractSectionPrice;
+import com.jaagro.crm.biz.entity.CustomerContractSectionPrice;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
@@ -26,7 +26,7 @@ public interface ContractSectionPriceMapper {
      * @param record
      * @return
      */
-    int insert(ContractSectionPrice record);
+    int insert(CustomerContractSectionPrice record);
 
     /**
      * 新增关键字段
@@ -34,7 +34,7 @@ public interface ContractSectionPriceMapper {
      * @param record
      * @return
      */
-    int insertSelective(ContractSectionPrice record);
+    int insertSelective(CustomerContractSectionPrice record);
 
     /**
      * 获取单条
@@ -42,7 +42,7 @@ public interface ContractSectionPriceMapper {
      * @param id
      * @return
      */
-    ContractSectionPrice selectByPrimaryKey(Integer selectionId);
+    CustomerContractSectionPrice selectByPrimaryKey(Integer selectionId);
 
     /**
      * 依据字段修改
@@ -50,7 +50,7 @@ public interface ContractSectionPriceMapper {
      * @param record
      * @return
      */
-    int updateByPrimaryKeySelective(ContractSectionPrice record);
+    int updateByPrimaryKeySelective(CustomerContractSectionPrice record);
 
     /**
      * 修改全表
@@ -58,7 +58,7 @@ public interface ContractSectionPriceMapper {
      * @param record
      * @return
      */
-    int updateByPrimaryKey(ContractSectionPrice record);
+    int updateByPrimaryKey(CustomerContractSectionPrice record);
 
     /**
      * 根据外键id删除
@@ -83,5 +83,5 @@ public interface ContractSectionPriceMapper {
      * @param value
      * @return
      */
-    ContractSectionPrice getByLimit(@Param("contractPriceId") Integer contractPriceId, @Param("value") BigDecimal value);
+    CustomerContractSectionPrice getByLimit(@Param("contractPriceId") Integer contractPriceId, @Param("value") BigDecimal value);
 }

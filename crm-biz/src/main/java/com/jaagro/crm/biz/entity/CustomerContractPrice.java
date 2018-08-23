@@ -11,7 +11,7 @@ import java.math.BigDecimal;
  */
 @Data
 @Accessors(chain = true)
-public class ContractPrice implements Serializable {
+public class CustomerContractPrice implements Serializable {
 
     /**
      * 客户合同报价

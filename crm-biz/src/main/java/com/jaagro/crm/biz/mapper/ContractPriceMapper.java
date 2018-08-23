@@ -1,7 +1,7 @@
 package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.api.dto.request.contract.ListContractPriceCriteriaDto;
-import com.jaagro.crm.biz.entity.ContractPrice;
+import com.jaagro.crm.biz.entity.CustomerContractPrice;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractPriceDto;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public interface ContractPriceMapper {
      * @param record
      * @return
      */
-    int insert(ContractPrice record);
+    int insert(CustomerContractPrice record);
 
     /**
      * 新增关键字段
@@ -32,7 +32,7 @@ public interface ContractPriceMapper {
      * @param record
      * @return
      */
-    int insertSelective(ContractPrice record);
+    int insertSelective(CustomerContractPrice record);
 
     /**
      * 获取单条
@@ -40,7 +40,7 @@ public interface ContractPriceMapper {
      * @param id
      * @return
      */
-    ContractPrice selectByPrimaryKey(Integer id);
+    CustomerContractPrice selectByPrimaryKey(Integer id);
 
     /**
      * 依据字段修改
@@ -48,7 +48,7 @@ public interface ContractPriceMapper {
      * @param record
      * @return
      */
-    int updateByPrimaryKeySelective(ContractPrice record);
+    int updateByPrimaryKeySelective(CustomerContractPrice record);
 
     /**
      * 修改全表
@@ -56,7 +56,7 @@ public interface ContractPriceMapper {
      * @param record
      * @return
      */
-    int updateByPrimaryKey(ContractPrice record);
+    int updateByPrimaryKey(CustomerContractPrice record);
 
     /**
      * 根据合同id 查出所有price记录

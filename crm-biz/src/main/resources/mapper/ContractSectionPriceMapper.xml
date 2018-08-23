@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jaagro.crm.biz.mapper.ContractSectionPriceMapper">
-  <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.ContractSectionPrice">
+  <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.CustomerContractSectionPrice">
     <id column="selection_id" jdbcType="INTEGER" property="selectionId" />
     <result column="contract_price_id" jdbcType="INTEGER" property="contractPriceId" />
     <result column="section_type" jdbcType="INTEGER" property="sectionType" />
@@ -20,14 +20,14 @@
     where selection_id = #{selectionId,jdbcType=INTEGER}
   </select>
   <select id="listByPriceId"
-          resultType="com.jaagro.crm.api.dto.response.contract.ReturnContractSectionPriceDto">
+          resultType="com.jaagro.crm.api.dto.response.customerContract.ReturnContractSectionPriceDto">
     select
     <include refid="Base_Column_List"></include>
     from contract_section_price
     where contract_price_id = #{priceId}
   </select>
   <select id="getByLimit"
-          resultType="com.jaagro.crm.biz.entity.ContractSectionPrice">
+          resultType="com.jaagro.crm.biz.entity.CustomerContractSectionPrice">
     select
     <include refid="Base_Column_List"></include>
     from contract_section_price
@@ -38,7 +38,7 @@
     delete from contract_section_price
     where selection_id = #{selectionId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.ContractSectionPrice" useGeneratedKeys="true" keyProperty="selectionId" keyColumn="selection_id">
+  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.CustomerContractSectionPrice" useGeneratedKeys="true" keyProperty="selectionId" keyColumn="selection_id">
     insert into contract_section_price (selection_id, contract_price_id, section_type, 
       upper_limit, lower_limit, price, 
       selection_status)
@@ -46,7 +46,7 @@
       #{upperLimit,jdbcType=DECIMAL}, #{lowerLimit,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL}, 
       #{selectionStatus,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.ContractSectionPrice" useGeneratedKeys="true" keyProperty="selectionId" keyColumn="selection_id">
+  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.CustomerContractSectionPrice" useGeneratedKeys="true" keyProperty="selectionId" keyColumn="selection_id">
     insert into contract_section_price
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="selectionId != null">
@@ -95,7 +95,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.ContractSectionPrice">
+  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.CustomerContractSectionPrice">
     update contract_section_price
     <set>
       <if test="contractPriceId != null">
@@ -119,7 +119,7 @@
     </set>
     where selection_id = #{selectionId,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.ContractSectionPrice">
+  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.CustomerContractSectionPrice">
     update contract_section_price
     set contract_price_id = #{contractPriceId,jdbcType=INTEGER},
       section_type = #{sectionType,jdbcType=INTEGER},

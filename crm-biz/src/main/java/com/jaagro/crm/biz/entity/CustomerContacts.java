@@ -11,9 +11,9 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-public class CustomerContracts implements Serializable {
+public class CustomerContacts implements Serializable {
     /**
-     * 客户审核记录主键id
+     * 主键id
      */
     private Integer id;
 

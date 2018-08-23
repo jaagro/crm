@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jaagro.crm.biz.mapper.ContractPriceMapper">
-    <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.ContractPrice">
+    <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.CustomerContractPrice">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="contract_id" property="contractId" jdbcType="INTEGER"/>
         <result column="pricing_type" property="pricingType" jdbcType="INTEGER"/>
@@ -19,7 +19,7 @@
         <result column="price_status" property="priceStatus" jdbcType="INTEGER"/>
     </resultMap>
 
-    <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.contract.ReturnContractPriceDto">
+    <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.customerContract.ReturnContractPriceDto">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="contract_id" property="contractId" jdbcType="INTEGER"/>
         <result column="pricing_type" property="pricingType" jdbcType="INTEGER"/>
@@ -54,7 +54,7 @@
     delete from contract_price
     where id = #{id,jdbcType=INTEGER}
   </delete>
-    <insert id="insert" parameterType="com.jaagro.crm.biz.entity.ContractPrice" useGeneratedKeys="true" keyProperty="id"
+    <insert id="insert" parameterType="com.jaagro.crm.biz.entity.CustomerContractPrice" useGeneratedKeys="true" keyProperty="id"
             keyColumn="id">
     insert into contract_price (id, contract_id, pricing_type,
       pickup_address_id, shipping_address_id, vehicle_type,
@@ -69,7 +69,7 @@
       #{minMile,jdbcType=DECIMAL}, #{minWeight,jdbcType=DECIMAL}, #{minMoney,jdbcType=DECIMAL},
       #{priceStatus,jdbcType=INTEGER})
   </insert>
-    <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.ContractPrice" useGeneratedKeys="true"
+    <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.CustomerContractPrice" useGeneratedKeys="true"
             keyProperty="id" keyColumn="id">
         insert into contract_price
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -167,7 +167,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.ContractPrice">
+    <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.CustomerContractPrice">
         update contract_price
         <set>
             <if test="contractId != null">
@@ -215,7 +215,7 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.ContractPrice">
+    <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.CustomerContractPrice">
     update contract_price
     set contract_id = #{contractId,jdbcType=INTEGER},
       pricing_type = #{pricingType,jdbcType=INTEGER},
@@ -234,7 +234,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
     <select id="getPriceByCriteria" resultMap="DetailInfo"
-            parameterType="com.jaagro.crm.api.dto.request.contract.ListContractPriceCriteriaDto">
+            parameterType="com.jaagro.crm.api.dto.request.customerContract.ListContractPriceCriteriaDto">
         select * from contract_price where
         contract_id = #{contractId} and pricing_type = #{pricingType} and product_type = #{productType} and price_status
         = 1

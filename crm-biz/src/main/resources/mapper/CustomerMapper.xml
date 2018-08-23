@@ -345,7 +345,6 @@
         <if test="keywords != null">
             <![CDATA[and (customer_name like concat('%',#{keywords},'%') or city like concat('%',#{keywords},'%') or province like concat('%',#{keywords},'%') or county like concat('%',#{keywords},'%') or address like concat('%',#{keywords},'%') or credit_code like concat('%',#{keywords},'%') )]]>
         </if>
-        and enabled = 1
         order by create_time desc
     </select>
     <select id="getByCustomerDto" resultMap="BaseResultMap"

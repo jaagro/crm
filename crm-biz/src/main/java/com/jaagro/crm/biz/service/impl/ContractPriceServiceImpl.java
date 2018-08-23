@@ -3,7 +3,7 @@ package com.jaagro.crm.biz.service.impl;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractPriceDto;
 import com.jaagro.crm.api.service.ContractPriceService;
 import com.jaagro.crm.api.service.ContractSectionPriceService;
-import com.jaagro.crm.biz.entity.ContractPrice;
+import com.jaagro.crm.biz.entity.CustomerContractPrice;
 import com.jaagro.crm.biz.mapper.ContractPriceMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class ContractPriceServiceImpl implements ContractPriceService {
     public Map<String, Object> disableByContractId(Integer id) {
         List<ReturnContractPriceDto> priceReturnDto = this.priceMapper.getByContractId(id);
         for (ReturnContractPriceDto dto : priceReturnDto) {
-            ContractPrice price = new ContractPrice();
+            CustomerContractPrice price = new CustomerContractPrice();
             BeanUtils.copyProperties(dto, price);
             price.setPriceStatus(0);
             this.priceMapper.updateByPrimaryKeySelective(price);

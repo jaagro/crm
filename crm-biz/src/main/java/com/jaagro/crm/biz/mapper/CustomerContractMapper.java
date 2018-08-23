@@ -2,7 +2,7 @@ package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.api.dto.request.customer.ListCustomerContractCriteriaDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerContractReturnDto;
-import com.jaagro.crm.biz.entity.CustomerContracts;
+import com.jaagro.crm.biz.entity.CustomerContacts;
 
 import java.util.List;
 
@@ -20,31 +20,31 @@ public interface CustomerContractMapper {
      *
      * @mbggenerated 2018-08-22
      */
-    int insert(CustomerContracts record);
+    int insert(CustomerContacts record);
 
     /**
      *
      * @mbggenerated 2018-08-22
      */
-    int insertSelective(CustomerContracts record);
+    int insertSelective(CustomerContacts record);
 
     /**
      *
      * @mbggenerated 2018-08-22
      */
-    CustomerContracts selectByPrimaryKey(Integer id);
+    CustomerContacts selectByPrimaryKey(Integer id);
 
     /**
      *
      * @mbggenerated 2018-08-22
      */
-    int updateByPrimaryKeySelective(CustomerContracts record);
+    int updateByPrimaryKeySelective(CustomerContacts record);
 
     /**
      *
      * @mbggenerated 2018-08-22
      */
-    int updateByPrimaryKey(CustomerContracts record);
+    int updateByPrimaryKey(CustomerContacts record);
 
     /**
      * 查询客户全部联系人

@@ -11,7 +11,7 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-public class Contract implements Serializable {
+public class CustomerContract implements Serializable {
 
     /**
      * 合同ID

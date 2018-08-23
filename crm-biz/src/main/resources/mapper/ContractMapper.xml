@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jaagro.crm.biz.mapper.ContractMapper">
-    <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.Contract">
+    <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.CustomerContract">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="customer_id" property="customerId" jdbcType="INTEGER"/>
         <result column="contract_status" property="contractStatus" jdbcType="INTEGER"/>
@@ -20,7 +20,7 @@
         <result column="new_update_user" property="newUpdateUser" jdbcType="INTEGER"/>
         <result column="version" property="version" jdbcType="INTEGER"/>
     </resultMap>
-    <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.contract.ReturnContractDto">
+    <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.customerContract.ReturnContractDto">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="customer_id" property="customerId" jdbcType="INTEGER"/>
         <result column="contract_status" property="contractStatus" jdbcType="INTEGER"/>
@@ -50,16 +50,16 @@
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
         select
         <include refid="Base_Column_List" />
-        from contract
+        from customerContract
         where id = #{id,jdbcType=INTEGER}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from contract
+    delete from customerContract
     where id = #{id,jdbcType=INTEGER}
   </delete>
-    <insert id="insert" parameterType="com.jaagro.crm.biz.entity.Contract" useGeneratedKeys="true" keyProperty="id"
+    <insert id="insert" parameterType="com.jaagro.crm.biz.entity.CustomerContract" useGeneratedKeys="true" keyProperty="id"
             keyColumn="id">
-    insert into contract (id, customer_id, contract_status,
+    insert into customerContract (id, customer_id, contract_status,
       start_date, end_date, contract_date,
       type, theme, product,
       context, contract_number, remark,
@@ -72,9 +72,9 @@
       #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=INTEGER}, #{newUpdateTime,jdbcType=TIMESTAMP},
       #{newUpdateUser,jdbcType=INTEGER}, #{version,jdbcType=INTEGER})
   </insert>
-    <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.Contract" useGeneratedKeys="true" keyProperty="id"
+    <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.CustomerContract" useGeneratedKeys="true" keyProperty="id"
             keyColumn="id">
-        insert into contract
+        insert into customerContract
         <trim prefix="(" suffix=")" suffixOverrides="," >
             <if test="id != null" >
                 id,
@@ -182,9 +182,9 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.Contract" useGeneratedKeys="true" keyProperty="id"
+    <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.CustomerContract" useGeneratedKeys="true" keyProperty="id"
             keyColumn="id">
-        update contract
+        update customerContract
         <set >
             <if test="customerId != null" >
                 customer_id = #{customerId,jdbcType=INTEGER},
@@ -237,9 +237,9 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.Contract" useGeneratedKeys="true" keyProperty="id"
+    <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.CustomerContract" useGeneratedKeys="true" keyProperty="id"
             keyColumn="id">
-    update contract
+    update customerContract
     set customer_id = #{customerId,jdbcType=INTEGER},
       contract_status = #{contractStatus,jdbcType=INTEGER},
       start_date = #{startDate,jdbcType=DATE},
@@ -258,11 +258,11 @@
       version = #{version,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
-    <select id="listByPage" parameterType="com.jaagro.crm.api.dto.request.contract.ListContractCriteriaDto"
+    <select id="listByPage" parameterType="com.jaagro.crm.api.dto.request.customerContract.ListContractCriteriaDto"
             resultMap="DetailInfo">
         select
         <include refid="Base_Column_List"/>
-        from contract
+        from customerContract
         where 1 = 1
         <if test="endDate != null">
             <![CDATA[and create_time <= #{endDate}]]>
@@ -276,20 +276,20 @@
     <select id="getById" parameterType="java.lang.Integer" resultMap="DetailInfo">
         select
         <include refid="Base_Column_List"/>
-        from contract
+        from customerContract
         where id = #{id,jdbcType=INTEGER}
     </select>
     <select id="getByCustomerId" parameterType="java.lang.Integer" resultMap="DetailInfo">
         select
         <include refid="Base_Column_List"/>
-        from contract
+        from customerContract
         where customer_id = #{id,jdbcType=INTEGER}
     </select>
-    <select id="getByUpdateDto" parameterType="com.jaagro.crm.api.dto.request.contract.UpdateContractDto"
+    <select id="getByUpdateDto" parameterType="com.jaagro.crm.api.dto.request.customerContract.UpdateContractDto"
             resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from contract
+        from customerContract
         where contract_number = #{contractNumber}
         <if test="id != null">
             and id != #{id}

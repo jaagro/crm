@@ -1,6 +1,6 @@
 package com.jaagro.crm.biz.mapper;
 
-import com.jaagro.crm.biz.entity.ContractLog;
+import com.jaagro.crm.biz.entity.CustomerContractLog;
 
 public interface ContractLogMapper {
 
@@ -12,25 +12,25 @@ public interface ContractLogMapper {
     /**
      * @mbggenerated 2018-08-22
      */
-    int insert(ContractLog record);
+    int insert(CustomerContractLog record);
 
     /**
      * @mbggenerated 2018-08-22
      */
-    int insertSelective(ContractLog record);
+    int insertSelective(CustomerContractLog record);
 
     /**
      * @mbggenerated 2018-08-22
      */
-    ContractLog selectByPrimaryKey(Integer id);
+    CustomerContractLog selectByPrimaryKey(Integer id);
 
     /**
      * @mbggenerated 2018-08-22
      */
-    int updateByPrimaryKeySelective(ContractLog record);
+    int updateByPrimaryKeySelective(CustomerContractLog record);
 
     /**
      * @mbggenerated 2018-08-22
      */
-    int updateByPrimaryKey(ContractLog record);
+    int updateByPrimaryKey(CustomerContractLog record);
 }

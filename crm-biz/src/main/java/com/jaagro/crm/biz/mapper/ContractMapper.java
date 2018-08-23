@@ -2,7 +2,7 @@ package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.api.dto.request.contract.ListContractCriteriaDto;
 import com.jaagro.crm.api.dto.request.contract.UpdateContractDto;
-import com.jaagro.crm.biz.entity.Contract;
+import com.jaagro.crm.biz.entity.CustomerContract;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public interface ContractMapper {
      * @param record
      * @return
      */
-    int insert(Contract record);
+    int insert(CustomerContract record);
 
     /**
      * 动态新增
@@ -34,7 +34,7 @@ public interface ContractMapper {
      * @param record
      * @return
      */
-    int insertSelective(Contract record);
+    int insertSelective(CustomerContract record);
 
     /**
      * 主键查询
@@ -42,7 +42,7 @@ public interface ContractMapper {
      * @param id
      * @return
      */
-    Contract selectByPrimaryKey(Integer id);
+    CustomerContract selectByPrimaryKey(Integer id);
 
     /**
      * 动态更新
@@ -50,7 +50,7 @@ public interface ContractMapper {
      * @param record
      * @return
      */
-    int updateByPrimaryKeySelective(Contract record);
+    int updateByPrimaryKeySelective(CustomerContract record);
 
     /**
      * 主键更新
@@ -58,7 +58,7 @@ public interface ContractMapper {
      * @param record
      * @return
      */
-    int updateByPrimaryKey(Contract record);
+    int updateByPrimaryKey(CustomerContract record);
 
     /**
      * 查询单个Dto
@@ -90,5 +90,5 @@ public interface ContractMapper {
      * @param updateContractDto
      * @return
      */
-    Contract getByUpdateDto(UpdateContractDto updateContractDto);
+    CustomerContract getByUpdateDto(UpdateContractDto updateContractDto);
 }
