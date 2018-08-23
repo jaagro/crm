@@ -9,6 +9,7 @@ import com.jaagro.crm.biz.mapper.CustomerMapper;
 import com.jaagro.crm.biz.mapper.CustomerSiteMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,7 @@ public class CustomerSiteController {
     @Autowired
     private CustomerSiteMapper siteMapper;
 
-    @ApiOperation("新增单个地址")
+    @ApiOperation(value = "新增单个地址")
     @PostMapping("/site")
     public BaseResponse insertCustomer(@RequestBody CreateCustomerSiteDto siteDto) {
         if (siteDto.getCustomerId() == null) {
