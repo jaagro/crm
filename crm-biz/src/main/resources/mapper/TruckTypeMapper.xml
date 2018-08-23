@@ -22,7 +22,7 @@
     delete from truck_type
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="entity.TruckType" >
+  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.TruckType" >
     insert into truck_type (id, name, truck_length, 
       truck_weight, truck_amount, enabled
       )
@@ -30,7 +30,7 @@
       #{truckWeight,jdbcType=VARCHAR}, #{truckAmount,jdbcType=VARCHAR}, #{enabled,jdbcType=TINYINT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="entity.TruckType" >
+  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.TruckType" >
     insert into truck_type
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -73,7 +73,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="entity.TruckType" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.TruckType" >
     update truck_type
     <set >
       <if test="name != null" >
@@ -94,7 +94,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="entity.TruckType" >
+  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.TruckType" >
     update truck_type
     set name = #{name,jdbcType=INTEGER},
       truck_length = #{truckLength,jdbcType=VARCHAR},

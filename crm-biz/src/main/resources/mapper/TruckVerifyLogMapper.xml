@@ -24,7 +24,7 @@
     delete from truck_verify_log
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="entity.TruckVerifyLog" >
+  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.TruckVerifyLog" >
     insert into truck_verify_log (id, verify_type, audit_result, 
       auditor, audit_time, audit_type, 
       description, references_id)
@@ -32,7 +32,7 @@
       #{auditor,jdbcType=INTEGER}, #{auditTime,jdbcType=TIMESTAMP}, #{auditType,jdbcType=INTEGER}, 
       #{description,jdbcType=VARCHAR}, #{referencesId,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="entity.TruckVerifyLog" >
+  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.TruckVerifyLog" >
     insert into truck_verify_log
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -87,7 +87,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="entity.TruckVerifyLog" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.TruckVerifyLog" >
     update truck_verify_log
     <set >
       <if test="verifyType != null" >
@@ -114,7 +114,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="entity.TruckVerifyLog" >
+  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.TruckVerifyLog" >
     update truck_verify_log
     set verify_type = #{verifyType,jdbcType=INTEGER},
       audit_result = #{auditResult,jdbcType=INTEGER},

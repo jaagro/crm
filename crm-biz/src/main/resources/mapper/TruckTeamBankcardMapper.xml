@@ -21,13 +21,13 @@
     delete from truck_team_bankcard
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="entity.TruckTeamBankcard" >
+  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.TruckTeamBankcard" >
     insert into truck_team_bankcard (id, truck_team_id, payment_account_id, 
       deposit_bank, account_person)
     values (#{id,jdbcType=INTEGER}, #{truckTeamId,jdbcType=INTEGER}, #{paymentAccountId,jdbcType=VARCHAR}, 
       #{depositBank,jdbcType=VARCHAR}, #{accountPerson,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="entity.TruckTeamBankcard" >
+  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.TruckTeamBankcard" >
     insert into truck_team_bankcard
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -64,7 +64,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="entity.TruckTeamBankcard" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.TruckTeamBankcard" >
     update truck_team_bankcard
     <set >
       <if test="truckTeamId != null" >
@@ -82,7 +82,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="entity.TruckTeamBankcard" >
+  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.TruckTeamBankcard" >
     update truck_team_bankcard
     set truck_team_id = #{truckTeamId,jdbcType=INTEGER},
       payment_account_id = #{paymentAccountId,jdbcType=VARCHAR},
