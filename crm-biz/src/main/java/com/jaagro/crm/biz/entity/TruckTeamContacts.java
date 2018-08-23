@@ -11,21 +11,21 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-public class CustomerContacts implements Serializable {
+public class TruckTeamContacts implements Serializable {
     /**
-     * 客户审核记录主键id
+     * 主键车队表联系人ID
      */
     private Integer id;
 
     /**
-     * 外键关联客户ID(References customer)
+     * 关联车队表ID
      */
-    private Integer customerId;
+    private Integer truckTeamId;
 
     /**
      * 联系人姓名
      */
-    private String contact;
+    private String contract;
 
     /**
      * 联系电话
@@ -38,7 +38,7 @@ public class CustomerContacts implements Serializable {
     private String position;
 
     /**
-     * 状态(0 停用 1 启用)
+     * 状态(0-停用 1- 可用)
      */
     private Boolean enabled;
 

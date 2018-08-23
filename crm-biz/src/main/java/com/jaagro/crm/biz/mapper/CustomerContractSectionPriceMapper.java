@@ -7,56 +7,40 @@ import org.apache.ibatis.annotations.Param;
 import java.math.BigDecimal;
 import java.util.List;
 
-/**
- * @author baiyiran
- */
-public interface ContractSectionPriceMapper {
-
+public interface CustomerContractSectionPriceMapper {
     /**
-     * 删除
      *
-     * @param id
-     * @return
+     * @mbggenerated 2018-08-23
      */
     int deleteByPrimaryKey(Integer selectionId);
 
     /**
-     * 新增全表
      *
-     * @param record
-     * @return
+     * @mbggenerated 2018-08-23
      */
     int insert(CustomerContractSectionPrice record);
 
     /**
-     * 新增关键字段
      *
-     * @param record
-     * @return
+     * @mbggenerated 2018-08-23
      */
     int insertSelective(CustomerContractSectionPrice record);
 
     /**
-     * 获取单条
      *
-     * @param id
-     * @return
+     * @mbggenerated 2018-08-23
      */
     CustomerContractSectionPrice selectByPrimaryKey(Integer selectionId);
 
     /**
-     * 依据字段修改
      *
-     * @param record
-     * @return
+     * @mbggenerated 2018-08-23
      */
     int updateByPrimaryKeySelective(CustomerContractSectionPrice record);
 
     /**
-     * 修改全表
      *
-     * @param record
-     * @return
+     * @mbggenerated 2018-08-23
      */
     int updateByPrimaryKey(CustomerContractSectionPrice record);
 

@@ -1,8 +1,8 @@
 package com.jaagro.crm.biz.mapper;
 
-import com.jaagro.crm.biz.entity.QualificationVerifyLog;
+import com.jaagro.crm.biz.entity.Truck;
 
-public interface QualificationVerifyLogMapper {
+public interface TruckMapper {
     /**
      *
      * @mbggenerated 2018-08-23
@@ -13,29 +13,29 @@ public interface QualificationVerifyLogMapper {
      *
      * @mbggenerated 2018-08-23
      */
-    int insert(QualificationVerifyLog record);
+    int insert(Truck record);
 
     /**
      *
      * @mbggenerated 2018-08-23
      */
-    int insertSelective(QualificationVerifyLog record);
+    int insertSelective(Truck record);
 
     /**
      *
      * @mbggenerated 2018-08-23
      */
-    QualificationVerifyLog selectByPrimaryKey(Integer id);
+    Truck selectByPrimaryKey(Integer id);
 
     /**
      *
      * @mbggenerated 2018-08-23
      */
-    int updateByPrimaryKeySelective(QualificationVerifyLog record);
+    int updateByPrimaryKeySelective(Truck record);
 
     /**
      *
      * @mbggenerated 2018-08-23
      */
-    int updateByPrimaryKey(QualificationVerifyLog record);
+    int updateByPrimaryKey(Truck record);
 }

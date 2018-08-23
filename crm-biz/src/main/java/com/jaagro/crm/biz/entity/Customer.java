@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * @author baiyiran
+ * @author tony
  */
 @Data
 @Accessors(chain = true)
@@ -25,7 +25,7 @@ public class Customer implements Serializable {
 
     /**
      * 客户类型
-     * (1:个体客户 2:企业客户 )
+ (1:个体客户 2:企业客户 )
      */
     private Integer customerType;
 
@@ -36,19 +36,19 @@ public class Customer implements Serializable {
 
     /**
      * 审核状态
-     * (0未审核，1-正常合作  10-停止合作 11-审核未通过 13-作废)
+ (0未审核，1-正常合作  10-停止合作 11-审核未通过 13-作废)
      */
     private Integer customerStatus;
-
-    /**
-     * 所属省份
-     */
-    private String province;
 
     /**
      * 所属城市
      */
     private String city;
+
+    /**
+     * 所属省份
+     */
+    private String province;
 
     /**
      * 所属区县
@@ -77,13 +77,13 @@ public class Customer implements Serializable {
 
     /**
      * 是否开票
-     * 0:否 1:是
+ 0:否 1:是
      */
     private Boolean enableInvoice;
 
     /**
      * 发票类型
-     * 1:增值税普通发票 2:增值税专用发票
+ 1:增值税普通发票 2:增值税专用发票
      */
     private Integer invoiceType;
 
@@ -121,5 +121,4 @@ public class Customer implements Serializable {
      * 修改人(References: user)
      */
     private Integer modifyUserId;
-
 }

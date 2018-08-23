@@ -7,49 +7,40 @@ import com.jaagro.crm.biz.entity.CustomerSite;
 
 import java.util.List;
 
-/**
- * @author baiyiran
- */
 public interface CustomerSiteMapper {
     /**
-     * @mbggenerated 2018-08-16
+     *
+     * @mbggenerated 2018-08-23
      */
     int deleteByPrimaryKey(Integer id);
 
     /**
-     * 新增
      *
-     * @param record
-     * @return
+     * @mbggenerated 2018-08-23
      */
     int insert(CustomerSite record);
 
     /**
-     * 动态新增
      *
-     * @param record
-     * @return
+     * @mbggenerated 2018-08-23
      */
     int insertSelective(CustomerSite record);
 
     /**
-     * 主键查询
      *
-     * @param id
-     * @return
+     * @mbggenerated 2018-08-23
      */
     CustomerSite selectByPrimaryKey(Integer id);
 
     /**
-     * 动态更新
      *
-     * @param record
-     * @return
+     * @mbggenerated 2018-08-23
      */
     int updateByPrimaryKeySelective(CustomerSite record);
 
     /**
-     * 主键更新
+     *
+     * @mbggenerated 2018-08-23
      */
     int updateByPrimaryKey(CustomerSite record);
 
@@ -75,6 +66,4 @@ public interface CustomerSiteMapper {
      * @param siteName
      */
     CustomerSiteReturnDto getSiteDto(UpdateCustomerSiteDto siteDto);
-
-
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jaagro.crm.biz.mapper.ContractPriceMapper">
+<mapper namespace="com.jaagro.crm.biz.mapper.CustomerContractPriceMapper">
     <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.CustomerContractPrice">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="contract_id" property="contractId" jdbcType="INTEGER"/>
@@ -37,7 +37,7 @@
         <result column="price_status" property="priceStatus" jdbcType="INTEGER"/>
 
         <collection property="sectionPrice" column="id"
-                    select="com.jaagro.crm.biz.mapper.ContractSectionPriceMapper.listByPriceId"></collection>
+                    select="com.jaagro.crm.biz.mapper.CustomerContractSectionPriceMapper.listByPriceId"></collection>
     </resultMap>
     <sql id="Base_Column_List">
     id, contract_id, pricing_type, pickup_address_id, shipping_address_id, vehicle_type,

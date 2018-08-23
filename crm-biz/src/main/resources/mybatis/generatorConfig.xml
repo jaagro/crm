@@ -15,7 +15,7 @@
 
         <!-- 数据库链接信息 -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql:///userserver?useSSL=false"
+                        connectionURL="jdbc:mysql:///crmserver?useSSL=false"
                         userId="root"
                         password="123456">
         </jdbcConnection>
@@ -29,25 +29,25 @@
         targetProject：目标工程
         -->
         <!-- entity class -->
-        <javaModelGenerator targetPackage="com.jaagro.user.biz.entity"
-                            targetProject="E:\git\jaagro-platform-crm\crm-biz\src\main\java">
+        <javaModelGenerator targetPackage="entity"
+                            targetProject="/SpringCloud/code">
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
         </javaModelGenerator>
 
         <!-- 生成 mapper.xml文件路径 -->
-        <sqlMapGenerator targetPackage="mapper"  targetProject="E:\git\jaagro-platform-crm\crm-biz\src\main\resources">
+        <sqlMapGenerator targetPackage="mapperxml"  targetProject="/SpringCloud/code">
             <property name="enableSubPackages" value="true" />
         </sqlMapGenerator>
 
         <!-- 生成 dao 接口的包路径 -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.jaagro.user.biz.mapper"  targetProject="E:\git\jaagro-platform-crm\crm-biz\src\main\java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="mapper"  targetProject="/SpringCloud/code">
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
         <!-- 对应数据库表名 不生成example实体类-->
 
-        <table tableName="customer_site" domainObjectName="CustomerSite" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
-        <!--<table tableName="contract_log" domainObjectName="CustomerContractLog" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
+        <!--<table tableName="%" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
+        <table tableName="truck_type" domainObjectName="TruckType" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
         <!--<table tableName="contract_price" domainObjectName="CustomerContractPrice" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
         <!--&lt;!&ndash;<table tableName="contract_section_price" domainObjectName="CustomerContractSectionPrice" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>&ndash;&gt;-->
         <!--<table tableName="employee" domainObjectName="Employee" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->

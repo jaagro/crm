@@ -12,7 +12,6 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class CustomerContract implements Serializable {
-
     /**
      * 合同ID
      */
@@ -94,7 +93,7 @@ public class CustomerContract implements Serializable {
     private Integer newUpdateUser;
 
     /**
-     * version
+     * 
      */
     private Integer version;
 }

@@ -48,9 +48,9 @@
         <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER"/>
 
         <collection property="customerContractReturnDtos" column="id"
-                    select="com.jaagro.crm.biz.mapper.CustomerContractMapper.getByCustomerId"/>
+                    select="com.jaagro.crm.biz.mapper.CustomerContactsMapper.getByCustomerId"/>
         <collection property="returnContractDtos" column="id"
-                    select="com.jaagro.crm.biz.mapper.ContractMapper.getByCustomerId"/>
+                    select="com.jaagro.crm.biz.mapper.CustomerContractMapper.getByCustomerId"/>
         <collection property="sites" column="id"
                     select="com.jaagro.crm.biz.mapper.CustomerSiteMapper.getByCustomerSiteId"/>
         <collection property="qualifications" column="id"

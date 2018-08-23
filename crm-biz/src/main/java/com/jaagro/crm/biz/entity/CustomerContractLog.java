@@ -12,7 +12,6 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class CustomerContractLog implements Serializable {
-
     /**
      * 合同日志
      */
@@ -40,8 +39,8 @@ public class CustomerContractLog implements Serializable {
 
     /**
      * 日志描述
-     * Nullable
-     * 修改前后各是什么内容
+ Nullable
+ 修改前后各是什么内容
      */
     private String logContent;
 

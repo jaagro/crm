@@ -3,7 +3,7 @@ package com.jaagro.crm.biz.service.impl;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractSectionPriceDto;
 import com.jaagro.crm.api.service.ContractSectionPriceService;
 import com.jaagro.crm.biz.entity.CustomerContractSectionPrice;
-import com.jaagro.crm.biz.mapper.ContractSectionPriceMapper;
+import com.jaagro.crm.biz.mapper.CustomerContractSectionPriceMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import java.util.Map;
 public class ContractSectionPriceServiceImpl implements ContractSectionPriceService {
 
     @Autowired
-    private ContractSectionPriceMapper sectionPriceMapper;
+    private CustomerContractSectionPriceMapper sectionPriceMapper;
 
     @Override
     public Map<String, Object> disableByPriceId(Integer priceId) {

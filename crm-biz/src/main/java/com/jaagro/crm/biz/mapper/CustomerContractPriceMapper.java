@@ -1,62 +1,48 @@
 package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.api.dto.request.contract.ListContractPriceCriteriaDto;
-import com.jaagro.crm.biz.entity.CustomerContractPrice;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractPriceDto;
+import com.jaagro.crm.biz.entity.CustomerContractPrice;
 
 import java.util.List;
 
-/**
- * @author tony
- */
-public interface ContractPriceMapper {
+public interface CustomerContractPriceMapper {
     /**
-     * 删除
      *
-     * @param id
-     * @return
+     * @mbggenerated 2018-08-23
      */
     int deleteByPrimaryKey(Integer id);
 
     /**
-     * 新增全表
      *
-     * @param record
-     * @return
+     * @mbggenerated 2018-08-23
      */
     int insert(CustomerContractPrice record);
 
     /**
-     * 新增关键字段
      *
-     * @param record
-     * @return
+     * @mbggenerated 2018-08-23
      */
     int insertSelective(CustomerContractPrice record);
 
     /**
-     * 获取单条
      *
-     * @param id
-     * @return
+     * @mbggenerated 2018-08-23
      */
     CustomerContractPrice selectByPrimaryKey(Integer id);
 
     /**
-     * 依据字段修改
      *
-     * @param record
-     * @return
+     * @mbggenerated 2018-08-23
      */
     int updateByPrimaryKeySelective(CustomerContractPrice record);
 
     /**
-     * 修改全表
      *
-     * @param record
-     * @return
+     * @mbggenerated 2018-08-23
      */
     int updateByPrimaryKey(CustomerContractPrice record);
+
 
     /**
      * 根据合同id 查出所有price记录

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jaagro.crm.biz.mapper.TruckTeamContractMapper" >
+  <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.TruckTeamContract" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER" />
+    <result column="contract_number" property="contractNumber" jdbcType="VARCHAR" />
+    <result column="bussiness_type" property="bussinessType" jdbcType="INTEGER" />
+    <result column="contract_date" property="contractDate" jdbcType="TIMESTAMP" />
+    <result column="start_date" property="startDate" jdbcType="TIMESTAMP" />
+    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
+    <result column="contract_status" property="contractStatus" jdbcType="INTEGER" />
+    <result column="notes" property="notes" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, truck_team_id, contract_number, bussiness_type, contract_date, start_date, end_date, 
+    contract_status, notes
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from truck_team_contract
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from truck_team_contract
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="entity.TruckTeamContract" >
+    insert into truck_team_contract (id, truck_team_id, contract_number, 
+      bussiness_type, contract_date, start_date, 
+      end_date, contract_status, notes
+      )
+    values (#{id,jdbcType=INTEGER}, #{truckTeamId,jdbcType=INTEGER}, #{contractNumber,jdbcType=VARCHAR}, 
+      #{bussinessType,jdbcType=INTEGER}, #{contractDate,jdbcType=TIMESTAMP}, #{startDate,jdbcType=TIMESTAMP}, 
+      #{endDate,jdbcType=TIMESTAMP}, #{contractStatus,jdbcType=INTEGER}, #{notes,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="entity.TruckTeamContract" >
+    insert into truck_team_contract
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="truckTeamId != null" >
+        truck_team_id,
+      </if>
+      <if test="contractNumber != null" >
+        contract_number,
+      </if>
+      <if test="bussinessType != null" >
+        bussiness_type,
+      </if>
+      <if test="contractDate != null" >
+        contract_date,
+      </if>
+      <if test="startDate != null" >
+        start_date,
+      </if>
+      <if test="endDate != null" >
+        end_date,
+      </if>
+      <if test="contractStatus != null" >
+        contract_status,
+      </if>
+      <if test="notes != null" >
+        notes,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="truckTeamId != null" >
+        #{truckTeamId,jdbcType=INTEGER},
+      </if>
+      <if test="contractNumber != null" >
+        #{contractNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="bussinessType != null" >
+        #{bussinessType,jdbcType=INTEGER},
+      </if>
+      <if test="contractDate != null" >
+        #{contractDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startDate != null" >
+        #{startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="contractStatus != null" >
+        #{contractStatus,jdbcType=INTEGER},
+      </if>
+      <if test="notes != null" >
+        #{notes,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="entity.TruckTeamContract" >
+    update truck_team_contract
+    <set >
+      <if test="truckTeamId != null" >
+        truck_team_id = #{truckTeamId,jdbcType=INTEGER},
+      </if>
+      <if test="contractNumber != null" >
+        contract_number = #{contractNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="bussinessType != null" >
+        bussiness_type = #{bussinessType,jdbcType=INTEGER},
+      </if>
+      <if test="contractDate != null" >
+        contract_date = #{contractDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startDate != null" >
+        start_date = #{startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        end_date = #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="contractStatus != null" >
+        contract_status = #{contractStatus,jdbcType=INTEGER},
+      </if>
+      <if test="notes != null" >
+        notes = #{notes,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="entity.TruckTeamContract" >
+    update truck_team_contract
+    set truck_team_id = #{truckTeamId,jdbcType=INTEGER},
+      contract_number = #{contractNumber,jdbcType=VARCHAR},
+      bussiness_type = #{bussinessType,jdbcType=INTEGER},
+      contract_date = #{contractDate,jdbcType=TIMESTAMP},
+      start_date = #{startDate,jdbcType=TIMESTAMP},
+      end_date = #{endDate,jdbcType=TIMESTAMP},
+      contract_status = #{contractStatus,jdbcType=INTEGER},
+      notes = #{notes,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

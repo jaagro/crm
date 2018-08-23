@@ -4,7 +4,7 @@ import com.jaagro.crm.api.dto.request.contract.ListContractCriteriaDto;
 import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
 import com.jaagro.crm.api.dto.request.contract.UpdateContractDto;
 import com.jaagro.crm.api.service.ContractService;
-import com.jaagro.crm.biz.mapper.ContractMapper;
+import com.jaagro.crm.biz.mapper.CustomerContractMapper;
 import com.jaagro.crm.biz.mapper.CustomerMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,7 +26,7 @@ public class ContractController {
     @Autowired
     private ContractService contractService;
     @Autowired
-    private ContractMapper contractMapper;
+    private CustomerContractMapper customerContractMapper;
     @Autowired
     private CustomerMapper customerMapper;
 
@@ -42,7 +42,7 @@ public class ContractController {
         }
         UpdateContractDto updateContractDto = new UpdateContractDto();
         updateContractDto.setContractNumber(dto.getContractNumber());
-        if (this.contractMapper.getByUpdateDto(updateContractDto) != null) {
+        if (this.customerContractMapper.getByUpdateDto(updateContractDto) != null) {
             return BaseResponse.errorInstance("合同编号[contractumber]已存在");
         }
         Map<String, Object> result;
@@ -59,13 +59,13 @@ public class ContractController {
     @PutMapping("/contract")
     public BaseResponse updateContract(@RequestBody UpdateContractDto dto) {
 
-        if (contractMapper.selectByPrimaryKey(dto.getId()) == null) {
+        if (customerContractMapper.selectByPrimaryKey(dto.getId()) == null) {
             return BaseResponse.idError("合同不存在");
         }
         if (StringUtils.isEmpty(dto.getCustomerId())) {
             return BaseResponse.idError("合同客户不能为空");
         }
-        if (this.contractMapper.getByUpdateDto(dto) != null) {
+        if (this.customerContractMapper.getByUpdateDto(dto) != null) {
             return BaseResponse.errorInstance("合同编号[contractumber]已存在");
         }
         Map<String, Object> result;
@@ -81,7 +81,7 @@ public class ContractController {
     @ApiOperation("查询单个合同")
     @GetMapping("/contract/{id}")
     public BaseResponse getById(@PathVariable Integer id) {
-        if (this.contractMapper.selectByPrimaryKey(id) == null) {
+        if (this.customerContractMapper.selectByPrimaryKey(id) == null) {
             return BaseResponse.queryDataEmpty();
         }
         Map<String, Object> result = contractService.getById(id);
