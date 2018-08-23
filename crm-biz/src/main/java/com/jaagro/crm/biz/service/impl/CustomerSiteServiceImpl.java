@@ -36,14 +36,14 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
         BeanUtils.copyProperties(customerSiteDto, site);
         site
                 .setCreateTime(new Date())
-                .setSiteStatus(true)
+                .setSiteStatus(1)
                 .setCreateUserId(userService.getCurrentUser().getId());
         siteMapper.insert(site);
         return ServiceResult.toResult("地址创建成功");
     }
 
     @Override
-    public Map<String, Object> createSite(List<CreateCustomerSiteDto> customerSiteDtos, Long CustomerId) {
+    public Map<String, Object> createSite(List<CreateCustomerSiteDto> customerSiteDtos, Integer CustomerId) {
         if (customerSiteDtos != null && customerSiteDtos.size() > 0) {
             for (CreateCustomerSiteDto customerSiteDto : customerSiteDtos) {
                 CustomerSite site = new CustomerSite();
@@ -51,7 +51,7 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
                 site
                         .setCustomerId(CustomerId)
                         .setCreateTime(new Date())
-                        .setSiteStatus(true)
+                        .setSiteStatus(1)
                         .setCreateUserId(userService.getCurrentUser().getId());
                 siteMapper.insert(site);
             }
@@ -90,7 +90,7 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
     }
 
     @Override
-    public Map<String, Object> getById(Long id) {
+    public Map<String, Object> getById(Integer id) {
         return ServiceResult.toResult(this.siteMapper.selectByPrimaryKey(id));
     }
 
@@ -102,9 +102,9 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
     }
 
     @Override
-    public Map<String, Object> disableSite(Long id) {
+    public Map<String, Object> disableSite(Integer id) {
         CustomerSite site = this.siteMapper.selectByPrimaryKey(id);
-        site.setSiteStatus(false);
+        site.setSiteStatus(0);
         this.siteMapper.updateByPrimaryKeySelective(site);
         return ServiceResult.toResult("地址删除成功");
     }
@@ -114,7 +114,7 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
         if (siteReturnDtos != null && siteReturnDtos.size() > 0) {
             for (CustomerSiteReturnDto siteDto : siteReturnDtos) {
                 CustomerSite site = this.siteMapper.selectByPrimaryKey(siteDto.getId());
-                site.setSiteStatus(false);
+                site.setSiteStatus(0);
                 this.siteMapper.updateByPrimaryKeySelective(site);
             }
         }

@@ -4,7 +4,6 @@ import com.jaagro.crm.api.dto.request.customer.CreateCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
 import com.jaagro.crm.api.service.CustomerService;
-import com.jaagro.crm.biz.entity.Customer;
 import com.jaagro.crm.biz.mapper.CustomerMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -48,7 +47,7 @@ public class CustomerController {
 
     @ApiOperation("删除客户[逻辑]")
     @DeleteMapping("/deleteCustomerById/{id}")
-    public BaseResponse deleteById(@PathVariable Long id) {
+    public BaseResponse deleteById(@PathVariable Integer id) {
         if (this.customerMapper.selectByPrimaryKey(id) == null) {
             return BaseResponse.errorInstance("查询不到相应数据");
         }
@@ -69,7 +68,7 @@ public class CustomerController {
 
     @ApiOperation("查询单个客户")
     @GetMapping("/customer/{id}")
-    public BaseResponse getById(@PathVariable Long id) {
+    public BaseResponse getById(@PathVariable Integer id) {
         if (this.customerMapper.selectByPrimaryKey(id) == null) {
             return BaseResponse.queryDataEmpty();
         }

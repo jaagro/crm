@@ -2,12 +2,9 @@ package com.jaagro.crm.biz.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.jaagro.crm.api.dto.request.contract.ContractPriceDto;
-import com.jaagro.crm.api.dto.request.contract.UpdateContractDto;
-import com.jaagro.crm.api.dto.response.contract.ContractSectionPriceDto;
-import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
-import com.jaagro.crm.api.dto.request.contract.ContractCriteriaDto;
-import com.jaagro.crm.api.dto.response.contract.ContractReturnDto;
+import com.jaagro.crm.api.dto.request.contract.*;
+import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnContractPriceDto;
 import com.jaagro.crm.api.service.ContractPriceService;
 import com.jaagro.crm.api.service.ContractService;
 import com.jaagro.crm.biz.entity.Contract;
@@ -61,10 +58,14 @@ public class ContractServiceImpl implements ContractService {
         Contract contract = new Contract();
         BeanUtils.copyProperties(dto, contract);
         contract
-                .setContractStatus(true)
+                .setContractStatus(1)
                 .setCreateTime(new Date())
                 .setCreateUser(userService.getCurrentUser().getId());
         contractMapper.insert(contract);
+
+        /**
+         * 未完成--创建资质证(表未确认)
+         */
 
         //创建contractPrice对象
         createPrice(dto, contract);
@@ -72,7 +73,7 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public Map<String, Object> createContract(List<CreateContractDto> dtos, Long CustomerId) {
+    public Map<String, Object> createContract(List<CreateContractDto> dtos, Integer CustomerId) {
         if (dtos != null && dtos.size() > 0) {
             for (CreateContractDto contractDto : dtos) {
                 //创建contract对象
@@ -109,9 +110,9 @@ public class ContractServiceImpl implements ContractService {
         contractMapper.updateByPrimaryKeySelective(contract);
 
         //删除原数据
-        List<ContractPrice> priceList = contractPriceMapper.listByContractId(dto.getId());
+        List<ReturnContractPriceDto> priceList = contractPriceMapper.listByContractId(dto.getId());
         if (priceList.size() > 0) {
-            for (ContractPrice cp : priceList) {
+            for (ReturnContractPriceDto cp : priceList) {
                 contractSectionPriceMapper.deleteByPriceId(cp.getId());
             }
             contractPriceMapper.deleteByContractId(dto.getId());
@@ -134,9 +135,9 @@ public class ContractServiceImpl implements ContractService {
                 contractMapper.updateByPrimaryKeySelective(contract);
 
                 //删除原数据
-                List<ContractPrice> priceList = contractPriceMapper.listByContractId(contractDto.getId());
+                List<ReturnContractPriceDto> priceList = contractPriceMapper.listByContractId(contractDto.getId());
                 if (priceList.size() > 0) {
-                    for (ContractPrice cp : priceList) {
+                    for (ReturnContractPriceDto cp : priceList) {
                         contractSectionPriceMapper.deleteByPriceId(cp.getId());
                     }
                     contractPriceMapper.deleteByContractId(contractDto.getId());
@@ -151,7 +152,7 @@ public class ContractServiceImpl implements ContractService {
     public void createPrice(UpdateContractDto dto, Contract contract) {
         //创建contractPrice对象
         if (dto.getPrice() != null && dto.getPrice().size() > 0) {
-            for (ContractPriceDto cp : dto.getPrice()) {
+            for (UpdateContractPriceDto cp : dto.getPrice()) {
                 ContractPrice contractPrice = new ContractPrice();
                 BeanUtils.copyProperties(cp, contractPrice);
                 contractPrice
@@ -163,7 +164,7 @@ public class ContractServiceImpl implements ContractService {
                 contractPriceMapper.insert(contractPrice);
                 //创建contractSectionPrice对象
                 if (cp.getSectionPrice() != null && cp.getSectionPrice().size() > 0) {
-                    for (ContractSectionPriceDto cspDto : cp.getSectionPrice()) {
+                    for (CreateContractSectionPriceDto cspDto : cp.getSectionPrice()) {
                         ContractSectionPrice csp = new ContractSectionPrice();
                         BeanUtils.copyProperties(cspDto, csp);
                         csp
@@ -179,7 +180,7 @@ public class ContractServiceImpl implements ContractService {
     public void createPrice(CreateContractDto dto, Contract contract) {
         //创建contractPrice对象
         if (dto.getPrice() != null && dto.getPrice().size() > 0) {
-            for (ContractPriceDto cp : dto.getPrice()) {
+            for (CreateContractPriceDto cp : dto.getPrice()) {
                 ContractPrice contractPrice = new ContractPrice();
                 BeanUtils.copyProperties(cp, contractPrice);
                 contractPrice
@@ -191,7 +192,7 @@ public class ContractServiceImpl implements ContractService {
                 contractPriceMapper.insert(contractPrice);
                 //创建contractSectionPrice对象
                 if (cp.getSectionPrice() != null && cp.getSectionPrice().size() > 0) {
-                    for (ContractSectionPriceDto cspDto : cp.getSectionPrice()) {
+                    for (CreateContractSectionPriceDto cspDto : cp.getSectionPrice()) {
                         ContractSectionPrice csp = new ContractSectionPrice();
                         BeanUtils.copyProperties(cspDto, csp);
                         csp
@@ -211,7 +212,7 @@ public class ContractServiceImpl implements ContractService {
      * @return
      */
     @Override
-    public Map<String, Object> getById(Long contractId) {
+    public Map<String, Object> getById(Integer contractId) {
         if (contractMapper.selectByPrimaryKey(contractId) == null) {
             return ServiceResult.error(ResponseStatusCode.ID_VALUE_ERROR.getCode(), "id: " + contractId + "不存在");
         }
@@ -225,18 +226,18 @@ public class ContractServiceImpl implements ContractService {
      * @return
      */
     @Override
-    public Map<String, Object> listByCriteria(ContractCriteriaDto dto) {
+    public Map<String, Object> listByCriteria(ListContractCriteriaDto dto) {
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
-        List<ContractReturnDto> contracts = contractMapper.listByPage(dto);
+        List<ReturnContractDto> contracts = contractMapper.listByPage(dto);
         return ServiceResult.toResult(new PageInfo<>(contracts));
     }
 
     @Override
-    public Map<String, Object> disableById(Long id) {
-        ContractReturnDto contractDto = this.contractMapper.getById(id);
+    public Map<String, Object> disableById(Integer id) {
+        ReturnContractDto contractDto = this.contractMapper.getById(id);
         Contract contract = new Contract();
         BeanUtils.copyProperties(contractDto, contract);
-        contract.setContractStatus(false);
+        contract.setContractStatus(0);
         this.contractMapper.updateByPrimaryKeySelective(contract);
         if (contractDto.getPrices() != null && contractDto.getPrices().size() > 0) {
             this.priceService.disableByContractId(contract.getId());
@@ -245,13 +246,13 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public Map<String, Object> disableByID(List<ContractReturnDto> dtos) {
-        for (ContractReturnDto contractReturnDto : dtos
+    public Map<String, Object> disableByID(List<ReturnContractDto> dtos) {
+        for (ReturnContractDto returnContractDto : dtos
         ) {
-            ContractReturnDto contractDto = this.contractMapper.getById(contractReturnDto.getId());
+            ReturnContractDto contractDto = this.contractMapper.getById(returnContractDto.getId());
             Contract contract = new Contract();
             BeanUtils.copyProperties(contractDto, contract);
-            contract.setContractStatus(false);
+            contract.setContractStatus(0);
             this.contractMapper.updateByPrimaryKeySelective(contract);
             if (contractDto.getPrices() != null && contractDto.getPrices().size() > 0) {
                 this.priceService.disableByContractId(contract.getId());

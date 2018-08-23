@@ -1,8 +1,8 @@
 package com.jaagro.crm.biz.mapper;
 
-import com.jaagro.crm.api.dto.request.contract.PriceCriteriaDto;
+import com.jaagro.crm.api.dto.request.contract.ListContractPriceCriteriaDto;
 import com.jaagro.crm.biz.entity.ContractPrice;
-import com.jaagro.crm.api.dto.response.contract.ContractPriceReturnDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnContractPriceDto;
 
 import java.util.List;
 
@@ -12,13 +12,15 @@ import java.util.List;
 public interface ContractPriceMapper {
     /**
      * 删除
+     *
      * @param id
      * @return
      */
-    int deleteByPrimaryKey(Long id);
+    int deleteByPrimaryKey(Integer id);
 
     /**
      * 新增全表
+     *
      * @param record
      * @return
      */
@@ -26,6 +28,7 @@ public interface ContractPriceMapper {
 
     /**
      * 新增关键字段
+     *
      * @param record
      * @return
      */
@@ -33,13 +36,15 @@ public interface ContractPriceMapper {
 
     /**
      * 获取单条
+     *
      * @param id
      * @return
      */
-    ContractPrice selectByPrimaryKey(Long id);
+    ContractPrice selectByPrimaryKey(Integer id);
 
     /**
      * 依据字段修改
+     *
      * @param record
      * @return
      */
@@ -47,6 +52,7 @@ public interface ContractPriceMapper {
 
     /**
      * 修改全表
+     *
      * @param record
      * @return
      */
@@ -58,7 +64,7 @@ public interface ContractPriceMapper {
      * @param contractId
      * @return
      */
-    List<ContractPrice> listByContractId(Long contractId);
+    List<ReturnContractPriceDto> listByContractId(Integer contractId);
 
     /**
      * 根据合同id 查出所有priceDto记录
@@ -66,19 +72,21 @@ public interface ContractPriceMapper {
      * @param contractId
      * @return
      */
-    List<ContractPriceReturnDto> getByContractId(Long contractId);
+    List<ReturnContractPriceDto> getByContractId(Integer contractId);
 
     /**
      * 根据合同id删除price记录
+     *
      * @param contractId
      * @return
      */
-    int deleteByContractId(Long contractId);
+    int deleteByContractId(Integer contractId);
 
     /**
      * 依据条件dto查询price对象
+     *
      * @param dto
      * @return
      */
-    ContractPrice getPriceByCriteria(PriceCriteriaDto dto);
+    ReturnContractPriceDto getPriceByCriteria(ListContractPriceCriteriaDto dto);
 }

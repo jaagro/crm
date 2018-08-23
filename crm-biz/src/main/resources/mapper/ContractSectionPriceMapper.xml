@@ -3,7 +3,7 @@
 <mapper namespace="com.jaagro.crm.biz.mapper.ContractSectionPriceMapper">
   <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.ContractSectionPrice">
     <id column="selection_id" jdbcType="INTEGER" property="selectionId" />
-    <result column="contract_price_id" jdbcType="BIGINT" property="contractPriceId" />
+    <result column="contract_price_id" jdbcType="INTEGER" property="contractPriceId" />
     <result column="section_type" jdbcType="INTEGER" property="sectionType" />
     <result column="upper_limit" jdbcType="DECIMAL" property="upperLimit" />
     <result column="lower_limit" jdbcType="DECIMAL" property="lowerLimit" />
@@ -20,7 +20,7 @@
     where selection_id = #{selectionId,jdbcType=INTEGER}
   </select>
   <select id="listByPriceId"
-          resultType="com.jaagro.crm.api.dto.response.contract.ContractSectionPriceReturnDto">
+          resultType="com.jaagro.crm.api.dto.response.contract.ReturnContractSectionPriceDto">
     select
     <include refid="Base_Column_List"></include>
     from contract_section_price
@@ -42,7 +42,7 @@
     insert into contract_section_price (selection_id, contract_price_id, section_type, 
       upper_limit, lower_limit, price, 
       selection_status)
-    values (#{selectionId,jdbcType=INTEGER}, #{contractPriceId,jdbcType=BIGINT}, #{sectionType,jdbcType=INTEGER}, 
+    values (#{selectionId,jdbcType=INTEGER}, #{contractPriceId,jdbcType=INTEGER}, #{sectionType,jdbcType=INTEGER}, 
       #{upperLimit,jdbcType=DECIMAL}, #{lowerLimit,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL}, 
       #{selectionStatus,jdbcType=INTEGER})
   </insert>
@@ -76,7 +76,7 @@
         #{selectionId,jdbcType=INTEGER},
       </if>
       <if test="contractPriceId != null">
-        #{contractPriceId,jdbcType=BIGINT},
+        #{contractPriceId,jdbcType=INTEGER},
       </if>
       <if test="sectionType != null">
         #{sectionType,jdbcType=INTEGER},
@@ -99,7 +99,7 @@
     update contract_section_price
     <set>
       <if test="contractPriceId != null">
-        contract_price_id = #{contractPriceId,jdbcType=BIGINT},
+        contract_price_id = #{contractPriceId,jdbcType=INTEGER},
       </if>
       <if test="sectionType != null">
         section_type = #{sectionType,jdbcType=INTEGER},
@@ -121,7 +121,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.ContractSectionPrice">
     update contract_section_price
-    set contract_price_id = #{contractPriceId,jdbcType=BIGINT},
+    set contract_price_id = #{contractPriceId,jdbcType=INTEGER},
       section_type = #{sectionType,jdbcType=INTEGER},
       upper_limit = #{upperLimit,jdbcType=DECIMAL},
       lower_limit = #{lowerLimit,jdbcType=DECIMAL},
@@ -131,6 +131,6 @@
   </update>
   <delete id="deleteByPriceId" parameterType="java.lang.Long">
     delete from contract_section_price
-    where contract_price_id = #{contractPriceId,jdbcType=BIGINT}
+    where contract_price_id = #{contractPriceId,jdbcType=INTEGER}
   </delete>
 </mapper>

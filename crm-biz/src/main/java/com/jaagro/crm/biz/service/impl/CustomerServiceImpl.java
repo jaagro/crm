@@ -3,8 +3,6 @@ package com.jaagro.crm.biz.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.constant.CustomerStatus;
-import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
-import com.jaagro.crm.api.dto.request.customer.*;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
@@ -58,7 +56,6 @@ public class CustomerServiceImpl implements CustomerService {
         BeanUtils.copyProperties(dto, customer);
         customer
                 .setCustomerStatus(CustomerStatus.UNCHECKED)
-                .setEnabled(true)
                 .setCreateTime(new Date())
                 .setCreateUserId(userService.getCurrentUser().getId());
         if (StringUtils.isEmpty(customer.getCustomerType())) {
@@ -134,7 +131,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @return
      */
     @Override
-    public Map<String, Object> getById(Long id) {
+    public Map<String, Object> getById(Integer id) {
         if (customerMapper.selectByPrimaryKey(id) == null) {
             return ServiceResult.error(ResponseStatusCode.ID_VALUE_ERROR.getCode(), "id: " + id + "不存在");
         }
@@ -163,7 +160,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @return
      */
     @Override
-    public Map<String, Object> auditCustomer(Long id, String auditResult) {
+    public Map<String, Object> auditCustomer(Integer id, String auditResult) {
         return null;
     }
 
@@ -174,13 +171,13 @@ public class CustomerServiceImpl implements CustomerService {
      * @return
      */
     @Override
-    public Map<String, Object> disableCustomer(Long id) {
+    public Map<String, Object> disableCustomer(Integer id) {
         CustomerReturnDto customerDto = customerMapper.getById(id);
         Customer customer = new Customer();
         BeanUtils.copyProperties(customerDto, customer);
         if (customer != null) {
             //逻辑删除 客户
-            customer.setEnabled(false);
+            customer.setCustomerStatus(13);
             this.customerMapper.updateByPrimaryKeySelective(customer);
             //逻辑删除 地址
             if (customerDto.getSites() != null && customerDto.getSites().size() > 0) {
@@ -195,8 +192,8 @@ public class CustomerServiceImpl implements CustomerService {
                 this.certificService.disableQualificationCertific(customerDto.getQualifications());
             }
             //逻辑删除 合同
-            if (customerDto.getContractReturnDtos() != null && customerDto.getContractReturnDtos().size() > 0) {
-                this.contractService.disableByID(customerDto.getContractReturnDtos());
+            if (customerDto.getReturnContractDtos() != null && customerDto.getReturnContractDtos().size() > 0) {
+                this.contractService.disableByID(customerDto.getReturnContractDtos());
             }
         }
         return ServiceResult.toResult("客户删除成功");

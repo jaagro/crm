@@ -14,29 +14,65 @@ import java.util.List;
 @Accessors(chain = true)
 public class UpdateContractDto implements Serializable {
 
-    private Long id;
+    /**
+     * 合同ID
+     */
+    private Integer id;
 
-    private Long customerId;
+    /**
+     * 客户ID
+     */
+    private Integer customerId;
 
-    private Boolean contractStatus;
+    /**
+     * 合同状态: 1-正常 2-终止
+     */
+    private Integer contractStatus;
 
+    /**
+     * 合同开始时间
+     */
     private Date startDate;
 
+    /**
+     * 合同结束时间
+     */
     private Date endDate;
 
+    /**
+     * 签约日期
+     */
+    private Date contractDate;
+
+    /**
+     * 合同类型
+     */
     private Integer type;
 
+    /**
+     * 合同主题
+     */
     private String theme;
 
+    /**
+     * 产品
+     */
     private String product;
 
+    /**
+     * 合同正文
+     */
     private String context;
 
+    /**
+     * 合同编号
+     */
     private String contractNumber;
 
+    /**
+     * 备注
+     */
     private String remark;
 
-    private Integer version;
-
-    private List<ContractPriceDto> price;
+    private List<UpdateContractPriceDto> price;
 }

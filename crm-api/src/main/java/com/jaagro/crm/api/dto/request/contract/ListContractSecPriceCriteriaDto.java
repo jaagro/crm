@@ -1,4 +1,4 @@
-package com.jaagro.crm.api.dto.response.contract;
+package com.jaagro.crm.api.dto.request.contract;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -6,13 +6,12 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-
 /**
- * @author baiyiran
+ * @author tony
  */
 @Data
 @Accessors(chain = true)
-public class ContractSectionPriceReturnDto implements Serializable {
+public class ListContractSecPriceCriteriaDto implements Serializable {
 
     private Integer selectionId;
 

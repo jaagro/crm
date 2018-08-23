@@ -1,6 +1,6 @@
 package com.jaagro.crm.biz.mapper;
 
-import com.jaagro.crm.api.dto.response.contract.ContractSectionPriceReturnDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnContractSectionPriceDto;
 import com.jaagro.crm.biz.entity.ContractSectionPrice;
 import org.apache.ibatis.annotations.Param;
 
@@ -66,7 +66,7 @@ public interface ContractSectionPriceMapper {
      * @param id
      * @return
      */
-    int deleteByPriceId(Long id);
+    int deleteByPriceId(Integer id);
 
     /**
      * 根据priceId获取所有sectionPrice记录
@@ -74,7 +74,7 @@ public interface ContractSectionPriceMapper {
      * @param priceId
      * @return
      */
-    List<ContractSectionPriceReturnDto> listByPriceId(Long priceId);
+    List<ReturnContractSectionPriceDto> listByPriceId(Integer priceId);
 
     /**
      * 根据传入值查询出符合limit条件的sectionPrice
@@ -83,5 +83,5 @@ public interface ContractSectionPriceMapper {
      * @param value
      * @return
      */
-    ContractSectionPrice getByLimit(@Param("contractPriceId") Long contractPriceId, @Param("value") BigDecimal value);
+    ContractSectionPrice getByLimit(@Param("contractPriceId") Integer contractPriceId, @Param("value") BigDecimal value);
 }

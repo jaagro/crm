@@ -5,6 +5,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
+
 /**
  * @author tony
  */
@@ -12,19 +13,45 @@ import java.util.Date;
 @Accessors(chain = true)
 public class ContractLog implements Serializable {
 
-    private Long id;
+    /**
+     * 合同日志
+     */
+    private Integer id;
 
-    private Long contractId;
+    /**
+     * 合同id
+     */
+    private Integer contractId;
 
+    /**
+     * 报价ID
+     */
     private Integer pricingId;
 
+    /**
+     * 阶梯报价ID
+     */
     private Integer selectionId;
 
+    /**
+     * 日志类型:1-新增  2-删除
+     */
     private Integer logType;
 
+    /**
+     * 日志描述
+     * Nullable
+     * 修改前后各是什么内容
+     */
     private String logContent;
 
+    /**
+     * 日志记录时间
+     */
     private Date createTime;
 
+    /**
+     * 修改人
+     */
     private Integer modifyUserId;
 }

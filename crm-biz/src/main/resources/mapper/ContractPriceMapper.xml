@@ -1,243 +1,228 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jaagro.crm.biz.mapper.ContractPriceMapper">
-  <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.ContractPrice">
-    <id column="id" jdbcType="BIGINT" property="id"/>
-    <result column="contract_id" jdbcType="BIGINT" property="contractId"/>
-    <result column="pricing_type" jdbcType="INTEGER" property="pricingType"/>
-    <result column="pickup_address_id" jdbcType="BIGINT" property="pickupAddressId"/>
-    <result column="shipping_address_id" jdbcType="BIGINT" property="shippingAddressId"/>
-    <result column="vehicle_type" jdbcType="BIGINT" property="vehicleType"/>
-    <result column="product_type" jdbcType="BIGINT" property="productType"/>
-    <result column="specification" jdbcType="VARCHAR" property="specification"/>
-    <result column="price" jdbcType="DECIMAL" property="price"/>
-    <result column="has_weight_section_values" jdbcType="INTEGER" property="hasWeightSectionValues"/>
-    <result column="has_mile_section_values" jdbcType="INTEGER" property="hasMileSectionValues"/>
-    <result column="min_mile" jdbcType="DECIMAL" property="minMile"/>
-    <result column="min_weight" jdbcType="DECIMAL" property="minWeight"/>
-    <result column="min_money" jdbcType="DECIMAL" property="minMoney"/>
-    <result column="price_status" jdbcType="INTEGER" property="priceStatus"/>
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.ContractPrice">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="contract_id" property="contractId" jdbcType="INTEGER"/>
+        <result column="pricing_type" property="pricingType" jdbcType="INTEGER"/>
+        <result column="pickup_address_id" property="pickupAddressId" jdbcType="INTEGER"/>
+        <result column="shipping_address_id" property="shippingAddressId" jdbcType="INTEGER"/>
+        <result column="vehicle_type" property="vehicleType" jdbcType="INTEGER"/>
+        <result column="product_type" property="productType" jdbcType="INTEGER"/>
+        <result column="specification" property="specification" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="DECIMAL"/>
+        <result column="has_weight_section_values" property="hasWeightSectionValues" jdbcType="INTEGER"/>
+        <result column="has_mile_section_values" property="hasMileSectionValues" jdbcType="INTEGER"/>
+        <result column="min_mile" property="minMile" jdbcType="DECIMAL"/>
+        <result column="min_weight" property="minWeight" jdbcType="DECIMAL"/>
+        <result column="min_money" property="minMoney" jdbcType="DECIMAL"/>
+        <result column="price_status" property="priceStatus" jdbcType="INTEGER"/>
+    </resultMap>
 
-  <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.contract.ContractPriceReturnDto">
-    <id column="id" jdbcType="BIGINT" property="id"/>
-    <result column="contract_id" jdbcType="BIGINT" property="contractId"/>
-    <result column="pricing_type" jdbcType="INTEGER" property="pricingType"/>
-    <result column="pickup_address_id" jdbcType="BIGINT" property="pickupAddressId"/>
-    <result column="shipping_address_id" jdbcType="BIGINT" property="shippingAddressId"/>
-    <result column="vehicle_type" jdbcType="BIGINT" property="vehicleType"/>
-    <result column="product_type" jdbcType="BIGINT" property="productType"/>
-    <result column="specification" jdbcType="VARCHAR" property="specification"/>
-    <result column="price" jdbcType="DECIMAL" property="price"/>
-    <result column="has_weight_section_values" jdbcType="INTEGER" property="hasWeightSectionValues"/>
-    <result column="has_mile_section_values" jdbcType="INTEGER" property="hasMileSectionValues"/>
-    <result column="min_mile" jdbcType="DECIMAL" property="minMile"/>
-    <result column="min_weight" jdbcType="DECIMAL" property="minWeight"/>
-    <result column="min_money" jdbcType="DECIMAL" property="minMoney"/>
-    <result column="price_status" jdbcType="INTEGER" property="priceStatus"/>
+    <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.contract.ReturnContractPriceDto">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="contract_id" property="contractId" jdbcType="INTEGER"/>
+        <result column="pricing_type" property="pricingType" jdbcType="INTEGER"/>
+        <result column="pickup_address_id" property="pickupAddressId" jdbcType="INTEGER"/>
+        <result column="shipping_address_id" property="shippingAddressId" jdbcType="INTEGER"/>
+        <result column="vehicle_type" property="vehicleType" jdbcType="INTEGER"/>
+        <result column="product_type" property="productType" jdbcType="INTEGER"/>
+        <result column="specification" property="specification" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="DECIMAL"/>
+        <result column="has_weight_section_values" property="hasWeightSectionValues" jdbcType="INTEGER"/>
+        <result column="has_mile_section_values" property="hasMileSectionValues" jdbcType="INTEGER"/>
+        <result column="min_mile" property="minMile" jdbcType="DECIMAL"/>
+        <result column="min_weight" property="minWeight" jdbcType="DECIMAL"/>
+        <result column="min_money" property="minMoney" jdbcType="DECIMAL"/>
+        <result column="price_status" property="priceStatus" jdbcType="INTEGER"/>
 
-    <collection property="sectionPrice" column="id"
-                select="com.jaagro.crm.biz.mapper.ContractSectionPriceMapper.listByPriceId"></collection>
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, contract_id, pricing_type, pickup_address_id, shipping_address_id, vehicle_type, 
-    product_type, specification, price, has_weight_section_values, has_mile_section_values, 
+        <collection property="sectionPrice" column="id"
+                    select="com.jaagro.crm.biz.mapper.ContractSectionPriceMapper.listByPriceId"></collection>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, contract_id, pricing_type, pickup_address_id, shipping_address_id, vehicle_type,
+    product_type, specification, price, has_weight_section_values, has_mile_section_values,
     min_mile, min_weight, min_money, price_status
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from contract_price
-    where id = #{id,jdbcType=BIGINT}
-  </select>
-    <select id="getPriceByCriteria" resultType="com.jaagro.crm.biz.entity.ContractPrice">
-      select * from contract_price where
-      contract_id = #{contractId} and pricing_type = #{pricingType} and product_type = #{productType} and price_status = 1
-      <if test="pickupAddressId != null">
-        and pickup_address_id = #{pickupAddressId}
-      </if>
-      <if test="shippingAddressId != null">
-        and shipping_address_id = #{shippingAddressId}
-      </if>
-      <if test="vehicleType != null">
-        and vehicle_type = #{vehicleType}
-      </if>
-      <if test="specification != null">
-        and specification = #{specification}
-      </if>
-      order by id desc limit 1
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from contract_price
+        where id = #{id,jdbcType=INTEGER}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from contract_price
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.ContractPrice" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-    insert into contract_price (id, contract_id, pricing_type, 
-      pickup_address_id, shipping_address_id, vehicle_type, 
-      product_type, specification, price, 
-      has_weight_section_values, has_mile_section_values, 
-      min_mile, min_weight, min_money, 
+    <insert id="insert" parameterType="com.jaagro.crm.biz.entity.ContractPrice" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id">
+    insert into contract_price (id, contract_id, pricing_type,
+      pickup_address_id, shipping_address_id, vehicle_type,
+      product_type, specification, price,
+      has_weight_section_values, has_mile_section_values,
+      min_mile, min_weight, min_money,
       price_status)
-    values (#{id,jdbcType=BIGINT}, #{contractId,jdbcType=BIGINT}, #{pricingType,jdbcType=INTEGER}, 
-      #{pickupAddressId,jdbcType=BIGINT}, #{shippingAddressId,jdbcType=BIGINT}, #{vehicleType,jdbcType=BIGINT}, 
-      #{productType,jdbcType=BIGINT}, #{specification,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
-      #{hasWeightSectionValues,jdbcType=INTEGER}, #{hasMileSectionValues,jdbcType=INTEGER}, 
-      #{minMile,jdbcType=DECIMAL}, #{minWeight,jdbcType=DECIMAL}, #{minMoney,jdbcType=DECIMAL}, 
+    values (#{id,jdbcType=INTEGER}, #{contractId,jdbcType=INTEGER}, #{pricingType,jdbcType=INTEGER},
+      #{pickupAddressId,jdbcType=INTEGER}, #{shippingAddressId,jdbcType=INTEGER}, #{vehicleType,jdbcType=INTEGER},
+      #{productType,jdbcType=INTEGER}, #{specification,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL},
+      #{hasWeightSectionValues,jdbcType=INTEGER}, #{hasMileSectionValues,jdbcType=INTEGER},
+      #{minMile,jdbcType=DECIMAL}, #{minWeight,jdbcType=DECIMAL}, #{minMoney,jdbcType=DECIMAL},
       #{priceStatus,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.ContractPrice" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-    insert into contract_price
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="contractId != null">
-        contract_id,
-      </if>
-      <if test="pricingType != null">
-        pricing_type,
-      </if>
-      <if test="pickupAddressId != null">
-        pickup_address_id,
-      </if>
-      <if test="shippingAddressId != null">
-        shipping_address_id,
-      </if>
-      <if test="vehicleType != null">
-        vehicle_type,
-      </if>
-      <if test="productType != null">
-        product_type,
-      </if>
-      <if test="specification != null">
-        specification,
-      </if>
-      <if test="price != null">
-        price,
-      </if>
-      <if test="hasWeightSectionValues != null">
-        has_weight_section_values,
-      </if>
-      <if test="hasMileSectionValues != null">
-        has_mile_section_values,
-      </if>
-      <if test="minMile != null">
-        min_mile,
-      </if>
-      <if test="minWeight != null">
-        min_weight,
-      </if>
-      <if test="minMoney != null">
-        min_money,
-      </if>
-      <if test="priceStatus != null">
-        price_status,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="contractId != null">
-        #{contractId,jdbcType=BIGINT},
-      </if>
-      <if test="pricingType != null">
-        #{pricingType,jdbcType=INTEGER},
-      </if>
-      <if test="pickupAddressId != null">
-        #{pickupAddressId,jdbcType=BIGINT},
-      </if>
-      <if test="shippingAddressId != null">
-        #{shippingAddressId,jdbcType=BIGINT},
-      </if>
-      <if test="vehicleType != null">
-        #{vehicleType,jdbcType=BIGINT},
-      </if>
-      <if test="productType != null">
-        #{productType,jdbcType=BIGINT},
-      </if>
-      <if test="specification != null">
-        #{specification,jdbcType=VARCHAR},
-      </if>
-      <if test="price != null">
-        #{price,jdbcType=DECIMAL},
-      </if>
-      <if test="hasWeightSectionValues != null">
-        #{hasWeightSectionValues,jdbcType=INTEGER},
-      </if>
-      <if test="hasMileSectionValues != null">
-        #{hasMileSectionValues,jdbcType=INTEGER},
-      </if>
-      <if test="minMile != null">
-        #{minMile,jdbcType=DECIMAL},
-      </if>
-      <if test="minWeight != null">
-        #{minWeight,jdbcType=DECIMAL},
-      </if>
-      <if test="minMoney != null">
-        #{minMoney,jdbcType=DECIMAL},
-      </if>
-      <if test="priceStatus != null">
-        #{priceStatus,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.ContractPrice" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.ContractPrice" useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id">
+        insert into contract_price
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="contractId != null">
+                contract_id,
+            </if>
+            <if test="pricingType != null">
+                pricing_type,
+            </if>
+            <if test="pickupAddressId != null">
+                pickup_address_id,
+            </if>
+            <if test="shippingAddressId != null">
+                shipping_address_id,
+            </if>
+            <if test="vehicleType != null">
+                vehicle_type,
+            </if>
+            <if test="productType != null">
+                product_type,
+            </if>
+            <if test="specification != null">
+                specification,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="hasWeightSectionValues != null">
+                has_weight_section_values,
+            </if>
+            <if test="hasMileSectionValues != null">
+                has_mile_section_values,
+            </if>
+            <if test="minMile != null">
+                min_mile,
+            </if>
+            <if test="minWeight != null">
+                min_weight,
+            </if>
+            <if test="minMoney != null">
+                min_money,
+            </if>
+            <if test="priceStatus != null">
+                price_status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="contractId != null">
+                #{contractId,jdbcType=INTEGER},
+            </if>
+            <if test="pricingType != null">
+                #{pricingType,jdbcType=INTEGER},
+            </if>
+            <if test="pickupAddressId != null">
+                #{pickupAddressId,jdbcType=INTEGER},
+            </if>
+            <if test="shippingAddressId != null">
+                #{shippingAddressId,jdbcType=INTEGER},
+            </if>
+            <if test="vehicleType != null">
+                #{vehicleType,jdbcType=INTEGER},
+            </if>
+            <if test="productType != null">
+                #{productType,jdbcType=INTEGER},
+            </if>
+            <if test="specification != null">
+                #{specification,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="hasWeightSectionValues != null">
+                #{hasWeightSectionValues,jdbcType=INTEGER},
+            </if>
+            <if test="hasMileSectionValues != null">
+                #{hasMileSectionValues,jdbcType=INTEGER},
+            </if>
+            <if test="minMile != null">
+                #{minMile,jdbcType=DECIMAL},
+            </if>
+            <if test="minWeight != null">
+                #{minWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="minMoney != null">
+                #{minMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="priceStatus != null">
+                #{priceStatus,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.ContractPrice">
+        update contract_price
+        <set>
+            <if test="contractId != null">
+                contract_id = #{contractId,jdbcType=INTEGER},
+            </if>
+            <if test="pricingType != null">
+                pricing_type = #{pricingType,jdbcType=INTEGER},
+            </if>
+            <if test="pickupAddressId != null">
+                pickup_address_id = #{pickupAddressId,jdbcType=INTEGER},
+            </if>
+            <if test="shippingAddressId != null">
+                shipping_address_id = #{shippingAddressId,jdbcType=INTEGER},
+            </if>
+            <if test="vehicleType != null">
+                vehicle_type = #{vehicleType,jdbcType=INTEGER},
+            </if>
+            <if test="productType != null">
+                product_type = #{productType,jdbcType=INTEGER},
+            </if>
+            <if test="specification != null">
+                specification = #{specification,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="hasWeightSectionValues != null">
+                has_weight_section_values = #{hasWeightSectionValues,jdbcType=INTEGER},
+            </if>
+            <if test="hasMileSectionValues != null">
+                has_mile_section_values = #{hasMileSectionValues,jdbcType=INTEGER},
+            </if>
+            <if test="minMile != null">
+                min_mile = #{minMile,jdbcType=DECIMAL},
+            </if>
+            <if test="minWeight != null">
+                min_weight = #{minWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="minMoney != null">
+                min_money = #{minMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="priceStatus != null">
+                price_status = #{priceStatus,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.ContractPrice">
     update contract_price
-    <set>
-      <if test="contractId != null">
-        contract_id = #{contractId,jdbcType=BIGINT},
-      </if>
-      <if test="pricingType != null">
-        pricing_type = #{pricingType,jdbcType=INTEGER},
-      </if>
-      <if test="pickupAddressId != null">
-        pickup_address_id = #{pickupAddressId,jdbcType=BIGINT},
-      </if>
-      <if test="shippingAddressId != null">
-        shipping_address_id = #{shippingAddressId,jdbcType=BIGINT},
-      </if>
-      <if test="vehicleType != null">
-        vehicle_type = #{vehicleType,jdbcType=BIGINT},
-      </if>
-      <if test="productType != null">
-        product_type = #{productType,jdbcType=BIGINT},
-      </if>
-      <if test="specification != null">
-        specification = #{specification,jdbcType=VARCHAR},
-      </if>
-      <if test="price != null">
-        price = #{price,jdbcType=DECIMAL},
-      </if>
-      <if test="hasWeightSectionValues != null">
-        has_weight_section_values = #{hasWeightSectionValues,jdbcType=INTEGER},
-      </if>
-      <if test="hasMileSectionValues != null">
-        has_mile_section_values = #{hasMileSectionValues,jdbcType=INTEGER},
-      </if>
-      <if test="minMile != null">
-        min_mile = #{minMile,jdbcType=DECIMAL},
-      </if>
-      <if test="minWeight != null">
-        min_weight = #{minWeight,jdbcType=DECIMAL},
-      </if>
-      <if test="minMoney != null">
-        min_money = #{minMoney,jdbcType=DECIMAL},
-      </if>
-      <if test="priceStatus != null">
-        price_status = #{priceStatus,jdbcType=INTEGER},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.ContractPrice">
-    update contract_price
-    set contract_id = #{contractId,jdbcType=BIGINT},
+    set contract_id = #{contractId,jdbcType=INTEGER},
       pricing_type = #{pricingType,jdbcType=INTEGER},
-      pickup_address_id = #{pickupAddressId,jdbcType=BIGINT},
-      shipping_address_id = #{shippingAddressId,jdbcType=BIGINT},
-      vehicle_type = #{vehicleType,jdbcType=BIGINT},
-      product_type = #{productType,jdbcType=BIGINT},
+      pickup_address_id = #{pickupAddressId,jdbcType=INTEGER},
+      shipping_address_id = #{shippingAddressId,jdbcType=INTEGER},
+      vehicle_type = #{vehicleType,jdbcType=INTEGER},
+      product_type = #{productType,jdbcType=INTEGER},
       specification = #{specification,jdbcType=VARCHAR},
       price = #{price,jdbcType=DECIMAL},
       has_weight_section_values = #{hasWeightSectionValues,jdbcType=INTEGER},
@@ -246,22 +231,41 @@
       min_weight = #{minWeight,jdbcType=DECIMAL},
       min_money = #{minMoney,jdbcType=DECIMAL},
       price_status = #{priceStatus,jdbcType=INTEGER}
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="getByContractId" parameterType="java.lang.Long" resultMap="DetailInfo">
-    select
-    <include refid="Base_Column_List"/>
-    from contract_price
-    where contract_id = #{contractId,jdbcType=BIGINT}
-  </select>
-  <select id="listByContractId" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List"/>
-    from contract_price
-    where contract_id = #{contractId,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByContractId" parameterType="java.lang.Long">
+    <select id="getPriceByCriteria" resultMap="DetailInfo"
+            parameterType="com.jaagro.crm.api.dto.request.contract.ListContractPriceCriteriaDto">
+        select * from contract_price where
+        contract_id = #{contractId} and pricing_type = #{pricingType} and product_type = #{productType} and price_status
+        = 1
+        <if test="pickupAddressId != null">
+            and pickup_address_id = #{pickupAddressId}
+        </if>
+        <if test="shippingAddressId != null">
+            and shipping_address_id = #{shippingAddressId}
+        </if>
+        <if test="vehicleType != null">
+            and vehicle_type = #{vehicleType}
+        </if>
+        <if test="specification != null">
+            and specification = #{specification}
+        </if>
+        order by id desc limit 1
+    </select>
+    <select id="getByContractId" parameterType="java.lang.Integer" resultMap="DetailInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from contract_price
+        where contract_id = #{contractId,jdbcType=INTEGER}
+    </select>
+    <select id="listByContractId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from contract_price
+        where contract_id = #{contractId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByContractId" parameterType="java.lang.Integer">
         delete from contract_price
-        where contract_id = #{contractId,jdbcType=BIGINT}
+        where contract_id = #{contractId,jdbcType=INTEGER}
     </delete>
 </mapper>

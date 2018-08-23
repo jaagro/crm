@@ -14,7 +14,7 @@ public interface CustomerSiteMapper {
     /**
      * @mbggenerated 2018-08-16
      */
-    int deleteByPrimaryKey(Long id);
+    int deleteByPrimaryKey(Integer id);
 
     /**
      * 新增
@@ -38,7 +38,7 @@ public interface CustomerSiteMapper {
      * @param id
      * @return
      */
-    CustomerSite selectByPrimaryKey(Long id);
+    CustomerSite selectByPrimaryKey(Integer id);
 
     /**
      * 动态更新
@@ -59,7 +59,7 @@ public interface CustomerSiteMapper {
      * @param dto
      * @return
      */
-    List<CustomerSiteReturnDto> getByCustomerSiteId(Long customer_id);
+    List<CustomerSiteReturnDto> getByCustomerSiteId(Integer customer_id);
 
     /**
      * 查询客户Id查询收发货地址

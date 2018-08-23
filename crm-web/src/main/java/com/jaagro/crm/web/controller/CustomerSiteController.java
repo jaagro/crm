@@ -4,7 +4,6 @@ import com.jaagro.crm.api.dto.request.customer.*;
 import com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto;
 import com.jaagro.crm.api.service.CustomerService;
 import com.jaagro.crm.api.service.CustomerSiteService;
-import com.jaagro.crm.biz.entity.CustomerSite;
 import com.jaagro.crm.biz.mapper.CustomerMapper;
 import com.jaagro.crm.biz.mapper.CustomerSiteMapper;
 import io.swagger.annotations.Api;
@@ -14,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import utils.BaseResponse;
-import utils.ServiceResult;
 
-import java.util.List;
-import java.util.Map;
 
 /**
  * 客户地址管理
@@ -28,8 +24,6 @@ import java.util.Map;
 @Api(value = "customer", description = "客户地址管理", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CustomerSiteController {
 
-    @Autowired
-    private CustomerService customerService;
     @Autowired
     private CustomerMapper customerMapper;
     @Autowired
@@ -63,7 +57,7 @@ public class CustomerSiteController {
 
     @ApiOperation("删除地址[逻辑]")
     @DeleteMapping("/deleteSiteById/{id}")
-    public BaseResponse deleteById(@PathVariable Long id) {
+    public BaseResponse deleteById(@PathVariable Integer id) {
         if (this.siteMapper.selectByPrimaryKey(id) == null) {
             return BaseResponse.errorInstance("查询不到相应数据");
         }
@@ -96,7 +90,7 @@ public class CustomerSiteController {
 
     @ApiOperation("查询单个地址")
     @GetMapping("/site/{id}")
-    public BaseResponse getById(@PathVariable Long id) {
+    public BaseResponse getById(@PathVariable Integer id) {
         if (this.siteMapper.selectByPrimaryKey(id) == null) {
             return BaseResponse.queryDataEmpty();
         }

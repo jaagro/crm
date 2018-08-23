@@ -16,19 +16,19 @@ public class CustomerSite implements Serializable {
     /**
      * 客户发货ID
      */
-    private Long id;
+    private Integer id;
 
     /**
      * 地址类型
-     * 1-装货点，2-卸货点
+     1-装货点，2-卸货点
      */
     private Integer siteType;
 
     /**
      * 外键关联客户ID
-     * ( References customer)
+     ( References customer)
      */
-    private Long customerId;
+    private Integer customerId;
 
     /**
      * 装货地名称
@@ -36,12 +36,12 @@ public class CustomerSite implements Serializable {
     private String siteName;
 
     /**
-     * 系统状态
+     * 系统状态(1-可用，2-不可用)
      */
-    private Boolean siteStatus;
+    private Integer siteStatus;
 
     /**
-     * 联系人
+     * 联系人姓名
      */
     private String contact;
 
@@ -68,7 +68,7 @@ public class CustomerSite implements Serializable {
     /**
      * 详细地址
      */
-    private String detailedAddress;
+    private String address;
 
     /**
      * 纬度
@@ -103,16 +103,11 @@ public class CustomerSite implements Serializable {
     /**
      * 创建人(References: user)
      */
-    private Long createUserId;
+    private Integer createUserId;
 
     /**
      * 修改人(References: user)
      */
-    private Long modifyUserId;
-
-    /**
-     * 是否删除 0:否 1:是
-     */
-    private Boolean enable;
+    private Integer modifyUserId;
 
 }

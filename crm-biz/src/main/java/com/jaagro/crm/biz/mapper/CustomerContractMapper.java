@@ -2,7 +2,7 @@ package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.api.dto.request.customer.ListCustomerContractCriteriaDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerContractReturnDto;
-import com.jaagro.crm.biz.entity.CustomerContract;
+import com.jaagro.crm.biz.entity.CustomerContracts;
 
 import java.util.List;
 
@@ -11,34 +11,40 @@ import java.util.List;
  */
 public interface CustomerContractMapper {
     /**
-     * @mbggenerated 2018-08-16
+     *
+     * @mbggenerated 2018-08-22
      */
-    int deleteByPrimaryKey(Long id);
+    int deleteByPrimaryKey(Integer id);
 
     /**
-     * @mbggenerated 2018-08-16
+     *
+     * @mbggenerated 2018-08-22
      */
-    int insert(CustomerContract record);
+    int insert(CustomerContracts record);
 
     /**
-     * @mbggenerated 2018-08-16
+     *
+     * @mbggenerated 2018-08-22
      */
-    int insertSelective(CustomerContract record);
+    int insertSelective(CustomerContracts record);
 
     /**
-     * @mbggenerated 2018-08-16
+     *
+     * @mbggenerated 2018-08-22
      */
-    CustomerContract selectByPrimaryKey(Long id);
+    CustomerContracts selectByPrimaryKey(Integer id);
 
     /**
-     * @mbggenerated 2018-08-16
+     *
+     * @mbggenerated 2018-08-22
      */
-    int updateByPrimaryKeySelective(CustomerContract record);
+    int updateByPrimaryKeySelective(CustomerContracts record);
 
     /**
-     * @mbggenerated 2018-08-16
+     *
+     * @mbggenerated 2018-08-22
      */
-    int updateByPrimaryKey(CustomerContract record);
+    int updateByPrimaryKey(CustomerContracts record);
 
     /**
      * 查询客户全部联系人
@@ -46,7 +52,7 @@ public interface CustomerContractMapper {
      * @param id
      * @return
      */
-    List<CustomerContractReturnDto> getByCustomerId(Long id);
+    List<CustomerContractReturnDto> getByCustomerId(Integer id);
 
     /**
      * 分页查询
