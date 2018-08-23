@@ -15,7 +15,7 @@
 
         <!-- 数据库链接信息 -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql:///userserver?useSSL=false"
+                        connectionURL="jdbc:mysql:///crmserver?useSSL=false"
                         userId="root"
                         password="123456">
         </jdbcConnection>

@@ -19,7 +19,7 @@
         <result column="price_status" property="priceStatus" jdbcType="INTEGER"/>
     </resultMap>
 
-    <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.customerContract.ReturnContractPriceDto">
+    <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.contract.ReturnContractPriceDto">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="contract_id" property="contractId" jdbcType="INTEGER"/>
         <result column="pricing_type" property="pricingType" jdbcType="INTEGER"/>
@@ -234,7 +234,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
     <select id="getPriceByCriteria" resultMap="DetailInfo"
-            parameterType="com.jaagro.crm.api.dto.request.customerContract.ListContractPriceCriteriaDto">
+            parameterType="com.jaagro.crm.api.dto.request.contract.ListContractPriceCriteriaDto">
         select * from contract_price where
         contract_id = #{contractId} and pricing_type = #{pricingType} and product_type = #{productType} and price_status
         = 1
