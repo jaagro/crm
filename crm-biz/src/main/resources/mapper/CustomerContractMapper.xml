@@ -20,7 +20,7 @@
         <result column="new_update_user" property="newUpdateUser" jdbcType="INTEGER"/>
         <result column="version" property="version" jdbcType="INTEGER"/>
     </resultMap>
-    <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.customerContract.ReturnContractDto">
+    <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.contract.ReturnContractDto">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="customer_id" property="customerId" jdbcType="INTEGER"/>
         <result column="contract_status" property="contractStatus" jdbcType="INTEGER"/>
@@ -258,7 +258,7 @@
       version = #{version,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
-    <select id="listByPage" parameterType="com.jaagro.crm.api.dto.request.customerContract.ListContractCriteriaDto"
+    <select id="listByPage" parameterType="com.jaagro.crm.api.dto.request.contract.ListContractCriteriaDto"
             resultMap="DetailInfo">
         select
         <include refid="Base_Column_List"/>
@@ -285,7 +285,7 @@
         from customerContract
         where customer_id = #{id,jdbcType=INTEGER}
     </select>
-    <select id="getByUpdateDto" parameterType="com.jaagro.crm.api.dto.request.customerContract.UpdateContractDto"
+    <select id="getByUpdateDto" parameterType="com.jaagro.crm.api.dto.request.contract.UpdateContractDto"
             resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
