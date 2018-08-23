@@ -1,54 +1,46 @@
 package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.api.dto.request.customer.ListSiteCriteriaDto;
+import com.jaagro.crm.api.dto.request.customer.UpdateCustomerSiteDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto;
 import com.jaagro.crm.biz.entity.CustomerSite;
 
 import java.util.List;
 
-/**
- * @author baiyiran
- */
 public interface CustomerSiteMapper {
     /**
-     * @mbggenerated 2018-08-16
+     *
+     * @mbggenerated 2018-08-23
      */
-    int deleteByPrimaryKey(Long id);
+    int deleteByPrimaryKey(Integer id);
 
     /**
-     * 新增
      *
-     * @param record
-     * @return
+     * @mbggenerated 2018-08-23
      */
     int insert(CustomerSite record);
 
     /**
-     * 动态新增
      *
-     * @param record
-     * @return
+     * @mbggenerated 2018-08-23
      */
     int insertSelective(CustomerSite record);
 
     /**
-     * 主键查询
      *
-     * @param id
-     * @return
+     * @mbggenerated 2018-08-23
      */
-    CustomerSite selectByPrimaryKey(Long id);
+    CustomerSite selectByPrimaryKey(Integer id);
 
     /**
-     * 动态更新
      *
-     * @param record
-     * @return
+     * @mbggenerated 2018-08-23
      */
     int updateByPrimaryKeySelective(CustomerSite record);
 
     /**
-     * 主键更新
+     *
+     * @mbggenerated 2018-08-23
      */
     int updateByPrimaryKey(CustomerSite record);
 
@@ -58,7 +50,7 @@ public interface CustomerSiteMapper {
      * @param dto
      * @return
      */
-    List<CustomerSiteReturnDto> getByCustomerSiteId(Long customer_id);
+    List<CustomerSiteReturnDto> getByCustomerSiteId(Integer customer_id);
 
     /**
      * 查询客户Id查询收发货地址
@@ -67,4 +59,11 @@ public interface CustomerSiteMapper {
      * @return
      */
     List<CustomerSiteReturnDto> getByCriteriDto(ListSiteCriteriaDto criteriaDto);
+
+    /**
+     * 根据地址名称查询
+     *
+     * @param siteName
+     */
+    CustomerSiteReturnDto getSiteDto(UpdateCustomerSiteDto siteDto);
 }

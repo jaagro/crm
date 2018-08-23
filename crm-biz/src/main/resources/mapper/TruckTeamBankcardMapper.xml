@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jaagro.crm.biz.mapper.TruckTeamBankcardMapper" >
+  <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.TruckTeamBankcard" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER" />
+    <result column="payment_account_id" property="paymentAccountId" jdbcType="VARCHAR" />
+    <result column="deposit_bank" property="depositBank" jdbcType="VARCHAR" />
+    <result column="account_person" property="accountPerson" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, truck_team_id, payment_account_id, deposit_bank, account_person
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from truck_team_bankcard
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from truck_team_bankcard
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="entity.TruckTeamBankcard" >
+    insert into truck_team_bankcard (id, truck_team_id, payment_account_id, 
+      deposit_bank, account_person)
+    values (#{id,jdbcType=INTEGER}, #{truckTeamId,jdbcType=INTEGER}, #{paymentAccountId,jdbcType=VARCHAR}, 
+      #{depositBank,jdbcType=VARCHAR}, #{accountPerson,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="entity.TruckTeamBankcard" >
+    insert into truck_team_bankcard
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="truckTeamId != null" >
+        truck_team_id,
+      </if>
+      <if test="paymentAccountId != null" >
+        payment_account_id,
+      </if>
+      <if test="depositBank != null" >
+        deposit_bank,
+      </if>
+      <if test="accountPerson != null" >
+        account_person,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="truckTeamId != null" >
+        #{truckTeamId,jdbcType=INTEGER},
+      </if>
+      <if test="paymentAccountId != null" >
+        #{paymentAccountId,jdbcType=VARCHAR},
+      </if>
+      <if test="depositBank != null" >
+        #{depositBank,jdbcType=VARCHAR},
+      </if>
+      <if test="accountPerson != null" >
+        #{accountPerson,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="entity.TruckTeamBankcard" >
+    update truck_team_bankcard
+    <set >
+      <if test="truckTeamId != null" >
+        truck_team_id = #{truckTeamId,jdbcType=INTEGER},
+      </if>
+      <if test="paymentAccountId != null" >
+        payment_account_id = #{paymentAccountId,jdbcType=VARCHAR},
+      </if>
+      <if test="depositBank != null" >
+        deposit_bank = #{depositBank,jdbcType=VARCHAR},
+      </if>
+      <if test="accountPerson != null" >
+        account_person = #{accountPerson,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="entity.TruckTeamBankcard" >
+    update truck_team_bankcard
+    set truck_team_id = #{truckTeamId,jdbcType=INTEGER},
+      payment_account_id = #{paymentAccountId,jdbcType=VARCHAR},
+      deposit_bank = #{depositBank,jdbcType=VARCHAR},
+      account_person = #{accountPerson,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

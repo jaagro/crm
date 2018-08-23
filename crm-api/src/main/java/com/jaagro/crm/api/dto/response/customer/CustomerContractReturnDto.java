@@ -18,25 +18,20 @@ public class CustomerContractReturnDto implements Serializable {
     /**
      * 客户审核记录主键id
      */
-    private Long id;
+    private Integer id;
 
     /**
      * 外键关联客户ID(References customer)
      */
-    private Long customerId;
+    private Integer customerId;
 
     /**
-     * 联系人员
+     * 联系人姓名
      */
-    private String contractName;
+    private String contact;
 
     /**
      * 联系电话
-     */
-    private String mobile;
-
-    /**
-     * 手机号码
      */
     private String phone;
 
@@ -48,5 +43,25 @@ public class CustomerContractReturnDto implements Serializable {
     /**
      * 状态(0 停用 1 启用)
      */
-    private Integer status;
+    private Boolean enabled;
+
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+
+    /**
+     * 修改时间
+     */
+    private Date modifyTime;
+
+    /**
+     * 创建人
+     */
+    private Integer createUserId;
+
+    /**
+     * 修改人
+     */
+    private Integer modifyUserId;
 }

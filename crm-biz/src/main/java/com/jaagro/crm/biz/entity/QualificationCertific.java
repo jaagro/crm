@@ -5,11 +5,8 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
-
 /**
- * 客户资质证照表
- *
- * @author baiyiran
+ * @author tony
  */
 @Data
 @Accessors(chain = true)
@@ -47,12 +44,12 @@ public class QualificationCertific implements Serializable {
     /**
      * 创建人(References: user)
      */
-    private Long createdUserId;
+    private Long createUserId;
 
     /**
      * 创建时间
      */
-    private Date createdTime;
+    private Date createTime;
 
     /**
      * 修改人(References: user)
@@ -68,5 +65,4 @@ public class QualificationCertific implements Serializable {
      * 是否可用（0不可用 1可用）
      */
     private Boolean enabled;
-
 }

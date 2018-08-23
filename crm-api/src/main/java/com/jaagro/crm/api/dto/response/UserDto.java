@@ -13,7 +13,7 @@ import java.util.Date;
 @Accessors(chain = true)
 public class UserDto implements Serializable {
 
-    private Long id;
+    private Integer id;
 
     private String username;
 

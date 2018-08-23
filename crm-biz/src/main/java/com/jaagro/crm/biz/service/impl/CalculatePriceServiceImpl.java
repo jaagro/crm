@@ -1,13 +1,13 @@
 package com.jaagro.crm.biz.service.impl;
 
-import com.jaagro.crm.api.dto.request.contract.PriceCriteriaDto;
+import com.jaagro.crm.api.dto.request.contract.ListContractPriceCriteriaDto;
 import com.jaagro.crm.api.dto.response.PriceReturnDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnContractPriceDto;
 import com.jaagro.crm.api.service.CalculatePriceService;
-import com.jaagro.crm.biz.entity.ContractPrice;
-import com.jaagro.crm.biz.mapper.ContractSectionPriceMapper;
+import com.jaagro.crm.biz.entity.CustomerContractSectionPrice;
+import com.jaagro.crm.biz.mapper.CustomerContractSectionPriceMapper;
 import com.jaagro.crm.api.constant.PricingType;
-import com.jaagro.crm.biz.entity.ContractSectionPrice;
-import com.jaagro.crm.biz.mapper.ContractPriceMapper;
+import com.jaagro.crm.biz.mapper.CustomerContractPriceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -24,9 +24,9 @@ import java.util.Map;
 public class CalculatePriceServiceImpl implements CalculatePriceService {
 
     @Autowired
-    private ContractPriceMapper contractPriceMapper;
+    private CustomerContractPriceMapper customerContractPriceMapper;
     @Autowired
-    private ContractSectionPriceMapper contractSectionPriceMapper;
+    private CustomerContractSectionPriceMapper customerContractSectionPriceMapper;
 
     /**
      * 根据条件计算费用
@@ -35,14 +35,14 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
      * @return
      */
     @Override
-    public Map<String, Object> calculatePrice(PriceCriteriaDto dto) {
+    public Map<String, Object> calculatePrice(ListContractPriceCriteriaDto dto) {
 
         //按数量计价
         if (PricingType.QUANTITY.longValue() == dto.getPricingType()) {
             if (StringUtils.isEmpty(dto.getQuantity())) {
                 return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "数量不能为空");
             }
-            ContractPrice cp = contractPriceMapper.getPriceByCriteria(dto);
+            ReturnContractPriceDto cp = customerContractPriceMapper.getPriceByCriteria(dto);
             if (cp == null) {
                 return ServiceResult.error("未找到相应的报价");
             }
@@ -61,7 +61,7 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
             if (StringUtils.isEmpty(dto.getPickupAddressId())) {
                 return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "请选择提货地址");
             }
-            ContractPrice cp = contractPriceMapper.getPriceByCriteria(dto);
+            ReturnContractPriceDto cp = customerContractPriceMapper.getPriceByCriteria(dto);
             if (cp == null) {
                 return ServiceResult.error("未找到相应的报价");
             }
@@ -76,7 +76,7 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
             if (StringUtils.isEmpty(dto.getMileage())) {
                 return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "里程数不能为空");
             }
-            ContractPrice cp = contractPriceMapper.getPriceByCriteria(dto);
+            ReturnContractPriceDto cp = customerContractPriceMapper.getPriceByCriteria(dto);
             if (cp == null) {
                 return ServiceResult.error("未找到相应的报价");
             }
@@ -92,7 +92,7 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
             if (StringUtils.isEmpty(dto.getMileage())) {
                 return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "里程数不能为空");
             }
-            ContractPrice cp = contractPriceMapper.getPriceByCriteria(dto);
+            ReturnContractPriceDto cp = customerContractPriceMapper.getPriceByCriteria(dto);
             if (cp == null) {
                 return ServiceResult.error("未找到相应的报价");
             }
@@ -117,11 +117,11 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
             if (StringUtils.isEmpty(dto.getMileage())) {
                 return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "里程数不能为空");
             }
-            ContractPrice cp = contractPriceMapper.getPriceByCriteria(dto);
+            ReturnContractPriceDto cp = customerContractPriceMapper.getPriceByCriteria(dto);
             if (cp == null) {
                 return ServiceResult.error("未找到相应的报价");
             }
-            ContractSectionPrice csp = contractSectionPriceMapper.getByLimit(cp.getId(), dto.getMileage());
+            CustomerContractSectionPrice csp = customerContractSectionPriceMapper.getByLimit(cp.getId(), dto.getMileage());
             if (csp == null) {
                 return ServiceResult.error("未找到相应的区间报价");
             }
@@ -145,7 +145,7 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
             if (StringUtils.isEmpty(dto.getWeight())) {
                 return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "重量不能为空");
             }
-            ContractPrice cp = contractPriceMapper.getPriceByCriteria(dto);
+            ReturnContractPriceDto cp = customerContractPriceMapper.getPriceByCriteria(dto);
             if (cp == null) {
                 return ServiceResult.error("未找到相应的报价");
             }

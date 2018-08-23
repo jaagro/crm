@@ -9,8 +9,8 @@ public interface ContractSectionPriceService {
     /**
      * 删除，注意逻辑删除
      *
-     * @param id
+     * @param priceId
      * @return
      */
-    Map<String, Object> disableByPriceId(Long priceId);
+    Map<String, Object> disableByPriceId(Integer priceId);
 }

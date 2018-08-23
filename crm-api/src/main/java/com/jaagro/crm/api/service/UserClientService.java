@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface UserClientService {
     /**
      * 获取token相关的用户信息
-     * 提供给其他微服务使用
      * @param token
      * @return
      */

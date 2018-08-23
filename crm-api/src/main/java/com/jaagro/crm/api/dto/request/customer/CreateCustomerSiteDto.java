@@ -5,6 +5,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @author baiyiran
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
 @Data
 @Accessors(chain = true)
 public class CreateCustomerSiteDto implements Serializable {
+
     /**
      * 地址类型
      * 1-装货点，2-卸货点
@@ -22,7 +24,7 @@ public class CreateCustomerSiteDto implements Serializable {
      * 外键关联客户ID
      * ( References customer)
      */
-    private Long customerId;
+    private Integer customerId;
 
     /**
      * 装货地名称
@@ -30,12 +32,7 @@ public class CreateCustomerSiteDto implements Serializable {
     private String siteName;
 
     /**
-     * 系统状态
-     */
-    private Integer siteStatus;
-
-    /**
-     * 联系人
+     * 联系人姓名
      */
     private String contact;
 
@@ -62,7 +59,7 @@ public class CreateCustomerSiteDto implements Serializable {
     /**
      * 详细地址
      */
-    private String detailedAddress;
+    private String address;
 
     /**
      * 纬度

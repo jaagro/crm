@@ -8,43 +8,69 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author tony
+ * @author baiyiran
  */
 @Data
 @Accessors(chain = true)
 public class CreateContractDto implements Serializable {
 
-    private Long id;
+    /**
+     * 客户ID
+     */
+    private Integer customerId;
 
-    private Long customerId;
-
+    /**
+     * 合同状态: 1-正常 2-终止
+     */
     private Integer contractStatus;
 
+    /**
+     * 合同开始时间
+     */
     private Date startDate;
 
+    /**
+     * 合同结束时间
+     */
     private Date endDate;
 
+    /**
+     * 签约日期
+     */
+    private Date contractDate;
+
+    /**
+     * 合同类型
+     */
     private Integer type;
 
+    /**
+     * 合同主题
+     */
     private String theme;
 
+    /**
+     * 产品
+     */
     private String product;
 
+    /**
+     * 合同正文
+     */
     private String context;
 
+    /**
+     * 合同编号
+     */
     private String contractNumber;
 
+    /**
+     * 备注
+     */
     private String remark;
 
-    private Date createTime;
-
-    private Long createUser;
-
-    private Date newUpdateTime;
-
-    private Long newUpdateUser;
-
-    private Integer version;
-
-    private List<ContractPriceDto> price;
+    /**
+     * 报价
+     */
+    private List<CreateContractPriceDto> price;
 }
