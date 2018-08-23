@@ -10,10 +10,10 @@ import com.jaagro.crm.api.dto.response.customer.CustomerQualificationReturnDto;
 import com.jaagro.crm.api.service.QualificationCertificService;
 import com.jaagro.crm.biz.entity.CustomerQualification;
 import com.jaagro.crm.biz.mapper.CustomerQualificationMapper;
+import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import utils.ServiceResult;
 
 import java.util.Date;
 import java.util.List;
