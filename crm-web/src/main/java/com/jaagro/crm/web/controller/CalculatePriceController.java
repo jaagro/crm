@@ -2,14 +2,15 @@ package com.jaagro.crm.web.controller;
 
 import com.jaagro.crm.api.dto.request.contract.ListContractPriceCriteriaDto;
 import com.jaagro.crm.api.service.CalculatePriceService;
+import com.jaagro.utils.BaseResponse;
+import com.jaagro.utils.ResponseStatusCode;
+import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import utils.BaseResponse;
-import utils.ResponseStatusCode;
-import utils.ServiceResult;
+
 
 /**
  * @author tony

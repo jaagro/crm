@@ -1,18 +1,18 @@
 package com.jaagro.crm.biz.service.impl;
 
+import com.jaagro.crm.api.constant.PricingType;
 import com.jaagro.crm.api.dto.request.contract.ListContractPriceCriteriaDto;
 import com.jaagro.crm.api.dto.response.PriceReturnDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractPriceDto;
 import com.jaagro.crm.api.service.CalculatePriceService;
 import com.jaagro.crm.biz.entity.CustomerContractSectionPrice;
-import com.jaagro.crm.biz.mapper.CustomerContractSectionPriceMapper;
-import com.jaagro.crm.api.constant.PricingType;
 import com.jaagro.crm.biz.mapper.CustomerContractPriceMapper;
+import com.jaagro.crm.biz.mapper.CustomerContractSectionPriceMapper;
+import com.jaagro.utils.ResponseStatusCode;
+import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import utils.ResponseStatusCode;
-import utils.ServiceResult;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -55,10 +55,10 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
 
         //按每车计价
         if (PricingType.VEHICLE.longValue() == dto.getPricingType()) {
-            if (StringUtils.isEmpty(dto.getShippingAddressId())) {
+            if (StringUtils.isEmpty(dto.getUnloadSite())) {
                 return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "请选择收货地址");
             }
-            if (StringUtils.isEmpty(dto.getPickupAddressId())) {
+            if (StringUtils.isEmpty(dto.getLoadSite())) {
                 return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "请选择提货地址");
             }
             ReturnContractPriceDto cp = customerContractPriceMapper.getPriceByCriteria(dto);

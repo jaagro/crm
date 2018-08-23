@@ -14,13 +14,13 @@ import com.jaagro.crm.biz.mapper.CustomerContractLogMapper;
 import com.jaagro.crm.biz.mapper.CustomerContractMapper;
 import com.jaagro.crm.biz.mapper.CustomerContractPriceMapper;
 import com.jaagro.crm.biz.mapper.CustomerContractSectionPriceMapper;
+import com.jaagro.utils.ResponseStatusCode;
+import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import utils.ResponseStatusCode;
-import utils.ServiceResult;
 
 import java.util.Date;
 import java.util.List;

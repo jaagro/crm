@@ -1,6 +1,6 @@
 package com.jaagro.crm.web.controller;
 
-import com.jaagro.crm.api.dto.response.UserDto;
+import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.service.UserClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +20,7 @@ public class TestController {
     UserClientService userClientService;
 
     @GetMapping("/test")
-    public UserDto getToken(){
+    public UserInfo getToken(){
         String token = request.getHeader("token");
         return userClientService.getUserByToken(token);
     }
@@ -28,5 +28,4 @@ public class TestController {
     public String test(){
         return "success";
     }
-
 }

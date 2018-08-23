@@ -9,11 +9,11 @@ import com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto;
 import com.jaagro.crm.api.service.CustomerSiteService;
 import com.jaagro.crm.biz.entity.CustomerSite;
 import com.jaagro.crm.biz.mapper.CustomerSiteMapper;
+import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import utils.ServiceResult;
 
 import java.util.Date;
 import java.util.List;

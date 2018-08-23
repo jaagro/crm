@@ -1,6 +1,6 @@
 package com.jaagro.crm.api.service;
 
-import com.jaagro.crm.api.dto.response.UserDto;
+import com.jaagro.constant.UserInfo;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,5 +17,5 @@ public interface UserClientService {
      * @return
      */
     @PostMapping("/getUserByToken")
-    UserDto getUserByToken(@RequestParam("token") String token);
+    UserInfo getUserByToken(@RequestParam("token") String token);
 }

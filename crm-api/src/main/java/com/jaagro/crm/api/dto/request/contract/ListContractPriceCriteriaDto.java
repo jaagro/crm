@@ -17,37 +17,37 @@ public class ListContractPriceCriteriaDto implements Serializable {
     /**
      * 合同id
      */
-    private Long contractId;
+    private Integer contractId;
 
     /**
      * 客户Id
      */
-    private Long customerId;
+    private Integer customerId;
 
     /**
      * 计价模式
      */
-    private Long pricingType;
+    private Integer pricingType;
 
     /**
      * 货物类型
      */
-    private Long productType;
+    private Integer productType;
 
     /**
      * 提货地址id
      */
-    private Long pickupAddressId;
+    private Integer loadSite;
 
     /**
      * 送货地址id
      */
-    private Long shippingAddressId;
+    private Integer unloadSite;
 
     /**
      * 车辆类型
      */
-    private Long vehicleType;
+    private Integer truckType;
 
     /**
      * 商品规格

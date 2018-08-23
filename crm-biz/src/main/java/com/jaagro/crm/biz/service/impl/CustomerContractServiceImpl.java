@@ -9,10 +9,10 @@ import com.jaagro.crm.api.dto.response.customer.CustomerContractReturnDto;
 import com.jaagro.crm.api.service.CustomerContractService;
 import com.jaagro.crm.biz.entity.CustomerContacts;
 import com.jaagro.crm.biz.mapper.CustomerContactsMapper;
+import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import utils.ServiceResult;
 
 import java.util.List;
 import java.util.Map;

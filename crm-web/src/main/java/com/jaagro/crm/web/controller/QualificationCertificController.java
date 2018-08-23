@@ -1,16 +1,19 @@
 package com.jaagro.crm.web.controller;
 
-import com.jaagro.crm.api.dto.request.customer.*;
+import com.jaagro.crm.api.dto.request.customer.CreateCustomerQualificationDto;
+import com.jaagro.crm.api.dto.request.customer.ListCustomerQualificationCriteriaDto;
+import com.jaagro.crm.api.dto.request.customer.UpdateCustomerQualificationDto;
 import com.jaagro.crm.api.service.CustomerService;
 import com.jaagro.crm.api.service.QualificationCertificService;
 import com.jaagro.crm.biz.mapper.CustomerMapper;
 import com.jaagro.crm.biz.mapper.CustomerQualificationMapper;
+import com.jaagro.utils.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import utils.BaseResponse;
+
 
 /**
  * 客户资质管理

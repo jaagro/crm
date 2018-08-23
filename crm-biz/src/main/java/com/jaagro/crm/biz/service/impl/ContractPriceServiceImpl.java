@@ -5,10 +5,10 @@ import com.jaagro.crm.api.service.ContractPriceService;
 import com.jaagro.crm.api.service.ContractSectionPriceService;
 import com.jaagro.crm.biz.entity.CustomerContractPrice;
 import com.jaagro.crm.biz.mapper.CustomerContractPriceMapper;
+import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import utils.ServiceResult;
 
 import java.util.List;
 import java.util.Map;

@@ -18,5 +18,4 @@ public interface CalculatePriceService {
      * @return
      */
     Map<String, Object> calculatePrice(ListContractPriceCriteriaDto dto);
-
 }
