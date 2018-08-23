@@ -24,6 +24,31 @@
     <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
   </resultMap>
+  <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.driver.TruckReturnDto" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER" />
+    <result column="truck_number" property="truckNumber" jdbcType="VARCHAR" />
+    <result column="vehicle_brand" property="vehicleBrand" jdbcType="VARCHAR" />
+    <result column="truck_type_id" property="truckTypeId" jdbcType="INTEGER" />
+    <result column="capacity" property="capacity" jdbcType="DECIMAL" />
+    <result column="maximum_load" property="maximumLoad" jdbcType="INTEGER" />
+    <result column="truck_weight" property="truckWeight" jdbcType="DECIMAL" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="county" property="county" jdbcType="VARCHAR" />
+    <result column="buy_time" property="buyTime" jdbcType="TIMESTAMP" />
+    <result column="expiry_date" property="expiryDate" jdbcType="TIMESTAMP" />
+    <result column="expiry_annual" property="expiryAnnual" jdbcType="TIMESTAMP" />
+    <result column="business_permit" property="businessPermit" jdbcType="VARCHAR" />
+    <result column="notes" property="notes" jdbcType="VARCHAR" />
+    <result column="truck_status" property="truckStatus" jdbcType="INTEGER" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <collection property="truckType" column="id"
+                select="com.jaagro.crm.biz.mapper.TruckTypeMapper.getById"/>
+  </resultMap>
   <sql id="Base_Column_List" >
     id, truck_team_id, truck_number, vehicle_brand, truck_type_id, capacity, maximum_load, 
     truck_weight, province, city, county, buy_time, expiry_date, expiry_annual, business_permit, 
@@ -281,4 +306,10 @@
       create_user_id = #{createUserId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="getById" parameterType="java.lang.Integer" resultMap="DetailInfo">
+    select
+    <include refid="Base_Column_List" />
+    from truck
+    where id = #{id,jdbcType=INTEGER}
+  </select>
 </mapper>

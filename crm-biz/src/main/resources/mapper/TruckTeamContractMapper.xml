@@ -12,6 +12,17 @@
     <result column="contract_status" property="contractStatus" jdbcType="INTEGER" />
     <result column="notes" property="notes" jdbcType="VARCHAR" />
   </resultMap>
+  <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.driver.TruckTeamContractReturnDto" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER" />
+    <result column="contract_number" property="contractNumber" jdbcType="VARCHAR" />
+    <result column="bussiness_type" property="bussinessType" jdbcType="INTEGER" />
+    <result column="contract_date" property="contractDate" jdbcType="TIMESTAMP" />
+    <result column="start_date" property="startDate" jdbcType="TIMESTAMP" />
+    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
+    <result column="contract_status" property="contractStatus" jdbcType="INTEGER" />
+    <result column="notes" property="notes" jdbcType="VARCHAR" />
+  </resultMap>
   <sql id="Base_Column_List" >
     id, truck_team_id, contract_number, bussiness_type, contract_date, start_date, end_date, 
     contract_status, notes
@@ -140,4 +151,10 @@
       notes = #{notes,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="getById" parameterType="java.lang.Integer" resultMap="DetailInfo">
+    select
+    <include refid="Base_Column_List" />
+    from truck_team_contract
+    where id = #{id,jdbcType=INTEGER}
+  </select>
 </mapper>

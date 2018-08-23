@@ -1,6 +1,7 @@
 package com.jaagro.crm.biz.mapper;
 
 
+import com.jaagro.crm.api.dto.response.driver.TruckTypeReturnDto;
 import com.jaagro.crm.biz.entity.TruckType;
 
 public interface TruckTypeMapper {
@@ -39,4 +40,11 @@ public interface TruckTypeMapper {
      * @mbggenerated 2018-08-23
      */
     int updateByPrimaryKey(TruckType record);
+
+    /**
+     * 查询单个合同类型
+     * @param id
+     * @return
+     */
+    TruckTypeReturnDto getById(Integer id);
 }

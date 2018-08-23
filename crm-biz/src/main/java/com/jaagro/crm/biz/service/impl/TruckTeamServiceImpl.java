@@ -89,11 +89,12 @@ public class TruckTeamServiceImpl implements TruckTeamService {
             }
         }
         //创建车队资质对象
-        if(dto.getTruckQualification() != null && dto.getTruckQualification().size() > 0){
-            for(CreateTruckQualificationDto ctq: dto.getTruckQualification()){
-                TruckQualification truckQualification = new TruckQualification();
-                BeanUtils.copyProperties(ctq,truckQualification);
-                truckQualificationMapper.insert(truckQualification);
+        if(dto.getTruckTeamBankcard() != null && dto.getTruckTeamBankcard().size() > 0){
+            for(CreateTruckTeamBankcardDto ctq: dto.getTruckTeamBankcard()){
+                TruckTeamBankcard truckTeamBankcard = new TruckTeamBankcard();
+                BeanUtils.copyProperties(ctq,truckTeamBankcard);
+                truckTeamBankcard.setTruckTeamId(dto.getId());
+                truckTeamBankcardMapper.insert(truckTeamBankcard);
             }
         }
         return ServiceResult.toResult("创建车队成功");

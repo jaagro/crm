@@ -34,7 +34,8 @@
     delete from truck_team
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.TruckTeam" >
+  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.TruckTeam" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
     insert into truck_team (id, team_name, team_type, 
       legal_name, credit_code, team_status, 
       cooperation_type, province, city, 
