@@ -5,7 +5,6 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * @author tony
@@ -37,12 +36,12 @@ public class ListContractPriceCriteriaDto implements Serializable {
     /**
      * 提货地址id
      */
-    private Integer loadSite;
+    private Integer loadSiteId;
 
     /**
      * 送货地址id
      */
-    private Integer unloadSite;
+    private Integer unloadSiteId;
 
     /**
      * 车辆类型
