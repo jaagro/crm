@@ -1,6 +1,7 @@
 package com.jaagro.crm.biz.mapper;
 
 
+import com.jaagro.crm.api.dto.response.driver.TruckTeamContractReturnDto;
 import com.jaagro.crm.biz.entity.TruckTeamContract;
 
 public interface TruckTeamContractMapper {
@@ -39,4 +40,14 @@ public interface TruckTeamContractMapper {
      * @mbggenerated 2018-08-23
      */
     int updateByPrimaryKey(TruckTeamContract record);
+
+    /**
+     * 查询合同dto
+     */
+    TruckTeamContractReturnDto getById(Integer id);
+
+    /**
+     * 查询合同dto
+     */
+    TruckTeamContractReturnDto getByContractNumber(String contractNumber);
 }

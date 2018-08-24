@@ -9,6 +9,14 @@
     <result column="truck_amount" property="truckAmount" jdbcType="VARCHAR" />
     <result column="enabled" property="enabled" jdbcType="TINYINT" />
   </resultMap>
+  <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.driver.TruckTypeReturnDto" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="INTEGER" />
+    <result column="truck_length" property="truckLength" jdbcType="VARCHAR" />
+    <result column="truck_weight" property="truckWeight" jdbcType="VARCHAR" />
+    <result column="truck_amount" property="truckAmount" jdbcType="VARCHAR" />
+    <result column="enabled" property="enabled" jdbcType="TINYINT" />
+  </resultMap>
   <sql id="Base_Column_List" >
     id, name, truck_length, truck_weight, truck_amount, enabled
   </sql>
@@ -103,4 +111,10 @@
       enabled = #{enabled,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="getById" parameterType="java.lang.Integer" resultMap="DetailInfo">
+    select
+    <include refid="Base_Column_List" />
+    from truck_type
+    where id = #{id,jdbcType=INTEGER}
+  </select>
 </mapper>

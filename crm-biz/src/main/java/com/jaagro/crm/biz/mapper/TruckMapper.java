@@ -1,5 +1,6 @@
 package com.jaagro.crm.biz.mapper;
 
+import com.jaagro.crm.api.dto.response.driver.TruckReturnDto;
 import com.jaagro.crm.biz.entity.Truck;
 
 public interface TruckMapper {
@@ -38,4 +39,12 @@ public interface TruckMapper {
      * @mbggenerated 2018-08-23
      */
     int updateByPrimaryKey(Truck record);
+
+    /**
+     * 查询车队dto
+     */
+    TruckReturnDto getById(Integer id);
+
+
+
 }

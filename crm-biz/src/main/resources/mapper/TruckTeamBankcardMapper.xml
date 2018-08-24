@@ -21,7 +21,8 @@
     delete from truck_team_bankcard
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.TruckTeamBankcard" >
+  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.TruckTeamBankcard" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
     insert into truck_team_bankcard (id, truck_team_id, payment_account_id, 
       deposit_bank, account_person)
     values (#{id,jdbcType=INTEGER}, #{truckTeamId,jdbcType=INTEGER}, #{paymentAccountId,jdbcType=VARCHAR}, 
