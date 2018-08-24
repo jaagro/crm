@@ -1,12 +1,10 @@
 package com.jaagro.crm.api.dto.request.customer;
 
-import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * @author baiyiarn
@@ -30,12 +28,6 @@ public class CreateCustomerDto implements Serializable {
      * 统一社会验证码(个体客户时，就是自然人身份证号码)
      */
     private String creditCode;
-
-    /**
-     * 审核状态
-     * (0未审核，1-正常合作  10-停止合作 11-审核未通过 13-作废)
-     */
-    private Integer customerStatus;
 
     /**
      * 所属省份
@@ -99,24 +91,24 @@ public class CreateCustomerDto implements Serializable {
      */
     private String notes;
 
-    /**
+   /* *//**
      * 客户联系人
-     */
+     *//*
     private List<CreateCustomerContractDto> contracts;
 
-    /**
+    *//**
      * 收发货地址
-     */
+     *//*
     private List<CreateCustomerSiteDto> customerSites;
 
-    /**
+    *//**
      * 资质证件照
-     */
+     *//*
     private List<CreateCustomerQualificationDto> qualificationCertificDtos;
 
-    /**
+    *//**
      * 客户合同
-     */
-    private List<CreateContractDto> createContractDtos;
+     *//*
+    private List<CreateContractDto> createContractDtos;*/
 
 }

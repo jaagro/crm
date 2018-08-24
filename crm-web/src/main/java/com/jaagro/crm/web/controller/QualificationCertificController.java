@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 /**
  * 客户资质管理
@@ -35,20 +37,25 @@ public class QualificationCertificController {
 
     @ApiOperation("新增资质")
     @PostMapping("/qualificationCertific")
-    public BaseResponse insertCustomer(@RequestBody CreateCustomerQualificationDto certificDto) {
-        if (certificDto.getCertificateType() == null) {
-            return BaseResponse.idNull("证件类型:[certificateType]不能为空");
+    public BaseResponse insertCustomer(@RequestBody List<CreateCustomerQualificationDto> certificDtos) {
+        if (certificDtos != null && certificDtos.size() > 0) {
+            for (CreateCustomerQualificationDto certificDto : certificDtos) {
+                if (certificDto.getCustomerId() == null) {
+                    return BaseResponse.idNull("客户id:[customerId]不能为空");
+                }
+                if (this.customerMapper.selectByPrimaryKey(certificDto.getCustomerId()) == null) {
+                    return BaseResponse.errorInstance("客户id:[customerId]不存在");
+                }
+                if (certificDto.getCertificateType() == null) {
+                    return BaseResponse.idNull("证件类型:[certificateType]不能为空");
+                }
+                if (certificDto.getCertificateImageUrl() == null) {
+                    return BaseResponse.idNull("证件图片地址:[certificateImageUrl]不能为空");
+                }
+                certificService.createQualificationCertific(certificDto);
+            }
         }
-        if (certificDto.getCertificateImageUrl() == null) {
-            return BaseResponse.idNull("证件图片地址:[certificateImageUrl]不能为空");
-        }
-        if (certificDto.getCustomerId() == null) {
-            return BaseResponse.idNull("客户id:[customerId]不能为空");
-        }
-        if (this.customerMapper.selectByPrimaryKey(certificDto.getCustomerId()) == null) {
-            return BaseResponse.errorInstance("客户id:[customerId]不存在");
-        }
-        return BaseResponse.service(certificService.createQualificationCertific(certificDto));
+        return BaseResponse.successInstance("创建成功");
     }
 
     @ApiOperation("删除资质[逻辑]")
@@ -63,6 +70,12 @@ public class QualificationCertificController {
     @ApiOperation("修改单个资质")
     @PutMapping("/qualificationCertific")
     public BaseResponse updateSite(@RequestBody UpdateCustomerQualificationDto certificDto) {
+        if (certificDto.getId() == null) {
+            return BaseResponse.idNull("证件id:[id]不能为空");
+        }
+        if (this.certificMapper.selectByPrimaryKey(certificDto.getId()) == null) {
+            return BaseResponse.idNull("证件id:[id]不能为空");
+        }
         if (certificDto.getCertificateType() == null) {
             return BaseResponse.idNull("证件类型:[certificateType]不能为空");
         }

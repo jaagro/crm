@@ -107,4 +107,9 @@ public class ReturnContractDto implements Serializable {
      */
     private List<ReturnContractPriceDto> prices;
 
+    /**
+     * 合同资质
+     */
+    private List<ReturnContractQualificationDto> qualifications;
+
 }

@@ -7,15 +7,15 @@ import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractPriceDto;
 import com.jaagro.crm.api.service.ContractPriceService;
 import com.jaagro.crm.api.service.ContractService;
+import com.jaagro.crm.biz.entity.ContractQualification;
 import com.jaagro.crm.biz.entity.CustomerContract;
 import com.jaagro.crm.biz.entity.CustomerContractPrice;
 import com.jaagro.crm.biz.entity.CustomerContractSectionPrice;
-import com.jaagro.crm.biz.mapper.CustomerContractLogMapper;
-import com.jaagro.crm.biz.mapper.CustomerContractMapper;
-import com.jaagro.crm.biz.mapper.CustomerContractPriceMapper;
-import com.jaagro.crm.biz.mapper.CustomerContractSectionPriceMapper;
+import com.jaagro.crm.biz.mapper.*;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +32,8 @@ import java.util.Map;
 @Service
 public class ContractServiceImpl implements ContractService {
 
+    private static final Logger log = LoggerFactory.getLogger(ContractServiceImpl.class);
+
     @Autowired
     private CustomerContractMapper customerContractMapper;
     @Autowired
@@ -44,6 +46,10 @@ public class ContractServiceImpl implements ContractService {
     private CurrentUserService userService;
     @Autowired
     private ContractPriceService priceService;
+    @Autowired
+    private CustomerSiteMapper siteMapper;
+    @Autowired
+    private ContractQualificationMapper contractQualificationMapper;
 
     /**
      * 创建合同
@@ -58,16 +64,24 @@ public class ContractServiceImpl implements ContractService {
         CustomerContract customerContract = new CustomerContract();
         BeanUtils.copyProperties(dto, customerContract);
         customerContract
-                .setContractStatus(1)
-                .setCreateTime(new Date())
                 .setCreateUser(userService.getCurrentUser().getId());
-        customerContractMapper.insert(customerContract);
+        customerContractMapper.insertSelective(customerContract);
+        log.info("【客户合同新增】------成功\nCustomerContract:" + customerContract.toString());
 
-        /**
-         * 未完成--创建资质证(表未确认)
-         */
+        //创建资质证
+        if (dto.getQualificationDtos() != null && dto.getQualificationDtos().size() > 0) {
+            for (CreateContractQualificationDto qualificationDto : dto.getQualificationDtos()) {
+                ContractQualification qualification = new ContractQualification();
+                BeanUtils.copyProperties(qualificationDto, qualification);
+                qualification
+                        .setRelevanceId(customerContract.getId())
+                        .setCreateUserId(this.userService.getCurrentUser().getId());
+                this.contractQualificationMapper.insertSelective(qualification);
+                log.info("【客户资质新增】------成功\nContractQualification:" + qualification.toString());
+            }
+        }
 
-        //创建contractPrice对象
+        //创建合同报价及阶梯报价
         createPrice(dto, customerContract);
         return ServiceResult.toResult("合同创建成功");
     }
@@ -80,10 +94,8 @@ public class ContractServiceImpl implements ContractService {
                 CustomerContract customerContract = new CustomerContract();
                 BeanUtils.copyProperties(contractDto, customerContract);
                 customerContract
-                        .setCustomerId(CustomerId)
-                        .setCreateTime(new Date())
                         .setCreateUser(userService.getCurrentUser().getId());
-                customerContractMapper.insert(customerContract);
+                customerContractMapper.insertSelective(customerContract);
 
                 //创建contractPrice对象
                 createPrice(contractDto, customerContract);
@@ -119,6 +131,7 @@ public class ContractServiceImpl implements ContractService {
         }
         //创建contractPrice对象
         createPrice(dto, customerContract);
+        log.info("【客户合同修改】------成功\nCustomerContract:" + customerContract.toString());
         return ServiceResult.toResult("合同修改成功");
     }
 
@@ -189,7 +202,14 @@ public class ContractServiceImpl implements ContractService {
                 if (StringUtils.isEmpty(customerContractPrice.getPricingType())) {
                     throw new RuntimeException("计价模式不能为空");
                 }
+                if (this.siteMapper.selectByPrimaryKey(customerContractPrice.getLoadSiteId()) == null) {
+                    throw new RuntimeException("发货地址:[" + customerContractPrice.getLoadSiteId() + "]不存在");
+                }
+                if (this.siteMapper.selectByPrimaryKey(customerContractPrice.getUnloadSiteId()) == null) {
+                    throw new RuntimeException("收货地址:[" + customerContractPrice.getUnloadSiteId() + "]不存在");
+                }
                 customerContractPriceMapper.insert(customerContractPrice);
+                log.info("【客户合同报价新增】------成功\nCustomerContractPrice:" + customerContractPrice.toString());
                 //创建contractSectionPrice对象
                 if (cp.getSectionPrice() != null && cp.getSectionPrice().size() > 0) {
                     for (CreateContractSectionPriceDto cspDto : cp.getSectionPrice()) {
@@ -199,6 +219,7 @@ public class ContractServiceImpl implements ContractService {
                                 .setContractPriceId(customerContractPrice.getId())
                                 .setSelectionStatus(1);
                         customerContractSectionPriceMapper.insert(csp);
+                        log.info("【客户合同阶梯报价新增】------成功\nCustomerContractSectionPrice:" + csp.toString());
                     }
                 }
             }
@@ -242,6 +263,7 @@ public class ContractServiceImpl implements ContractService {
         if (contractDto.getPrices() != null && contractDto.getPrices().size() > 0) {
             this.priceService.disableByContractId(customerContract.getId());
         }
+        log.info("【客户合同删除】------成功\nCustomerContract:" + id);
         return ServiceResult.toResult("合同删除成功");
     }
 

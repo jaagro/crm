@@ -28,7 +28,7 @@ public interface CustomerContractService {
      * @param dtos
      * @return
      */
-    Map<String, Object> createCustomerContract(List<CreateCustomerContractDto> dtos,Integer CustomerId);
+    Map<String, Object> createCustomerContract(List<CreateCustomerContractDto> dtos, Integer CustomerId);
 
     /**
      * 修改单个客户联系人，注意新增updateDto
@@ -77,4 +77,12 @@ public interface CustomerContractService {
      * @return
      */
     Map<String, Object> disableCustomerContract(List<CustomerContactsReturnDto> customerContactsReturnDtos);
+
+    /**
+     * 根据客户id查询
+     *
+     * @param customerId
+     * @return
+     */
+    Map<String, Object> listByCustomerId(Integer customerId);
 }

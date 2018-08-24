@@ -41,23 +41,26 @@
 
         <collection property="prices" column="id"
                     select="com.jaagro.crm.biz.mapper.CustomerContractPriceMapper.getByContractId"></collection>
+        <collection property="qualifications" column="id"
+                    select="com.jaagro.crm.biz.mapper.ContractQualificationMapper.listByContractId"></collection>
     </resultMap>
     <sql id="Base_Column_List">
         id, customer_id, contract_status, start_date, end_date, contract_date, type, theme,
         product, context, contract_number, remark, create_time, create_user, new_update_time,
         new_update_user, version
     </sql>
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         from customer_contract
         where id = #{id,jdbcType=INTEGER}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from customer_contract
     where id = #{id,jdbcType=INTEGER}
   </delete>
-    <insert id="insert" parameterType="com.jaagro.crm.biz.entity.CustomerContract" useGeneratedKeys="true" keyProperty="id"
+    <insert id="insert" parameterType="com.jaagro.crm.biz.entity.CustomerContract" useGeneratedKeys="true"
+            keyProperty="id"
             keyColumn="id">
     insert into customer_contract (id, customer_id, contract_status,
       start_date, end_date, contract_date,
@@ -72,172 +75,175 @@
       #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=INTEGER}, #{newUpdateTime,jdbcType=TIMESTAMP},
       #{newUpdateUser,jdbcType=INTEGER}, #{version,jdbcType=INTEGER})
   </insert>
-    <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.CustomerContract" useGeneratedKeys="true" keyProperty="id"
+    <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.CustomerContract" useGeneratedKeys="true"
+            keyProperty="id"
             keyColumn="id">
         insert into customer_contract
-        <trim prefix="(" suffix=")" suffixOverrides="," >
-            <if test="id != null" >
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
                 id,
             </if>
-            <if test="customerId != null" >
+            <if test="customerId != null">
                 customer_id,
             </if>
-            <if test="contractStatus != null" >
+            <if test="contractStatus != null">
                 contract_status,
             </if>
-            <if test="startDate != null" >
+            <if test="startDate != null">
                 start_date,
             </if>
-            <if test="endDate != null" >
+            <if test="endDate != null">
                 end_date,
             </if>
-            <if test="contractDate != null" >
+            <if test="contractDate != null">
                 contract_date,
             </if>
-            <if test="type != null" >
+            <if test="type != null">
                 type,
             </if>
-            <if test="theme != null" >
+            <if test="theme != null">
                 theme,
             </if>
-            <if test="product != null" >
+            <if test="product != null">
                 product,
             </if>
-            <if test="context != null" >
+            <if test="context != null">
                 context,
             </if>
-            <if test="contractNumber != null" >
+            <if test="contractNumber != null">
                 contract_number,
             </if>
-            <if test="remark != null" >
+            <if test="remark != null">
                 remark,
             </if>
-            <if test="createTime != null" >
+            <if test="createTime != null">
                 create_time,
             </if>
-            <if test="createUser != null" >
+            <if test="createUser != null">
                 create_user,
             </if>
-            <if test="newUpdateTime != null" >
+            <if test="newUpdateTime != null">
                 new_update_time,
             </if>
-            <if test="newUpdateUser != null" >
+            <if test="newUpdateUser != null">
                 new_update_user,
             </if>
-            <if test="version != null" >
+            <if test="version != null">
                 version,
             </if>
         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides="," >
-            <if test="id != null" >
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
                 #{id,jdbcType=INTEGER},
             </if>
-            <if test="customerId != null" >
+            <if test="customerId != null">
                 #{customerId,jdbcType=INTEGER},
             </if>
-            <if test="contractStatus != null" >
+            <if test="contractStatus != null">
                 #{contractStatus,jdbcType=INTEGER},
             </if>
-            <if test="startDate != null" >
+            <if test="startDate != null">
                 #{startDate,jdbcType=DATE},
             </if>
-            <if test="endDate != null" >
+            <if test="endDate != null">
                 #{endDate,jdbcType=DATE},
             </if>
-            <if test="contractDate != null" >
+            <if test="contractDate != null">
                 #{contractDate,jdbcType=TIMESTAMP},
             </if>
-            <if test="type != null" >
+            <if test="type != null">
                 #{type,jdbcType=INTEGER},
             </if>
-            <if test="theme != null" >
+            <if test="theme != null">
                 #{theme,jdbcType=VARCHAR},
             </if>
-            <if test="product != null" >
+            <if test="product != null">
                 #{product,jdbcType=VARCHAR},
             </if>
-            <if test="context != null" >
+            <if test="context != null">
                 #{context,jdbcType=VARCHAR},
             </if>
-            <if test="contractNumber != null" >
+            <if test="contractNumber != null">
                 #{contractNumber,jdbcType=VARCHAR},
             </if>
-            <if test="remark != null" >
+            <if test="remark != null">
                 #{remark,jdbcType=VARCHAR},
             </if>
-            <if test="createTime != null" >
+            <if test="createTime != null">
                 #{createTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="createUser != null" >
+            <if test="createUser != null">
                 #{createUser,jdbcType=INTEGER},
             </if>
-            <if test="newUpdateTime != null" >
+            <if test="newUpdateTime != null">
                 #{newUpdateTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="newUpdateUser != null" >
+            <if test="newUpdateUser != null">
                 #{newUpdateUser,jdbcType=INTEGER},
             </if>
-            <if test="version != null" >
+            <if test="version != null">
                 #{version,jdbcType=INTEGER},
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.CustomerContract" useGeneratedKeys="true" keyProperty="id"
+    <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.CustomerContract"
+            useGeneratedKeys="true" keyProperty="id"
             keyColumn="id">
         update customer_contract
-        <set >
-            <if test="customerId != null" >
+        <set>
+            <if test="customerId != null">
                 customer_id = #{customerId,jdbcType=INTEGER},
             </if>
-            <if test="contractStatus != null" >
+            <if test="contractStatus != null">
                 contract_status = #{contractStatus,jdbcType=INTEGER},
             </if>
-            <if test="startDate != null" >
+            <if test="startDate != null">
                 start_date = #{startDate,jdbcType=DATE},
             </if>
-            <if test="endDate != null" >
+            <if test="endDate != null">
                 end_date = #{endDate,jdbcType=DATE},
             </if>
-            <if test="contractDate != null" >
+            <if test="contractDate != null">
                 contract_date = #{contractDate,jdbcType=TIMESTAMP},
             </if>
-            <if test="type != null" >
+            <if test="type != null">
                 type = #{type,jdbcType=INTEGER},
             </if>
-            <if test="theme != null" >
+            <if test="theme != null">
                 theme = #{theme,jdbcType=VARCHAR},
             </if>
-            <if test="product != null" >
+            <if test="product != null">
                 product = #{product,jdbcType=VARCHAR},
             </if>
-            <if test="context != null" >
+            <if test="context != null">
                 context = #{context,jdbcType=VARCHAR},
             </if>
-            <if test="contractNumber != null" >
+            <if test="contractNumber != null">
                 contract_number = #{contractNumber,jdbcType=VARCHAR},
             </if>
-            <if test="remark != null" >
+            <if test="remark != null">
                 remark = #{remark,jdbcType=VARCHAR},
             </if>
-            <if test="createTime != null" >
+            <if test="createTime != null">
                 create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="createUser != null" >
+            <if test="createUser != null">
                 create_user = #{createUser,jdbcType=INTEGER},
             </if>
-            <if test="newUpdateTime != null" >
+            <if test="newUpdateTime != null">
                 new_update_time = #{newUpdateTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="newUpdateUser != null" >
+            <if test="newUpdateUser != null">
                 new_update_user = #{newUpdateUser,jdbcType=INTEGER},
             </if>
-            <if test="version != null" >
+            <if test="version != null">
                 version = #{version,jdbcType=INTEGER},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.CustomerContract" useGeneratedKeys="true" keyProperty="id"
+    <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.CustomerContract" useGeneratedKeys="true"
+            keyProperty="id"
             keyColumn="id">
     update customer_contract
     set customer_id = #{customerId,jdbcType=INTEGER},
