@@ -148,8 +148,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Map<String, Object> listByCriteria(ListCustomerCriteriaDto dto) {
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
-        List<ListCustomerDto> customerReturnDtos = this.customerMapper.getByCriteriaDto(dto);
-        return ServiceResult.toResult(new PageInfo<>(customerReturnDtos));
+        List<ListCustomerDto> customerReturnDtos = customerMapper.getByCriteriaDto(dto);
+        PageInfo pageInfo = new PageInfo<>(customerReturnDtos);
+        return ServiceResult.toResult(pageInfo);
 
     }
 
