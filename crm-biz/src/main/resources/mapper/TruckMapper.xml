@@ -306,7 +306,7 @@
       create_user_id = #{createUserId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="getById" parameterType="java.lang.Integer" resultMap="DetailInfo">
+  <select id="getTruckById" parameterType="java.lang.Integer" resultMap="DetailInfo">
     select
     <include refid="Base_Column_List" />
     from truck
