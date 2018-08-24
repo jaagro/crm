@@ -1,12 +1,10 @@
 package com.jaagro.crm.api.dto.request.customer;
 
-import com.jaagro.crm.api.dto.request.contract.UpdateContractDto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * 修改客户帮助类
@@ -106,23 +104,23 @@ public class UpdateCustomerDto implements Serializable {
      */
     private String notes;
 
-    /**
+    /* *//**
      * 客户联系人
-     */
+     *//*
     private List<UpdateCustomerContractDto> customerContractDtos;
 
-    /**
+    *//**
      * 收发货地址
-     */
+     *//*
     private List<UpdateCustomerSiteDto> customerSites;
 
-    /**
+    *//**
      * 资质证件照
-     */
+     *//*
     private List<UpdateCustomerQualificationDto> qualificationCertificDtos;
 
-    /**
+    *//**
      * 客户合同
-     */
-    private List<UpdateContractDto> createContractDtos;
+     *//*
+    private List<UpdateContractDto> createContractDtos;*/
 }

@@ -11,6 +11,8 @@ import com.jaagro.crm.api.service.QualificationCertificService;
 import com.jaagro.crm.biz.entity.CustomerQualification;
 import com.jaagro.crm.biz.mapper.CustomerQualificationMapper;
 import com.jaagro.utils.ServiceResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,8 @@ import java.util.Map;
 @Service
 public class QualificationCertificServiceImpl implements QualificationCertificService {
 
+    private static final Logger log = LoggerFactory.getLogger(QualificationCertificServiceImpl.class);
+
     @Autowired
     private CustomerQualificationMapper certificMapper;
     @Autowired
@@ -35,11 +39,9 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
         CustomerQualification qc = new CustomerQualification();
         BeanUtils.copyProperties(certificDto, qc);
         qc
-                .setEnabled(true)
-                .setCertificateStatus(CertificateStatus.UNCHECKED)
-                .setCreateUserId(userService.getCurrentUser().getId())
-                .setCreateTime(new Date());
-        this.certificMapper.insert(qc);
+                .setCreateUserId(userService.getCurrentUser().getId());
+        this.certificMapper.insertSelective(qc);
+        log.info("【资质证照新增】-------成功\nCustomerQualification:" + qc.toString());
         return ServiceResult.toResult("资质证件照创建成功");
     }
 
@@ -50,12 +52,8 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
                 CustomerQualification qc = new CustomerQualification();
                 BeanUtils.copyProperties(certificDto, qc);
                 qc
-                        .setEnabled(true)
-                        .setCustomerId(CustomerId)
-                        .setCertificateStatus(CertificateStatus.UNCHECKED)
-                        .setCreateUserId(userService.getCurrentUser().getId())
-                        .setCreateTime(new Date());
-                this.certificMapper.insert(qc);
+                        .setCreateUserId(userService.getCurrentUser().getId());
+                this.certificMapper.insertSelective(qc);
             }
         }
         return ServiceResult.toResult("资质证件照列表创建成功");
@@ -69,6 +67,7 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
                 .setModifyUserId(userService.getCurrentUser().getId())
                 .setModifyTime(new Date());
         this.certificMapper.updateByPrimaryKeySelective(qc);
+        log.info("【资质证照修改】-------成功\nCustomerQualification:" + qc.toString());
         return ServiceResult.toResult("证件照修改成功");
     }
 
@@ -104,6 +103,7 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
         CustomerQualification certific = this.certificMapper.selectByPrimaryKey(id);
         certific.setEnabled(false);
         this.certificMapper.updateByPrimaryKeySelective(certific);
+        log.info("【资质证照删除】-------成功\nCustomerQualification:" + id);
         return ServiceResult.toResult("资质证件照删除成功");
     }
 

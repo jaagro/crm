@@ -15,18 +15,6 @@ import java.util.List;
 public class CreateContractPriceDto implements Serializable {
 
     /**
-     * 客户合同报价
-     */
-    private Integer id;
-
-    /**
-     * 合同id
-     * Nullable
-     * References: contract
-     */
-    private Integer contractId;
-
-    /**
      * 计价方式
      * 说明：
      * 1、按重量;
@@ -98,11 +86,6 @@ public class CreateContractPriceDto implements Serializable {
      * 起步运费
      */
     private BigDecimal minMoney;
-
-    /**
-     * 是否有效
-     */
-    private Integer priceStatus;
 
     private List<CreateContractSectionPriceDto> sectionPrice;
 }

@@ -20,11 +20,6 @@ public class CreateContractDto implements Serializable {
     private Integer customerId;
 
     /**
-     * 合同状态: 1-正常 2-终止
-     */
-    private Integer contractStatus;
-
-    /**
      * 合同开始时间
      */
     private Date startDate;
@@ -73,4 +68,9 @@ public class CreateContractDto implements Serializable {
      * 报价
      */
     private List<CreateContractPriceDto> price;
+
+    /**
+     * 资质证件照
+     */
+    private List<CreateContractQualificationDto> qualificationDtos;
 }

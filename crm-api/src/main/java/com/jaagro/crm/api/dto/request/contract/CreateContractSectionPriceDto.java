@@ -14,11 +14,6 @@ import java.math.BigDecimal;
 public class CreateContractSectionPriceDto implements Serializable {
 
     /**
-     * 合同报价id
-     */
-    private Integer contractPriceId;
-
-    /**
      * 1-重量阶梯报价 2-里程阶梯报价
      */
     private Integer sectionType;

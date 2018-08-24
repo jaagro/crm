@@ -15,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 
-
 /**
  * 客户地址管理
  *
@@ -38,6 +37,9 @@ public class CustomerSiteController {
         if (siteDto.getCustomerId() == null) {
             return BaseResponse.idNull("客户id:[customerId]不能为空");
         }
+        if (this.customerMapper.selectByPrimaryKey(siteDto.getCustomerId()) == null) {
+            return BaseResponse.errorInstance("客户id:[customerId]不存在");
+        }
         if (siteDto.getSiteType() == null) {
             return BaseResponse.errorInstance("地址类型:[siteType]不能为空");
         }
@@ -49,9 +51,6 @@ public class CustomerSiteController {
         CustomerSiteReturnDto site = this.siteMapper.getSiteDto(customerSiteDto);
         if (site != null) {
             return BaseResponse.errorInstance("地址名称:[siteName]已存在");
-        }
-        if (this.customerMapper.selectByPrimaryKey(siteDto.getCustomerId()) == null) {
-            return BaseResponse.errorInstance("客户id:[customerId]不存在");
         }
         return BaseResponse.service(siteService.createSite(siteDto));
     }
@@ -68,8 +67,8 @@ public class CustomerSiteController {
     @ApiOperation("修改单个地址")
     @PutMapping("/site")
     public BaseResponse updateSite(@RequestBody UpdateCustomerSiteDto siteDto) {
-        if (siteDto.getCustomerId() == null) {
-            return BaseResponse.idNull("客户id:[customerId]不能为空");
+        if (this.siteMapper.selectByPrimaryKey(siteDto.getId()) == null) {
+            return BaseResponse.idNull("地址id:[id]不能为空");
         }
         if (siteDto.getSiteType() == null) {
             return BaseResponse.errorInstance("地址类型:[siteType]不能为空");
@@ -80,11 +79,10 @@ public class CustomerSiteController {
         if (this.siteMapper.getSiteDto(siteDto) != null) {
             return BaseResponse.errorInstance("地址名称:[siteName]已存在");
         }
-        if (this.customerMapper.selectByPrimaryKey(siteDto.getCustomerId()) == null) {
-            return BaseResponse.errorInstance("客户id:[customerId]不存在");
-        }
-        if (this.siteMapper.selectByPrimaryKey(siteDto.getId()) == null) {
-            return BaseResponse.queryDataEmpty();
+        if (siteDto.getCustomerId() != null) {
+            if (this.customerMapper.selectByPrimaryKey(siteDto.getCustomerId()) == null) {
+                return BaseResponse.errorInstance("客户id:[customerId]不存在");
+            }
         }
         return BaseResponse.service(siteService.updateSite(siteDto));
     }

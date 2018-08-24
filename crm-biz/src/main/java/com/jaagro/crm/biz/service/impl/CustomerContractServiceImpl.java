@@ -43,8 +43,7 @@ public class CustomerContractServiceImpl implements CustomerContractService {
                 CustomerContacts customerContacts = new CustomerContacts();
                 BeanUtils.copyProperties(dto, customerContacts);
                 customerContacts
-                        .setEnabled(true)
-                        .setCustomerId(CustomerId);
+                        .setEnabled(true);
                 customerContactsMapper.insert(customerContacts);
             }
         }
@@ -100,6 +99,11 @@ public class CustomerContractServiceImpl implements CustomerContractService {
             }
         }
         return ServiceResult.toResult("客户联系人停用成功");
+    }
+
+    @Override
+    public Map<String, Object> listByCustomerId(Integer customerId) {
+        return ServiceResult.toResult(this.customerContactsMapper.listByCustomerId(customerId));
     }
 
 }

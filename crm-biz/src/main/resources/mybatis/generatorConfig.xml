@@ -30,24 +30,24 @@
         -->
         <!-- entity class -->
         <javaModelGenerator targetPackage="entity"
-                            targetProject="/SpringCloud/code">
+                            targetProject="E:\git\jaagro-platform-crm\crm-biz\src\main\java">
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
         </javaModelGenerator>
 
         <!-- 生成 mapper.xml文件路径 -->
-        <sqlMapGenerator targetPackage="mapperxml"  targetProject="/SpringCloud/code">
+        <sqlMapGenerator targetPackage="mapperxml"  targetProject="E:\git\jaagro-platform-crm\crm-biz\src\main\resources">
             <property name="enableSubPackages" value="true" />
         </sqlMapGenerator>
 
         <!-- 生成 dao 接口的包路径 -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="mapper"  targetProject="/SpringCloud/code">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="mapper"  targetProject="E:\git\jaagro-platform-crm\crm-biz\src\main\java">
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
         <!-- 对应数据库表名 不生成example实体类-->
 
         <!--<table tableName="%" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
-        <table tableName="customer_user" domainObjectName="CustomerUser" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
+        <table tableName="contract_qualification" domainObjectName="ContractQualification" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
         <!--<table tableName="contract_price" domainObjectName="CustomerContractPrice" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
         <!--&lt;!&ndash;<table tableName="contract_section_price" domainObjectName="CustomerContractSectionPrice" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>&ndash;&gt;-->
         <!--<table tableName="employee" domainObjectName="Employee" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->

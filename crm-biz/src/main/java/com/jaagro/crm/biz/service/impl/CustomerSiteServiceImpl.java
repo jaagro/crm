@@ -10,6 +10,8 @@ import com.jaagro.crm.api.service.CustomerSiteService;
 import com.jaagro.crm.biz.entity.CustomerSite;
 import com.jaagro.crm.biz.mapper.CustomerSiteMapper;
 import com.jaagro.utils.ServiceResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,8 @@ import java.util.Map;
 @Service
 public class CustomerSiteServiceImpl implements CustomerSiteService {
 
+    private static final Logger log = LoggerFactory.getLogger(CustomerSiteServiceImpl.class);
+
     @Autowired
     private CustomerSiteMapper siteMapper;
     @Autowired
@@ -38,7 +42,8 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
                 .setCreateTime(new Date())
                 .setSiteStatus(1)
                 .setCreateUserId(userService.getCurrentUser().getId());
-        siteMapper.insert(site);
+        siteMapper.insertSelective(site);
+        log.info("【地址新增】-------成功\nCustomerSite:" + site.toString());
         return ServiceResult.toResult("地址创建成功");
     }
 
@@ -53,7 +58,7 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
                         .setCreateTime(new Date())
                         .setSiteStatus(1)
                         .setCreateUserId(userService.getCurrentUser().getId());
-                siteMapper.insert(site);
+                siteMapper.insertSelective(site);
             }
         }
         return ServiceResult.toResult("地址创建成功");
@@ -67,6 +72,7 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
                 .setModifyTime(new Date())
                 .setModifyUserId(userService.getCurrentUser().getId());
         siteMapper.updateByPrimaryKeySelective(site);
+        log.info("【地址修改】-------成功\nCustomerSite:" + site.toString());
         return ServiceResult.toResult("地址修改成功");
     }
 
@@ -106,6 +112,7 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
         CustomerSite site = this.siteMapper.selectByPrimaryKey(id);
         site.setSiteStatus(0);
         this.siteMapper.updateByPrimaryKeySelective(site);
+        log.info("【地址删除】-------成功\nCustomerSite:" + id);
         return ServiceResult.toResult("地址删除成功");
     }
 
