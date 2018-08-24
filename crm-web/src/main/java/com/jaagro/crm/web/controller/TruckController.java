@@ -26,7 +26,7 @@ public class TruckController {
 
     @ApiOperation("查询单个车辆")
     @GetMapping("/truck/{id}")
-    public BaseResponse getById(@PathVariable Integer id) {
+    public BaseResponse getTruckById(@PathVariable Integer id) {
         if (this.truckMapper.selectByPrimaryKey(id) == null) {
             return BaseResponse.errorInstance("查询不到车辆信息");
         }

@@ -2,7 +2,7 @@ package com.jaagro.crm.biz.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.jaagro.crm.api.constant.CustomerStatus;
+import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
@@ -56,7 +56,7 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = new Customer();
         BeanUtils.copyProperties(dto, customer);
         customer
-                .setCustomerStatus(CustomerStatus.UNCHECKED)
+                .setCustomerStatus(AuditStatus.UNCHECKED)
                 .setCreateTime(new Date())
                 .setCreateUserId(userService.getCurrentUser().getId());
         if (StringUtils.isEmpty(customer.getCustomerType())) {

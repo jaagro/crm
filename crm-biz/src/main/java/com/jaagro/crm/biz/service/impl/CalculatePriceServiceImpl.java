@@ -55,10 +55,10 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
 
         //按每车计价
         if (PricingType.VEHICLE.longValue() == dto.getPricingType()) {
-            if (StringUtils.isEmpty(dto.getUnloadSite())) {
+            if (StringUtils.isEmpty(dto.getUnloadSiteId())) {
                 return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "请选择收货地址");
             }
-            if (StringUtils.isEmpty(dto.getLoadSite())) {
+            if (StringUtils.isEmpty(dto.getLoadSiteId())) {
                 return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "请选择提货地址");
             }
             ReturnContractPriceDto cp = customerContractPriceMapper.getPriceByCriteria(dto);
