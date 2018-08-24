@@ -96,6 +96,17 @@ public class TruckTeamServiceImpl implements TruckTeamService {
         return ServiceResult.toResult("创建车队成功");
     }
     /**
+     * 获取单条
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public Map<String, Object> getTruckTeamById(Integer id) {
+        return ServiceResult.toResult(truckTeamMapper.getTruckTeamById(id));
+    }
+
+    /**
      * 创建车队对象
      * @param dto
      * @return

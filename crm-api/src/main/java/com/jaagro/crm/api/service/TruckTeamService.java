@@ -24,4 +24,12 @@ public interface TruckTeamService {
      * @return
      */
     Map<String, Object> createTruckTeams(CreateTruckTeamDto dto);
+
+    /**
+     * 获取单条车辆
+     *
+     * @param id
+     * @return
+     */
+    Map<String, Object> getTruckTeamById(Integer id);
 }
