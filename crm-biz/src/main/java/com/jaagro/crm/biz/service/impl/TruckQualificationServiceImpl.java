@@ -1,5 +1,6 @@
 package com.jaagro.crm.biz.service.impl;
 
+import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.constant.CertificateStatus;
 import com.jaagro.crm.api.dto.request.driver.CreateTruckQualificationDto;
 import com.jaagro.crm.api.service.TruckQualificationService;
@@ -51,8 +52,21 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
         return ServiceResult.toResult("创建车队资质成功");
     }
 
+    /**
+     * 创建单个资质对象
+     * @param dto
+     * @return
+     */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> createTruckQualification(CreateTruckQualificationDto dto) {
-        return null;
+        //创建资质对象
+        TruckQualification truckQualification = new TruckQualification();
+        BeanUtils.copyProperties(dto,truckQualification);
+        truckQualification
+                .setCreateUserId(AuditStatus.UNCHECKED)
+                .setCreateUserId(1);
+        truckQualificationMapper.insert(truckQualification);
+        return ServiceResult.toResult("创建资质对象成功");
     }
 }

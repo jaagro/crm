@@ -52,7 +52,7 @@ public class TruckTeamController {
 
     @ApiOperation("查询单个车队")
     @GetMapping("/truckTeam/{id}")
-    public BaseResponse getById(@PathVariable Integer id) {
+    public BaseResponse getTruckTeamById(@PathVariable Integer id) {
         if (this.truckTeamMapper.selectByPrimaryKey(id) == null) {
             return BaseResponse.errorInstance("查询不到车队信息");
         }

@@ -1,7 +1,7 @@
 package com.jaagro.crm.web.controller;
 
+import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
 import com.jaagro.crm.api.dto.request.driver.CreateTruckQualificationDto;
-import com.jaagro.crm.api.dto.request.driver.CreateTruckTeamContractDto;
 import com.jaagro.crm.api.service.TruckQualificationService;
 import com.jaagro.crm.biz.mapper.TruckQualificationMapper;
 import com.jaagro.utils.BaseResponse;
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,7 +27,7 @@ public class TruckQualificationController {
     @Autowired
     private TruckQualificationMapper truckQualificationMapper;
 
-    @ApiOperation("新增合同")
+    @ApiOperation("新增资质")
     @PostMapping("/truckQualification")
     public BaseResponse insert(@RequestBody CreateTruckQualificationDto dto){
         if(StringUtils.isEmpty(dto.getCertificateType())){
@@ -34,4 +35,6 @@ public class TruckQualificationController {
         }
         return BaseResponse.service(truckQualificationService.createTruckQualification(dto));
     }
+
+
 }

@@ -11,7 +11,7 @@ import java.util.Map;
 public interface TruckQualificationService {
 
     /**
-     * 创建多车队合同
+     * 创建车队资质
      *
      * @param dto
      * @return
@@ -19,7 +19,7 @@ public interface TruckQualificationService {
     Map<String, Object> createTruckQualification(List<CreateTruckQualificationDto> dto, Integer truckTeamId);
 
     /**
-     * 创建车队合同
+     * 创建车队资质
      *
      * @param dto
      * @return

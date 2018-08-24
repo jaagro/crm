@@ -15,10 +15,18 @@ public interface TruckService {
      * @param id
      * @return
      */
-    Map<String, Object> getById(Integer id);
+    Map<String, Object> getTruckById(Integer id);
 
     /**
-     * 创建车辆
+     * 创建车队
+     *
+     * @param dto
+     * @return
+     */
+    Map<String, Object> createTrucks(CreateTruckDto dto);
+
+    /**
+     * 创建车队车辆
      *
      * @param dto
      * @return
