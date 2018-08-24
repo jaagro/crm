@@ -33,4 +33,16 @@ public class TruckTeamController {
         }
         return BaseResponse.service(truckTeamService.createTruckTeam(dto));
     }
+
+    @ApiOperation("新增多个车队")
+    @PostMapping("/truckTeams")
+    public BaseResponse inserts(@RequestBody CreateTruckTeamDto dto){
+        if(StringUtils.isEmpty(dto.getTeamName())){
+            return BaseResponse.errorInstance("车队名称不能为空");
+        }
+        if(StringUtils.isEmpty(dto.getCreditCode())){
+            return BaseResponse.errorInstance("身份证不能为空");
+        }
+        return BaseResponse.service(truckTeamService.createTruckTeams(dto));
+    }
 }

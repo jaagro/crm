@@ -41,8 +41,10 @@ public interface TruckMapper {
     int updateByPrimaryKey(Truck record);
 
     /**
-     * 查询合同dto
+     * 查询车队dto
      */
     TruckReturnDto getById(Integer id);
+
+
 
 }

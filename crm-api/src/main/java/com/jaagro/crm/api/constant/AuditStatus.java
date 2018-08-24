@@ -5,7 +5,7 @@ package com.jaagro.crm.api.constant;
  *
  * @author liqiangping
  */
-public final class CustomerStatus {
+public final class AuditStatus {
 
     /**
      * 未审核

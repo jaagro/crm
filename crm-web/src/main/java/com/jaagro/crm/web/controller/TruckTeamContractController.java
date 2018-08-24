@@ -1,6 +1,7 @@
 package com.jaagro.crm.web.controller;
 
 import com.jaagro.crm.api.dto.request.driver.CreateTruckTeamContractDto;
+import com.jaagro.crm.api.dto.request.driver.UpdateTruckTeamContractDto;
 import com.jaagro.crm.api.service.TruckTeamContractService;
 import com.jaagro.crm.biz.mapper.TruckTeamContractMapper;
 import com.jaagro.crm.biz.mapper.TruckTeamMapper;
@@ -49,4 +50,25 @@ public class TruckTeamContractController {
         return BaseResponse.service(result);
     }
 
+    @ApiOperation("查询单个合同")
+    @GetMapping("/truckTeamContractNumber/{contractNumber}")
+    public BaseResponse getByContractNumber(@PathVariable String contractNumber) {
+        if (truckTeamContractMapper.getByContractNumber(contractNumber) == null) {
+            return BaseResponse.errorInstance("查询不到合同编号");
+        }
+        Map<String, Object> result = truckTeamContractService.getByContractNumber(contractNumber);
+        return BaseResponse.service(result);
+    }
+
+    @ApiOperation("修改合同")
+    @PostMapping("/updateTruckTeamContract")
+    public BaseResponse updateTruckTeamContract(@RequestBody UpdateTruckTeamContractDto dto){
+        if(StringUtils.isEmpty(dto.getContractNumber())){
+            return BaseResponse.errorInstance("合同编号不能为空");
+        }
+        if(StringUtils.isEmpty(dto.getContractDate())){
+            return BaseResponse.errorInstance("签约日期不能为空");
+        }
+        return BaseResponse.service(truckTeamContractService.updateTruckTeamContract(dto));
+    }
 }

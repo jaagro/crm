@@ -45,4 +45,9 @@ public interface TruckTeamContractMapper {
      * 查询合同dto
      */
     TruckTeamContractReturnDto getById(Integer id);
+
+    /**
+     * 查询合同dto
+     */
+    TruckTeamContractReturnDto getByContractNumber(String contractNumber);
 }

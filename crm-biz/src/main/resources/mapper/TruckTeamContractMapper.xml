@@ -109,7 +109,8 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.TruckTeamContract" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.TruckTeamContract" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
     update truck_team_contract
     <set >
       <if test="truckTeamId != null" >
@@ -139,7 +140,8 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.TruckTeamContract" >
+  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.TruckTeamContract" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
     update truck_team_contract
     set truck_team_id = #{truckTeamId,jdbcType=INTEGER},
       contract_number = #{contractNumber,jdbcType=VARCHAR},
@@ -156,5 +158,11 @@
     <include refid="Base_Column_List" />
     from truck_team_contract
     where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="getByContractNumber" parameterType="java.lang.String" resultMap="DetailInfo">
+    select
+    <include refid="Base_Column_List" />
+    from truck_team_contract
+    where contract_number = #{contract_number,jdbcType=INTEGER}
   </select>
 </mapper>

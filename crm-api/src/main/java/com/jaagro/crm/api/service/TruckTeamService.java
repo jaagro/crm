@@ -16,4 +16,12 @@ public interface TruckTeamService {
      * @return
      */
     Map<String, Object> createTruckTeam(CreateTruckTeamDto dto);
+
+    /**
+     * 创建关联车队
+     *
+     * @param dto
+     * @return
+     */
+    Map<String, Object> createTruckTeams(CreateTruckTeamDto dto);
 }
