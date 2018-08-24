@@ -6,6 +6,7 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author liqiangping
@@ -117,5 +118,15 @@ public class CreateTruckDto implements Serializable {
      * 创建人(关联用户ID)
      */
     private Integer createUserId;
+
+    /**
+     * 查询车辆资质
+     */
+    private List<CreateTruckQualificationDto> truckQualification;
+
+    /**
+     * 查询车辆司机
+     */
+    private List<CreateDriverDto> driver;
 
 }

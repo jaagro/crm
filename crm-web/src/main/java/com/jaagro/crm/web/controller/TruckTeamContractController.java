@@ -19,7 +19,7 @@ import java.util.Map;
  * @author liqiangping
  */
 @RestController
-@Api(value = "truckTeam", description = "车队合同管理", produces = MediaType.APPLICATION_JSON_VALUE)
+@Api(value = "truckTeamContract", description = "车队合同管理", produces = MediaType.APPLICATION_JSON_VALUE)
 public class TruckTeamContractController {
 
     @Autowired
@@ -50,7 +50,7 @@ public class TruckTeamContractController {
         return BaseResponse.service(result);
     }
 
-    @ApiOperation("查询单个合同")
+    @ApiOperation("查询单个合同编号")
     @GetMapping("/truckTeamContractNumber/{contractNumber}")
     public BaseResponse getByContractNumber(@PathVariable String contractNumber) {
         if (truckTeamContractMapper.getByContractNumber(contractNumber) == null) {
