@@ -356,6 +356,6 @@
         <if test="id != null">
             and id != #{id}
         </if>
-        and enabled = 1
+        and customer_status <![CDATA[ <= ]]> 1
     </select>
 </mapper>

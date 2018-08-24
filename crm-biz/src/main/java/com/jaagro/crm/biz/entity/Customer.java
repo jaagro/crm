@@ -14,7 +14,7 @@ import java.util.Date;
 @Accessors(chain = true)
 public class Customer implements Serializable {
     /**
-     * 客户主键id
+     * 客户主键idnabled
      */
     private Integer id;
 
