@@ -111,7 +111,7 @@ public class TruckTeamServiceImpl implements TruckTeamService {
      * @param dto
      * @return
      */
-    @Deprecated //方法废弃注解
+    @Deprecated
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> createTruckTeam(CreateTruckTeamDto dto) {
