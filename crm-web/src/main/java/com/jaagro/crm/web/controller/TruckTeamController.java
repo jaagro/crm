@@ -35,7 +35,7 @@ public class TruckTeamController {
         if(StringUtils.isEmpty(dto.getCreditCode())){
             return BaseResponse.errorInstance("身份证不能为空");
         }
-        return BaseResponse.service(truckTeamService.createTruckTeam(dto));
+        return BaseResponse.service(truckTeamService.createTruckTeams(dto));
     }
 
     @ApiOperation("新增多个车队")
@@ -47,7 +47,7 @@ public class TruckTeamController {
         if(StringUtils.isEmpty(dto.getCreditCode())){
             return BaseResponse.errorInstance("身份证不能为空");
         }
-        return BaseResponse.service(truckTeamService.createTruckTeams(dto));
+        return BaseResponse.service(truckTeamService.createTruckTeam(dto));
     }
 
     @ApiOperation("查询单个车队")
