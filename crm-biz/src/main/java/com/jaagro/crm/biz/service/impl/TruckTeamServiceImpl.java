@@ -59,7 +59,7 @@ public class TruckTeamServiceImpl implements TruckTeamService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Map<String, Object> createTruckTeams(CreateTruckTeamDto dto) {
+    public Map<String, Object> createTruckTeam(CreateTruckTeamDto dto) {
         //创建车队对象
         TruckTeam truckTeam = new TruckTeam();
         BeanUtils.copyProperties(dto, truckTeam);
@@ -111,10 +111,10 @@ public class TruckTeamServiceImpl implements TruckTeamService {
      * @param dto
      * @return
      */
-    @Deprecated //方法废弃注解
+    @Deprecated
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Map<String, Object> createTruckTeam(CreateTruckTeamDto dto) {
+    public Map<String, Object> createTruckTeams(CreateTruckTeamDto dto) {
         //创建车队对象
         TruckTeam truckTeam = new TruckTeam();
         BeanUtils.copyProperties(dto,truckTeam);
