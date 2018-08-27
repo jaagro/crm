@@ -2,7 +2,7 @@ package com.jaagro.crm.api.service;
 
 import com.jaagro.crm.api.dto.request.customer.*;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerContractDto;
-import com.jaagro.crm.api.dto.response.customer.CustomerContractReturnDto;
+import com.jaagro.crm.api.dto.response.customer.CustomerContactsReturnDto;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +28,7 @@ public interface CustomerContractService {
      * @param dtos
      * @return
      */
-    Map<String, Object> createCustomerContract(List<CreateCustomerContractDto> dtos,Long CustomerId);
+    Map<String, Object> createCustomerContract(List<CreateCustomerContractDto> dtos, Integer CustomerId);
 
     /**
      * 修改单个客户联系人，注意新增updateDto
@@ -52,7 +52,7 @@ public interface CustomerContractService {
      * @param id
      * @return
      */
-    Map<String, Object> getById(Long id);
+    Map<String, Object> getById(Integer id);
 
     /**
      * 根据条件分页获取
@@ -60,7 +60,7 @@ public interface CustomerContractService {
      * @param dto
      * @return
      */
-    Map<String, Object> listByCriteria(ListCustomerContractCriteriaDto dto);
+    Map<String, Object> listByCriteria(ListCustomerContactsCriteriaDto dto);
 
     /**
      * 删除客户联系人，注意逻辑删除
@@ -68,7 +68,7 @@ public interface CustomerContractService {
      * @param id
      * @return
      */
-    Map<String, Object> disableCustomerContract(Long id);
+    Map<String, Object> disableCustomerContract(Integer id);
 
     /**
      * 删除客户联系人，注意逻辑删除
@@ -76,5 +76,13 @@ public interface CustomerContractService {
      * @param id
      * @return
      */
-    Map<String, Object> disableCustomerContract(List<CustomerContractReturnDto> customerContractReturnDtos);
+    Map<String, Object> disableCustomerContract(List<CustomerContactsReturnDto> customerContactsReturnDtos);
+
+    /**
+     * 根据客户id查询
+     *
+     * @param customerId
+     * @return
+     */
+    Map<String, Object> listByCustomerId(Integer customerId);
 }

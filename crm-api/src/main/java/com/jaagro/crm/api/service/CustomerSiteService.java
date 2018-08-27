@@ -29,7 +29,7 @@ public interface CustomerSiteService {
      * @param customerSiteDtos
      * @return
      */
-    Map<String, Object> createSite(List<CreateCustomerSiteDto> customerSiteDtos, Long CustomerId);
+    Map<String, Object> createSite(List<CreateCustomerSiteDto> customerSiteDtos, Integer CustomerId);
 
     /**
      * 修改单个地点，注意新增updateDto
@@ -52,7 +52,7 @@ public interface CustomerSiteService {
      * @param id
      * @return
      */
-    Map<String, Object> getById(Long id);
+    Map<String, Object> getById(Integer id);
 
     /**
      * 根据条件分页获取
@@ -68,7 +68,7 @@ public interface CustomerSiteService {
      * @param id
      * @return
      */
-    Map<String, Object> disableSite(Long id);
+    Map<String, Object> disableSite(Integer id);
 
     /**
      * 删除地点，注意逻辑删除
@@ -77,4 +77,13 @@ public interface CustomerSiteService {
      * @return
      */
     Map<String, Object> disableSite(List<CustomerSiteReturnDto> siteReturnDtos);
+
+    /**
+     * 验证名称是否重复
+     *
+     * @param id
+     * @return
+     */
+    Map<String, Object> getBySiteDto(UpdateCustomerSiteDto siteDto);
+
 }

@@ -4,33 +4,39 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * @author baiyiran
+ * @author tony
  */
 @Data
 @Accessors(chain = true)
 public class Customer implements Serializable {
     /**
-     * 客户主键id
+     * 客户主键idnabled
      */
-    private Long id;
+    private Integer id;
 
     /**
-     * 客户名称
+     * 客户名称(个体客户时，就是自然人姓名)
      */
     private String customerName;
 
     /**
      * 客户类型
-     * (1:个体客户 2:企业客户 )
+ (1:个体客户 2:企业客户 )
      */
     private Integer customerType;
 
     /**
+     * 统一社会验证码(个体客户时，就是自然人身份证号码)
+     */
+    private String creditCode;
+
+    /**
      * 审核状态
-     * (0未审核，1正常合作 2审核未通过，4停止合作)
+ (0未审核，1-正常合作  10-停止合作 11-审核未通过 13-作废)
      */
     private Integer customerStatus;
 
@@ -57,12 +63,12 @@ public class Customer implements Serializable {
     /**
      * 纬度
      */
-    private Long latitude;
+    private BigDecimal latitude;
 
     /**
      * 经度
      */
-    private Long longitude;
+    private BigDecimal longitude;
 
     /**
      * 账期天数
@@ -71,13 +77,13 @@ public class Customer implements Serializable {
 
     /**
      * 是否开票
-     * 0:否 1:是
+ 0:否 1:是
      */
     private Boolean enableInvoice;
 
     /**
      * 发票类型
-     * 1:增值税普通发票 2:增值税专用发票
+ 1:增值税普通发票 2:增值税专用发票
      */
     private Integer invoiceType;
 
@@ -109,16 +115,10 @@ public class Customer implements Serializable {
     /**
      * 创建人(References: user)
      */
-    private Long createdUserId;
+    private Integer createUserId;
 
     /**
      * 修改人(References: user)
      */
-    private Long modifyUserId;
-
-    /**
-     * 是否可用（0不可用 1可用）
-     */
-    private Boolean enabled;
-
+    private Integer modifyUserId;
 }

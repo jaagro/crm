@@ -1,10 +1,11 @@
 package com.jaagro.crm.api.dto.response.customer;
 
-import com.jaagro.crm.api.dto.response.contract.ContractReturnDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -19,10 +20,10 @@ public class CustomerReturnDto implements Serializable {
     /**
      * 客户主键id
      */
-    private Long id;
+    private Integer id;
 
     /**
-     * 客户名称
+     * 客户名称(个体客户时，就是自然人姓名)
      */
     private String customerName;
 
@@ -33,20 +34,25 @@ public class CustomerReturnDto implements Serializable {
     private Integer customerType;
 
     /**
-     * 审核状态
-     * (0未审核，1正常合作 2审核未通过，4停止合作)
+     * 统一社会验证码(个体客户时，就是自然人身份证号码)
      */
-    private Integer customerStatus;
+    private String creditCode;
 
     /**
-     * 所属城市
+     * 审核状态
+     * (0未审核，1-正常合作  10-停止合作 11-审核未通过 13-作废)
      */
-    private String city;
+    private Integer customerStatus;
 
     /**
      * 所属省份
      */
     private String province;
+
+    /**
+     * 所属城市
+     */
+    private String city;
 
     /**
      * 所属区县
@@ -61,12 +67,12 @@ public class CustomerReturnDto implements Serializable {
     /**
      * 纬度
      */
-    private Long latitude;
+    private BigDecimal latitude;
 
     /**
      * 经度
      */
-    private Long longitude;
+    private BigDecimal longitude;
 
     /**
      * 账期天数
@@ -113,27 +119,22 @@ public class CustomerReturnDto implements Serializable {
     /**
      * 创建人(References: user)
      */
-    private Long createdUserId;
+    private Integer createUserId;
 
     /**
      * 修改人(References: user)
      */
-    private Long modifyUserId;
-
-    /**
-     * 是否可用（0不可用 1可用）
-     */
-    private Boolean enabled;
+    private Integer modifyUserId;
 
     /**
      * 客户联系人
      */
-    private List<CustomerContractReturnDto> customerContractReturnDtos;
+    private List<CustomerContactsReturnDto> customerContactsReturnDtos;
 
     /**
      * 查询客户合同
      */
-    private List<ContractReturnDto> contractReturnDtos;
+    private List<ReturnContractDto> returnContractDtos;
 
     /**
      * 查询客户收发货地
@@ -143,5 +144,5 @@ public class CustomerReturnDto implements Serializable {
     /**
      * 查询客户资质证件照
      */
-    private List<QualificationCertificReturnDto> qualifications;
+    private List<CustomerQualificationReturnDto> qualifications;
 }

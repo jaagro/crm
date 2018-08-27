@@ -13,6 +13,6 @@ public interface ContractPriceService {
      * @param id
      * @return
      */
-    Map<String, Object> disableByContractId(Long contractId);
+    Map<String, Object> disableByContractId(Integer contractId);
 
 }

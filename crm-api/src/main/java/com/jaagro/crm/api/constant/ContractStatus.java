@@ -1,17 +1,18 @@
 package com.jaagro.crm.api.constant;
 
 /**
- * 合同使用状态
- *
- * @author tony
+ * @author liqiangping
  */
 public final class ContractStatus {
+
+
     /**
-     * 正常启用
+     * 0 待审核
      */
-    public static final Integer ACTIVE = 1;
+    public static final Integer UNAUDITED = 0;
+
     /**
-     * 终止
+     * 1 审核通过
      */
-    public static final Integer DISABLE = 0;
+    private static final Integer APPROVE = 1;
 }

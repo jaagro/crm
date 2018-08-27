@@ -7,7 +7,7 @@ import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
 import java.util.Map;
 
 /**
- * @author liqiangping
+ * @author baiyiran
  */
 public interface CustomerService {
     /**
@@ -34,7 +34,7 @@ public interface CustomerService {
      * @param id
      * @return
      */
-    Map<String, Object> getById(Long id);
+    Map<String, Object> getById(Integer id);
 
     /**
      * 分页获取list，注意criteria查询条件
@@ -51,7 +51,7 @@ public interface CustomerService {
      * @param auditResult
      * @return
      */
-    Map<String, Object> auditCustomer(Long id, String auditResult);
+    Map<String, Object> auditCustomer(Integer id, String auditResult);
 
     /**
      * 逻辑删除
@@ -59,6 +59,6 @@ public interface CustomerService {
      * @param id
      * @return
      */
-    Map<String, Object> disableCustomer(Long id);
+    Map<String, Object> disableCustomer(Integer id);
 
 }

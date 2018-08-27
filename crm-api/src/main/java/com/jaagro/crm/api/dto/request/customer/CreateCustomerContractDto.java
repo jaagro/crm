@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 客户联系人新增dto
@@ -17,12 +18,12 @@ public class CreateCustomerContractDto implements Serializable {
     /**
      * 外键关联客户ID(References customer)
      */
-    private Long customerId;
+    private Integer customerId;
 
     /**
-     * 联系人员
+     * 联系人姓名
      */
-    private String contractName;
+    private String contact;
 
     /**
      * 联系电话
@@ -34,8 +35,4 @@ public class CreateCustomerContractDto implements Serializable {
      */
     private String position;
 
-    /**
-     * 状态(0 停用 1 启用)
-     */
-    private Integer status;
 }

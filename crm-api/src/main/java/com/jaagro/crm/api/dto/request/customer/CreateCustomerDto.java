@@ -1,21 +1,20 @@
 package com.jaagro.crm.api.dto.request.customer;
 
-import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
+import java.math.BigDecimal;
 
 /**
- * @author liqiangping
+ * @author baiyiarn
  */
 @Data
 @Accessors(chain = true)
 public class CreateCustomerDto implements Serializable {
+
     /**
-     * 客户名称
+     * 客户名称(个体客户时，就是自然人姓名)
      */
     private String customerName;
 
@@ -26,20 +25,19 @@ public class CreateCustomerDto implements Serializable {
     private Integer customerType;
 
     /**
-     * 审核状态
-     * (0未审核，1正常合作 2审核未通过，4停止合作)
+     * 统一社会验证码(个体客户时，就是自然人身份证号码)
      */
-    private Integer customerStatus;
-
-    /**
-     * 所属城市
-     */
-    private String city;
+    private String creditCode;
 
     /**
      * 所属省份
      */
     private String province;
+
+    /**
+     * 所属城市
+     */
+    private String city;
 
     /**
      * 所属区县
@@ -54,12 +52,12 @@ public class CreateCustomerDto implements Serializable {
     /**
      * 纬度
      */
-    private Long latitude;
+    private BigDecimal latitude;
 
     /**
      * 经度
      */
-    private Long longitude;
+    private BigDecimal longitude;
 
     /**
      * 账期天数
@@ -93,50 +91,24 @@ public class CreateCustomerDto implements Serializable {
      */
     private String notes;
 
-    /**
-     * 创建日期
-     */
-    private Date createTime;
-
-    /**
-     * 修改日期
-     */
-    private Date modifyTime;
-
-    /**
-     * 创建人(References: user)
-     */
-    private Long createdUserId;
-
-    /**
-     * 修改人(References: user)
-     */
-    private Long modifyUserId;
-
-    /**
-     * 是否删除 0:否 1:是
-     */
-    private Byte enable;
-
-    /**
+   /* *//**
      * 客户联系人
-     */
+     *//*
     private List<CreateCustomerContractDto> contracts;
 
-    /**
+    *//**
      * 收发货地址
-     */
+     *//*
     private List<CreateCustomerSiteDto> customerSites;
 
-    /**
+    *//**
      * 资质证件照
-     */
-    private List<CreateQualificationCertificDto> qualificationCertificDtos;
+     *//*
+    private List<CreateCustomerQualificationDto> qualificationCertificDtos;
 
-    /**
+    *//**
      * 客户合同
-     */
-    private List<CreateContractDto> createContractDtos;
-
+     *//*
+    private List<CreateContractDto> createContractDtos;*/
 
 }

@@ -2,28 +2,25 @@ package com.jaagro.crm.biz.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.jaagro.crm.api.constant.ContractStatus;
-import com.jaagro.crm.api.dto.request.contract.ContractPriceDto;
-import com.jaagro.crm.api.dto.response.contract.ContractSectionPriceDto;
-import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
-import com.jaagro.crm.api.dto.request.contract.ContractCriteriaDto;
-import com.jaagro.crm.api.dto.response.contract.ContractReturnDto;
+import com.jaagro.crm.api.dto.request.contract.*;
+import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnContractPriceDto;
 import com.jaagro.crm.api.service.ContractPriceService;
 import com.jaagro.crm.api.service.ContractService;
-import com.jaagro.crm.biz.entity.Contract;
-import com.jaagro.crm.biz.entity.ContractPrice;
-import com.jaagro.crm.biz.entity.ContractSectionPrice;
-import com.jaagro.crm.biz.mapper.ContractLogMapper;
-import com.jaagro.crm.biz.mapper.ContractMapper;
-import com.jaagro.crm.biz.mapper.ContractPriceMapper;
-import com.jaagro.crm.biz.mapper.ContractSectionPriceMapper;
+import com.jaagro.crm.biz.entity.ContractQualification;
+import com.jaagro.crm.biz.entity.CustomerContract;
+import com.jaagro.crm.biz.entity.CustomerContractPrice;
+import com.jaagro.crm.biz.entity.CustomerContractSectionPrice;
+import com.jaagro.crm.biz.mapper.*;
+import com.jaagro.utils.ResponseStatusCode;
+import com.jaagro.utils.ServiceResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import utils.ResponseStatusCode;
-import utils.ServiceResult;
 
 import java.util.Date;
 import java.util.List;
@@ -35,18 +32,24 @@ import java.util.Map;
 @Service
 public class ContractServiceImpl implements ContractService {
 
+    private static final Logger log = LoggerFactory.getLogger(ContractServiceImpl.class);
+
     @Autowired
-    private ContractMapper contractMapper;
+    private CustomerContractMapper customerContractMapper;
     @Autowired
-    private ContractPriceMapper contractPriceMapper;
+    private CustomerContractPriceMapper customerContractPriceMapper;
     @Autowired
-    private ContractSectionPriceMapper contractSectionPriceMapper;
+    private CustomerContractSectionPriceMapper customerContractSectionPriceMapper;
     @Autowired
-    private ContractLogMapper contractLogMapper;
+    private CustomerContractLogMapper customerContractLogMapper;
     @Autowired
     private CurrentUserService userService;
     @Autowired
     private ContractPriceService priceService;
+    @Autowired
+    private CustomerSiteMapper siteMapper;
+    @Autowired
+    private ContractQualificationMapper contractQualificationMapper;
 
     /**
      * 创建合同
@@ -58,34 +61,44 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public Map<String, Object> createContract(CreateContractDto dto) {
         //创建contract对象
-        Contract contract = new Contract();
-        BeanUtils.copyProperties(dto, contract);
-        contract
-                .setContractStatus(1)
-                .setCreateTime(new Date())
+        CustomerContract customerContract = new CustomerContract();
+        BeanUtils.copyProperties(dto, customerContract);
+        customerContract
                 .setCreateUser(userService.getCurrentUser().getId());
-        contractMapper.insert(contract);
+        customerContractMapper.insertSelective(customerContract);
+        log.info("【客户合同新增】------成功\nCustomerContract:" + customerContract.toString());
 
-        //创建contractPrice对象
-        createPrice(dto, contract);
+        //创建资质证
+        if (dto.getQualificationDtos() != null && dto.getQualificationDtos().size() > 0) {
+            for (CreateContractQualificationDto qualificationDto : dto.getQualificationDtos()) {
+                ContractQualification qualification = new ContractQualification();
+                BeanUtils.copyProperties(qualificationDto, qualification);
+                qualification
+                        .setRelevanceId(customerContract.getId())
+                        .setCreateUserId(this.userService.getCurrentUser().getId());
+                this.contractQualificationMapper.insertSelective(qualification);
+                log.info("【客户资质新增】------成功\nContractQualification:" + qualification.toString());
+            }
+        }
+
+        //创建合同报价及阶梯报价
+        createPrice(dto, customerContract);
         return ServiceResult.toResult("合同创建成功");
     }
 
     @Override
-    public Map<String, Object> createContract(List<CreateContractDto> dtos, Long CustomerId) {
+    public Map<String, Object> createContract(List<CreateContractDto> dtos, Integer CustomerId) {
         if (dtos != null && dtos.size() > 0) {
             for (CreateContractDto contractDto : dtos) {
                 //创建contract对象
-                Contract contract = new Contract();
-                BeanUtils.copyProperties(contractDto, contract);
-                contract
-                        .setCustomerId(CustomerId)
-                        .setCreateTime(new Date())
+                CustomerContract customerContract = new CustomerContract();
+                BeanUtils.copyProperties(contractDto, customerContract);
+                customerContract
                         .setCreateUser(userService.getCurrentUser().getId());
-                contractMapper.insert(contract);
+                customerContractMapper.insertSelective(customerContract);
 
                 //创建contractPrice对象
-                createPrice(contractDto, contract);
+                createPrice(contractDto, customerContract);
             }
         }
         return ServiceResult.toResult("合同列表创建成功");
@@ -99,77 +112,114 @@ public class ContractServiceImpl implements ContractService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Map<String, Object> updateContract(CreateContractDto dto) {
+    public Map<String, Object> updateContract(UpdateContractDto dto) {
         // 创建contract对象
-        Contract contract = new Contract();
-        BeanUtils.copyProperties(dto, contract);
-        contract
+        CustomerContract customerContract = new CustomerContract();
+        BeanUtils.copyProperties(dto, customerContract);
+        customerContract
                 .setNewUpdateTime(new Date())
                 .setNewUpdateUser(userService.getCurrentUser().getId());
-        contractMapper.updateByPrimaryKeySelective(contract);
+        customerContractMapper.updateByPrimaryKeySelective(customerContract);
 
         //删除原数据
-        List<ContractPrice> priceList = contractPriceMapper.listByContractId(dto.getId());
+        List<ReturnContractPriceDto> priceList = customerContractPriceMapper.listByContractId(dto.getId());
         if (priceList.size() > 0) {
-            for (ContractPrice cp : priceList) {
-                contractSectionPriceMapper.deleteByPriceId(cp.getId());
+            for (ReturnContractPriceDto cp : priceList) {
+                customerContractSectionPriceMapper.deleteByPriceId(cp.getId());
             }
-            contractPriceMapper.deleteByContractId(dto.getId());
+            customerContractPriceMapper.deleteByContractId(dto.getId());
         }
         //创建contractPrice对象
-        createPrice(dto, contract);
+        createPrice(dto, customerContract);
+        log.info("【客户合同修改】------成功\nCustomerContract:" + customerContract.toString());
         return ServiceResult.toResult("合同修改成功");
     }
 
     @Override
-    public Map<String, Object> updateContract(List<CreateContractDto> dtos) {
+    public Map<String, Object> updateContract(List<UpdateContractDto> dtos) {
         if (dtos != null && dtos.size() > 0) {
-            for (CreateContractDto contractDto : dtos) {
+            for (UpdateContractDto contractDto : dtos) {
                 // 创建contract对象
-                Contract contract = new Contract();
-                BeanUtils.copyProperties(contractDto, contract);
-                contract
+                CustomerContract customerContract = new CustomerContract();
+                BeanUtils.copyProperties(contractDto, customerContract);
+                customerContract
                         .setNewUpdateTime(new Date())
                         .setNewUpdateUser(userService.getCurrentUser().getId());
-                contractMapper.updateByPrimaryKeySelective(contract);
+                customerContractMapper.updateByPrimaryKeySelective(customerContract);
 
                 //删除原数据
-                List<ContractPrice> priceList = contractPriceMapper.listByContractId(contractDto.getId());
+                List<ReturnContractPriceDto> priceList = customerContractPriceMapper.listByContractId(contractDto.getId());
                 if (priceList.size() > 0) {
-                    for (ContractPrice cp : priceList) {
-                        contractSectionPriceMapper.deleteByPriceId(cp.getId());
+                    for (ReturnContractPriceDto cp : priceList) {
+                        customerContractSectionPriceMapper.deleteByPriceId(cp.getId());
                     }
-                    contractPriceMapper.deleteByContractId(contractDto.getId());
+                    customerContractPriceMapper.deleteByContractId(contractDto.getId());
                 }
                 //创建contractPrice对象
-                createPrice(contractDto, contract);
+                createPrice(contractDto, customerContract);
             }
         }
         return ServiceResult.toResult("合同修改成功");
     }
 
-    public void createPrice(CreateContractDto dto, Contract contract) {
+    public void createPrice(UpdateContractDto dto, CustomerContract customerContract) {
         //创建contractPrice对象
         if (dto.getPrice() != null && dto.getPrice().size() > 0) {
-            for (ContractPriceDto cp : dto.getPrice()) {
-                ContractPrice contractPrice = new ContractPrice();
-                BeanUtils.copyProperties(cp, contractPrice);
-                contractPrice
-                        .setContractId(contract.getId())
+            for (UpdateContractPriceDto cp : dto.getPrice()) {
+                CustomerContractPrice customerContractPrice = new CustomerContractPrice();
+                BeanUtils.copyProperties(cp, customerContractPrice);
+                customerContractPrice
+                        .setContractId(customerContract.getId())
                         .setPriceStatus(1);
-                if (StringUtils.isEmpty(contractPrice.getPricingType())) {
+                if (StringUtils.isEmpty(customerContractPrice.getPricingType())) {
                     throw new RuntimeException("计价模式不能为空");
                 }
-                contractPriceMapper.insert(contractPrice);
+                customerContractPriceMapper.insertSelective(customerContractPrice);
                 //创建contractSectionPrice对象
                 if (cp.getSectionPrice() != null && cp.getSectionPrice().size() > 0) {
-                    for (ContractSectionPriceDto cspDto : cp.getSectionPrice()) {
-                        ContractSectionPrice csp = new ContractSectionPrice();
+                    for (CreateContractSectionPriceDto cspDto : cp.getSectionPrice()) {
+                        CustomerContractSectionPrice csp = new CustomerContractSectionPrice();
                         BeanUtils.copyProperties(cspDto, csp);
                         csp
-                                .setContractPriceId(contractPrice.getId())
+                                .setContractPriceId(customerContractPrice.getId())
                                 .setSelectionStatus(1);
-                        contractSectionPriceMapper.insert(csp);
+                        customerContractSectionPriceMapper.insertSelective(csp);
+                    }
+                }
+            }
+        }
+    }
+
+    public void createPrice(CreateContractDto dto, CustomerContract customerContract) {
+        //创建contractPrice对象
+        if (dto.getPrice() != null && dto.getPrice().size() > 0) {
+            for (CreateContractPriceDto cp : dto.getPrice()) {
+                CustomerContractPrice customerContractPrice = new CustomerContractPrice();
+                BeanUtils.copyProperties(cp, customerContractPrice);
+                customerContractPrice
+                        .setContractId(customerContract.getId())
+                        .setPriceStatus(1);
+                if (StringUtils.isEmpty(customerContractPrice.getPricingType())) {
+                    throw new RuntimeException("计价模式不能为空");
+                }
+                if (this.siteMapper.selectByPrimaryKey(customerContractPrice.getLoadSiteId()) == null) {
+                    throw new RuntimeException("发货地址:[" + customerContractPrice.getLoadSiteId() + "]不存在");
+                }
+                if (this.siteMapper.selectByPrimaryKey(customerContractPrice.getUnloadSiteId()) == null) {
+                    throw new RuntimeException("收货地址:[" + customerContractPrice.getUnloadSiteId() + "]不存在");
+                }
+                customerContractPriceMapper.insertSelective(customerContractPrice);
+                log.info("【客户合同报价新增】------成功\nCustomerContractPrice:" + customerContractPrice.toString());
+                //创建contractSectionPrice对象
+                if (cp.getSectionPrice() != null && cp.getSectionPrice().size() > 0) {
+                    for (CreateContractSectionPriceDto cspDto : cp.getSectionPrice()) {
+                        CustomerContractSectionPrice csp = new CustomerContractSectionPrice();
+                        BeanUtils.copyProperties(cspDto, csp);
+                        csp
+                                .setContractPriceId(customerContractPrice.getId())
+                                .setSelectionStatus(1);
+                        customerContractSectionPriceMapper.insertSelective(csp);
+                        log.info("【客户合同阶梯报价新增】------成功\nCustomerContractSectionPrice:" + csp.toString());
                     }
                 }
             }
@@ -183,11 +233,11 @@ public class ContractServiceImpl implements ContractService {
      * @return
      */
     @Override
-    public Map<String, Object> getById(Long contractId) {
-        if (contractMapper.selectByPrimaryKey(contractId) == null) {
+    public Map<String, Object> getById(Integer contractId) {
+        if (customerContractMapper.selectByPrimaryKey(contractId) == null) {
             return ServiceResult.error(ResponseStatusCode.ID_VALUE_ERROR.getCode(), "id: " + contractId + "不存在");
         }
-        return ServiceResult.toResult(contractMapper.getById(contractId));
+        return ServiceResult.toResult(customerContractMapper.getById(contractId));
     }
 
     /**
@@ -197,36 +247,37 @@ public class ContractServiceImpl implements ContractService {
      * @return
      */
     @Override
-    public Map<String, Object> listByCriteria(ContractCriteriaDto dto) {
+    public Map<String, Object> listByCriteria(ListContractCriteriaDto dto) {
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
-        List<ContractReturnDto> contracts = contractMapper.listByPage(dto);
+        List<ReturnContractDto> contracts = customerContractMapper.listByPage(dto);
         return ServiceResult.toResult(new PageInfo<>(contracts));
     }
 
     @Override
-    public Map<String, Object> disableById(Long id) {
-        ContractReturnDto contractDto = this.contractMapper.getById(id);
-        Contract contract = new Contract();
-        BeanUtils.copyProperties(contractDto, contract);
-        contract.setContractStatus(ContractStatus.DISABLE);
-        this.contractMapper.updateByPrimaryKeySelective(contract);
+    public Map<String, Object> disableById(Integer id) {
+        ReturnContractDto contractDto = this.customerContractMapper.getById(id);
+        CustomerContract customerContract = new CustomerContract();
+        BeanUtils.copyProperties(contractDto, customerContract);
+        customerContract.setContractStatus(0);
+        this.customerContractMapper.updateByPrimaryKeySelective(customerContract);
         if (contractDto.getPrices() != null && contractDto.getPrices().size() > 0) {
-            this.priceService.disableByContractId(contract.getId());
+            this.priceService.disableByContractId(customerContract.getId());
         }
+        log.info("【客户合同删除】------成功\nCustomerContract:" + id);
         return ServiceResult.toResult("合同删除成功");
     }
 
     @Override
-    public Map<String, Object> disableByID(List<ContractReturnDto> dtos) {
-        for (ContractReturnDto contractReturnDto : dtos
+    public Map<String, Object> disableByID(List<ReturnContractDto> dtos) {
+        for (ReturnContractDto returnContractDto : dtos
         ) {
-            ContractReturnDto contractDto = this.contractMapper.getById(contractReturnDto.getId());
-            Contract contract = new Contract();
-            BeanUtils.copyProperties(contractDto, contract);
-            contract.setContractStatus(ContractStatus.DISABLE);
-            this.contractMapper.updateByPrimaryKeySelective(contract);
+            ReturnContractDto contractDto = this.customerContractMapper.getById(returnContractDto.getId());
+            CustomerContract customerContract = new CustomerContract();
+            BeanUtils.copyProperties(contractDto, customerContract);
+            customerContract.setContractStatus(0);
+            this.customerContractMapper.updateByPrimaryKeySelective(customerContract);
             if (contractDto.getPrices() != null && contractDto.getPrices().size() > 0) {
-                this.priceService.disableByContractId(contract.getId());
+                this.priceService.disableByContractId(customerContract.getId());
             }
         }
         return ServiceResult.toResult("合同删除成功");

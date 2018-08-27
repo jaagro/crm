@@ -5,11 +5,8 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
-
 /**
- * 审核表
- *
- * @author baiyiran
+ * @author tony
  */
 @Data
 @Accessors(chain = true)
@@ -32,7 +29,7 @@ public class CustomerVerifyLog implements Serializable {
     /**
      * 审核人
      */
-    private String auditor;
+    private Integer auditor;
 
     /**
      * 审核时间
@@ -55,5 +52,4 @@ public class CustomerVerifyLog implements Serializable {
      * 根据审核类型判断关联表[customer|qualification_certific|contract]
      */
     private Long referencesId;
-
 }

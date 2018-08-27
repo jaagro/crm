@@ -1,13 +1,13 @@
 package com.jaagro.crm.biz.service.impl;
 
-import com.jaagro.crm.api.dto.response.contract.ContractSectionPriceReturnDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnContractSectionPriceDto;
 import com.jaagro.crm.api.service.ContractSectionPriceService;
-import com.jaagro.crm.biz.entity.ContractSectionPrice;
-import com.jaagro.crm.biz.mapper.ContractSectionPriceMapper;
+import com.jaagro.crm.biz.entity.CustomerContractSectionPrice;
+import com.jaagro.crm.biz.mapper.CustomerContractSectionPriceMapper;
+import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import utils.ServiceResult;
 
 import java.util.List;
 import java.util.Map;
@@ -19,14 +19,14 @@ import java.util.Map;
 public class ContractSectionPriceServiceImpl implements ContractSectionPriceService {
 
     @Autowired
-    private ContractSectionPriceMapper sectionPriceMapper;
+    private CustomerContractSectionPriceMapper sectionPriceMapper;
 
     @Override
-    public Map<String, Object> disableByPriceId(Long priceId) {
-        List<ContractSectionPriceReturnDto> contractSectionPriceReturnDto = this.sectionPriceMapper.listByPriceId(priceId);
-        for (ContractSectionPriceReturnDto returnDto : contractSectionPriceReturnDto
+    public Map<String, Object> disableByPriceId(Integer priceId) {
+        List<ReturnContractSectionPriceDto> contractSectionPriceReturnDto = this.sectionPriceMapper.listByPriceId(priceId);
+        for (ReturnContractSectionPriceDto returnDto : contractSectionPriceReturnDto
         ) {
-            ContractSectionPrice sectionPrice = new ContractSectionPrice();
+            CustomerContractSectionPrice sectionPrice = new CustomerContractSectionPrice();
             BeanUtils.copyProperties(returnDto, sectionPrice);
             sectionPrice.setSelectionStatus(0);
             this.sectionPriceMapper.updateByPrimaryKeySelective(sectionPrice);
