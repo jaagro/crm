@@ -32,7 +32,7 @@ public class CustomerContractServiceImpl implements CustomerContractService {
         BeanUtils.copyProperties(dto, customerContacts);
         customerContacts
                 .setEnabled(true);
-        customerContactsMapper.insert(customerContacts);
+        customerContactsMapper.insertSelective(customerContacts);
         return ServiceResult.toResult("客户联系人创建成功");
     }
 
@@ -44,7 +44,7 @@ public class CustomerContractServiceImpl implements CustomerContractService {
                 BeanUtils.copyProperties(dto, customerContacts);
                 customerContacts
                         .setEnabled(true);
-                customerContactsMapper.insert(customerContacts);
+                customerContactsMapper.insertSelective(customerContacts);
             }
         }
         return ServiceResult.toResult("客户联系人创建成功");

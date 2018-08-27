@@ -5,7 +5,6 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * 修改收发货帮助类
@@ -26,6 +25,11 @@ public class UpdateCustomerSiteDto implements Serializable {
      * 1-装货点，2-卸货点
      */
     private Integer siteType;
+
+    /**
+     * 归属网点
+     */
+    private Integer deptId;
 
     /**
      * 外键关联客户ID

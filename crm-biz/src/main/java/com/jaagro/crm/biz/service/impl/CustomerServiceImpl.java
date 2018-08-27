@@ -2,7 +2,6 @@ package com.jaagro.crm.biz.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.jaagro.crm.api.constant.CustomerStatus;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
@@ -65,8 +64,7 @@ public class CustomerServiceImpl implements CustomerService {
             throw new RuntimeException("客户类型不能为空");
         }
         customerMapper.insertSelective(customer);
-        log.info("【新增客户】-------成功\ncustomer:" + customer.toString());
-        return ServiceResult.toResult(this.customerMapper.selectByPrimaryKey(customer.getId()));
+        return ServiceResult.toResult(customer.getId());
         /* //新增联系人对象
         if (dto.getContracts() != null && dto.getContracts().size() > 0) {
             this.customerContractService.createCustomerContract(dto.getContracts(), customer.getId());
@@ -102,7 +100,6 @@ public class CustomerServiceImpl implements CustomerService {
                     .setModifyTime(new Date())
                     .setModifyUserId(userService.getCurrentUser().getId());
             this.customerMapper.updateByPrimaryKeySelective(customer);
-            log.info("【修改客户】-------成功\ncustomer:" + customer.toString());
             /*//修改合同表
             if (dto.getCreateContractDtos() != null && dto.getCreateContractDtos().size() > 0) {
                 this.contractService.updateContract(dto.getCreateContractDtos());

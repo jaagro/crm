@@ -5,7 +5,6 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * 返回的客户收发货地址
@@ -25,6 +24,11 @@ public class CustomerSiteReturnDto implements Serializable {
      1-装货点，2-卸货点
      */
     private Integer siteType;
+
+    /**
+     * 归属网点
+     */
+    private Integer deptId;
 
     /**
      * 外键关联客户ID
@@ -92,23 +96,4 @@ public class CustomerSiteReturnDto implements Serializable {
      */
     private String notes;
 
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 修改时间
-     */
-    private Date modifyTime;
-
-    /**
-     * 创建人(References: user)
-     */
-    private Integer createUserId;
-
-    /**
-     * 修改人(References: user)
-     */
-    private Integer modifyUserId;
 }

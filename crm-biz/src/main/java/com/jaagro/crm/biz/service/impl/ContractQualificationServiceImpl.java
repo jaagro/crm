@@ -33,7 +33,6 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
         qualification
                 .setModifyUserId(this.userService.getCurrentUser().getId());
         this.qualificationMapper.updateByPrimaryKeySelective(qualification);
-        log.info("【客户资质修改】------成功\nContractQualification:" + qualification.toString());
         return ServiceResult.toResult("客户资质修改成功");
     }
 
@@ -42,7 +41,6 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
         ContractQualification qualification = this.qualificationMapper.selectByPrimaryKey(id);
         qualification.setEnabled(false);
         this.qualificationMapper.updateByPrimaryKeySelective(qualification);
-        log.info("【客户资质删除】------成功\nContractQualification:" + id);
         return ServiceResult.toResult("客户资质删除成功");
     }
 }

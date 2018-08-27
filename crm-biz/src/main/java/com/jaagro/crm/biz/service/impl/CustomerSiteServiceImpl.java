@@ -43,7 +43,6 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
                 .setSiteStatus(1)
                 .setCreateUserId(userService.getCurrentUser().getId());
         siteMapper.insertSelective(site);
-        log.info("【地址新增】-------成功\nCustomerSite:" + site.toString());
         return ServiceResult.toResult("地址创建成功");
     }
 
@@ -72,7 +71,6 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
                 .setModifyTime(new Date())
                 .setModifyUserId(userService.getCurrentUser().getId());
         siteMapper.updateByPrimaryKeySelective(site);
-        log.info("【地址修改】-------成功\nCustomerSite:" + site.toString());
         return ServiceResult.toResult("地址修改成功");
     }
 
@@ -112,7 +110,6 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
         CustomerSite site = this.siteMapper.selectByPrimaryKey(id);
         site.setSiteStatus(0);
         this.siteMapper.updateByPrimaryKeySelective(site);
-        log.info("【地址删除】-------成功\nCustomerSite:" + id);
         return ServiceResult.toResult("地址删除成功");
     }
 

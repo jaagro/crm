@@ -41,7 +41,6 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
         qc
                 .setCreateUserId(userService.getCurrentUser().getId());
         this.certificMapper.insertSelective(qc);
-        log.info("【资质证照新增】-------成功\nCustomerQualification:" + qc.toString());
         return ServiceResult.toResult("资质证件照创建成功");
     }
 
@@ -67,7 +66,6 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
                 .setModifyUserId(userService.getCurrentUser().getId())
                 .setModifyTime(new Date());
         this.certificMapper.updateByPrimaryKeySelective(qc);
-        log.info("【资质证照修改】-------成功\nCustomerQualification:" + qc.toString());
         return ServiceResult.toResult("证件照修改成功");
     }
 
@@ -103,7 +101,6 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
         CustomerQualification certific = this.certificMapper.selectByPrimaryKey(id);
         certific.setEnabled(false);
         this.certificMapper.updateByPrimaryKeySelective(certific);
-        log.info("【资质证照删除】-------成功\nCustomerQualification:" + id);
         return ServiceResult.toResult("资质证件照删除成功");
     }
 

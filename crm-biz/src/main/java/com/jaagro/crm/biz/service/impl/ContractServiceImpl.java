@@ -174,7 +174,7 @@ public class ContractServiceImpl implements ContractService {
                 if (StringUtils.isEmpty(customerContractPrice.getPricingType())) {
                     throw new RuntimeException("计价模式不能为空");
                 }
-                customerContractPriceMapper.insert(customerContractPrice);
+                customerContractPriceMapper.insertSelective(customerContractPrice);
                 //创建contractSectionPrice对象
                 if (cp.getSectionPrice() != null && cp.getSectionPrice().size() > 0) {
                     for (CreateContractSectionPriceDto cspDto : cp.getSectionPrice()) {
@@ -183,7 +183,7 @@ public class ContractServiceImpl implements ContractService {
                         csp
                                 .setContractPriceId(customerContractPrice.getId())
                                 .setSelectionStatus(1);
-                        customerContractSectionPriceMapper.insert(csp);
+                        customerContractSectionPriceMapper.insertSelective(csp);
                     }
                 }
             }
@@ -208,7 +208,7 @@ public class ContractServiceImpl implements ContractService {
                 if (this.siteMapper.selectByPrimaryKey(customerContractPrice.getUnloadSiteId()) == null) {
                     throw new RuntimeException("收货地址:[" + customerContractPrice.getUnloadSiteId() + "]不存在");
                 }
-                customerContractPriceMapper.insert(customerContractPrice);
+                customerContractPriceMapper.insertSelective(customerContractPrice);
                 log.info("【客户合同报价新增】------成功\nCustomerContractPrice:" + customerContractPrice.toString());
                 //创建contractSectionPrice对象
                 if (cp.getSectionPrice() != null && cp.getSectionPrice().size() > 0) {
@@ -218,7 +218,7 @@ public class ContractServiceImpl implements ContractService {
                         csp
                                 .setContractPriceId(customerContractPrice.getId())
                                 .setSelectionStatus(1);
-                        customerContractSectionPriceMapper.insert(csp);
+                        customerContractSectionPriceMapper.insertSelective(csp);
                         log.info("【客户合同阶梯报价新增】------成功\nCustomerContractSectionPrice:" + csp.toString());
                     }
                 }
