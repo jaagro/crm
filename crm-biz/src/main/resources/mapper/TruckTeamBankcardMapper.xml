@@ -28,7 +28,7 @@
     values (#{id,jdbcType=INTEGER}, #{truckTeamId,jdbcType=INTEGER}, #{paymentAccountId,jdbcType=VARCHAR}, 
       #{depositBank,jdbcType=VARCHAR}, #{accountPerson,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.TruckTeamBankcard" >
+  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.TruckTeamBankcard" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into truck_team_bankcard
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

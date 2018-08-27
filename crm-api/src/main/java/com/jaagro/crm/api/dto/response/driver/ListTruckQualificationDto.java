@@ -1,16 +1,21 @@
-package com.jaagro.crm.api.dto.request.driver;
+package com.jaagro.crm.api.dto.response.driver;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
- * @author liqiangping
+ * @author tony
  */
 @Data
 @Accessors(chain = true)
-public class CreateTruckQualificationDto implements Serializable {
+public class ListTruckQualificationDto implements Serializable {
+    /**
+     * 资质证照主键id
+     */
+    private Integer id;
 
     /**
      * 关联车队表
@@ -38,13 +43,37 @@ public class CreateTruckQualificationDto implements Serializable {
     private String certificateImageUrl;
 
     /**
+     * 证件状态(0；审核未通过 1；未审核 2；已审核)
+     */
+    private Integer certificateStatus;
+
+    /**
      * 创建人(关联用户ID)
      */
     private Integer createUserId;
+
+    /**
+     * 修改人(关联用户ID)
+     */
+    private Integer modifyUserId;
+
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+
+    /**
+     * 修改时间
+     */
+    private Date modifyTime;
 
     /**
      * 描述信息
      */
     private String notes;
 
+    /**
+     * 是否可用(0不可用 1可用)
+     */
+    private Boolean enabled;
 }

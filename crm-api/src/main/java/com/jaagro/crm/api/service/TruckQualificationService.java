@@ -1,8 +1,7 @@
 package com.jaagro.crm.api.service;
 
-import com.jaagro.crm.api.dto.request.driver.CreateTruckQualificationDto;
+import com.jaagro.crm.api.dto.request.driver.CreateListTruckQualificationDto;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,13 +15,5 @@ public interface TruckQualificationService {
      * @param dto
      * @return
      */
-    Map<String, Object> createTruckQualification(List<CreateTruckQualificationDto> dto, Integer truckTeamId);
-
-    /**
-     * 创建车队资质
-     *
-     * @param dto
-     * @return
-     */
-    Map<String, Object> createTruckQualification(CreateTruckQualificationDto dto);
+    Map<String, Object> createTruckQualification(CreateListTruckQualificationDto dto);
 }

@@ -24,12 +24,11 @@
     <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
   </resultMap>
-  <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.driver.TruckReturnDto" >
+  <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.driver.GetTruckDto" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER" />
     <result column="truck_number" property="truckNumber" jdbcType="VARCHAR" />
     <result column="vehicle_brand" property="vehicleBrand" jdbcType="VARCHAR" />
-    <result column="truck_type_id" property="truckTypeId" jdbcType="INTEGER" />
     <result column="capacity" property="capacity" jdbcType="DECIMAL" />
     <result column="maximum_load" property="maximumLoad" jdbcType="INTEGER" />
     <result column="truck_weight" property="truckWeight" jdbcType="DECIMAL" />
@@ -46,8 +45,30 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
-    <collection property="truckType" column="id"
-                select="com.jaagro.crm.biz.mapper.TruckTypeMapper.getById"/>
+    <association property="truckTypeId" select="com.jaagro.crm.biz.mapper.TruckTypeMapper.getById" column="truck_type_id"></association>
+  </resultMap>
+  <resultMap id="listTruck" type="com.jaagro.crm.api.dto.response.driver.ListTruckDto" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER" />
+    <result column="truck_number" property="truckNumber" jdbcType="VARCHAR" />
+    <result column="vehicle_brand" property="vehicleBrand" jdbcType="VARCHAR" />
+    <result column="capacity" property="capacity" jdbcType="DECIMAL" />
+    <result column="maximum_load" property="maximumLoad" jdbcType="INTEGER" />
+    <result column="truck_weight" property="truckWeight" jdbcType="DECIMAL" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="county" property="county" jdbcType="VARCHAR" />
+    <result column="buy_time" property="buyTime" jdbcType="TIMESTAMP" />
+    <result column="expiry_date" property="expiryDate" jdbcType="TIMESTAMP" />
+    <result column="expiry_annual" property="expiryAnnual" jdbcType="TIMESTAMP" />
+    <result column="business_permit" property="businessPermit" jdbcType="VARCHAR" />
+    <result column="notes" property="notes" jdbcType="VARCHAR" />
+    <result column="truck_status" property="truckStatus" jdbcType="INTEGER" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <association property="truckTypeId" select="com.jaagro.crm.biz.mapper.TruckTypeMapper.getById" column="truck_type_id"></association>
   </resultMap>
   <sql id="Base_Column_List" >
     id, truck_team_id, truck_number, vehicle_brand, truck_type_id, capacity, maximum_load, 
@@ -64,8 +85,7 @@
     delete from truck
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.Truck" useGeneratedKeys="true" keyProperty="id"
-          keyColumn="id">
+  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.Truck" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into truck (id, truck_team_id, truck_number, 
       vehicle_brand, truck_type_id, capacity, 
       maximum_load, truck_weight, province, 
@@ -83,7 +103,7 @@
       #{createTime,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.Truck" >
+  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.Truck" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into truck
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -311,5 +331,21 @@
     <include refid="Base_Column_List" />
     from truck
     where id = #{id,jdbcType=INTEGER}
+  </select>
+    <select id="getByTruckNumber" resultType="com.jaagro.crm.biz.entity.Truck">
+      select
+      <include refid="Base_Column_List" />
+      from truck
+      where truck_number = #{truckNumber,jdbcType=VARCHAR}
+      limit 1
+    </select>
+  <select id="listTruckByTeamId" resultMap="listTruck">
+    select
+    <include refid="Base_Column_List" />
+    from truck
+    where truck_team_id = #{teamId,jdbcType=INTEGER}
+    <if test="truckNumber != null">
+      and truck_number = #{truckNumber}
+    </if>
   </select>
 </mapper>

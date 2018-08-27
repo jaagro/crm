@@ -1,7 +1,6 @@
 package com.jaagro.crm.biz.service.impl;
 
-import com.jaagro.crm.api.constant.AuditStatus;
-import com.jaagro.crm.api.constant.CertificateStatus;
+import com.jaagro.crm.api.dto.request.driver.CreateListTruckQualificationDto;
 import com.jaagro.crm.api.dto.request.driver.CreateTruckQualificationDto;
 import com.jaagro.crm.api.service.TruckQualificationService;
 import com.jaagro.crm.biz.entity.TruckQualification;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,6 +25,8 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
 
     @Autowired
     private TruckQualificationMapper truckQualificationMapper;
+    @Autowired
+    private CurrentUserService currentUserService;
 
     /**
      * 创建车队资质
@@ -35,38 +35,17 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Map<String, Object> createTruckQualification(List<CreateTruckQualificationDto> dto, Integer truckTeamId) {
-        if (dto != null && dto.size() > 0) {
-            for(CreateTruckQualificationDto ctq: dto) {
-                //创建车队资质对象
-                TruckQualification truckQualification = new TruckQualification();
-                BeanUtils.copyProperties(ctq,truckQualification);
-                truckQualification
-                        .setCertificateStatus(CertificateStatus.UNCHECKED)
-                        .setEnabled(false)
-                        .setCreateUserId(1)
-                        .setTruckTeamId(truckTeamId);
-                truckQualificationMapper.insert(truckQualification);
-            }
+    public Map<String, Object> createTruckQualification(CreateListTruckQualificationDto dto) {
+        for(CreateTruckQualificationDto qualification : dto.getQualification()){
+            TruckQualification truckQualification = new TruckQualification();
+            BeanUtils.copyProperties(qualification, truckQualification);
+            truckQualification
+                    .setTruckTeamId(dto.getTruckTeamId())
+                    .setTruckId(dto.getTruckId())
+                    .setDriverId(dto.getDriverId())
+                    .setCreateUserId(currentUserService.getCurrentUser().getId());
+            truckQualificationMapper.insertSelective(truckQualification);
         }
-        return ServiceResult.toResult("创建车队资质成功");
-    }
-
-    /**
-     * 创建单个资质对象
-     * @param dto
-     * @return
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Map<String, Object> createTruckQualification(CreateTruckQualificationDto dto) {
-        //创建资质对象
-        TruckQualification truckQualification = new TruckQualification();
-        BeanUtils.copyProperties(dto,truckQualification);
-        truckQualification
-                .setCreateUserId(AuditStatus.UNCHECKED)
-                .setCreateUserId(1);
-        truckQualificationMapper.insert(truckQualification);
-        return ServiceResult.toResult("创建资质对象成功");
+        return ServiceResult.toResult("资质保存成功");
     }
 }

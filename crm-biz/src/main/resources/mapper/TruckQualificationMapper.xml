@@ -44,7 +44,7 @@
       #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, #{notes,jdbcType=VARCHAR}, 
       #{enabled,jdbcType=TINYINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.TruckQualification" >
+  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.TruckQualification" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into truck_qualification
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

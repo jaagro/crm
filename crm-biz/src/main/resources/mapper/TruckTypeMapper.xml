@@ -3,7 +3,7 @@
 <mapper namespace="com.jaagro.crm.biz.mapper.TruckTypeMapper" >
   <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.TruckType" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="name" property="name" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="truck_length" property="truckLength" jdbcType="VARCHAR" />
     <result column="truck_weight" property="truckWeight" jdbcType="VARCHAR" />
     <result column="truck_amount" property="truckAmount" jdbcType="VARCHAR" />
@@ -11,7 +11,7 @@
   </resultMap>
   <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.driver.TruckTypeReturnDto" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="name" property="name" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="truck_length" property="truckLength" jdbcType="VARCHAR" />
     <result column="truck_weight" property="truckWeight" jdbcType="VARCHAR" />
     <result column="truck_amount" property="truckAmount" jdbcType="VARCHAR" />
@@ -30,15 +30,15 @@
     delete from truck_type
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.TruckType" >
+  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.TruckType" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into truck_type (id, name, truck_length, 
       truck_weight, truck_amount, enabled
       )
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=INTEGER}, #{truckLength,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{truckLength,jdbcType=VARCHAR},
       #{truckWeight,jdbcType=VARCHAR}, #{truckAmount,jdbcType=VARCHAR}, #{enabled,jdbcType=TINYINT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.TruckType" >
+  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.TruckType" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into truck_type
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -65,7 +65,7 @@
         #{id,jdbcType=INTEGER},
       </if>
       <if test="name != null" >
-        #{name,jdbcType=INTEGER},
+        #{name,jdbcType=VARCHAR},
       </if>
       <if test="truckLength != null" >
         #{truckLength,jdbcType=VARCHAR},
@@ -85,7 +85,7 @@
     update truck_type
     <set >
       <if test="name != null" >
-        name = #{name,jdbcType=INTEGER},
+        name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="truckLength != null" >
         truck_length = #{truckLength,jdbcType=VARCHAR},
@@ -104,7 +104,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.TruckType" >
     update truck_type
-    set name = #{name,jdbcType=INTEGER},
+    set name = #{name,jdbcType=VARCHAR},
       truck_length = #{truckLength,jdbcType=VARCHAR},
       truck_weight = #{truckWeight,jdbcType=VARCHAR},
       truck_amount = #{truckAmount,jdbcType=VARCHAR},

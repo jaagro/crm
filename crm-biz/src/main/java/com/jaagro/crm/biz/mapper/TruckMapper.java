@@ -1,7 +1,11 @@
 package com.jaagro.crm.biz.mapper;
 
-import com.jaagro.crm.api.dto.response.driver.TruckReturnDto;
+import com.jaagro.crm.api.dto.response.driver.GetTruckDto;
+import com.jaagro.crm.api.dto.response.driver.ListTruckDto;
 import com.jaagro.crm.biz.entity.Truck;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface TruckMapper {
     /**
@@ -43,6 +47,20 @@ public interface TruckMapper {
     /**
      * 查询车辆dto
      */
-    TruckReturnDto getTruckById(Integer id);
+    GetTruckDto getTruckById(Integer id);
 
+    /**
+     * 通过车牌号码查询车辆
+     * @param truckNumber
+     * @return
+     */
+    Truck getByTruckNumber(String truckNumber);
+
+    /**
+     * 获取车辆list
+     * @param teamId
+     * @param truckNumber
+     * @return
+     */
+    List<ListTruckDto> listTruckByTeamId(@Param("teamId") Integer teamId, @Param("truckNumber") String truckNumber);
 }

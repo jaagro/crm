@@ -12,3 +12,4 @@ gen
 /crm-biz/.mvn/
 /crm-biz/target/
 /crm-api/target/
+!/crm-biz/src/main/java/com/jaagro/crm/biz/service/impl/TruckTeamServiceImpl.java

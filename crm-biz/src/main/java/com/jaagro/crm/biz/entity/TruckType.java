@@ -19,7 +19,7 @@ public class TruckType implements Serializable {
     /**
      * 车型名称
      */
-    private Integer name;
+    private String name;
 
     /**
      * 车长

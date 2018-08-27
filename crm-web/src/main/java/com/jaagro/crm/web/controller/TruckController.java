@@ -1,8 +1,11 @@
 package com.jaagro.crm.web.controller;
 
 import com.jaagro.crm.api.dto.request.driver.CreateTruckDto;
+import com.jaagro.crm.api.dto.request.driver.ListTruckCriteriaDto;
 import com.jaagro.crm.api.service.TruckService;
 import com.jaagro.crm.biz.mapper.TruckMapper;
+import com.jaagro.crm.biz.mapper.TruckTeamMapper;
+import com.jaagro.crm.biz.mapper.TruckTypeMapper;
 import com.jaagro.utils.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,6 +26,10 @@ public class TruckController {
     private TruckService truckService;
     @Autowired
     private TruckMapper truckMapper;
+    @Autowired
+    private TruckTeamMapper truckTeamMapper;
+    @Autowired
+    private TruckTypeMapper truckTypeMapper;
 
     @ApiOperation("查询单个车辆")
     @GetMapping("/truck/{id}")
@@ -37,18 +44,43 @@ public class TruckController {
     @ApiOperation("新增车辆")
     @PostMapping("/truck")
     public BaseResponse insert(@RequestBody CreateTruckDto dto){
-        if(StringUtils.isEmpty(dto.getBusinessPermit())){
-            return BaseResponse.errorInstance("车辆营运证号不能为空");
+        if(truckMapper.getByTruckNumber(dto.getTruckNumber()) != null){
+            return BaseResponse.errorInstance(dto.getTruckNumber() + " :当前车牌号已经存在");
         }
-        return BaseResponse.service(truckService.createTrucks(dto));
+        if(truckTeamMapper.selectByPrimaryKey(dto.getTruckTeamId()) == null){
+            return BaseResponse.errorInstance("当前车队不存在");
+        }
+        if(StringUtils.isEmpty(dto.getTruckNumber())){
+            return BaseResponse.errorInstance("车牌号码不能为空");
+        }
+        if(truckTypeMapper.selectByPrimaryKey(dto.getTruckTypeId()) == null){
+            return BaseResponse.errorInstance("请选择正确的车辆类型");
+        }
+        BaseResponse response;
+        try {
+            response = BaseResponse.service(truckService.createTruck(dto));
+        }catch (RuntimeException e){
+            e.printStackTrace();
+            response = BaseResponse.errorInstance(e.getMessage());
+        }
+
+        return response;
     }
 
-    @ApiOperation("新增车辆司机资质")
-    @PostMapping("/trucks")
-    public BaseResponse insertTruck(@RequestBody CreateTruckDto dto){
-        if(StringUtils.isEmpty(dto.getBusinessPermit())){
-            return BaseResponse.errorInstance("车辆营运证号不能为空");
+//    @ApiOperation("新增车辆司机资质")
+//    @PostMapping("/trucks")
+//    public BaseResponse insertTruck(@RequestBody CreateTruckDto dto){
+//        if(StringUtils.isEmpty(dto.getBusinessPermit())){
+//            return BaseResponse.errorInstance("车辆营运证号不能为空");
+//        }
+//        return BaseResponse.service(truckService.createTrucks(dto));
+//    }
+
+    @PostMapping("/listTruck")
+    public BaseResponse listTruck(@RequestBody ListTruckCriteriaDto truckCriteria){
+        if(StringUtils.isEmpty(truckCriteria.getTruckTeamId())){
+            return BaseResponse.idError("truckTeamId不能为空");
         }
-        return BaseResponse.service(truckService.createTrucks(dto));
+        return BaseResponse.service(truckService.listTruck(truckCriteria));
     }
 }

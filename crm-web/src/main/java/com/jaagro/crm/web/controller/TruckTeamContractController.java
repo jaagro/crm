@@ -4,7 +4,6 @@ import com.jaagro.crm.api.dto.request.driver.CreateTruckTeamContractDto;
 import com.jaagro.crm.api.dto.request.driver.UpdateTruckTeamContractDto;
 import com.jaagro.crm.api.service.TruckTeamContractService;
 import com.jaagro.crm.biz.mapper.TruckTeamContractMapper;
-import com.jaagro.crm.biz.mapper.TruckTeamMapper;
 import com.jaagro.utils.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

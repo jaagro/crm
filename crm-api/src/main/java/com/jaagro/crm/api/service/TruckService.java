@@ -1,8 +1,8 @@
 package com.jaagro.crm.api.service;
 
 import com.jaagro.crm.api.dto.request.driver.CreateTruckDto;
+import com.jaagro.crm.api.dto.request.driver.ListTruckCriteriaDto;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,18 +18,16 @@ public interface TruckService {
     Map<String, Object> getTruckById(Integer id);
 
     /**
-     * 创建车队
-     *
-     * @param dto
+     * 创建车辆
+     * @param truckDto
      * @return
      */
-    Map<String, Object> createTrucks(CreateTruckDto dto);
+    Map<String, Object> createTruck(CreateTruckDto truckDto);
 
     /**
-     * 创建车队车辆
-     *
-     * @param dto
+     * 获取list
+     * @param criteriaDto
      * @return
      */
-    Map<String, Object> createTruck(List<CreateTruckDto> dto, Integer truckTeamId);
+    Map<String, Object> listTruck(ListTruckCriteriaDto criteriaDto);
 }

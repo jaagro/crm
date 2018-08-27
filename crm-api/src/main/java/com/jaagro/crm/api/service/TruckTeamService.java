@@ -10,15 +10,7 @@ import java.util.Map;
 public interface TruckTeamService {
 
     /**
-     * 创建车队
-     *
-     * @param dto
-     * @return
-     */
-    Map<String, Object> createTruckTeams(CreateTruckTeamDto dto);
-
-    /**
-     * 创建关联车队
+     * 创建车队对象
      *
      * @param dto
      * @return
@@ -32,4 +24,6 @@ public interface TruckTeamService {
      * @return
      */
     Map<String, Object> getTruckTeamById(Integer id);
+
+    Map<String, Object> listTruckTeam();
 }

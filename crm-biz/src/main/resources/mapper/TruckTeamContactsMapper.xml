@@ -38,7 +38,7 @@
       #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, 
       #{modifyUserId,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.TruckTeamContacts" >
+  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.TruckTeamContacts" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into truck_team_contacts
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

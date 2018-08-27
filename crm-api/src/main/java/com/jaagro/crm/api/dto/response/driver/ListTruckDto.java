@@ -6,14 +6,13 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 /**
- * @author liqiangping
+ * @author tony
  */
 @Data
 @Accessors(chain = true)
-public class TruckReturnDto implements Serializable {
+public class ListTruckDto implements Serializable {
     /**
      * 主键车辆表ID
      */
@@ -37,7 +36,7 @@ public class TruckReturnDto implements Serializable {
     /**
      * 关联车辆类型ID
      */
-    private Integer truckTypeId;
+    private TruckTypeReturnDto truckTypeId;
 
     /**
      * 最大载重
@@ -118,9 +117,4 @@ public class TruckReturnDto implements Serializable {
      * 创建人(关联用户ID)
      */
     private Integer createUserId;
-
-    /**
-     * 查询车型表
-     */
-    private List<TruckTypeReturnDto> truckType;
 }

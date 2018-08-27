@@ -1,15 +1,20 @@
 package com.jaagro.crm.biz.service.impl;
 
-import com.jaagro.crm.api.constant.AuditStatus;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.dto.request.driver.CreateDriverDto;
+import com.jaagro.crm.api.dto.request.driver.CreateListTruckQualificationDto;
 import com.jaagro.crm.api.dto.request.driver.CreateTruckDto;
-import com.jaagro.crm.api.dto.request.driver.CreateTruckQualificationDto;
+import com.jaagro.crm.api.dto.request.driver.ListTruckCriteriaDto;
+import com.jaagro.crm.api.dto.response.driver.DriverReturnDto;
+import com.jaagro.crm.api.dto.response.driver.GetTruckDto;
+import com.jaagro.crm.api.dto.response.driver.ListTruckDto;
 import com.jaagro.crm.api.service.DriverClientService;
+import com.jaagro.crm.api.service.TruckQualificationService;
 import com.jaagro.crm.api.service.TruckService;
 import com.jaagro.crm.biz.entity.Truck;
-import com.jaagro.crm.biz.entity.TruckQualification;
 import com.jaagro.crm.biz.mapper.TruckMapper;
-import com.jaagro.crm.biz.mapper.TruckQualificationMapper;
+import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +22,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -32,9 +38,12 @@ public class TruckServiceImpl implements TruckService {
     @Autowired
     private TruckMapper truckMapper;
     @Autowired
-    private TruckQualificationMapper truckQualificationMapper;
-    @Autowired
     private DriverClientService driverClientService;
+    @Autowired
+    private TruckQualificationService truckQualificationService;
+    @Autowired
+    private CurrentUserService currentUserService;
+
     /**
      * 获取单条
      *
@@ -43,66 +52,72 @@ public class TruckServiceImpl implements TruckService {
      */
     @Override
     public Map<String, Object> getTruckById(Integer id) {
-        return ServiceResult.toResult(truckMapper.getTruckById(id));
-    }
-
-    /**
-     * 关联创建车辆
-     * @param dto
-     * @return
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Map<String, Object> createTrucks(CreateTruckDto dto) {
-        //创建车辆对象
-        Truck truck = new Truck();
-        BeanUtils.copyProperties(dto,truck);
-        truck
-                .setTruckStatus(AuditStatus.UNCHECKED)
-                .setCreateUserId(1);
-        truckMapper.insert(truck);
-        //创建车辆资质对象
-        if(dto.getTruckQualification() != null && dto.getTruckQualification().size() > 0){
-            for(CreateTruckQualificationDto ctq: dto.getTruckQualification()) {
-                //创建车辆资质对象
-                TruckQualification truckQualification = new TruckQualification();
-                BeanUtils.copyProperties(ctq,truckQualification);
-                truckQualification.setTruckId(dto.getId());
-                truckQualificationMapper.insert(truckQualification);
-            }
+        GetTruckDto result = truckMapper.getTruckById(id);
+        if(StringUtils.isEmpty(result)){
+            return ServiceResult.error(ResponseStatusCode.FORBIDDEN_ERROR.getCode(), id + ": 无效");
         }
-        //创建车辆司机对象
-        if(dto.getDriver() != null && dto.getDriver().size() > 0){
-            for(CreateDriverDto cd: dto.getDriver()){
-                //创建司机对象
-                driverClientService.createDriver(cd);
-            }
-        }
-        return ServiceResult.toResult("创建车辆资质成功");
+        List<DriverReturnDto> drivers = driverClientService.listByTruckId(id);
+        result.setDrivers(drivers);
+        return ServiceResult.toResult(result);
     }
 
     /**
      * 创建车辆对象
-     * @param dto
-     * @param truckTeamId
      * @return
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Map<String, Object> createTruck(List<CreateTruckDto> dto, Integer truckTeamId) {
-        if(dto != null && dto.size() > 0){
-            for(CreateTruckDto ctd: dto) {
-                //创建车辆对象
-                Truck truck = new Truck();
-                BeanUtils.copyProperties(ctd,truck);
-                truck
-                        .setTruckStatus(AuditStatus.UNCHECKED)
-                        .setTruckTeamId(truckTeamId)
-                        .setCreateUserId(1);
-                truckMapper.insert(truck);
+    public Map<String, Object> createTruck(CreateTruckDto truckDto) {
+        Truck truck = new Truck();
+        BeanUtils.copyProperties(truckDto, truck);
+        truckMapper.insertSelective(truck);
+
+        //车辆资质列表
+        if(truckDto.getTruckQualifications() != null && truckDto.getTruckQualifications().size() > 0) {
+            CreateListTruckQualificationDto listTruckQualification = new CreateListTruckQualificationDto();
+            listTruckQualification
+                    .setTruckTeamId(truck.getTruckTeamId())
+                    .setTruckId(truck.getId());
+            listTruckQualification.setQualification(truckDto.getTruckQualifications());
+            truckQualificationService.createTruckQualification(listTruckQualification);
+        }
+
+        //司机列表
+        if(truckDto.getDriver() != null && truckDto.getDriver().size() > 0) {
+            for(CreateDriverDto driverDto : truckDto.getDriver()){
+                Integer driverId = 0;
+                driverDto
+                        .setTruckId(truck.getId())
+                        .setTruckTeamId(truck.getTruckTeamId());
+                try {
+                    driverId = driverClientService.createDriverToFeign(driverDto);
+                }catch (RuntimeException e) {
+                    log.error(e.getMessage());
+                    throw e;
+                }
+
+                //司机资质列表
+                if(driverDto.getDriverQualifications() != null && driverDto.getDriverQualifications().size() > 0){
+                    CreateListTruckQualificationDto listTruckQualification = new CreateListTruckQualificationDto();
+                    listTruckQualification
+                            .setTruckTeamId(truck.getTruckTeamId())
+                            .setTruckId(truck.getId())
+                            .setDriverId(driverId);
+                    listTruckQualification.setQualification(driverDto.getDriverQualifications());
+                    truckQualificationService.createTruckQualification(listTruckQualification);
+                }
             }
         }
-        return ServiceResult.toResult("车辆对象创建成功");
+        return ServiceResult.toResult(truck.getId());
     }
 
+    @Override
+    public Map<String, Object> listTruck(ListTruckCriteriaDto criteria){
+        PageHelper.startPage(criteria.getPageNum(), criteria.getPageSize());
+        List<ListTruckDto> result = truckMapper.listTruckByTeamId(criteria.getTruckTeamId(), criteria.getTruckNumber());
+        if (result == null || result.size() == 0){
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(),"未查询到数据");
+        }
+        return ServiceResult.toResult(new PageInfo<>(result));
+    }
 }

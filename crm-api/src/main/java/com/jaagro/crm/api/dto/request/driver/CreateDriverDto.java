@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author liqiangping
@@ -41,4 +42,9 @@ public class CreateDriverDto implements Serializable {
      * 驾驶证到期时间
      */
     private String expiryDrivingLicense;
+
+    /**
+     * 司机资质列表
+     */
+    private List<CreateTruckQualificationDto> driverQualifications;
 }

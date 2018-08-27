@@ -4,8 +4,6 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
 
 /**
  * @author liqiangping
@@ -69,52 +67,7 @@ public class CreateTruckTeamDto implements Serializable {
     private String address;
 
     /**
-     * 创建日期
-     */
-    private Date createTime;
-
-    /**
-     * 修改日期
-     */
-    private Date modifyTime;
-
-    /**
-     * 创建人(关联用户ID)
-     */
-    private Integer createUserId;
-
-    /**
-     * 修改人(关联用户ID)
-     */
-    private Integer modifyUserId;
-
-    /**
      * 备注信息
      */
     private String notes;
-
-    /**
-     * 查询资质证件照表
-     */
-    private List<CreateTruckQualificationDto> truckQualification;
-
-    /**
-     *查询车队银行表
-     */
-    private List<CreateTruckTeamBankcardDto> truckTeamBankcard;
-
-    /**
-     * 查询车队表联系人
-     */
-    private List<CreateTruckTeamContactsDto> truckTeamContacts;
-
-    /**
-     * 查询车队合同表
-     */
-    private List<CreateTruckTeamContractDto> truckTeamContract;
-
-    /**
-     * 查询车辆表
-     */
-    private List<CreateTruckDto> truck;
 }

@@ -1,9 +1,8 @@
 package com.jaagro.crm.web.controller;
 
-import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
-import com.jaagro.crm.api.dto.request.driver.CreateTruckQualificationDto;
+import com.jaagro.crm.api.dto.request.driver.CreateListTruckQualificationDto;
 import com.jaagro.crm.api.service.TruckQualificationService;
-import com.jaagro.crm.biz.mapper.TruckQualificationMapper;
+import com.jaagro.crm.biz.mapper.TruckTeamMapper;
 import com.jaagro.utils.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,16 +23,17 @@ public class TruckQualificationController {
     @Autowired
     private TruckQualificationService truckQualificationService;
     @Autowired
-    private TruckQualificationMapper truckQualificationMapper;
+    private TruckTeamMapper truckTeamMapper;
 
     @ApiOperation("新增资质")
     @PostMapping("/truckQualification")
-    public BaseResponse insert(@RequestBody CreateTruckQualificationDto dto){
-        if(StringUtils.isEmpty(dto.getCertificateType())){
-            return BaseResponse.errorInstance("资质类型不能为空");
+    public BaseResponse insert(@RequestBody CreateListTruckQualificationDto dto){
+        if(StringUtils.isEmpty(truckTeamMapper.selectByPrimaryKey(dto.getTruckTeamId()))){
+            return BaseResponse.errorInstance(dto.getTruckTeamId() + " :车队不存在");
+        }
+        if(StringUtils.isEmpty(dto.getQualification())){
+            return BaseResponse.errorInstance("请上传资质");
         }
         return BaseResponse.service(truckQualificationService.createTruckQualification(dto));
     }
-
-
 }
