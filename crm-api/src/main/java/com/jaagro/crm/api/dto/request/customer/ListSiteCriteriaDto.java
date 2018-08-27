@@ -33,7 +33,7 @@ public class ListSiteCriteriaDto implements Serializable {
     /**
      * 客户id
      */
-    private Long customerId;
+    private Integer customerId;
     /**
      * 地点类型
      */

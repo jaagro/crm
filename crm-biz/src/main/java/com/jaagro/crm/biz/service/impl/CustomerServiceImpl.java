@@ -64,7 +64,7 @@ public class CustomerServiceImpl implements CustomerService {
             throw new RuntimeException("客户类型不能为空");
         }
         customerMapper.insertSelective(customer);
-        return ServiceResult.toResult(this.customerMapper.selectByPrimaryKey(customer.getId()));
+        return ServiceResult.toResult(customer.getId());
         /* //新增联系人对象
         if (dto.getContracts() != null && dto.getContracts().size() > 0) {
             this.customerContractService.createCustomerContract(dto.getContracts(), customer.getId());

@@ -25,6 +25,11 @@ public class CustomerSite implements Serializable {
     private Integer siteType;
 
     /**
+     * 归属网点
+     */
+    private Integer deptId;
+
+    /**
      * 外键关联客户ID
  ( References customer)
      */

@@ -101,4 +101,17 @@ public class CustomerSiteController {
     public BaseResponse listByCriteria(@RequestBody ListSiteCriteriaDto criteriaDto) {
         return BaseResponse.service(this.siteService.listByCriteria(criteriaDto));
     }
+
+    @ApiOperation("根据客户查询收发货地址")
+    @GetMapping("/listSiteForSelect/{customerId}/{siteType}")
+    public BaseResponse getById(@PathVariable Integer customerId, @PathVariable Integer siteType) {
+        if (this.customerMapper.selectByPrimaryKey(customerId) == null) {
+            return BaseResponse.errorInstance("客户不存在");
+        }
+        ListSiteCriteriaDto criteriaDto = new ListSiteCriteriaDto();
+        criteriaDto
+                .setCustomerId(customerId)
+                .setSiteType(siteType);
+        return BaseResponse.successInstance(this.siteMapper.listAllSite(criteriaDto));
+    }
 }

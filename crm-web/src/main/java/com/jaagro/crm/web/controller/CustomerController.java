@@ -50,17 +50,18 @@ public class CustomerController {
         if (customer.getCustomerName() == null) {
             return BaseResponse.errorInstance("客户名称:[customerName]不能为空");
         }
-        if (customer.getLatitude() == null) {
+        //先注释，最后商议
+       /* if (customer.getLatitude() == null) {
             return BaseResponse.errorInstance("经度:[latitude]不能为空");
         }
         if (customer.getLongitude() == null) {
             return BaseResponse.errorInstance("纬度:[longitude]不能为空");
-        }
+        }*/
         UpdateCustomerDto updateCustomerDto = new UpdateCustomerDto();
         updateCustomerDto.setCustomerName(customer.getCustomerName());
-        if (this.customerMapper.getByCustomerDto(updateCustomerDto) != null) {
+        /*if (this.customerMapper.getByCustomerDto(updateCustomerDto) != null) {
             return BaseResponse.idNull("客户名称:[customerName]已存在");
-        }
+        }*/
         return BaseResponse.service(customerService.createCustomer(customer));
     }
 
@@ -96,9 +97,9 @@ public class CustomerController {
         if (this.customerMapper.selectByPrimaryKey(customer.getId()) == null) {
             return BaseResponse.queryDataEmpty();
         }
-        if (this.customerMapper.getByCustomerDto(customer) != null) {
+        /*if (this.customerMapper.getByCustomerDto(customer) != null) {
             return BaseResponse.errorInstance("客户名称:[customerName]已存在");
-        }
+        }*/
         return BaseResponse.service(customerService.updateById(customer));
     }
 

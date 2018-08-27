@@ -5,7 +5,6 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * @author baiyiran
@@ -25,6 +24,11 @@ public class CreateCustomerSiteDto implements Serializable {
      * ( References customer)
      */
     private Integer customerId;
+
+    /**
+     * 归属网点
+     */
+    private Integer deptId;
 
     /**
      * 装货地名称
