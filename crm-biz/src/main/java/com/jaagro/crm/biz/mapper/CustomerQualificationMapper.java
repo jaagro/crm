@@ -2,6 +2,7 @@ package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.api.dto.request.customer.ListCustomerQualificationCriteriaDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerQualificationReturnDto;
+import com.jaagro.crm.api.dto.response.customer.ReturnQualificationDto;
 import com.jaagro.crm.biz.entity.CustomerQualification;
 
 import java.util.List;
@@ -58,4 +59,18 @@ public interface CustomerQualificationMapper {
      * @return
      */
     List<CustomerQualificationReturnDto> getByQualificationCriteriDto(ListCustomerQualificationCriteriaDto certificDto);
+
+    /**
+     *根据客户查询待审核的
+     * @param customerId
+     * @return
+     */
+    List<ReturnQualificationDto> listByCustomerIdAndStatus(Integer customerId);
+
+    /**
+     * 查询客户除审核成功的个数
+     * @param customerId
+     * @return
+     */
+    int countByCustomerIdAndStatus(Integer customerId);
 }

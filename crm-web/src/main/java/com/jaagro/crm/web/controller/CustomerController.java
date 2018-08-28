@@ -1,11 +1,15 @@
 package com.jaagro.crm.web.controller;
 
 import com.jaagro.crm.api.dto.request.customer.*;
+import com.jaagro.crm.api.dto.response.contract.ReturnContractQualificationDto;
+import com.jaagro.crm.api.dto.response.customer.ReturnQualificationDto;
 import com.jaagro.crm.api.service.CustomerContractService;
 import com.jaagro.crm.api.service.CustomerService;
 import com.jaagro.crm.biz.entity.Customer;
+import com.jaagro.crm.biz.entity.CustomerQualification;
 import com.jaagro.crm.biz.mapper.CustomerContactsMapper;
 import com.jaagro.crm.biz.mapper.CustomerMapper;
+import com.jaagro.crm.biz.mapper.CustomerQualificationMapper;
 import com.jaagro.utils.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,6 +38,8 @@ public class CustomerController {
     private CustomerContactsMapper customerContactsMapper;
     @Autowired
     private CustomerContractService customerContractService;
+    @Autowired
+    private CustomerQualificationMapper qualificationMapper;
 
     /**
      * 新增客户
@@ -95,7 +101,7 @@ public class CustomerController {
     @PutMapping("/customer")
     public BaseResponse updateCustomer(@RequestBody UpdateCustomerDto customer) {
         if (this.customerMapper.selectByPrimaryKey(customer.getId()) == null) {
-            return BaseResponse.queryDataEmpty();
+            return BaseResponse.errorInstance("客户不存在");
         }
         /*if (this.customerMapper.getByCustomerDto(customer) != null) {
             return BaseResponse.errorInstance("客户名称:[customerName]已存在");
@@ -107,7 +113,7 @@ public class CustomerController {
     @GetMapping("/customer/{id}")
     public BaseResponse getById(@PathVariable Integer id) {
         if (this.customerMapper.selectByPrimaryKey(id) == null) {
-            return BaseResponse.queryDataEmpty();
+            return BaseResponse.errorInstance("客户不存在");
         }
         Map<String, Object> result = customerService.getById(id);
         return BaseResponse.service(result);
@@ -117,6 +123,23 @@ public class CustomerController {
     @PostMapping("/listCustomerByCriteria")
     public BaseResponse listByCriteria(@RequestBody ListCustomerCriteriaDto criteriaDto) {
         return BaseResponse.service(this.customerService.listByCriteria(criteriaDto));
+    }
+
+    @ApiOperation("客户资质获取下一条")
+    @GetMapping("/getQualification")
+    public BaseResponse listByCriteria(@PathVariable Integer customerId) {
+        if (this.customerMapper.selectByPrimaryKey(customerId) == null) {
+            return BaseResponse.errorInstance("客户不存在");
+        }
+        //返回要审核的资质信息
+        List<ReturnQualificationDto> qualificationDtos = this.qualificationMapper.listByCustomerIdAndStatus(customerId);
+        if (qualificationDtos != null && qualificationDtos.size() > 0) {
+            return BaseResponse.successInstance(qualificationDtos.get(0));
+        }
+        Customer customer = this.customerMapper.selectByPrimaryKey(customerId);
+        customer.setCustomerStatus(1);
+        this.customerMapper.updateByPrimaryKeySelective(customer);
+        return BaseResponse.queryDataEmpty();
     }
 
     //-------------------------------------------------客户联系人---------------------------------
@@ -237,5 +260,6 @@ public class CustomerController {
         }
         return BaseResponse.successInstance(this.customerContactsMapper.selectByPrimaryKey(id));
     }
+
 
 }
