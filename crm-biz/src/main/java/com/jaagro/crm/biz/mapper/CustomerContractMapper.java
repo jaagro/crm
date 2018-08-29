@@ -2,6 +2,8 @@ package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.api.dto.request.contract.ListContractCriteriaDto;
 import com.jaagro.crm.api.dto.request.contract.UpdateContractDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnCheckContractDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnCheckContractQualificationDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
 import com.jaagro.crm.biz.entity.CustomerContract;
 
@@ -9,37 +11,31 @@ import java.util.List;
 
 public interface CustomerContractMapper {
     /**
-     *
      * @mbggenerated 2018-08-23
      */
     int deleteByPrimaryKey(Integer id);
 
     /**
-     *
      * @mbggenerated 2018-08-23
      */
     int insert(CustomerContract record);
 
     /**
-     *
      * @mbggenerated 2018-08-23
      */
     int insertSelective(CustomerContract record);
 
     /**
-     *
      * @mbggenerated 2018-08-23
      */
     CustomerContract selectByPrimaryKey(Integer id);
 
     /**
-     *
      * @mbggenerated 2018-08-23
      */
     int updateByPrimaryKeySelective(CustomerContract record);
 
     /**
-     *
      * @mbggenerated 2018-08-23
      */
     int updateByPrimaryKey(CustomerContract record);
@@ -75,4 +71,21 @@ public interface CustomerContractMapper {
      * @return
      */
     CustomerContract getByUpdateDto(UpdateContractDto updateContractDto);
+
+    /**
+     * 根据客户查询未审核个数
+     *
+     * @param customerId
+     * @return
+     */
+    int countByCustomerId(Integer customerId);
+
+    /**
+     * 根绝客户id查询需要审核的合同
+     *
+     * @param customerId
+     * @return
+     */
+    List<ReturnCheckContractDto> listByCustomerIdAndStatus(Integer customerId);
+
 }

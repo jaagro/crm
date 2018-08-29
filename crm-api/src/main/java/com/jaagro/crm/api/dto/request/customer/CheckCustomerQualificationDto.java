@@ -6,16 +6,15 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 
 /**
- * 修改证件照帮助类
+ * 审核证件照帮助类
  *
  * @author baiyiran
  */
 @Data
 @Accessors(chain = true)
-public class UpdateCustomerQualificationDto implements Serializable {
-
+public class CheckCustomerQualificationDto implements Serializable {
     /**
-     * 客户资质证照主键id
+     * id
      */
     private Integer id;
 
@@ -25,7 +24,10 @@ public class UpdateCustomerQualificationDto implements Serializable {
     private Integer certificateStatus;
 
     /**
-     * 描述信息
+     * 审核不通过描述信息(1、客户姓名与图片不符
+     * 2、客户身份证号码与图片不符
+     * 3、客户姓名与身份证号与合同信息不符)
      */
     private String description;
+
 }

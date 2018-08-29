@@ -1,6 +1,6 @@
 package com.jaagro.crm.web.controller;
 
-import com.jaagro.crm.api.dto.request.driver.CreateListTruckQualificationDto;
+import com.jaagro.crm.api.dto.request.truck.CreateListTruckQualificationDto;
 import com.jaagro.crm.api.service.TruckQualificationService;
 import com.jaagro.crm.biz.mapper.TruckTeamMapper;
 import com.jaagro.utils.BaseResponse;

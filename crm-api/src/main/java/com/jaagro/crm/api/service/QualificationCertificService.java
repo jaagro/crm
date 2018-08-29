@@ -55,6 +55,14 @@ public interface QualificationCertificService {
     Map<String, Object> getById(Integer id);
 
     /**
+     * 获取审核资质详情
+     *
+     * @param id
+     * @return
+     */
+    Map<String, Object> getDetailById(Integer id);
+
+    /**
      * 根据条件分页获取
      *
      * @param dto

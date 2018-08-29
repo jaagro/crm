@@ -66,7 +66,6 @@ public class ContractServiceImpl implements ContractService {
         customerContract
                 .setCreateUser(userService.getCurrentUser().getId());
         customerContractMapper.insertSelective(customerContract);
-        log.info("【客户合同新增】------成功\nCustomerContract:" + customerContract.toString());
 
         //创建资质证
         if (dto.getQualificationDtos() != null && dto.getQualificationDtos().size() > 0) {
@@ -77,7 +76,6 @@ public class ContractServiceImpl implements ContractService {
                         .setRelevanceId(customerContract.getId())
                         .setCreateUserId(this.userService.getCurrentUser().getId());
                 this.contractQualificationMapper.insertSelective(qualification);
-                log.info("【客户资质新增】------成功\nContractQualification:" + qualification.toString());
             }
         }
 
@@ -131,7 +129,6 @@ public class ContractServiceImpl implements ContractService {
         }
         //创建contractPrice对象
         createPrice(dto, customerContract);
-        log.info("【客户合同修改】------成功\nCustomerContract:" + customerContract.toString());
         return ServiceResult.toResult("合同修改成功");
     }
 

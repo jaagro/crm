@@ -15,6 +15,19 @@
         <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
         <result column="enabled" property="enabled" jdbcType="BIT"/>
     </resultMap>
+    <resultMap id="ReturnCheckMap" type="com.jaagro.crm.api.dto.response.contract.ReturnCheckContractQualificationDto">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="relevance_type" property="relevanceType" jdbcType="INTEGER"/>
+        <result column="relevance_id" property="relevanceId" jdbcType="INTEGER"/>
+        <result column="certificate_type" property="certificateType" jdbcType="INTEGER"/>
+        <result column="certificate_image_url" property="certificateImageUrl" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+
+        <association property="contractDto" column="relevance_id"
+                     select="com.jaagro.crm.biz.mapper.CustomerContractMapper.getById">
+            <id column="id" property="id" jdbcType="INTEGER"/>
+        </association>
+    </resultMap>
     <sql id="Base_Column_List">
     id, relevance_type, relevance_id, certificate_type, certificate_image_url, certificate_status, 
     description, create_user_id, create_time, modify_user_id, modify_time, enabled
@@ -179,5 +192,23 @@
         <include refid="Base_Column_List"/>
         from contract_qualification
         where relevance_id = #{contractId,jdbcType=INTEGER}
+    </select>
+    <select id="listByCriteria" resultMap="ReturnCheckMap"
+            parameterType="com.jaagro.crm.api.dto.request.contract.ListContractQualificationCriteriaDto">
+        select
+        <include refid="Base_Column_List"/>
+        from contract_qualification
+        where 1=1
+        <if test="certificateStatus != null">
+            and certificate_status = #{certificateStatus,jdbcType=INTEGER}
+        </if>
+        <if test="relevanceType != null">
+            and relevance_type = #{relevanceType,jdbcType=INTEGER}
+        </if>
+        <if test="certificateStatus == null">
+            and certificate_status = 0
+        </if>
+        and enabled = 1
+        order by create_time desc
     </select>
 </mapper>

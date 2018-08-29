@@ -1,12 +1,10 @@
 package com.jaagro.crm.api.service;
 
-import com.jaagro.crm.api.dto.request.driver.CreateDriverDto;
-import com.jaagro.crm.api.dto.response.driver.DriverReturnDto;
+import com.jaagro.crm.api.dto.request.truck.CreateDriverDto;
+import com.jaagro.crm.api.dto.response.truck.DriverReturnDto;
+import com.jaagro.utils.BaseResponse;
 import org.springframework.cloud.netflix.feign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,7 +20,7 @@ public interface DriverClientService {
      * @return
      */
     @PostMapping("/driver")
-    Integer createDriverToFeign(@RequestBody CreateDriverDto driver);
+    Integer createDriverReturnId(@RequestBody CreateDriverDto driver);
 
     /**
      * 通过车辆id获取司机list
@@ -31,4 +29,12 @@ public interface DriverClientService {
      */
     @GetMapping("/listDriverByTruckId/{truckId}")
     List<DriverReturnDto> listByTruckId(@PathVariable("truckId") Integer truckId);
+
+    /**
+     * 删除司机【逻辑】
+     * @param truckId
+     * @return
+     */
+    @DeleteMapping("/driverByTruck/{truckId}")
+    BaseResponse deleteDriverByTruckId(@PathVariable("truckId") Integer truckId);
 }

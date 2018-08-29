@@ -1,9 +1,13 @@
 package com.jaagro.crm.web.controller;
 
-import com.jaagro.crm.api.dto.request.driver.CreateTruckTeamDto;
+import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContactsDto;
+import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamDto;
+import com.jaagro.crm.api.service.TruckTeamContactsService;
 import com.jaagro.crm.api.service.TruckTeamService;
 import com.jaagro.crm.biz.mapper.TruckTeamMapper;
 import com.jaagro.utils.BaseResponse;
+import com.jaagro.utils.ResponseStatusCode;
+import com.jaagro.utils.ServiceResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,17 +26,27 @@ public class TruckTeamController {
 
     @Autowired
     private TruckTeamService truckTeamService;
-
     @Autowired
     private TruckTeamMapper truckTeamMapper;
+    @Autowired
+    private TruckTeamContactsService truckTeamContactsService;
 
     @ApiOperation("新增车队")
     @PostMapping("/truckTeam")
-    public BaseResponse insert(@RequestBody CreateTruckTeamDto dto){
-        if(StringUtils.isEmpty(dto.getTeamName())){
+    public BaseResponse insertTruckTeam(@RequestBody CreateTruckTeamDto truckTeam){
+        if(StringUtils.isEmpty(truckTeam.getTeamName())){
             return BaseResponse.errorInstance("车队名称不能为空");
         }
-        return BaseResponse.service(truckTeamService.createTruckTeam(dto));
+        return BaseResponse.service(truckTeamService.createTruckTeam(truckTeam));
+    }
+
+    @ApiOperation("车队修改")
+    @PutMapping("/truckTeam")
+    public BaseResponse updateTruckTeam(@RequestBody CreateTruckTeamDto truckTeam){
+        if(StringUtils.isEmpty(truckTeam.getId())){
+            return BaseResponse.idError("id");
+        }
+        return BaseResponse.service(truckTeamService.updateTruckTeam(truckTeam));
     }
 
     @ApiOperation("查询单个车队")
@@ -41,4 +55,29 @@ public class TruckTeamController {
         Map<String, Object> result = truckTeamService.getTruckTeamById(id);
         return BaseResponse.service(result);
     }
+
+    @ApiOperation("删除车队【逻辑】")
+    @DeleteMapping("/truckTeam/{id}")
+    public BaseResponse deleteTruckTeam(@PathVariable("id") Integer id){
+        return BaseResponse.service(truckTeamService.deleteTruckTeam(id));
+    }
+
+    @ApiOperation("新增车队联系人")
+    @PostMapping("/truckTeamContacts")
+    public BaseResponse createTruckTeamContacts(@RequestBody CreateTruckTeamContactsDto contacts){
+        if(StringUtils.isEmpty(contacts.getTruckTeamId())){
+            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队id不能为空"));
+        }
+        if(StringUtils.isEmpty(contacts.getContract())){
+            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "请填写联系人姓名"));
+        }
+        return BaseResponse.service(truckTeamContactsService.createTruckTeamContacts(contacts));
+    }
+
+    @ApiOperation("获取车队联系人列表")
+    @GetMapping("/listTruckTeamContacts/{teamId}")
+    public BaseResponse listTruckTeamContacts(@PathVariable("teamId") Integer teamId){
+        return BaseResponse.service(truckTeamContactsService.listTruckTeamContacts(teamId));
+    }
+
 }

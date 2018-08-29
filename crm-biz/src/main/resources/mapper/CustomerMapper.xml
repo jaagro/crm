@@ -48,13 +48,25 @@
         <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER"/>
 
         <collection property="customerContactsReturnDtos" column="id"
-                    select="com.jaagro.crm.biz.mapper.CustomerContactsMapper.getByCustomerId"/>
+                    select="com.jaagro.crm.biz.mapper.CustomerContactsMapper.listByCustomerId"/>
         <collection property="returnContractDtos" column="id"
                     select="com.jaagro.crm.biz.mapper.CustomerContractMapper.getByCustomerId"/>
         <collection property="sites" column="id"
                     select="com.jaagro.crm.biz.mapper.CustomerSiteMapper.getByCustomerSiteId"/>
         <collection property="qualifications" column="id"
                     select="com.jaagro.crm.biz.mapper.CustomerQualificationMapper.getByCustomerQualificationId"/>
+    </resultMap>
+    <resultMap id="ReturnCheckMap" type="com.jaagro.crm.api.dto.response.customer.ReturnCustomerDto">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="customer_name" property="customerName" jdbcType="VARCHAR"/>
+        <result column="customer_type" property="customerType" jdbcType="INTEGER"/>
+        <result column="credit_code" property="creditCode" jdbcType="VARCHAR"/>
+        <result column="customer_status" property="customerStatus" jdbcType="INTEGER"/>
+        <result column="city" property="city" jdbcType="VARCHAR"/>
+        <result column="province" property="province" jdbcType="VARCHAR"/>
+        <result column="county" property="county" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="notes" property="notes" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, customer_name, customer_type, credit_code, customer_status, city, province, county,
@@ -357,5 +369,11 @@
             and id != #{id}
         </if>
         and customer_status <![CDATA[ <= ]]> 1
+    </select>
+    <select id="getCheckById" resultMap="ReturnCheckMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from customer
+        where id = #{id}
     </select>
 </mapper>

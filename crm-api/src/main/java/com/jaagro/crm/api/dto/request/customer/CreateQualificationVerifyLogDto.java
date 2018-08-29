@@ -1,17 +1,14 @@
-package com.jaagro.crm.biz.entity;
+package com.jaagro.crm.api.dto.request.customer;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.Date;
-
+/**
+ * @author baiyiran
+ */
 @Data
 @Accessors(chain = true)
-public class QualificationVerifyLog {
-    /**
-     * 审核表主键id
-     */
-    private Integer id;
+public class CreateQualificationVerifyLogDto {
 
     /**
      * 审核类型（1-客户资质 2- 客户合同 3-运力资质 4-运力合同）
@@ -35,13 +32,4 @@ public class QualificationVerifyLog {
      */
     private String description;
 
-    /**
-     * 审核人
-     */
-    private Integer auditor;
-
-    /**
-     * 审核时间
-     */
-    private Date createTime;
 }

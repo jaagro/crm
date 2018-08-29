@@ -1,5 +1,7 @@
 package com.jaagro.crm.biz.mapper;
 
+import com.jaagro.crm.api.dto.request.contract.ListContractQualificationCriteriaDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnCheckContractQualificationDto;
 import com.jaagro.crm.biz.entity.ContractQualification;
 
 import java.util.List;
@@ -45,4 +47,12 @@ public interface ContractQualificationMapper {
      * @return
      */
     List<ContractQualification> listByContractId(Integer contractId);
+
+    /**
+     * 合同资质证分页
+     *
+     * @param dto
+     * @return
+     */
+    List<ReturnCheckContractQualificationDto> listByCriteria(ListContractQualificationCriteriaDto dto);
 }

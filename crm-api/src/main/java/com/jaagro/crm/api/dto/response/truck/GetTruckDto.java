@@ -1,4 +1,4 @@
-package com.jaagro.crm.api.dto.response.driver;
+package com.jaagro.crm.api.dto.response.truck;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -88,6 +88,11 @@ public class GetTruckDto implements Serializable {
      * 营运证号
      */
     private String businessPermit;
+
+    /**
+     * 行驶证号
+     */
+    private String drivingPermit;
 
     /**
      * 备注信息

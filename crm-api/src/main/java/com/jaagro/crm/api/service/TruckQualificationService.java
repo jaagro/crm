@@ -1,6 +1,6 @@
 package com.jaagro.crm.api.service;
 
-import com.jaagro.crm.api.dto.request.driver.CreateListTruckQualificationDto;
+import com.jaagro.crm.api.dto.request.truck.CreateListTruckQualificationDto;
 
 import java.util.Map;
 

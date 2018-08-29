@@ -1,7 +1,7 @@
 package com.jaagro.crm.biz.service.impl;
 
-import com.jaagro.crm.api.dto.request.driver.CreateTruckTeamDto;
-import com.jaagro.crm.api.dto.response.driver.TruckTeamReturnDto;
+import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamDto;
+import com.jaagro.crm.api.dto.response.truck.TruckTeamReturnDto;
 import com.jaagro.crm.api.service.TruckTeamService;
 import com.jaagro.crm.biz.entity.TruckTeam;
 import com.jaagro.crm.biz.mapper.TruckTeamMapper;
@@ -13,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -44,7 +45,27 @@ public class TruckTeamServiceImpl implements TruckTeamService {
     }
 
     /**
-     * 获取单条车辆
+     * 修改车队
+     *
+     * @param truckTeamDto
+     * @return
+     */
+    @Override
+    public Map<String, Object> updateTruckTeam(CreateTruckTeamDto truckTeamDto) {
+        if(truckTeamMapper.selectByPrimaryKey(truckTeamDto.getId()) == null){
+            ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), truckTeamDto.getId() + " ：该车队不存在");
+        }
+        TruckTeam truckTeam = new TruckTeam();
+        BeanUtils.copyProperties(truckTeamDto, truckTeam);
+        truckTeam
+                .setModifyTime(new Date())
+                .setModifyUserId(currentUserService.getCurrentUser().getId());
+        truckTeamMapper.updateByPrimaryKeySelective(truckTeam);
+        return ServiceResult.toResult(truckTeamMapper.getTruckTeamById(truckTeam.getId()));
+    }
+
+    /**
+     * 获取单条车队
      *
      * @param id
      * @return
@@ -61,6 +82,21 @@ public class TruckTeamServiceImpl implements TruckTeamService {
     @Override
     public Map<String, Object> listTruckTeam() {
         return null;
+    }
+
+    /**
+     * 删除单条车队
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public Map<String, Object> deleteTruckTeam(Integer id) {
+        if(truckTeamMapper.selectByPrimaryKey(id) == null){
+            ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), id + ": 不存在");
+        }
+        truckTeamMapper.deleteByLogic(id);
+        return ServiceResult.toResult("删除成功");
     }
 
 }

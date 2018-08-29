@@ -23,8 +23,9 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="driving_permit" property="drivingPermit" jdbcType="VARCHAR" />
   </resultMap>
-  <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.driver.GetTruckDto" >
+  <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.truck.GetTruckDto" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER" />
     <result column="truck_number" property="truckNumber" jdbcType="VARCHAR" />
@@ -45,9 +46,10 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="driving_permit" property="drivingPermit" jdbcType="VARCHAR" />
     <association property="truckTypeId" select="com.jaagro.crm.biz.mapper.TruckTypeMapper.getById" column="truck_type_id"></association>
   </resultMap>
-  <resultMap id="listTruck" type="com.jaagro.crm.api.dto.response.driver.ListTruckDto" >
+  <resultMap id="listTruck" type="com.jaagro.crm.api.dto.response.truck.ListTruckDto" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER" />
     <result column="truck_number" property="truckNumber" jdbcType="VARCHAR" />
@@ -68,12 +70,13 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="driving_permit" property="drivingPermit" jdbcType="VARCHAR" />
     <association property="truckTypeId" select="com.jaagro.crm.biz.mapper.TruckTypeMapper.getById" column="truck_type_id"></association>
   </resultMap>
   <sql id="Base_Column_List" >
     id, truck_team_id, truck_number, vehicle_brand, truck_type_id, capacity, maximum_load, 
     truck_weight, province, city, county, buy_time, expiry_date, expiry_annual, business_permit, 
-    notes, truck_status, modify_time, create_time, modify_user_id, create_user_id
+    notes, truck_status, modify_time, create_time, modify_user_id, create_user_id, driving_permit
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -92,7 +95,7 @@
       city, county, buy_time, 
       expiry_date, expiry_annual, business_permit, 
       notes, truck_status, modify_time, 
-      create_time, modify_user_id, create_user_id
+      create_time, modify_user_id, create_user_id, driving_permit
       )
     values (#{id,jdbcType=INTEGER}, #{truckTeamId,jdbcType=INTEGER}, #{truckNumber,jdbcType=VARCHAR}, 
       #{vehicleBrand,jdbcType=VARCHAR}, #{truckTypeId,jdbcType=INTEGER}, #{capacity,jdbcType=DECIMAL}, 
@@ -100,7 +103,7 @@
       #{city,jdbcType=VARCHAR}, #{county,jdbcType=VARCHAR}, #{buyTime,jdbcType=TIMESTAMP}, 
       #{expiryDate,jdbcType=TIMESTAMP}, #{expiryAnnual,jdbcType=TIMESTAMP}, #{businessPermit,jdbcType=VARCHAR}, 
       #{notes,jdbcType=VARCHAR}, #{truckStatus,jdbcType=INTEGER}, #{modifyTime,jdbcType=TIMESTAMP}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}
+      #{createTime,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, #{drivingPermit,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.Truck" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
@@ -234,6 +237,9 @@
       <if test="createUserId != null" >
         #{createUserId,jdbcType=INTEGER},
       </if>
+      <if test="drivingPermit != null" >
+        #{drivingPermit,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.Truck" >
@@ -299,6 +305,9 @@
       <if test="createUserId != null" >
         create_user_id = #{createUserId,jdbcType=INTEGER},
       </if>
+      <if test="drivingPermit != null" >
+        #{drivingPermit,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -324,6 +333,12 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       modify_user_id = #{modifyUserId,jdbcType=INTEGER},
       create_user_id = #{createUserId,jdbcType=INTEGER}
+      driving_permit = #{drivingPermit,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="deleteTruckLogic">
+    update truck
+    set truck_status = #{status, jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="getTruckById" parameterType="java.lang.Integer" resultMap="DetailInfo">

@@ -1,7 +1,7 @@
 package com.jaagro.crm.web.controller;
 
-import com.jaagro.crm.api.dto.request.driver.CreateTruckTeamContractDto;
-import com.jaagro.crm.api.dto.request.driver.UpdateTruckTeamContractDto;
+import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContractDto;
+import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamContractDto;
 import com.jaagro.crm.api.service.TruckTeamContractService;
 import com.jaagro.crm.biz.mapper.TruckTeamContractMapper;
 import com.jaagro.utils.BaseResponse;

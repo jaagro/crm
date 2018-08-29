@@ -2,13 +2,14 @@ package com.jaagro.crm.biz.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.jaagro.crm.api.dto.request.driver.CreateDriverDto;
-import com.jaagro.crm.api.dto.request.driver.CreateListTruckQualificationDto;
-import com.jaagro.crm.api.dto.request.driver.CreateTruckDto;
-import com.jaagro.crm.api.dto.request.driver.ListTruckCriteriaDto;
-import com.jaagro.crm.api.dto.response.driver.DriverReturnDto;
-import com.jaagro.crm.api.dto.response.driver.GetTruckDto;
-import com.jaagro.crm.api.dto.response.driver.ListTruckDto;
+import com.jaagro.crm.api.constant.AuditStatus;
+import com.jaagro.crm.api.dto.request.truck.CreateDriverDto;
+import com.jaagro.crm.api.dto.request.truck.CreateListTruckQualificationDto;
+import com.jaagro.crm.api.dto.request.truck.CreateTruckDto;
+import com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto;
+import com.jaagro.crm.api.dto.response.truck.DriverReturnDto;
+import com.jaagro.crm.api.dto.response.truck.GetTruckDto;
+import com.jaagro.crm.api.dto.response.truck.ListTruckDto;
 import com.jaagro.crm.api.service.DriverClientService;
 import com.jaagro.crm.api.service.TruckQualificationService;
 import com.jaagro.crm.api.service.TruckService;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -46,7 +48,6 @@ public class TruckServiceImpl implements TruckService {
 
     /**
      * 获取单条
-     *
      * @param id
      * @return
      */
@@ -90,9 +91,9 @@ public class TruckServiceImpl implements TruckService {
                         .setTruckId(truck.getId())
                         .setTruckTeamId(truck.getTruckTeamId());
                 try {
-                    driverId = driverClientService.createDriverToFeign(driverDto);
+                    driverId = driverClientService.createDriverReturnId(driverDto);
                 }catch (RuntimeException e) {
-                    log.error(e.getMessage());
+                    log.error("司机新建失败：" + e.getMessage());
                     throw e;
                 }
 
@@ -111,12 +112,51 @@ public class TruckServiceImpl implements TruckService {
         return ServiceResult.toResult(truck.getId());
     }
 
+    /**
+     * 修改车辆
+     *
+     * @param truckDto
+     * @return
+     */
+    @Override
+    public Map<String, Object> updateTruck(CreateTruckDto truckDto) {
+        if(truckMapper.selectByPrimaryKey(truckDto.getTruckTeamId()) == null){
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), truckDto.getId() + " ：id不正确");
+        }
+        Truck truck = new Truck();
+        BeanUtils.copyProperties(truckDto, truck);
+        truck
+                .setModifyUserId(currentUserService.getCurrentUser().getId())
+                .setModifyTime(new Date());
+        truckMapper.updateByPrimaryKeySelective(truck);
+        return ServiceResult.toResult(truckMapper.getTruckById(truckDto.getId()));
+    }
+
+    /**
+     * 删除车辆
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Map<String, Object> deleteTruck(Integer id) {
+        if(truckMapper.selectByPrimaryKey(id) == null){
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), id + " ：id不正确");
+        }
+        //删除车辆所属的司机
+        driverClientService.deleteDriverByTruckId(id);
+        //删除车辆
+        truckMapper.deleteTruckLogic(AuditStatus.STOP_COOPERATION, id);
+        return ServiceResult.toResult("删除成功");
+    }
+
     @Override
     public Map<String, Object> listTruck(ListTruckCriteriaDto criteria){
         PageHelper.startPage(criteria.getPageNum(), criteria.getPageSize());
         List<ListTruckDto> result = truckMapper.listTruckByTeamId(criteria.getTruckTeamId(), criteria.getTruckNumber());
         if (result == null || result.size() == 0){
-            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(),"未查询到数据");
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(),"查无数据");
         }
         return ServiceResult.toResult(new PageInfo<>(result));
     }

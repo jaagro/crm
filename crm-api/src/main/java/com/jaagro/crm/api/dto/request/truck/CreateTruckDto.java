@@ -1,4 +1,4 @@
-package com.jaagro.crm.api.dto.request.driver;
+package com.jaagro.crm.api.dto.request.truck;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -90,14 +90,14 @@ public class CreateTruckDto implements Serializable {
     private String businessPermit;
 
     /**
+     * 行驶证号
+     */
+    private String drivingPermit;
+
+    /**
      * 备注信息
      */
     private String notes;
-
-    /**
-     * 创建人(关联用户ID)
-     */
-    private Integer createUserId;
 
     /**
      * 车辆资质列表
@@ -105,7 +105,7 @@ public class CreateTruckDto implements Serializable {
     private List<CreateTruckQualificationDto> truckQualifications;
 
     /**
-     * 查询车辆司机
+     * 司机列表
      */
     private List<CreateDriverDto> driver;
 

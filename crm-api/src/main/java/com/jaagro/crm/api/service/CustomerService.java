@@ -45,6 +45,7 @@ public interface CustomerService {
     Map<String, Object> listByCriteria(ListCustomerCriteriaDto dto);
 
     /**
+     * 1
      * 审核客户，注意需要修改的字段有哪些，插入的表有哪些
      *
      * @param id

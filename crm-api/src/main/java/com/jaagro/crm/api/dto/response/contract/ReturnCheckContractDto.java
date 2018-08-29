@@ -5,18 +5,17 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 
 /**
- * 客户合同分页查询 返回类
+ * 审核客户合同返回类
  *
  * @author baiyiran
  */
 @Data
 @Accessors(chain = true)
 
-public class ReturnContractDto implements Serializable {
+public class ReturnCheckContractDto implements Serializable {
     /**
      * 合同ID
      */
@@ -53,38 +52,10 @@ public class ReturnContractDto implements Serializable {
     private Integer type;
 
     /**
-     * 合同主题
-     */
-    private String theme;
-
-    /**
-     * 产品
-     */
-    private String product;
-
-    /**
-     * 合同正文
-     */
-    private String context;
-
-    /**
      * 合同编号
      */
     private String contractNumber;
 
-    /**
-     * 备注
-     */
-    private String remark;
 
-    /**
-     * 合同报价
-     */
-    private List<ReturnContractPriceDto> prices;
-
-    /**
-     * 合同资质
-     */
-    private List<ReturnContractQualificationDto> qualifications;
 
 }
