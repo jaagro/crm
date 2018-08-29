@@ -1,15 +1,9 @@
 package com.jaagro.crm.web.controller;
 
 import com.jaagro.crm.api.dto.request.customer.*;
-import com.jaagro.crm.api.dto.response.contract.ReturnContractQualificationDto;
-import com.jaagro.crm.api.dto.response.customer.ReturnQualificationDto;
-import com.jaagro.crm.api.service.CustomerContractService;
-import com.jaagro.crm.api.service.CustomerService;
+import com.jaagro.crm.api.service.*;
 import com.jaagro.crm.biz.entity.Customer;
-import com.jaagro.crm.biz.entity.CustomerQualification;
-import com.jaagro.crm.biz.mapper.CustomerContactsMapper;
-import com.jaagro.crm.biz.mapper.CustomerMapper;
-import com.jaagro.crm.biz.mapper.CustomerQualificationMapper;
+import com.jaagro.crm.biz.mapper.*;
 import com.jaagro.utils.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,6 +34,8 @@ public class CustomerController {
     private CustomerContractService customerContractService;
     @Autowired
     private CustomerQualificationMapper qualificationMapper;
+    @Autowired
+    private CustomerContractMapper contractMapper;
 
     /**
      * 新增客户
@@ -88,6 +84,12 @@ public class CustomerController {
         return BaseResponse.service(customerService.createCustomer(customer));
     }*/
 
+    /**
+     * 删除客户[逻辑]
+     *
+     * @param id
+     * @return
+     */
     @ApiOperation("删除客户[逻辑]")
     @DeleteMapping("/deleteCustomerById/{id}")
     public BaseResponse deleteById(@PathVariable Integer id) {
@@ -97,6 +99,12 @@ public class CustomerController {
         return BaseResponse.service(this.customerService.disableCustomer(id));
     }
 
+    /**
+     * 修改客户
+     *
+     * @param customer
+     * @return
+     */
     @ApiOperation("修改客户")
     @PutMapping("/customer")
     public BaseResponse updateCustomer(@RequestBody UpdateCustomerDto customer) {
@@ -109,6 +117,12 @@ public class CustomerController {
         return BaseResponse.service(customerService.updateById(customer));
     }
 
+    /**
+     * 查询单个客户
+     *
+     * @param id
+     * @return
+     */
     @ApiOperation("查询单个客户")
     @GetMapping("/customer/{id}")
     public BaseResponse getById(@PathVariable Integer id) {
@@ -119,27 +133,16 @@ public class CustomerController {
         return BaseResponse.service(result);
     }
 
+    /**
+     * 分页查询客户
+     *
+     * @param criteriaDto
+     * @return
+     */
     @ApiOperation("分页查询客户")
     @PostMapping("/listCustomerByCriteria")
     public BaseResponse listByCriteria(@RequestBody ListCustomerCriteriaDto criteriaDto) {
         return BaseResponse.service(this.customerService.listByCriteria(criteriaDto));
-    }
-
-    @ApiOperation("客户资质获取下一条")
-    @GetMapping("/getQualification")
-    public BaseResponse listByCriteria(@PathVariable Integer customerId) {
-        if (this.customerMapper.selectByPrimaryKey(customerId) == null) {
-            return BaseResponse.errorInstance("客户不存在");
-        }
-        //返回要审核的资质信息
-        List<ReturnQualificationDto> qualificationDtos = this.qualificationMapper.listByCustomerIdAndStatus(customerId);
-        if (qualificationDtos != null && qualificationDtos.size() > 0) {
-            return BaseResponse.successInstance(qualificationDtos.get(0));
-        }
-        Customer customer = this.customerMapper.selectByPrimaryKey(customerId);
-        customer.setCustomerStatus(1);
-        this.customerMapper.updateByPrimaryKeySelective(customer);
-        return BaseResponse.queryDataEmpty();
     }
 
     //-------------------------------------------------客户联系人---------------------------------
@@ -168,9 +171,6 @@ public class CustomerController {
                 }
                 if (StringUtils.isEmpty(contractDto.getContact())) {
                     return BaseResponse.errorInstance("联系人姓名不能为空");
-                }
-                if (StringUtils.isEmpty(contractDto.getPosition())) {
-                    return BaseResponse.errorInstance("联系人职位不能为空");
                 }
             }
         }
@@ -260,6 +260,4 @@ public class CustomerController {
         }
         return BaseResponse.successInstance(this.customerContactsMapper.selectByPrimaryKey(id));
     }
-
-
 }

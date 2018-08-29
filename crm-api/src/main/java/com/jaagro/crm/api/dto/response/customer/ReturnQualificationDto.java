@@ -46,5 +46,5 @@ public class ReturnQualificationDto implements Serializable {
     /**
      * 客户信息
      */
-    private ReturnCustomerDto customer;
+    private ReturnCustomerDto returnCustomerDto;
 }

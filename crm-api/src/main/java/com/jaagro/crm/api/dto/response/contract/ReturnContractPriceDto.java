@@ -100,11 +100,6 @@ public class ReturnContractPriceDto implements Serializable {
     private BigDecimal minMoney;
 
     /**
-     * 是否有效
-     */
-    private Integer priceStatus;
-
-    /**
      * 阶梯报价
      */
     private List<ReturnContractSectionPriceDto> sectionPrice;

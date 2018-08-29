@@ -9,7 +9,9 @@ import com.jaagro.crm.api.dto.response.customer.CustomerReturnDto;
 import com.jaagro.crm.api.dto.response.customer.ListCustomerDto;
 import com.jaagro.crm.api.service.*;
 import com.jaagro.crm.biz.entity.Customer;
+import com.jaagro.crm.biz.mapper.CustomerContractMapper;
 import com.jaagro.crm.biz.mapper.CustomerMapper;
+import com.jaagro.crm.biz.mapper.CustomerQualificationMapper;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
@@ -44,6 +46,10 @@ public class CustomerServiceImpl implements CustomerService {
     private QualificationCertificService certificService;
     @Autowired
     private CustomerContractService customerContractService;
+    @Autowired
+    private CustomerContractMapper contractMapper;
+    @Autowired
+    private CustomerQualificationMapper qualificationMapper;
 
     /**
      * 创建客户

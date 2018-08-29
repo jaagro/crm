@@ -25,6 +25,4 @@ public class ReturnContractSectionPriceDto implements Serializable {
     private BigDecimal upperLimit;
 
     private BigDecimal price;
-
-    private Integer selectionStatus;
 }
