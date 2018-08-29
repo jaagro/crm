@@ -207,7 +207,7 @@
         and enabled = 1
         order by create_time desc
     </select>
-    <select id="listByCustomerIdAndStatus" resultMap="ReturnMap" parameterType="java.lang.Integer">
+    <select id="listByCustomerIdAndStatus" resultMap="ReturnCheckMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
         from customer_qualification

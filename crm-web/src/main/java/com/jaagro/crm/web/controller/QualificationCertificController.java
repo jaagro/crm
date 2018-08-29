@@ -132,15 +132,15 @@ public class QualificationCertificController {
     }
 
     /**
-     * 待审核客户资质列表
+     * 待审核资质下一个
      *
      * @param customerId
      * @return
      */
-    @ApiOperation("待审核资质列表")
-    @GetMapping("/listQalfcationByCustmId/{customerId}")
+    @ApiOperation("待审核资质下一个")
+    @GetMapping("/getQalfcationByCustmIdAuto/{customerId}")
     @ApiImplicitParam(name = "customerId", value = "客户id", required = true, dataType = "Integer", paramType = "path")
-    public BaseResponse listQalfcationByCustmId(@PathVariable Integer customerId) {
+    public BaseResponse getQalfcationByCustmIdAuto(@PathVariable Integer customerId) {
         if (this.customerMapper.selectByPrimaryKey(customerId) == null) {
             return BaseResponse.errorInstance("客户不存在");
         }
@@ -152,26 +152,10 @@ public class QualificationCertificController {
         //返回要审核的资质信息
         List<ReturnQualificationDto> qualificationDtos = this.certificMapper.listByCustomerIdAndStatus(customerId);
         if (qualificationDtos != null && qualificationDtos.size() > 0) {
-            return BaseResponse.successInstance(qualificationDtos);
+            return BaseResponse.successInstance(qualificationDtos.get(0));
         }
-        return BaseResponse.successInstance(qualificationDtos);
+        return BaseResponse.queryDataEmpty();
     }
-
-    /**
-     * 获取待审核资质详情
-     *
-     * @param id
-     * @return
-     */
-    @ApiOperation("待审核资质详情")
-    @GetMapping("/getQualificationById/{id}")
-    public BaseResponse getQualificationById(@PathVariable Integer id) {
-        if (this.certificMapper.selectByPrimaryKey(id) == null) {
-            return BaseResponse.errorInstance("资质不存在");
-        }
-        return BaseResponse.service(this.certificService.getDetailById(id));
-    }
-
 
     /**
      * 审核资质

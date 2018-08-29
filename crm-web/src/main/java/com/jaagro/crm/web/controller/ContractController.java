@@ -1,10 +1,10 @@
 package com.jaagro.crm.web.controller;
 
-import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
-import com.jaagro.crm.api.dto.request.contract.ListContractCriteriaDto;
-import com.jaagro.crm.api.dto.request.contract.UpdateContractDto;
-import com.jaagro.crm.api.dto.request.contract.UpdateContractQualificationDto;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.jaagro.crm.api.dto.request.contract.*;
 import com.jaagro.crm.api.dto.request.customer.CreateQualificationVerifyLogDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnCheckContractQualificationDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
 import com.jaagro.crm.api.service.ContractQualificationService;
 import com.jaagro.crm.api.service.ContractService;
@@ -16,7 +16,6 @@ import com.jaagro.crm.biz.mapper.CustomerContractMapper;
 import com.jaagro.crm.biz.mapper.CustomerMapper;
 import com.jaagro.utils.BaseResponse;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -229,14 +228,27 @@ public class ContractController {
     //--------------------------------------------------审核合同------------------------------------------------------
 
     /**
-     * 客户合同资质待审核列表
+     * 待审核合同资质分页
+     *
+     * @param dto
+     * @return
+     */
+    @ApiOperation("待审核合同资质分页")
+    @PostMapping("/listContractQuaByCriteria")
+    public BaseResponse listContractQuaByCriteria(@RequestBody ListContractQualificationCriteriaDto dto) {
+        PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
+        return BaseResponse.successInstance(new PageInfo<>(qualificationMapper.listByCriteria(dto)));
+    }
+
+    /**
+     * 客户合同资质待审核获取下一个
      *
      * @param customerId
      * @return
      */
-    @ApiOperation("客户合同资质待审核列表")
-    @GetMapping("/listContractByCustmId/{customerId}")
-    public BaseResponse listContractByCustmId(@PathVariable Integer customerId) {
+    @ApiOperation("客户合同资质待审核获取下一个")
+    @GetMapping("/getContractByCustmIdAuto/{customerId}")
+    public BaseResponse getContractByCustmIdAuto(@PathVariable Integer customerId) {
         if (this.customerMapper.selectByPrimaryKey(customerId) == null) {
             return BaseResponse.errorInstance("客户不存在");
         }
@@ -246,24 +258,11 @@ public class ContractController {
             return BaseResponse.errorInstance("客户未上传合同");
         }
         //返回要审核的客户合同
-        return BaseResponse.successInstance(this.customerContractMapper.listByCustomerIdAndStatus(customerId));
-    }
-
-    /**
-     * 客户合同资质待审核详情
-     *
-     * @param id
-     * @return
-     */
-    @ApiOperation("客户合同资质待审核详情")
-    @GetMapping("/getContractByCustmId/{id}")
-    @ApiImplicitParam(name = "id", value = "合同资质id", required = true, dataType = "Integer", paramType = "path")
-    public BaseResponse getContractByCustmId(@PathVariable Integer id) {
-        if (this.customerContractMapper.selectByPrimaryKey(id) == null) {
-            return BaseResponse.errorInstance("客户合同资质不存在");
+        List<ReturnCheckContractQualificationDto> contractDtos = this.qualificationMapper.listByCriteria(new ListContractQualificationCriteriaDto());
+        if (contractDtos != null && contractDtos.size() > 0) {
+            return BaseResponse.successInstance(contractDtos.get(0));
         }
-        //返回要审核的客户合同
-        return BaseResponse.successInstance(this.qualificationMapper.getCheckById(id));
+        return BaseResponse.queryDataEmpty();
     }
 
     /**

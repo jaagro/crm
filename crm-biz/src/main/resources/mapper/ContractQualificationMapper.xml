@@ -24,7 +24,7 @@
         <result column="description" property="description" jdbcType="VARCHAR"/>
 
         <association property="contractDto" column="relevance_id"
-                    select="com.jaagro.crm.biz.mapper.CustomerContractMapper.getById">
+                     select="com.jaagro.crm.biz.mapper.CustomerContractMapper.getById">
             <id column="id" property="id" jdbcType="INTEGER"/>
         </association>
     </resultMap>
@@ -193,10 +193,22 @@
         from contract_qualification
         where relevance_id = #{contractId,jdbcType=INTEGER}
     </select>
-    <select id="getCheckById" resultMap="ReturnCheckMap" parameterType="java.lang.Integer">
+    <select id="listByCriteria" resultMap="ReturnCheckMap"
+            parameterType="com.jaagro.crm.api.dto.request.contract.ListContractQualificationCriteriaDto">
         select
         <include refid="Base_Column_List"/>
         from contract_qualification
-        where id = #{id,jdbcType=INTEGER}
+        where 1=1
+        <if test="certificateStatus != null">
+            and certificate_status = #{certificateStatus,jdbcType=INTEGER}
+        </if>
+        <if test="relevanceType != null">
+            and relevance_type = #{relevanceType,jdbcType=INTEGER}
+        </if>
+        <if test="certificateStatus == null">
+            and certificate_status = 0
+        </if>
+        and enabled = 1
+        order by create_time desc
     </select>
 </mapper>
