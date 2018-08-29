@@ -17,15 +17,19 @@
     <resultMap id="ReturnMap" type="com.jaagro.crm.api.dto.response.customer.CustomerQualificationReturnDto">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="certificate_type" property="certificateType" jdbcType="INTEGER"/>
+        <result column="certificate_status" property="certificateStatus" jdbcType="INTEGER"/>
+        <result column="customer_id" property="customerId" jdbcType="INTEGER"/>
+        <result column="enabled" property="enabled" jdbcType="TINYINT"/>
+    </resultMap>
+    <resultMap id="ReturnCheckMap" type="com.jaagro.crm.api.dto.response.customer.ReturnQualificationDto">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="certificate_type" property="certificateType" jdbcType="INTEGER"/>
         <result column="certificate_image_url" property="certificateImageUrl" jdbcType="VARCHAR"/>
         <result column="certificate_status" property="certificateStatus" jdbcType="INTEGER"/>
         <result column="customer_id" property="customerId" jdbcType="INTEGER"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>
-        <result column="create_user_id" property="createUserId" jdbcType="INTEGER"/>
-        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
-        <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER"/>
-        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
-        <result column="enabled" property="enabled" jdbcType="TINYINT"/>
+        <association property="returnCustomerDto" column="customer_id"
+                    select="com.jaagro.crm.biz.mapper.CustomerMapper.getCheckById"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, certificate_type, certificate_image_url, certificate_status, customer_id, description,
@@ -203,5 +207,32 @@
         and enabled = 1
         order by create_time desc
     </select>
-
+    <select id="listByCustomerIdAndStatus" resultMap="ReturnMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from customer_qualification
+        where 1=1
+        and customer_id = #{customerId}
+        and certificate_status = 0
+        and enabled = 1
+        order by create_time desc
+    </select>
+    <select id="getDetailById" resultMap="ReturnCheckMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from customer_qualification
+        where 1=1
+        and id = #{id}
+        and certificate_status = 0
+        and enabled = 1
+    </select>
+    <select id="countByCustomerIdAndStatus" parameterType="java.lang.Integer" resultType="int">
+        select
+        count(1)
+        from customer_qualification
+        where 1=1
+        and customer_id = #{customerId}
+        and certificate_status != 1
+        and enabled = 1
+    </select>
 </mapper>

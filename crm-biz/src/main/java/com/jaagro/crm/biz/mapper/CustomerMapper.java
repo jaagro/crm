@@ -4,43 +4,38 @@ import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerReturnDto;
 import com.jaagro.crm.api.dto.response.customer.ListCustomerDto;
+import com.jaagro.crm.api.dto.response.customer.ReturnCustomerDto;
 import com.jaagro.crm.biz.entity.Customer;
 
 import java.util.List;
 
 public interface CustomerMapper {
     /**
-     *
      * @mbggenerated 2018-08-23
      */
     int deleteByPrimaryKey(Integer id);
 
     /**
-     *
      * @mbggenerated 2018-08-23
      */
     int insert(Customer record);
 
     /**
-     *
      * @mbggenerated 2018-08-23
      */
     int insertSelective(Customer record);
 
     /**
-     *
      * @mbggenerated 2018-08-23
      */
     Customer selectByPrimaryKey(Integer id);
 
     /**
-     *
      * @mbggenerated 2018-08-23
      */
     int updateByPrimaryKeySelective(Customer record);
 
     /**
-     *
      * @mbggenerated 2018-08-23
      */
     int updateByPrimaryKey(Customer record);
@@ -68,4 +63,12 @@ public interface CustomerMapper {
      * @return
      */
     Customer getByCustomerDto(UpdateCustomerDto customer);
+
+    /**
+     * 根据id查询(审核客户资质需要的返回信息)
+     *
+     * @param id
+     * @return
+     */
+    ReturnCustomerDto getCheckById(Integer id);
 }

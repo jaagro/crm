@@ -2,127 +2,116 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.jaagro.crm.biz.mapper.QualificationVerifyLogMapper" >
   <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.QualificationVerifyLog" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="verify_type" property="verifyType" jdbcType="INTEGER" />
-    <result column="audit_result" property="auditResult" jdbcType="INTEGER" />
-    <result column="auditor" property="auditor" jdbcType="VARCHAR" />
-    <result column="audit_time" property="auditTime" jdbcType="TIMESTAMP" />
-    <result column="audit_type" property="auditType" jdbcType="INTEGER" />
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="certificate_type" property="certificateType" jdbcType="INTEGER" />
+    <result column="references_id" property="referencesId" jdbcType="INTEGER" />
+    <result column="vertify_result" property="vertifyResult" jdbcType="INTEGER" />
     <result column="description" property="description" jdbcType="VARCHAR" />
-    <result column="references_id" property="referencesId" jdbcType="BIGINT" />
+    <result column="auditor" property="auditor" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, verify_type, audit_result, auditor, audit_time, audit_type, description, references_id
+    id, certificate_type, references_id, vertify_result, description, auditor, create_time
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select
     <include refid="Base_Column_List" />
-    from customer_verify_log
-    where id = #{id,jdbcType=BIGINT}
+    from qualification_verify_log
+    where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from customer_verify_log
-    where id = #{id,jdbcType=BIGINT}
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from qualification_verify_log
+    where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.QualificationVerifyLog" useGeneratedKeys="true" keyProperty="id" keyColumn="id" >
-    insert into customer_verify_log (id, verify_type, audit_result,
-      auditor, audit_time, audit_type,
-      description, references_id)
-    values (#{id,jdbcType=BIGINT}, #{verifyType,jdbcType=INTEGER}, #{auditResult,jdbcType=INTEGER},
-      #{auditor,jdbcType=VARCHAR}, #{auditTime,jdbcType=TIMESTAMP}, #{auditType,jdbcType=INTEGER},
-      #{description,jdbcType=VARCHAR}, #{referencesId,jdbcType=BIGINT})
+  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.QualificationVerifyLog" >
+    insert into qualification_verify_log (id, certificate_type, references_id,
+      vertify_result, description, auditor,
+      create_time)
+    values (#{id,jdbcType=INTEGER}, #{certificateType,jdbcType=INTEGER}, #{referencesId,jdbcType=INTEGER},
+      #{vertifyResult,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, #{auditor,jdbcType=INTEGER},
+      #{createTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.QualificationVerifyLog" useGeneratedKeys="true" keyProperty="id" keyColumn="id" >
-    insert into customer_verify_log
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
+  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.QualificationVerifyLog" >
+    insert into qualification_verify_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
         id,
       </if>
-      <if test="verifyType != null">
-        verify_type,
+      <if test="certificateType != null" >
+        certificate_type,
       </if>
-      <if test="auditResult != null">
-        audit_result,
+      <if test="referencesId != null" >
+        references_id,
       </if>
-      <if test="auditor != null">
-        auditor,
-      </if>
-      <if test="auditTime != null">
-        audit_time,
-      </if>
-      <if test="auditType != null">
-        audit_type,
+      <if test="vertifyResult != null" >
+        vertify_result,
       </if>
       <if test="description != null" >
         description,
       </if>
-      <if test="referencesId != null">
-        references_id,
+      <if test="auditor != null" >
+        auditor,
+      </if>
+      <if test="createTime != null" >
+        create_time,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
       </if>
-      <if test="verifyType != null">
-        #{verifyType,jdbcType=INTEGER},
+      <if test="certificateType != null" >
+        #{certificateType,jdbcType=INTEGER},
       </if>
-      <if test="auditResult != null">
-        #{auditResult,jdbcType=INTEGER},
+      <if test="referencesId != null" >
+        #{referencesId,jdbcType=INTEGER},
       </if>
-      <if test="auditor != null">
-        #{auditor,jdbcType=VARCHAR},
-      </if>
-      <if test="auditTime != null">
-        #{auditTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="auditType != null">
-        #{auditType,jdbcType=INTEGER},
+      <if test="vertifyResult != null" >
+        #{vertifyResult,jdbcType=INTEGER},
       </if>
       <if test="description != null" >
         #{description,jdbcType=VARCHAR},
       </if>
-      <if test="referencesId != null">
-        #{referencesId,jdbcType=BIGINT},
+      <if test="auditor != null" >
+        #{auditor,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.QualificationVerifyLog">
-    update customer_verify_log
-    <set>
-      <if test="verifyType != null">
-        verify_type = #{verifyType,jdbcType=INTEGER},
+  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.QualificationVerifyLog" >
+    update qualification_verify_log
+    <set >
+      <if test="certificateType != null" >
+        certificate_type = #{certificateType,jdbcType=INTEGER},
       </if>
-      <if test="auditResult != null">
-        audit_result = #{auditResult,jdbcType=INTEGER},
+      <if test="referencesId != null" >
+        references_id = #{referencesId,jdbcType=INTEGER},
       </if>
-      <if test="auditor != null">
-        auditor = #{auditor,jdbcType=VARCHAR},
-      </if>
-      <if test="auditTime != null">
-        audit_time = #{auditTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="auditType != null">
-        audit_type = #{auditType,jdbcType=INTEGER},
+      <if test="vertifyResult != null" >
+        vertify_result = #{vertifyResult,jdbcType=INTEGER},
       </if>
       <if test="description != null" >
         description = #{description,jdbcType=VARCHAR},
       </if>
-      <if test="referencesId != null">
-        references_id = #{referencesId,jdbcType=BIGINT},
+      <if test="auditor != null" >
+        auditor = #{auditor,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.QualificationVerifyLog">
-    update customer_verify_log
-    set verify_type = #{verifyType,jdbcType=INTEGER},
-      audit_result = #{auditResult,jdbcType=INTEGER},
-      auditor = #{auditor,jdbcType=VARCHAR},
-      audit_time = #{auditTime,jdbcType=TIMESTAMP},
-      audit_type = #{auditType,jdbcType=INTEGER},
+  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.QualificationVerifyLog" >
+    update qualification_verify_log
+    set certificate_type = #{certificateType,jdbcType=INTEGER},
+      references_id = #{referencesId,jdbcType=INTEGER},
+      vertify_result = #{vertifyResult,jdbcType=INTEGER},
       description = #{description,jdbcType=VARCHAR},
-      references_id = #{referencesId,jdbcType=BIGINT}
-    where id = #{id,jdbcType=BIGINT}
+      auditor = #{auditor,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

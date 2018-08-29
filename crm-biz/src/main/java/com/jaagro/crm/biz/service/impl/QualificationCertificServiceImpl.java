@@ -90,6 +90,11 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
     }
 
     @Override
+    public Map<String, Object> getDetailById(Integer id) {
+        return ServiceResult.toResult(this.certificMapper.getDetailById(id));
+    }
+
+    @Override
     public Map<String, Object> listByCriteria(ListCustomerQualificationCriteriaDto dto) {
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
         List<CustomerQualificationReturnDto> certificReturnDtos = this.certificMapper.getByQualificationCriteriDto(dto);

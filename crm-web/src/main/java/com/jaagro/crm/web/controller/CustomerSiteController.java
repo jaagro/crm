@@ -48,10 +48,10 @@ public class CustomerSiteController {
         }
         UpdateCustomerSiteDto customerSiteDto = new UpdateCustomerSiteDto();
         customerSiteDto.setSiteName(siteDto.getSiteName());
-        CustomerSiteReturnDto site = this.siteMapper.getSiteDto(customerSiteDto);
+        /*CustomerSiteReturnDto site = this.siteMapper.getSiteDto(customerSiteDto);
         if (site != null) {
             return BaseResponse.errorInstance("地址名称:[siteName]已存在");
-        }
+        }*/
         return BaseResponse.service(siteService.createSite(siteDto));
     }
 

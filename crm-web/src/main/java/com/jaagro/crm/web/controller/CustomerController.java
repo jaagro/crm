@@ -1,11 +1,9 @@
 package com.jaagro.crm.web.controller;
 
 import com.jaagro.crm.api.dto.request.customer.*;
-import com.jaagro.crm.api.service.CustomerContractService;
-import com.jaagro.crm.api.service.CustomerService;
+import com.jaagro.crm.api.service.*;
 import com.jaagro.crm.biz.entity.Customer;
-import com.jaagro.crm.biz.mapper.CustomerContactsMapper;
-import com.jaagro.crm.biz.mapper.CustomerMapper;
+import com.jaagro.crm.biz.mapper.*;
 import com.jaagro.utils.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,6 +32,10 @@ public class CustomerController {
     private CustomerContactsMapper customerContactsMapper;
     @Autowired
     private CustomerContractService customerContractService;
+    @Autowired
+    private CustomerQualificationMapper qualificationMapper;
+    @Autowired
+    private CustomerContractMapper contractMapper;
 
     /**
      * 新增客户
@@ -82,6 +84,12 @@ public class CustomerController {
         return BaseResponse.service(customerService.createCustomer(customer));
     }*/
 
+    /**
+     * 删除客户[逻辑]
+     *
+     * @param id
+     * @return
+     */
     @ApiOperation("删除客户[逻辑]")
     @DeleteMapping("/deleteCustomerById/{id}")
     public BaseResponse deleteById(@PathVariable Integer id) {
@@ -91,11 +99,17 @@ public class CustomerController {
         return BaseResponse.service(this.customerService.disableCustomer(id));
     }
 
+    /**
+     * 修改客户
+     *
+     * @param customer
+     * @return
+     */
     @ApiOperation("修改客户")
     @PutMapping("/customer")
     public BaseResponse updateCustomer(@RequestBody UpdateCustomerDto customer) {
         if (this.customerMapper.selectByPrimaryKey(customer.getId()) == null) {
-            return BaseResponse.queryDataEmpty();
+            return BaseResponse.errorInstance("客户不存在");
         }
         /*if (this.customerMapper.getByCustomerDto(customer) != null) {
             return BaseResponse.errorInstance("客户名称:[customerName]已存在");
@@ -103,16 +117,28 @@ public class CustomerController {
         return BaseResponse.service(customerService.updateById(customer));
     }
 
+    /**
+     * 查询单个客户
+     *
+     * @param id
+     * @return
+     */
     @ApiOperation("查询单个客户")
     @GetMapping("/customer/{id}")
     public BaseResponse getById(@PathVariable Integer id) {
         if (this.customerMapper.selectByPrimaryKey(id) == null) {
-            return BaseResponse.queryDataEmpty();
+            return BaseResponse.errorInstance("客户不存在");
         }
         Map<String, Object> result = customerService.getById(id);
         return BaseResponse.service(result);
     }
 
+    /**
+     * 分页查询客户
+     *
+     * @param criteriaDto
+     * @return
+     */
     @ApiOperation("分页查询客户")
     @PostMapping("/listCustomerByCriteria")
     public BaseResponse listByCriteria(@RequestBody ListCustomerCriteriaDto criteriaDto) {
@@ -145,9 +171,6 @@ public class CustomerController {
                 }
                 if (StringUtils.isEmpty(contractDto.getContact())) {
                     return BaseResponse.errorInstance("联系人姓名不能为空");
-                }
-                if (StringUtils.isEmpty(contractDto.getPosition())) {
-                    return BaseResponse.errorInstance("联系人职位不能为空");
                 }
             }
         }
@@ -237,5 +260,4 @@ public class CustomerController {
         }
         return BaseResponse.successInstance(this.customerContactsMapper.selectByPrimaryKey(id));
     }
-
 }

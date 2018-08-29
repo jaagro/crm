@@ -6,13 +6,13 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 
 /**
- * 返回的资质证件照
+ * 审核需要的资质信息
  *
- * @author liqiangping
+ * @author baiyiran
  */
 @Data
 @Accessors(chain = true)
-public class CustomerQualificationReturnDto implements Serializable {
+public class ReturnQualificationDto implements Serializable {
     /**
      * 客户资质证照主键id
      */
@@ -22,6 +22,11 @@ public class CustomerQualificationReturnDto implements Serializable {
      * 证件类型(1-工商执照 2-身份证正面 3-身份证反面 4-......)
      */
     private Integer certificateType;
+
+    /**
+     * 证件图片地址
+     */
+    private String certificateImageUrl;
 
     /**
      * 证件状态(-1；审核未通过 0；未审核 1；已审核)
@@ -34,7 +39,12 @@ public class CustomerQualificationReturnDto implements Serializable {
     private Integer customerId;
 
     /**
-     * 是否可用（0不可用 1可用）
+     * 描述信息
      */
-    private Boolean enabled;
+    private String description;
+
+    /**
+     * 客户信息
+     */
+    private ReturnCustomerDto returnCustomerDto;
 }
