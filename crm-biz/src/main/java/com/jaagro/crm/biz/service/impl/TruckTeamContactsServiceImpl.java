@@ -52,7 +52,7 @@ public class TruckTeamContactsServiceImpl implements TruckTeamContactsService {
     @Override
     public Map<String, Object> listTruckTeamContacts(Integer teamId){
         if(truckTeamMapper.selectByPrimaryKey(teamId) == null){
-            ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), teamId + ": 无效");
+            ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), teamId + ": 车队id无效");
         }
         List<TruckTeamContacts> contacts = truckTeamContactsMapper.listTruckTeamContacts(teamId);
         if(StringUtils.isEmpty(contacts)){
