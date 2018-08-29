@@ -117,4 +117,9 @@ public class Truck implements Serializable {
      * 创建人(关联用户ID)
      */
     private Integer createUserId;
+
+    /**
+     * 行驶证号码
+     */
+    private String drivingPermit;
 }

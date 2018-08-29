@@ -1,7 +1,7 @@
 package com.jaagro.crm.biz.mapper;
 
 
-import com.jaagro.crm.api.dto.response.driver.TruckTeamReturnDto;
+import com.jaagro.crm.api.dto.response.truck.TruckTeamReturnDto;
 import com.jaagro.crm.biz.entity.TruckTeam;
 
 public interface TruckTeamMapper {
@@ -45,4 +45,11 @@ public interface TruckTeamMapper {
      * 查询车辆dto
      */
     TruckTeamReturnDto getTruckTeamById(Integer id);
+
+    /**
+     * 逻辑删除
+     * @param id
+     * @return
+     */
+    int deleteByLogic(Integer id);
 }

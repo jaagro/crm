@@ -1,6 +1,6 @@
 package com.jaagro.crm.api.service;
 
-import com.jaagro.crm.api.dto.request.driver.CreateTruckTeamBankcardDto;
+import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamBankcardDto;
 
 import java.util.List;
 import java.util.Map;

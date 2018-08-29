@@ -12,7 +12,7 @@
     <result column="contract_status" property="contractStatus" jdbcType="INTEGER" />
     <result column="notes" property="notes" jdbcType="VARCHAR" />
   </resultMap>
-  <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.driver.TruckTeamContractReturnDto" >
+  <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.truck.TruckTeamContractReturnDto" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER" />
     <result column="contract_number" property="contractNumber" jdbcType="VARCHAR" />

@@ -1,4 +1,4 @@
-package com.jaagro.crm.api.dto.request.driver;
+package com.jaagro.crm.api.dto.response.truck;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -7,11 +7,11 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @author Administrator
+ * @author liqiangping
  */
 @Data
 @Accessors(chain = true)
-public class UpdateTruckTeamContractDto implements Serializable {
+public class TruckTeamContractReturnDto implements Serializable {
     /**
      * 主键车队合同表ID
      */

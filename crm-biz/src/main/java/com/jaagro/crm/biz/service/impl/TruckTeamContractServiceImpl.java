@@ -1,9 +1,9 @@
 package com.jaagro.crm.biz.service.impl;
 
 import com.jaagro.crm.api.constant.ContractStatus;
-import com.jaagro.crm.api.dto.request.driver.CreateTruckTeamContractDto;
-import com.jaagro.crm.api.dto.request.driver.UpdateTruckTeamContractDto;
-import com.jaagro.crm.api.dto.response.driver.TruckTeamContractReturnDto;
+import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContractDto;
+import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamContractDto;
+import com.jaagro.crm.api.dto.response.truck.TruckTeamContractReturnDto;
 import com.jaagro.crm.api.service.TruckTeamContractService;
 import com.jaagro.crm.biz.entity.TruckTeamContract;
 import com.jaagro.crm.biz.mapper.TruckTeamContractMapper;

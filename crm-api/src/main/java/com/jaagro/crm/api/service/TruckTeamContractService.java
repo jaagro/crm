@@ -1,7 +1,7 @@
 package com.jaagro.crm.api.service;
 
-import com.jaagro.crm.api.dto.request.driver.CreateTruckTeamContractDto;
-import com.jaagro.crm.api.dto.request.driver.UpdateTruckTeamContractDto;
+import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContractDto;
+import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamContractDto;
 
 import java.util.List;
 import java.util.Map;

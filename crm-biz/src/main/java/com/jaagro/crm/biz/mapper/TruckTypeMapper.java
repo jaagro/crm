@@ -1,7 +1,7 @@
 package com.jaagro.crm.biz.mapper;
 
 
-import com.jaagro.crm.api.dto.response.driver.TruckTypeReturnDto;
+import com.jaagro.crm.api.dto.response.truck.TruckTypeReturnDto;
 import com.jaagro.crm.biz.entity.TruckType;
 
 public interface TruckTypeMapper {

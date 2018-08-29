@@ -1,10 +1,9 @@
-package com.jaagro.crm.api.dto.request.driver;
+package com.jaagro.crm.api.dto.request.truck;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author liqiangping
@@ -36,29 +35,4 @@ public class CreateTruckTeamContactsDto implements Serializable {
      * 职位
      */
     private String position;
-
-    /**
-     * 状态(0-停用 1- 可用)
-     */
-    private Boolean enabled;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 修改时间
-     */
-    private Date modifyTime;
-
-    /**
-     * 创建人
-     */
-    private Integer createUserId;
-
-    /**
-     * 修改人
-     */
-    private Integer modifyUserId;
 }

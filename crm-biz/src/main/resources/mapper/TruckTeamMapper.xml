@@ -19,7 +19,7 @@
     <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER" />
     <result column="notes" property="notes" jdbcType="VARCHAR" />
   </resultMap>
-  <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.driver.TruckTeamReturnDto" >
+  <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.truck.TruckTeamReturnDto" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="team_name" property="teamName" jdbcType="VARCHAR" />
     <result column="team_type" property="teamType" jdbcType="INTEGER" />
@@ -52,6 +52,11 @@
     delete from truck_team
     where id = #{id,jdbcType=INTEGER}
   </delete>
+  <update id="deleteByLogic" parameterType="java.lang.Integer">
+    update truck_team
+    set team_status = 0
+    where id = #{id,jdbcType=INTEGER}
+  </update>
   <insert id="insert" parameterType="com.jaagro.crm.biz.entity.TruckTeam" useGeneratedKeys="true" keyProperty="id"
           keyColumn="id">
     insert into truck_team (id, team_name, team_type, 

@@ -1,7 +1,7 @@
 package com.jaagro.crm.biz.mapper;
 
 
-import com.jaagro.crm.api.dto.response.driver.TruckTeamContractReturnDto;
+import com.jaagro.crm.api.dto.response.truck.TruckTeamContractReturnDto;
 import com.jaagro.crm.biz.entity.TruckTeamContract;
 
 public interface TruckTeamContractMapper {

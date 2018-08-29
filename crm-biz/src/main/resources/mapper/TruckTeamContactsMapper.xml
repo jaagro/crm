@@ -23,6 +23,12 @@
     from truck_team_contacts
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="listTruckTeamContacts" resultType="com.jaagro.crm.biz.entity.TruckTeamContacts">
+    select
+    <include refid="Base_Column_List" />
+    from truck_team_contacts
+    where truck_team_id = #{teamId,jdbcType=INTEGER}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from truck_team_contacts
     where id = #{id,jdbcType=INTEGER}

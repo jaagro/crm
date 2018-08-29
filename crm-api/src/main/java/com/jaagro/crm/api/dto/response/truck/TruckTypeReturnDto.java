@@ -1,4 +1,4 @@
-package com.jaagro.crm.api.dto.response.driver;
+package com.jaagro.crm.api.dto.response.truck;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

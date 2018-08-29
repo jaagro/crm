@@ -2,6 +2,8 @@ package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.biz.entity.TruckTeamContacts;
 
+import java.util.List;
+
 public interface TruckTeamContactsMapper {
     /**
      *
@@ -38,4 +40,11 @@ public interface TruckTeamContactsMapper {
      * @mbggenerated 2018-08-23
      */
     int updateByPrimaryKey(TruckTeamContacts record);
+
+    /**
+     * 通过车队id获取联系人
+     * @param teamId
+     * @return
+     */
+    List<TruckTeamContacts> listTruckTeamContacts(Integer teamId);
 }
