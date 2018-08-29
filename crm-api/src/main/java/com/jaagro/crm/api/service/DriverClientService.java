@@ -22,7 +22,7 @@ public interface DriverClientService {
      * @return
      */
     @PostMapping("/driver")
-    Integer createDriverToFeign(@RequestBody CreateDriverDto driver);
+    Integer createDriverReturnId(@RequestBody CreateDriverDto driver);
 
     /**
      * 通过车辆id获取司机list

@@ -46,7 +46,6 @@ public class TruckServiceImpl implements TruckService {
 
     /**
      * 获取单条
-     *
      * @param id
      * @return
      */
@@ -90,9 +89,9 @@ public class TruckServiceImpl implements TruckService {
                         .setTruckId(truck.getId())
                         .setTruckTeamId(truck.getTruckTeamId());
                 try {
-                    driverId = driverClientService.createDriverToFeign(driverDto);
+                    driverId = driverClientService.createDriverReturnId(driverDto);
                 }catch (RuntimeException e) {
-                    log.error(e.getMessage());
+                    log.error("司机新建失败：" + e.getMessage());
                     throw e;
                 }
 
