@@ -19,7 +19,7 @@ public interface DriverClientService {
      * @param driver
      * @return
      */
-    @PostMapping("/driver")
+    @PostMapping("/driverFeign")
     Integer createDriverReturnId(@RequestBody CreateDriverDto driver);
 
     /**
@@ -43,6 +43,6 @@ public interface DriverClientService {
      * @param id
      * @return
      */
-    @GetMapping("/driver/{id}")
-    BaseResponse getDriverById(@PathVariable("id") Integer id);
+    @GetMapping("/driverFeign/{id}")
+    DriverReturnDto getDriverReturnObject(@PathVariable("id") Integer id);
 }
