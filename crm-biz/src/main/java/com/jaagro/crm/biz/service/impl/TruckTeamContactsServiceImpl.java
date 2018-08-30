@@ -46,7 +46,7 @@ public class TruckTeamContactsServiceImpl implements TruckTeamContactsService {
                 if(StringUtils.isEmpty(contactsDto.getTruckTeamId())){
                     return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队id不能为空");
                 }
-                if(StringUtils.isEmpty(contactsDto.getContract())){
+                if(StringUtils.isEmpty(contactsDto.getContacts())){
                     return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "联系人姓名不能为空");
                 }
                 TruckTeamContacts contacts = new TruckTeamContacts();

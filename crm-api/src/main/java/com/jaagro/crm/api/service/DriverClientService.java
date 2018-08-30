@@ -37,4 +37,12 @@ public interface DriverClientService {
      */
     @DeleteMapping("/driverByTruck/{truckId}")
     BaseResponse deleteDriverByTruckId(@PathVariable("truckId") Integer truckId);
+
+    /**
+     * 通过司机id获取司机
+     * @param id
+     * @return
+     */
+    @GetMapping("/driver/{id}")
+    BaseResponse getDriverById(@PathVariable("id") Integer id);
 }
