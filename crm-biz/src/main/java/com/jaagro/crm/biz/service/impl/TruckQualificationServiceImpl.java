@@ -30,13 +30,14 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
 
     /**
      * 创建车队资质
+     *
      * @param dto
      * @return
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> createTruckQualification(CreateListTruckQualificationDto dto) {
-        for(CreateTruckQualificationDto qualification : dto.getQualification()){
+        for (CreateTruckQualificationDto qualification : dto.getQualification()) {
             TruckQualification truckQualification = new TruckQualification();
             BeanUtils.copyProperties(qualification, truckQualification);
             truckQualification
@@ -47,5 +48,15 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
             truckQualificationMapper.insertSelective(truckQualification);
         }
         return ServiceResult.toResult("资质保存成功");
+    }
+
+    /**
+     * 分页查询待审核的运力资质
+     *
+     * @return
+     */
+    @Override
+    public Map<String, Object> listQualification() {
+        return ServiceResult.toResult("");
     }
 }

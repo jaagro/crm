@@ -27,13 +27,26 @@ public class TruckQualificationController {
 
     @ApiOperation("新增资质")
     @PostMapping("/truckQualification")
-    public BaseResponse insert(@RequestBody CreateListTruckQualificationDto dto){
-        if(StringUtils.isEmpty(truckTeamMapper.selectByPrimaryKey(dto.getTruckTeamId()))){
+    public BaseResponse insert(@RequestBody CreateListTruckQualificationDto dto) {
+        if (StringUtils.isEmpty(truckTeamMapper.selectByPrimaryKey(dto.getTruckTeamId()))) {
             return BaseResponse.errorInstance(dto.getTruckTeamId() + " :车队不存在");
         }
-        if(StringUtils.isEmpty(dto.getQualification())){
+        if (StringUtils.isEmpty(dto.getQualification())) {
             return BaseResponse.errorInstance("请上传资质");
         }
         return BaseResponse.service(truckQualificationService.createTruckQualification(dto));
     }
+
+    @ApiOperation("待审核资质分页")
+    @PostMapping("/listQualification")
+    public BaseResponse listQualification(@RequestBody CreateListTruckQualificationDto dto) {
+        if (StringUtils.isEmpty(truckTeamMapper.selectByPrimaryKey(dto.getTruckTeamId()))) {
+            return BaseResponse.errorInstance(dto.getTruckTeamId() + " :车队不存在");
+        }
+        if (StringUtils.isEmpty(dto.getQualification())) {
+            return BaseResponse.errorInstance("请上传资质");
+        }
+        return BaseResponse.service(truckQualificationService.createTruckQualification(dto));
+    }
+
 }

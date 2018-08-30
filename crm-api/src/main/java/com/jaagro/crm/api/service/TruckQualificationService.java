@@ -16,4 +16,11 @@ public interface TruckQualificationService {
      * @return
      */
     Map<String, Object> createTruckQualification(CreateListTruckQualificationDto dto);
+
+    /**
+     * 分页查询待审核的运力资质
+     *
+     * @return
+     */
+    Map<String, Object> listQualification();
 }
