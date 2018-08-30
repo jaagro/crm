@@ -6,8 +6,6 @@ import com.jaagro.crm.api.service.TruckTeamContactsService;
 import com.jaagro.crm.api.service.TruckTeamService;
 import com.jaagro.crm.biz.mapper.TruckTeamMapper;
 import com.jaagro.utils.BaseResponse;
-import com.jaagro.utils.ResponseStatusCode;
-import com.jaagro.utils.ServiceResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -64,13 +63,7 @@ public class TruckTeamController {
 
     @ApiOperation("新增车队联系人")
     @PostMapping("/truckTeamContacts")
-    public BaseResponse createTruckTeamContacts(@RequestBody CreateTruckTeamContactsDto contacts){
-        if(StringUtils.isEmpty(contacts.getTruckTeamId())){
-            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队id不能为空"));
-        }
-        if(StringUtils.isEmpty(contacts.getContract())){
-            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "请填写联系人姓名"));
-        }
+    public BaseResponse createTruckTeamContacts(@RequestBody List<CreateTruckTeamContactsDto> contacts){
         return BaseResponse.service(truckTeamContactsService.createTruckTeamContacts(contacts));
     }
 
