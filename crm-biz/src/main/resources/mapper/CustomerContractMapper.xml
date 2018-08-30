@@ -23,7 +23,6 @@
     <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.contract.ReturnContractDto">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="customer_id" property="customerId" jdbcType="INTEGER"/>
-        <result column="contract_status" property="contractStatus" jdbcType="INTEGER"/>
         <result column="start_date" property="startDate" jdbcType="DATE"/>
         <result column="end_date" property="endDate" jdbcType="DATE"/>
         <result column="contract_date" property="contractDate" jdbcType="TIMESTAMP"/>
@@ -274,12 +273,6 @@
         <include refid="Base_Column_List"/>
         from customer_contract
         where 1 = 1
-        <if test="endDate != null">
-            <![CDATA[and create_time <= #{endDate}]]>
-        </if>
-        <if test="startDate != null">
-            <![CDATA[and create_time >= #{startDate}]]>
-        </if>
         and contract_status = 1
         order by create_time desc
     </select>

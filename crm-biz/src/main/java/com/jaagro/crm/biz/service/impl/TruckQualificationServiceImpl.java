@@ -1,7 +1,10 @@
 package com.jaagro.crm.biz.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.dto.request.truck.CreateListTruckQualificationDto;
 import com.jaagro.crm.api.dto.request.truck.CreateTruckQualificationDto;
+import com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto;
 import com.jaagro.crm.api.service.TruckQualificationService;
 import com.jaagro.crm.biz.entity.TruckQualification;
 import com.jaagro.crm.biz.mapper.TruckQualificationMapper;
@@ -56,7 +59,9 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
      * @return
      */
     @Override
-    public Map<String, Object> listQualification() {
-        return ServiceResult.toResult("");
+    public Map<String, Object> listQualification(ListTruckQualificationCriteriaDto criteriaDto) {
+        PageHelper.startPage(criteriaDto.getPageNum(), criteriaDto.getPageSize());
+        return ServiceResult.toResult(new PageInfo<>(this.truckQualificationMapper.listByCriteria(criteriaDto)));
     }
+
 }

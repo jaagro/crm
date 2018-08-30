@@ -34,7 +34,6 @@
         <result column="min_mile" property="minMile" jdbcType="DECIMAL"/>
         <result column="min_weight" property="minWeight" jdbcType="DECIMAL"/>
         <result column="min_money" property="minMoney" jdbcType="DECIMAL"/>
-        <result column="price_status" property="priceStatus" jdbcType="INTEGER"/>
 
         <collection property="sectionPrice" column="id"
                     select="com.jaagro.crm.biz.mapper.CustomerContractSectionPriceMapper.listByPriceId"></collection>
@@ -130,10 +129,10 @@
                 #{pricingType,jdbcType=INTEGER},
             </if>
             <if test="loadSiteId != null">
-                #{load_site_id,jdbcType=INTEGER},
+                #{loadSiteId,jdbcType=INTEGER},
             </if>
             <if test="unloadSiteId != null">
-                #{unload_site_id,jdbcType=INTEGER},
+                #{unloadSiteId,jdbcType=INTEGER},
             </if>
             <if test="vehicleType != null">
                 #{vehicleType,jdbcType=INTEGER},

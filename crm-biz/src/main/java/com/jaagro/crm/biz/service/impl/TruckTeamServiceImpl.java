@@ -1,5 +1,6 @@
 package com.jaagro.crm.biz.service.impl;
 
+import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamDto;
 import com.jaagro.crm.api.dto.response.truck.TruckTeamReturnDto;
 import com.jaagro.crm.api.service.TruckTeamService;
@@ -39,7 +40,9 @@ public class TruckTeamServiceImpl implements TruckTeamService {
     public Map<String, Object> createTruckTeam(CreateTruckTeamDto truckTeamDto) {
         TruckTeam truckTeam = new TruckTeam();
         BeanUtils.copyProperties(truckTeamDto, truckTeam);
-        truckTeam.setCreateUserId(currentUserService.getCurrentUser().getId());
+        truckTeam
+                .setCreateUserId(currentUserService.getCurrentUser().getId())
+                .setTeamStatus(AuditStatus.UNCHECKED);
         truckTeamMapper.insertSelective(truckTeam);
         return ServiceResult.toResult(truckTeam.getId());
     }
@@ -52,7 +55,7 @@ public class TruckTeamServiceImpl implements TruckTeamService {
      */
     @Override
     public Map<String, Object> updateTruckTeam(CreateTruckTeamDto truckTeamDto) {
-        if(truckTeamMapper.selectByPrimaryKey(truckTeamDto.getId()) == null){
+        if (truckTeamMapper.selectByPrimaryKey(truckTeamDto.getId()) == null) {
             ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), truckTeamDto.getId() + " ：该车队不存在");
         }
         TruckTeam truckTeam = new TruckTeam();
@@ -73,7 +76,7 @@ public class TruckTeamServiceImpl implements TruckTeamService {
     @Override
     public Map<String, Object> getTruckTeamById(Integer id) {
         TruckTeamReturnDto truckTeam = truckTeamMapper.getTruckTeamById(id);
-        if(truckTeam == null){
+        if (truckTeam == null) {
             ServiceResult.error(ResponseStatusCode.ID_VALUE_ERROR.getCode(), id + ": 不存在");
         }
         return ServiceResult.toResult(truckTeam);
@@ -92,7 +95,7 @@ public class TruckTeamServiceImpl implements TruckTeamService {
      */
     @Override
     public Map<String, Object> deleteTruckTeam(Integer id) {
-        if(truckTeamMapper.selectByPrimaryKey(id) == null){
+        if (truckTeamMapper.selectByPrimaryKey(id) == null) {
             ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), id + ": 不存在");
         }
         truckTeamMapper.deleteByLogic(id);
