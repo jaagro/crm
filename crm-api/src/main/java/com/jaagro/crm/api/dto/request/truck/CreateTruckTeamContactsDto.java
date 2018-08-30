@@ -24,7 +24,7 @@ public class CreateTruckTeamContactsDto implements Serializable {
     /**
      * 联系人姓名
      */
-    private String contract;
+    private String contacts;
 
     /**
      * 联系电话
