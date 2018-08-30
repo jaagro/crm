@@ -6,7 +6,9 @@ import com.jaagro.crm.api.dto.request.customer.UpdateCustomerQualificationDto;
 import com.jaagro.crm.api.dto.request.truck.CreateListTruckQualificationDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckQualificationDto;
+import com.jaagro.crm.api.dto.response.truck.DriverReturnDto;
 import com.jaagro.crm.api.dto.response.truck.ReturnTruckQualificationDto;
+import com.jaagro.crm.api.service.DriverClientService;
 import com.jaagro.crm.api.service.QualificationCertificService;
 import com.jaagro.crm.api.service.QualificationVerifyLogService;
 import com.jaagro.crm.api.service.TruckQualificationService;
@@ -45,6 +47,8 @@ public class TruckQualificationController {
     private QualificationCertificService certificService;
     @Autowired
     private QualificationVerifyLogService logService;
+    @Autowired
+    private DriverClientService driverClientService;
 
     @ApiOperation("新增资质")
     @PostMapping("/truckQualification")
@@ -78,7 +82,7 @@ public class TruckQualificationController {
             ReturnTruckQualificationDto qualificationDto = qualificationDtos.get(0);
             //填充司机信息
             if (qualificationDto.getDriverId() != null) {
-
+                qualificationDto.setDriverReturnDto(this.driverClientService.getDriverReturnObject(qualificationDto.getDriverId()));
             }
             //填充车辆信息
             if (qualificationDto.getTruckId() != null) {

@@ -61,4 +61,9 @@ public class ReturnTruckQualificationDto implements Serializable {
      */
     private ReturnCheckTruckDto truckDto;
 
+    /**
+     * 司机信息
+     */
+    private DriverReturnDto driverReturnDto;
+
 }
