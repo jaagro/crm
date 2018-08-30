@@ -1,5 +1,6 @@
 package com.jaagro.crm.biz.mapper;
 
+import com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto;
 import com.jaagro.crm.api.dto.response.truck.ReturnTruckQualificationDto;
 import com.jaagro.crm.biz.entity.TruckQualification;
 
@@ -39,6 +40,13 @@ public interface TruckQualificationMapper {
     /**
      * 查询待审核的运力资质列表
      */
-//    List<ReturnTruckQualificationDto> listByCriteria();
+    List<ReturnTruckQualificationDto> listByCriteria(ListTruckQualificationCriteriaDto criteriaDto);
 
+    /**
+     * 待根据车队id获取审核运力资质列表
+     *
+     * @param teamId
+     * @return
+     */
+    List<ReturnTruckQualificationDto> listByTeamId(Integer truckTeamId);
 }

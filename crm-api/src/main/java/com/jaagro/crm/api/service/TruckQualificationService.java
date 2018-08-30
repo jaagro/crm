@@ -1,6 +1,7 @@
 package com.jaagro.crm.api.service;
 
 import com.jaagro.crm.api.dto.request.truck.CreateListTruckQualificationDto;
+import com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto;
 
 import java.util.Map;
 
@@ -22,5 +23,5 @@ public interface TruckQualificationService {
      *
      * @return
      */
-    Map<String, Object> listQualification();
+    Map<String, Object> listQualification(ListTruckQualificationCriteriaDto criteriaDto);
 }

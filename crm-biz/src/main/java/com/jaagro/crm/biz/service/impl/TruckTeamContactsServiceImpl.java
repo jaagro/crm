@@ -35,18 +35,19 @@ public class TruckTeamContactsServiceImpl implements TruckTeamContactsService {
 
     /**
      * 创建车队联系人对象
+     *
      * @param truckTeamContacts
      * @return
      */
     @Override
     public Map<String, Object> createTruckTeamContacts(List<CreateTruckTeamContactsDto> truckTeamContacts) {
 
-        if(truckTeamContacts != null && truckTeamContacts.size() > 0){
-            for(CreateTruckTeamContactsDto contactsDto : truckTeamContacts){
-                if(StringUtils.isEmpty(contactsDto.getTruckTeamId())){
+        if (truckTeamContacts != null && truckTeamContacts.size() > 0) {
+            for (CreateTruckTeamContactsDto contactsDto : truckTeamContacts) {
+                if (StringUtils.isEmpty(contactsDto.getTruckTeamId())) {
                     return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队id不能为空");
                 }
-                if(StringUtils.isEmpty(contactsDto.getContract())){
+                if (StringUtils.isEmpty(contactsDto.getContacts())) {
                     return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "联系人姓名不能为空");
                 }
                 TruckTeamContacts contacts = new TruckTeamContacts();
@@ -61,12 +62,12 @@ public class TruckTeamContactsServiceImpl implements TruckTeamContactsService {
     }
 
     @Override
-    public Map<String, Object> listTruckTeamContacts(Integer teamId){
-        if(truckTeamMapper.selectByPrimaryKey(teamId) == null){
+    public Map<String, Object> listTruckTeamContacts(Integer teamId) {
+        if (truckTeamMapper.selectByPrimaryKey(teamId) == null) {
             ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), teamId + ": 车队id无效");
         }
         List<TruckTeamContacts> contacts = truckTeamContactsMapper.listTruckTeamContacts(teamId);
-        if(StringUtils.isEmpty(contacts)){
+        if (StringUtils.isEmpty(contacts)) {
             return ServiceResult.error(ResponseStatusCode.QUERY_DATA_EMPTY.getCode(), "查无数据");
         }
         return ServiceResult.toResult(contacts);

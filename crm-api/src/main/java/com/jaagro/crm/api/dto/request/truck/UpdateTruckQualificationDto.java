@@ -1,4 +1,4 @@
-package com.jaagro.crm.api.dto.request.contract;
+package com.jaagro.crm.api.dto.request.truck;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -10,20 +10,19 @@ import java.io.Serializable;
  */
 @Data
 @Accessors(chain = true)
-public class UpdateContractQualificationDto implements Serializable {
-
+public class UpdateTruckQualificationDto implements Serializable {
     /**
-     * 合同资质证照主键id
+     * 资质证照主键id
      */
     private Integer id;
 
     /**
-     * 资质类型：1-合同首页 2-合同签字页 3-合同报价页
+     * 资质类型(1-工商执照 2-身份证正面 3-身份证反面 4-......)
      */
     private Integer certificateType;
 
     /**
-     * 证件状态(0-未审核。1-正常 2-审核未通过审核 4-不可用)
+     * 证件状态(0；审核未通过 1；未审核 2；已审核)
      */
     private Integer certificateStatus;
 
@@ -31,4 +30,5 @@ public class UpdateContractQualificationDto implements Serializable {
      * 描述信息
      */
     private String description;
+
 }

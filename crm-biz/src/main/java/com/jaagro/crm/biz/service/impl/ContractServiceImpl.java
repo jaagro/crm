@@ -50,6 +50,8 @@ public class ContractServiceImpl implements ContractService {
     private CustomerSiteMapper siteMapper;
     @Autowired
     private ContractQualificationMapper contractQualificationMapper;
+    @Autowired
+    private CustomerMapper customerMapper;
 
     /**
      * 创建合同
@@ -247,6 +249,9 @@ public class ContractServiceImpl implements ContractService {
     public Map<String, Object> listByCriteria(ListContractCriteriaDto dto) {
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
         List<ReturnContractDto> contracts = customerContractMapper.listByPage(dto);
+        for (ReturnContractDto contractDto : contracts) {
+            contractDto.setCustomerName(this.customerMapper.selectByPrimaryKey(contractDto.getCustomerId()).getCustomerName());
+        }
         return ServiceResult.toResult(new PageInfo<>(contracts));
     }
 
