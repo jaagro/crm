@@ -1,94 +1,107 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jaagro.crm.biz.mapper.TruckMapper" >
-  <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.Truck" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER" />
-    <result column="truck_number" property="truckNumber" jdbcType="VARCHAR" />
-    <result column="vehicle_brand" property="vehicleBrand" jdbcType="VARCHAR" />
-    <result column="truck_type_id" property="truckTypeId" jdbcType="INTEGER" />
-    <result column="capacity" property="capacity" jdbcType="DECIMAL" />
-    <result column="maximum_load" property="maximumLoad" jdbcType="INTEGER" />
-    <result column="truck_weight" property="truckWeight" jdbcType="DECIMAL" />
-    <result column="province" property="province" jdbcType="VARCHAR" />
-    <result column="city" property="city" jdbcType="VARCHAR" />
-    <result column="county" property="county" jdbcType="VARCHAR" />
-    <result column="buy_time" property="buyTime" jdbcType="TIMESTAMP" />
-    <result column="expiry_date" property="expiryDate" jdbcType="TIMESTAMP" />
-    <result column="expiry_annual" property="expiryAnnual" jdbcType="TIMESTAMP" />
-    <result column="business_permit" property="businessPermit" jdbcType="VARCHAR" />
-    <result column="notes" property="notes" jdbcType="VARCHAR" />
-    <result column="truck_status" property="truckStatus" jdbcType="INTEGER" />
-    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER" />
-    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
-    <result column="driving_permit" property="drivingPermit" jdbcType="VARCHAR" />
-  </resultMap>
-  <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.truck.GetTruckDto" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER" />
-    <result column="truck_number" property="truckNumber" jdbcType="VARCHAR" />
-    <result column="vehicle_brand" property="vehicleBrand" jdbcType="VARCHAR" />
-    <result column="capacity" property="capacity" jdbcType="DECIMAL" />
-    <result column="maximum_load" property="maximumLoad" jdbcType="INTEGER" />
-    <result column="truck_weight" property="truckWeight" jdbcType="DECIMAL" />
-    <result column="province" property="province" jdbcType="VARCHAR" />
-    <result column="city" property="city" jdbcType="VARCHAR" />
-    <result column="county" property="county" jdbcType="VARCHAR" />
-    <result column="buy_time" property="buyTime" jdbcType="TIMESTAMP" />
-    <result column="expiry_date" property="expiryDate" jdbcType="TIMESTAMP" />
-    <result column="expiry_annual" property="expiryAnnual" jdbcType="TIMESTAMP" />
-    <result column="business_permit" property="businessPermit" jdbcType="VARCHAR" />
-    <result column="notes" property="notes" jdbcType="VARCHAR" />
-    <result column="truck_status" property="truckStatus" jdbcType="INTEGER" />
-    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER" />
-    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
-    <result column="driving_permit" property="drivingPermit" jdbcType="VARCHAR" />
-    <association property="truckTypeId" select="com.jaagro.crm.biz.mapper.TruckTypeMapper.getById" column="truck_type_id"></association>
-  </resultMap>
-  <resultMap id="listTruck" type="com.jaagro.crm.api.dto.response.truck.ListTruckDto" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER" />
-    <result column="truck_number" property="truckNumber" jdbcType="VARCHAR" />
-    <result column="vehicle_brand" property="vehicleBrand" jdbcType="VARCHAR" />
-    <result column="capacity" property="capacity" jdbcType="DECIMAL" />
-    <result column="maximum_load" property="maximumLoad" jdbcType="INTEGER" />
-    <result column="truck_weight" property="truckWeight" jdbcType="DECIMAL" />
-    <result column="province" property="province" jdbcType="VARCHAR" />
-    <result column="city" property="city" jdbcType="VARCHAR" />
-    <result column="county" property="county" jdbcType="VARCHAR" />
-    <result column="buy_time" property="buyTime" jdbcType="TIMESTAMP" />
-    <result column="expiry_date" property="expiryDate" jdbcType="TIMESTAMP" />
-    <result column="expiry_annual" property="expiryAnnual" jdbcType="TIMESTAMP" />
-    <result column="business_permit" property="businessPermit" jdbcType="VARCHAR" />
-    <result column="notes" property="notes" jdbcType="VARCHAR" />
-    <result column="truck_status" property="truckStatus" jdbcType="INTEGER" />
-    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER" />
-    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
-    <result column="driving_permit" property="drivingPermit" jdbcType="VARCHAR" />
-    <association property="truckTypeId" select="com.jaagro.crm.biz.mapper.TruckTypeMapper.getById" column="truck_type_id"></association>
-  </resultMap>
-  <sql id="Base_Column_List" >
+<mapper namespace="com.jaagro.crm.biz.mapper.TruckMapper">
+    <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.Truck">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER"/>
+        <result column="truck_number" property="truckNumber" jdbcType="VARCHAR"/>
+        <result column="vehicle_brand" property="vehicleBrand" jdbcType="VARCHAR"/>
+        <result column="truck_type_id" property="truckTypeId" jdbcType="INTEGER"/>
+        <result column="capacity" property="capacity" jdbcType="DECIMAL"/>
+        <result column="maximum_load" property="maximumLoad" jdbcType="INTEGER"/>
+        <result column="truck_weight" property="truckWeight" jdbcType="DECIMAL"/>
+        <result column="province" property="province" jdbcType="VARCHAR"/>
+        <result column="city" property="city" jdbcType="VARCHAR"/>
+        <result column="county" property="county" jdbcType="VARCHAR"/>
+        <result column="buy_time" property="buyTime" jdbcType="TIMESTAMP"/>
+        <result column="expiry_date" property="expiryDate" jdbcType="TIMESTAMP"/>
+        <result column="expiry_annual" property="expiryAnnual" jdbcType="TIMESTAMP"/>
+        <result column="business_permit" property="businessPermit" jdbcType="VARCHAR"/>
+        <result column="notes" property="notes" jdbcType="VARCHAR"/>
+        <result column="truck_status" property="truckStatus" jdbcType="INTEGER"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER"/>
+        <result column="create_user_id" property="createUserId" jdbcType="INTEGER"/>
+        <result column="driving_permit" property="drivingPermit" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.truck.GetTruckDto">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER"/>
+        <result column="truck_number" property="truckNumber" jdbcType="VARCHAR"/>
+        <result column="vehicle_brand" property="vehicleBrand" jdbcType="VARCHAR"/>
+        <result column="capacity" property="capacity" jdbcType="DECIMAL"/>
+        <result column="maximum_load" property="maximumLoad" jdbcType="INTEGER"/>
+        <result column="truck_weight" property="truckWeight" jdbcType="DECIMAL"/>
+        <result column="province" property="province" jdbcType="VARCHAR"/>
+        <result column="city" property="city" jdbcType="VARCHAR"/>
+        <result column="county" property="county" jdbcType="VARCHAR"/>
+        <result column="buy_time" property="buyTime" jdbcType="TIMESTAMP"/>
+        <result column="expiry_date" property="expiryDate" jdbcType="TIMESTAMP"/>
+        <result column="expiry_annual" property="expiryAnnual" jdbcType="TIMESTAMP"/>
+        <result column="business_permit" property="businessPermit" jdbcType="VARCHAR"/>
+        <result column="notes" property="notes" jdbcType="VARCHAR"/>
+        <result column="truck_status" property="truckStatus" jdbcType="INTEGER"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER"/>
+        <result column="create_user_id" property="createUserId" jdbcType="INTEGER"/>
+        <result column="driving_permit" property="drivingPermit" jdbcType="VARCHAR"/>
+        <association property="truckTypeId" select="com.jaagro.crm.biz.mapper.TruckTypeMapper.getById"
+                     column="truck_type_id"></association>
+    </resultMap>
+    <resultMap id="listTruck" type="com.jaagro.crm.api.dto.response.truck.ListTruckDto">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER"/>
+        <result column="truck_number" property="truckNumber" jdbcType="VARCHAR"/>
+        <result column="vehicle_brand" property="vehicleBrand" jdbcType="VARCHAR"/>
+        <result column="capacity" property="capacity" jdbcType="DECIMAL"/>
+        <result column="maximum_load" property="maximumLoad" jdbcType="INTEGER"/>
+        <result column="truck_weight" property="truckWeight" jdbcType="DECIMAL"/>
+        <result column="province" property="province" jdbcType="VARCHAR"/>
+        <result column="city" property="city" jdbcType="VARCHAR"/>
+        <result column="county" property="county" jdbcType="VARCHAR"/>
+        <result column="buy_time" property="buyTime" jdbcType="TIMESTAMP"/>
+        <result column="expiry_date" property="expiryDate" jdbcType="TIMESTAMP"/>
+        <result column="expiry_annual" property="expiryAnnual" jdbcType="TIMESTAMP"/>
+        <result column="business_permit" property="businessPermit" jdbcType="VARCHAR"/>
+        <result column="notes" property="notes" jdbcType="VARCHAR"/>
+        <result column="truck_status" property="truckStatus" jdbcType="INTEGER"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER"/>
+        <result column="create_user_id" property="createUserId" jdbcType="INTEGER"/>
+        <result column="driving_permit" property="drivingPermit" jdbcType="VARCHAR"/>
+        <association property="truckTypeId" select="com.jaagro.crm.biz.mapper.TruckTypeMapper.getById"
+                     column="truck_type_id"></association>
+    </resultMap>
+    <resultMap id="ReturnCheckMap" type="com.jaagro.crm.api.dto.response.truck.ReturnCheckTruckDto">
+        <result column="truck_number" property="truckNumber" jdbcType="VARCHAR"/>
+        <result column="vehicle_brand" property="vehicleBrand" jdbcType="VARCHAR"/>
+        <result column="capacity" property="capacity" jdbcType="DECIMAL"/>
+        <result column="maximum_load" property="maximumLoad" jdbcType="INTEGER"/>
+        <result column="truck_weight" property="truckWeight" jdbcType="DECIMAL"/>
+        <result column="business_permit" property="businessPermit" jdbcType="VARCHAR"/>
+        <result column="driving_permit" property="drivingPermit" jdbcType="VARCHAR"/>
+        <result column="notes" property="notes" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, truck_team_id, truck_number, vehicle_brand, truck_type_id, capacity, maximum_load, 
     truck_weight, province, city, county, buy_time, expiry_date, expiry_annual, business_permit, 
     notes, truck_status, modify_time, create_time, modify_user_id, create_user_id, driving_permit
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from truck
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from truck
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from truck
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.Truck" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    <insert id="insert" parameterType="com.jaagro.crm.biz.entity.Truck" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id">
     insert into truck (id, truck_team_id, truck_number, 
       vehicle_brand, truck_type_id, capacity, 
       maximum_load, truck_weight, province, 
@@ -106,212 +119,216 @@
       #{createTime,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, #{drivingPermit,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.Truck" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-    insert into truck
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="truckTeamId != null" >
-        truck_team_id,
-      </if>
-      <if test="truckNumber != null" >
-        truck_number,
-      </if>
-      <if test="vehicleBrand != null" >
-        vehicle_brand,
-      </if>
-      <if test="truckTypeId != null" >
-        truck_type_id,
-      </if>
-      <if test="capacity != null" >
-        capacity,
-      </if>
-      <if test="maximumLoad != null" >
-        maximum_load,
-      </if>
-      <if test="truckWeight != null" >
-        truck_weight,
-      </if>
-      <if test="province != null" >
-        province,
-      </if>
-      <if test="city != null" >
-        city,
-      </if>
-      <if test="county != null" >
-        county,
-      </if>
-      <if test="buyTime != null" >
-        buy_time,
-      </if>
-      <if test="expiryDate != null" >
-        expiry_date,
-      </if>
-      <if test="expiryAnnual != null" >
-        expiry_annual,
-      </if>
-      <if test="businessPermit != null" >
-        business_permit,
-      </if>
-      <if test="notes != null" >
-        notes,
-      </if>
-      <if test="truckStatus != null" >
-        truck_status,
-      </if>
-      <if test="modifyTime != null" >
-        modify_time,
-      </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="modifyUserId != null" >
-        modify_user_id,
-      </if>
-      <if test="createUserId != null" >
-        create_user_id,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="truckTeamId != null" >
-        #{truckTeamId,jdbcType=INTEGER},
-      </if>
-      <if test="truckNumber != null" >
-        #{truckNumber,jdbcType=VARCHAR},
-      </if>
-      <if test="vehicleBrand != null" >
-        #{vehicleBrand,jdbcType=VARCHAR},
-      </if>
-      <if test="truckTypeId != null" >
-        #{truckTypeId,jdbcType=INTEGER},
-      </if>
-      <if test="capacity != null" >
-        #{capacity,jdbcType=DECIMAL},
-      </if>
-      <if test="maximumLoad != null" >
-        #{maximumLoad,jdbcType=INTEGER},
-      </if>
-      <if test="truckWeight != null" >
-        #{truckWeight,jdbcType=DECIMAL},
-      </if>
-      <if test="province != null" >
-        #{province,jdbcType=VARCHAR},
-      </if>
-      <if test="city != null" >
-        #{city,jdbcType=VARCHAR},
-      </if>
-      <if test="county != null" >
-        #{county,jdbcType=VARCHAR},
-      </if>
-      <if test="buyTime != null" >
-        #{buyTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="expiryDate != null" >
-        #{expiryDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="expiryAnnual != null" >
-        #{expiryAnnual,jdbcType=TIMESTAMP},
-      </if>
-      <if test="businessPermit != null" >
-        #{businessPermit,jdbcType=VARCHAR},
-      </if>
-      <if test="notes != null" >
-        #{notes,jdbcType=VARCHAR},
-      </if>
-      <if test="truckStatus != null" >
-        #{truckStatus,jdbcType=INTEGER},
-      </if>
-      <if test="modifyTime != null" >
-        #{modifyTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifyUserId != null" >
-        #{modifyUserId,jdbcType=INTEGER},
-      </if>
-      <if test="createUserId != null" >
-        #{createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="drivingPermit != null" >
-        #{drivingPermit,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.Truck" >
-    update truck
-    <set >
-      <if test="truckTeamId != null" >
-        truck_team_id = #{truckTeamId,jdbcType=INTEGER},
-      </if>
-      <if test="truckNumber != null" >
-        truck_number = #{truckNumber,jdbcType=VARCHAR},
-      </if>
-      <if test="vehicleBrand != null" >
-        vehicle_brand = #{vehicleBrand,jdbcType=VARCHAR},
-      </if>
-      <if test="truckTypeId != null" >
-        truck_type_id = #{truckTypeId,jdbcType=INTEGER},
-      </if>
-      <if test="capacity != null" >
-        capacity = #{capacity,jdbcType=DECIMAL},
-      </if>
-      <if test="maximumLoad != null" >
-        maximum_load = #{maximumLoad,jdbcType=INTEGER},
-      </if>
-      <if test="truckWeight != null" >
-        truck_weight = #{truckWeight,jdbcType=DECIMAL},
-      </if>
-      <if test="province != null" >
-        province = #{province,jdbcType=VARCHAR},
-      </if>
-      <if test="city != null" >
-        city = #{city,jdbcType=VARCHAR},
-      </if>
-      <if test="county != null" >
-        county = #{county,jdbcType=VARCHAR},
-      </if>
-      <if test="buyTime != null" >
-        buy_time = #{buyTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="expiryDate != null" >
-        expiry_date = #{expiryDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="expiryAnnual != null" >
-        expiry_annual = #{expiryAnnual,jdbcType=TIMESTAMP},
-      </if>
-      <if test="businessPermit != null" >
-        business_permit = #{businessPermit,jdbcType=VARCHAR},
-      </if>
-      <if test="notes != null" >
-        notes = #{notes,jdbcType=VARCHAR},
-      </if>
-      <if test="truckStatus != null" >
-        truck_status = #{truckStatus,jdbcType=INTEGER},
-      </if>
-      <if test="modifyTime != null" >
-        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifyUserId != null" >
-        modify_user_id = #{modifyUserId,jdbcType=INTEGER},
-      </if>
-      <if test="createUserId != null" >
-        create_user_id = #{createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="drivingPermit != null" >
-        #{drivingPermit,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.Truck" >
+    <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.Truck" useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id">
+        insert into truck
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="truckTeamId != null">
+                truck_team_id,
+            </if>
+            <if test="truckNumber != null">
+                truck_number,
+            </if>
+            <if test="vehicleBrand != null">
+                vehicle_brand,
+            </if>
+            <if test="truckTypeId != null">
+                truck_type_id,
+            </if>
+            <if test="capacity != null">
+                capacity,
+            </if>
+            <if test="maximumLoad != null">
+                maximum_load,
+            </if>
+            <if test="truckWeight != null">
+                truck_weight,
+            </if>
+            <if test="province != null">
+                province,
+            </if>
+            <if test="city != null">
+                city,
+            </if>
+            <if test="county != null">
+                county,
+            </if>
+            <if test="buyTime != null">
+                buy_time,
+            </if>
+            <if test="expiryDate != null">
+                expiry_date,
+            </if>
+            <if test="expiryAnnual != null">
+                expiry_annual,
+            </if>
+            <if test="businessPermit != null">
+                business_permit,
+            </if>
+            <if test="notes != null">
+                notes,
+            </if>
+            <if test="truckStatus != null">
+                truck_status,
+            </if>
+            <if test="modifyTime != null">
+                modify_time,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="modifyUserId != null">
+                modify_user_id,
+            </if>
+            <if test="createUserId != null">
+                create_user_id,
+            </if>
+            <if test="drivingPermit != null">
+               driving_permit,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="truckTeamId != null">
+                #{truckTeamId,jdbcType=INTEGER},
+            </if>
+            <if test="truckNumber != null">
+                #{truckNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="vehicleBrand != null">
+                #{vehicleBrand,jdbcType=VARCHAR},
+            </if>
+            <if test="truckTypeId != null">
+                #{truckTypeId,jdbcType=INTEGER},
+            </if>
+            <if test="capacity != null">
+                #{capacity,jdbcType=DECIMAL},
+            </if>
+            <if test="maximumLoad != null">
+                #{maximumLoad,jdbcType=INTEGER},
+            </if>
+            <if test="truckWeight != null">
+                #{truckWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="province != null">
+                #{province,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null">
+                #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="county != null">
+                #{county,jdbcType=VARCHAR},
+            </if>
+            <if test="buyTime != null">
+                #{buyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="expiryDate != null">
+                #{expiryDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="expiryAnnual != null">
+                #{expiryAnnual,jdbcType=TIMESTAMP},
+            </if>
+            <if test="businessPermit != null">
+                #{businessPermit,jdbcType=VARCHAR},
+            </if>
+            <if test="notes != null">
+                #{notes,jdbcType=VARCHAR},
+            </if>
+            <if test="truckStatus != null">
+                #{truckStatus,jdbcType=INTEGER},
+            </if>
+            <if test="modifyTime != null">
+                #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyUserId != null">
+                #{modifyUserId,jdbcType=INTEGER},
+            </if>
+            <if test="createUserId != null">
+                #{createUserId,jdbcType=INTEGER},
+            </if>
+            <if test="drivingPermit != null">
+                #{drivingPermit,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.Truck">
+        update truck
+        <set>
+            <if test="truckTeamId != null">
+                truck_team_id = #{truckTeamId,jdbcType=INTEGER},
+            </if>
+            <if test="truckNumber != null">
+                truck_number = #{truckNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="vehicleBrand != null">
+                vehicle_brand = #{vehicleBrand,jdbcType=VARCHAR},
+            </if>
+            <if test="truckTypeId != null">
+                truck_type_id = #{truckTypeId,jdbcType=INTEGER},
+            </if>
+            <if test="capacity != null">
+                capacity = #{capacity,jdbcType=DECIMAL},
+            </if>
+            <if test="maximumLoad != null">
+                maximum_load = #{maximumLoad,jdbcType=INTEGER},
+            </if>
+            <if test="truckWeight != null">
+                truck_weight = #{truckWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="province != null">
+                province = #{province,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null">
+                city = #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="county != null">
+                county = #{county,jdbcType=VARCHAR},
+            </if>
+            <if test="buyTime != null">
+                buy_time = #{buyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="expiryDate != null">
+                expiry_date = #{expiryDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="expiryAnnual != null">
+                expiry_annual = #{expiryAnnual,jdbcType=TIMESTAMP},
+            </if>
+            <if test="businessPermit != null">
+                business_permit = #{businessPermit,jdbcType=VARCHAR},
+            </if>
+            <if test="notes != null">
+                notes = #{notes,jdbcType=VARCHAR},
+            </if>
+            <if test="truckStatus != null">
+                truck_status = #{truckStatus,jdbcType=INTEGER},
+            </if>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyUserId != null">
+                modify_user_id = #{modifyUserId,jdbcType=INTEGER},
+            </if>
+            <if test="createUserId != null">
+                create_user_id = #{createUserId,jdbcType=INTEGER},
+            </if>
+            <if test="drivingPermit != null">
+                #{drivingPermit,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.Truck">
     update truck
     set truck_team_id = #{truckTeamId,jdbcType=INTEGER},
       truck_number = #{truckNumber,jdbcType=VARCHAR},
@@ -336,31 +353,37 @@
       driving_permit = #{drivingPermit,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="deleteTruckLogic">
+    <update id="deleteTruckLogic">
     update truck
     set truck_status = #{status, jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="getTruckById" parameterType="java.lang.Integer" resultMap="DetailInfo">
-    select
-    <include refid="Base_Column_List" />
-    from truck
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-    <select id="getByTruckNumber" resultType="com.jaagro.crm.biz.entity.Truck">
-      select
-      <include refid="Base_Column_List" />
-      from truck
-      where truck_number = #{truckNumber,jdbcType=VARCHAR}
-      limit 1
+    <select id="getTruckById" parameterType="java.lang.Integer" resultMap="DetailInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from truck
+        where id = #{id,jdbcType=INTEGER}
     </select>
-  <select id="listTruckByTeamId" resultMap="listTruck">
-    select
-    <include refid="Base_Column_List" />
-    from truck
-    where truck_team_id = #{teamId,jdbcType=INTEGER}
-    <if test="truckNumber != null">
-      and truck_number = #{truckNumber}
-    </if>
-  </select>
+    <select id="getByTruckNumber" resultType="com.jaagro.crm.biz.entity.Truck">
+        select
+        <include refid="Base_Column_List"/>
+        from truck
+        where truck_number = #{truckNumber,jdbcType=VARCHAR}
+        limit 1
+    </select>
+    <select id="listTruckByTeamId" resultMap="listTruck">
+        select
+        <include refid="Base_Column_List"/>
+        from truck
+        where truck_team_id = #{teamId,jdbcType=INTEGER}
+        <if test="truckNumber != null">
+            and truck_number = #{truckNumber}
+        </if>
+    </select>
+    <select id="getCheckById" resultMap="ReturnCheckMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from truck
+        where id = #{id,jdbcType=INTEGER}
+    </select>
 </mapper>

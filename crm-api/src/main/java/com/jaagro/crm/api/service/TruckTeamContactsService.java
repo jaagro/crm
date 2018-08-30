@@ -2,6 +2,7 @@ package com.jaagro.crm.api.service;
 
 import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContactsDto;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,10 +12,10 @@ public interface TruckTeamContactsService {
 
     /**
      * 创建车队联系人
-     * @param contacts
+     * @param truckTeamContacts
      * @return
      */
-    Map<String, Object> createTruckTeamContacts(CreateTruckTeamContactsDto contacts);
+    Map<String, Object> createTruckTeamContacts(List<CreateTruckTeamContactsDto> truckTeamContacts);
 
     /**
      * 根据车队获取车队联系人

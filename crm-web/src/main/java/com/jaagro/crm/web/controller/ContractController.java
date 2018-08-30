@@ -247,13 +247,13 @@ public class ContractController {
      * @return
      */
     @ApiOperation("客户合同资质待审核获取下一个")
-    @GetMapping("/getContractByCustmIdAuto/{customerId}")
-    public BaseResponse getContractByCustmIdAuto(@PathVariable Integer customerId) {
-        if (this.customerMapper.selectByPrimaryKey(customerId) == null) {
+    @GetMapping("/getContractByCustmIdAuto/{relevanceId}")
+    public BaseResponse getContractByCustmIdAuto(@PathVariable Integer relevanceId) {
+        if (this.customerMapper.selectByPrimaryKey(relevanceId) == null) {
             return BaseResponse.errorInstance("客户不存在");
         }
         //查询此客户是否有合同
-        List<ReturnContractDto> contractDtoList = this.customerContractMapper.getByCustomerId(customerId);
+        List<ReturnContractDto> contractDtoList = this.customerContractMapper.getByCustomerId(relevanceId);
         if (contractDtoList.size() < 1) {
             return BaseResponse.errorInstance("客户未上传合同");
         }

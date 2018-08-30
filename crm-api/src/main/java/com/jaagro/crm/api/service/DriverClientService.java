@@ -19,7 +19,7 @@ public interface DriverClientService {
      * @param driver
      * @return
      */
-    @PostMapping("/driver")
+    @PostMapping("/driverFeign")
     Integer createDriverReturnId(@RequestBody CreateDriverDto driver);
 
     /**
@@ -37,4 +37,12 @@ public interface DriverClientService {
      */
     @DeleteMapping("/driverByTruck/{truckId}")
     BaseResponse deleteDriverByTruckId(@PathVariable("truckId") Integer truckId);
+
+    /**
+     * 通过司机id获取司机
+     * @param id
+     * @return
+     */
+    @GetMapping("/driverFeign/{id}")
+    DriverReturnDto getDriverReturnObject(@PathVariable("id") Integer id);
 }

@@ -25,6 +25,11 @@ public class UpdateCustomerQualificationDto implements Serializable {
     private Integer certificateStatus;
 
     /**
+     * 证件类型(1-工商执照 2-身份证正面 3-身份证反面 4-......)
+     */
+    private Integer certificateType;
+
+    /**
      * 描述信息
      */
     private String description;

@@ -1,7 +1,10 @@
 package com.jaagro.crm.biz.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.dto.request.truck.CreateListTruckQualificationDto;
 import com.jaagro.crm.api.dto.request.truck.CreateTruckQualificationDto;
+import com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto;
 import com.jaagro.crm.api.service.TruckQualificationService;
 import com.jaagro.crm.biz.entity.TruckQualification;
 import com.jaagro.crm.biz.mapper.TruckQualificationMapper;
@@ -30,13 +33,14 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
 
     /**
      * 创建车队资质
+     *
      * @param dto
      * @return
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> createTruckQualification(CreateListTruckQualificationDto dto) {
-        for(CreateTruckQualificationDto qualification : dto.getQualification()){
+        for (CreateTruckQualificationDto qualification : dto.getQualification()) {
             TruckQualification truckQualification = new TruckQualification();
             BeanUtils.copyProperties(qualification, truckQualification);
             truckQualification
@@ -48,4 +52,16 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
         }
         return ServiceResult.toResult("资质保存成功");
     }
+
+    /**
+     * 分页查询待审核的运力资质
+     *
+     * @return
+     */
+    @Override
+    public Map<String, Object> listQualification(ListTruckQualificationCriteriaDto criteriaDto) {
+        PageHelper.startPage(criteriaDto.getPageNum(), criteriaDto.getPageSize());
+        return ServiceResult.toResult(new PageInfo<>(this.truckQualificationMapper.listByCriteria(criteriaDto)));
+    }
+
 }

@@ -35,27 +35,39 @@ public class TruckTeamContactsServiceImpl implements TruckTeamContactsService {
 
     /**
      * 创建车队联系人对象
-     * @param dto
+     *
+     * @param truckTeamContacts
      * @return
      */
     @Override
-    public Map<String, Object> createTruckTeamContacts(CreateTruckTeamContactsDto dto) {
+    public Map<String, Object> createTruckTeamContacts(List<CreateTruckTeamContactsDto> truckTeamContacts) {
 
-        TruckTeamContacts contacts = new TruckTeamContacts();
-        BeanUtils.copyProperties(dto, contacts);
-        contacts
-                .setCreateUserId(currentUserService.getCurrentUser().getId());
-        truckTeamContactsMapper.insertSelective(contacts);
-        return ServiceResult.toResult(contacts.getId());
+        if (truckTeamContacts != null && truckTeamContacts.size() > 0) {
+            for (CreateTruckTeamContactsDto contactsDto : truckTeamContacts) {
+                if (StringUtils.isEmpty(contactsDto.getTruckTeamId())) {
+                    return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队id不能为空");
+                }
+                if (StringUtils.isEmpty(contactsDto.getContacts())) {
+                    return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "联系人姓名不能为空");
+                }
+                TruckTeamContacts contacts = new TruckTeamContacts();
+                BeanUtils.copyProperties(truckTeamContacts, contacts);
+                contacts
+                        .setCreateUserId(currentUserService.getCurrentUser().getId());
+                truckTeamContactsMapper.insertSelective(contacts);
+            }
+            return ServiceResult.toResult("联系人新增完成");
+        }
+        return ServiceResult.toResult("联系人新增失败");
     }
 
     @Override
-    public Map<String, Object> listTruckTeamContacts(Integer teamId){
-        if(truckTeamMapper.selectByPrimaryKey(teamId) == null){
+    public Map<String, Object> listTruckTeamContacts(Integer teamId) {
+        if (truckTeamMapper.selectByPrimaryKey(teamId) == null) {
             ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), teamId + ": 车队id无效");
         }
         List<TruckTeamContacts> contacts = truckTeamContactsMapper.listTruckTeamContacts(teamId);
-        if(StringUtils.isEmpty(contacts)){
+        if (StringUtils.isEmpty(contacts)) {
             return ServiceResult.error(ResponseStatusCode.QUERY_DATA_EMPTY.getCode(), "查无数据");
         }
         return ServiceResult.toResult(contacts);

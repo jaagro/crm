@@ -45,23 +45,23 @@ public class TruckController {
 
     @ApiOperation("新增车辆")
     @PostMapping("/truck")
-    public BaseResponse insert(@RequestBody CreateTruckDto truck){
-        if(truckMapper.getByTruckNumber(truck.getTruckNumber()) != null){
+    public BaseResponse insert(@RequestBody CreateTruckDto truck) {
+        if (truckMapper.getByTruckNumber(truck.getTruckNumber()) != null) {
             return BaseResponse.errorInstance(truck.getTruckNumber() + " :当前车牌号已经存在");
         }
-        if(truckTeamMapper.selectByPrimaryKey(truck.getTruckTeamId()) == null){
+        if (truckTeamMapper.selectByPrimaryKey(truck.getTruckTeamId()) == null) {
             return BaseResponse.errorInstance("当前车队不存在");
         }
-        if(StringUtils.isEmpty(truck.getTruckNumber())){
+        if (StringUtils.isEmpty(truck.getTruckNumber())) {
             return BaseResponse.errorInstance("车牌号码不能为空");
         }
-        if(truckTypeMapper.selectByPrimaryKey(truck.getTruckTypeId()) == null){
+        if (truckTypeMapper.selectByPrimaryKey(truck.getTruckTypeId()) == null) {
             return BaseResponse.errorInstance("请选择正确的车辆类型");
         }
         BaseResponse response;
         try {
             response = BaseResponse.service(truckService.createTruck(truck));
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
             e.printStackTrace();
             response = BaseResponse.errorInstance(e.getMessage());
         }
@@ -71,8 +71,8 @@ public class TruckController {
 
     @ApiOperation("车辆修改")
     @PutMapping("/truck")
-    public BaseResponse updateTruckTeam(@RequestBody CreateTruckDto truck){
-        if(StringUtils.isEmpty(truck.getTruckNumber())){
+    public BaseResponse updateTruckTeam(@RequestBody CreateTruckDto truck) {
+        if (StringUtils.isEmpty(truck.getTruckNumber())) {
             return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车牌号码不能为空"));
         }
         return BaseResponse.service(truckService.updateTruck(truck));
@@ -80,15 +80,23 @@ public class TruckController {
 
     @ApiOperation("车辆删除【逻辑】")
     @DeleteMapping("/truck/{id}")
-    public BaseResponse deleteTruckTeam(@PathVariable("id") Integer id){
+    public BaseResponse deleteTruckTeam(@PathVariable("id") Integer id) {
         return BaseResponse.service(truckService.deleteTruck(id));
     }
 
     @PostMapping("/listTruck")
-    public BaseResponse listTruck(@RequestBody ListTruckCriteriaDto truckCriteria){
-        if(StringUtils.isEmpty(truckCriteria.getTruckTeamId())){
+    public BaseResponse listTruck(@RequestBody ListTruckCriteriaDto truckCriteria) {
+        if (StringUtils.isEmpty(truckCriteria.getTruckTeamId())) {
             return BaseResponse.idError("truckTeamId不能为空");
         }
         return BaseResponse.service(truckService.listTruck(truckCriteria));
     }
+
+    @ApiOperation("获取全部车型")
+    @GetMapping("/listTruckType")
+    public BaseResponse listTruckType() {
+        return BaseResponse.successInstance(truckTypeMapper.listAll());
+    }
+
+
 }

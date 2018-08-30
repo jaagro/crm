@@ -1,36 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jaagro.crm.biz.mapper.TruckTypeMapper" >
-  <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.TruckType" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="truck_length" property="truckLength" jdbcType="VARCHAR" />
-    <result column="truck_weight" property="truckWeight" jdbcType="VARCHAR" />
-    <result column="truck_amount" property="truckAmount" jdbcType="VARCHAR" />
-    <result column="enabled" property="enabled" jdbcType="TINYINT" />
-  </resultMap>
-  <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.truck.TruckTypeReturnDto" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="truck_length" property="truckLength" jdbcType="VARCHAR" />
-    <result column="truck_weight" property="truckWeight" jdbcType="VARCHAR" />
-    <result column="truck_amount" property="truckAmount" jdbcType="VARCHAR" />
-    <result column="enabled" property="enabled" jdbcType="TINYINT" />
-  </resultMap>
-  <sql id="Base_Column_List" >
+<mapper namespace="com.jaagro.crm.biz.mapper.TruckTypeMapper">
+    <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.TruckType">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="truck_length" property="truckLength" jdbcType="VARCHAR"/>
+        <result column="truck_weight" property="truckWeight" jdbcType="VARCHAR"/>
+        <result column="truck_amount" property="truckAmount" jdbcType="VARCHAR"/>
+        <result column="enabled" property="enabled" jdbcType="TINYINT"/>
+    </resultMap>
+    <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.truck.TruckTypeReturnDto">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="truck_length" property="truckLength" jdbcType="VARCHAR"/>
+        <result column="truck_weight" property="truckWeight" jdbcType="VARCHAR"/>
+        <result column="truck_amount" property="truckAmount" jdbcType="VARCHAR"/>
+        <result column="enabled" property="enabled" jdbcType="TINYINT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, name, truck_length, truck_weight, truck_amount, enabled
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from truck_type
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from truck_type
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from truck_type
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.TruckType" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    <insert id="insert" parameterType="com.jaagro.crm.biz.entity.TruckType" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id">
     insert into truck_type (id, name, truck_length, 
       truck_weight, truck_amount, enabled
       )
@@ -38,71 +39,72 @@
       #{truckWeight,jdbcType=VARCHAR}, #{truckAmount,jdbcType=VARCHAR}, #{enabled,jdbcType=TINYINT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.TruckType" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-    insert into truck_type
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="name != null" >
-        name,
-      </if>
-      <if test="truckLength != null" >
-        truck_length,
-      </if>
-      <if test="truckWeight != null" >
-        truck_weight,
-      </if>
-      <if test="truckAmount != null" >
-        truck_amount,
-      </if>
-      <if test="enabled != null" >
-        enabled,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="name != null" >
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="truckLength != null" >
-        #{truckLength,jdbcType=VARCHAR},
-      </if>
-      <if test="truckWeight != null" >
-        #{truckWeight,jdbcType=VARCHAR},
-      </if>
-      <if test="truckAmount != null" >
-        #{truckAmount,jdbcType=VARCHAR},
-      </if>
-      <if test="enabled != null" >
-        #{enabled,jdbcType=TINYINT},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.TruckType" >
-    update truck_type
-    <set >
-      <if test="name != null" >
-        name = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="truckLength != null" >
-        truck_length = #{truckLength,jdbcType=VARCHAR},
-      </if>
-      <if test="truckWeight != null" >
-        truck_weight = #{truckWeight,jdbcType=VARCHAR},
-      </if>
-      <if test="truckAmount != null" >
-        truck_amount = #{truckAmount,jdbcType=VARCHAR},
-      </if>
-      <if test="enabled != null" >
-        enabled = #{enabled,jdbcType=TINYINT},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.TruckType" >
+    <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.TruckType" useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id">
+        insert into truck_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="truckLength != null">
+                truck_length,
+            </if>
+            <if test="truckWeight != null">
+                truck_weight,
+            </if>
+            <if test="truckAmount != null">
+                truck_amount,
+            </if>
+            <if test="enabled != null">
+                enabled,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="truckLength != null">
+                #{truckLength,jdbcType=VARCHAR},
+            </if>
+            <if test="truckWeight != null">
+                #{truckWeight,jdbcType=VARCHAR},
+            </if>
+            <if test="truckAmount != null">
+                #{truckAmount,jdbcType=VARCHAR},
+            </if>
+            <if test="enabled != null">
+                #{enabled,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.TruckType">
+        update truck_type
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="truckLength != null">
+                truck_length = #{truckLength,jdbcType=VARCHAR},
+            </if>
+            <if test="truckWeight != null">
+                truck_weight = #{truckWeight,jdbcType=VARCHAR},
+            </if>
+            <if test="truckAmount != null">
+                truck_amount = #{truckAmount,jdbcType=VARCHAR},
+            </if>
+            <if test="enabled != null">
+                enabled = #{enabled,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.TruckType">
     update truck_type
     set name = #{name,jdbcType=VARCHAR},
       truck_length = #{truckLength,jdbcType=VARCHAR},
@@ -111,10 +113,16 @@
       enabled = #{enabled,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="getById" parameterType="java.lang.Integer" resultMap="DetailInfo">
-    select
-    <include refid="Base_Column_List" />
-    from truck_type
-    where id = #{id,jdbcType=INTEGER}
-  </select>
+    <select id="getById" parameterType="java.lang.Integer" resultMap="DetailInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from truck_type
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="listAll" resultMap="DetailInfo" >
+        select
+        <include refid="Base_Column_List"/>
+        from truck_type
+        where enabled = 1
+    </select>
 </mapper>

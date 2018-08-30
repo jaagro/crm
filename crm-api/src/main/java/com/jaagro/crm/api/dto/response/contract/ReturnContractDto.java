@@ -28,6 +28,11 @@ public class ReturnContractDto implements Serializable {
     private Integer customerId;
 
     /**
+     * 客户姓名
+     */
+    private String customerName;
+
+    /**
      * 合同状态: 1-正常 2-终止
      */
     private Integer contractStatus;

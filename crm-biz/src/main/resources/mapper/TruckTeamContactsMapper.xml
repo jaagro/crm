@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.TruckTeamContacts" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER" />
-    <result column="contract" property="contract" jdbcType="VARCHAR" />
+    <result column="contacts" property="contacts" jdbcType="VARCHAR" />
     <result column="phone" property="phone" jdbcType="VARCHAR" />
     <result column="position" property="position" jdbcType="VARCHAR" />
     <result column="enabled" property="enabled" jdbcType="TINYINT" />
@@ -14,7 +14,7 @@
     <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, truck_team_id, contract, phone, position, enabled, create_time, modify_time, 
+    id, truck_team_id, contacts, phone, position, enabled, create_time, modify_time,
     create_user_id, modify_user_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -35,11 +35,11 @@
   </delete>
   <insert id="insert" parameterType="com.jaagro.crm.biz.entity.TruckTeamContacts" useGeneratedKeys="true" keyProperty="id"
           keyColumn="id">
-    insert into truck_team_contacts (id, truck_team_id, contract, 
+    insert into truck_team_contacts (id, truck_team_id, contacts,
       phone, position, enabled, 
       create_time, modify_time, create_user_id, 
       modify_user_id)
-    values (#{id,jdbcType=INTEGER}, #{truckTeamId,jdbcType=INTEGER}, #{contract,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{truckTeamId,jdbcType=INTEGER}, #{contacts,jdbcType=VARCHAR},
       #{phone,jdbcType=VARCHAR}, #{position,jdbcType=VARCHAR}, #{enabled,jdbcType=TINYINT}, 
       #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, 
       #{modifyUserId,jdbcType=INTEGER})
@@ -53,8 +53,8 @@
       <if test="truckTeamId != null" >
         truck_team_id,
       </if>
-      <if test="contract != null" >
-        contract,
+      <if test="contacts != null" >
+        contacts,
       </if>
       <if test="phone != null" >
         phone,
@@ -85,8 +85,8 @@
       <if test="truckTeamId != null" >
         #{truckTeamId,jdbcType=INTEGER},
       </if>
-      <if test="contract != null" >
-        #{contract,jdbcType=VARCHAR},
+      <if test="contacts != null" >
+        #{contacts,jdbcType=VARCHAR},
       </if>
       <if test="phone != null" >
         #{phone,jdbcType=VARCHAR},
@@ -117,8 +117,8 @@
       <if test="truckTeamId != null" >
         truck_team_id = #{truckTeamId,jdbcType=INTEGER},
       </if>
-      <if test="contract != null" >
-        contract = #{contract,jdbcType=VARCHAR},
+      <if test="contacts != null" >
+        contacts = #{contacts,jdbcType=VARCHAR},
       </if>
       <if test="phone != null" >
         phone = #{phone,jdbcType=VARCHAR},
@@ -147,7 +147,7 @@
   <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.TruckTeamContacts" >
     update truck_team_contacts
     set truck_team_id = #{truckTeamId,jdbcType=INTEGER},
-      contract = #{contract,jdbcType=VARCHAR},
+      contacts = #{contacts,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       position = #{position,jdbcType=VARCHAR},
       enabled = #{enabled,jdbcType=TINYINT},

@@ -1,38 +1,52 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jaagro.crm.biz.mapper.TruckQualificationMapper" >
-  <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.TruckQualification" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER" />
-    <result column="truck_id" property="truckId" jdbcType="INTEGER" />
-    <result column="driver_id" property="driverId" jdbcType="INTEGER" />
-    <result column="certificate_type" property="certificateType" jdbcType="INTEGER" />
-    <result column="certificate_image_url" property="certificateImageUrl" jdbcType="VARCHAR" />
-    <result column="certificate_status" property="certificateStatus" jdbcType="INTEGER" />
-    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
-    <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
-    <result column="notes" property="notes" jdbcType="VARCHAR" />
-    <result column="enabled" property="enabled" jdbcType="TINYINT" />
-  </resultMap>
-  <sql id="Base_Column_List" >
+<mapper namespace="com.jaagro.crm.biz.mapper.TruckQualificationMapper">
+    <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.TruckQualification">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER"/>
+        <result column="truck_id" property="truckId" jdbcType="INTEGER"/>
+        <result column="driver_id" property="driverId" jdbcType="INTEGER"/>
+        <result column="certificate_type" property="certificateType" jdbcType="INTEGER"/>
+        <result column="certificate_image_url" property="certificateImageUrl" jdbcType="VARCHAR"/>
+        <result column="certificate_status" property="certificateStatus" jdbcType="INTEGER"/>
+        <result column="create_user_id" property="createUserId" jdbcType="INTEGER"/>
+        <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+        <result column="notes" property="notes" jdbcType="VARCHAR"/>
+        <result column="enabled" property="enabled" jdbcType="TINYINT"/>
+    </resultMap>
+    <resultMap id="ReturnCheckMap" type="com.jaagro.crm.api.dto.response.truck.ReturnTruckQualificationDto">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER"/>
+        <result column="truck_id" property="truckId" jdbcType="INTEGER"/>
+        <result column="driver_id" property="driverId" jdbcType="INTEGER"/>
+        <result column="certificate_type" property="certificateType" jdbcType="INTEGER"/>
+        <result column="certificate_image_url" property="certificateImageUrl" jdbcType="VARCHAR"/>
+        <result column="certificate_status" property="certificateStatus" jdbcType="INTEGER"/>
+        <result column="notes" property="notes" jdbcType="VARCHAR"/>
+
+        <association property="teamDto" column="truck_team_id"
+                     select="com.jaagro.crm.biz.mapper.TruckTeamMapper.getTeamById"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, truck_team_id, truck_id, driver_id, certificate_type, certificate_image_url, 
     certificate_status, create_user_id, modify_user_id, create_time, modify_time, notes, 
     enabled
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from truck_qualification
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from truck_qualification
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from truck_qualification
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.TruckQualification" useGeneratedKeys="true" keyProperty="id"
-          keyColumn="id">
+    <insert id="insert" parameterType="com.jaagro.crm.biz.entity.TruckQualification" useGeneratedKeys="true"
+            keyProperty="id"
+            keyColumn="id">
     insert into truck_qualification (id, truck_team_id, truck_id, 
       driver_id, certificate_type, certificate_image_url, 
       certificate_status, create_user_id, modify_user_id, 
@@ -44,134 +58,135 @@
       #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, #{notes,jdbcType=VARCHAR}, 
       #{enabled,jdbcType=TINYINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.TruckQualification" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-    insert into truck_qualification
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="truckTeamId != null" >
-        truck_team_id,
-      </if>
-      <if test="truckId != null" >
-        truck_id,
-      </if>
-      <if test="driverId != null" >
-        driver_id,
-      </if>
-      <if test="certificateType != null" >
-        certificate_type,
-      </if>
-      <if test="certificateImageUrl != null" >
-        certificate_image_url,
-      </if>
-      <if test="certificateStatus != null" >
-        certificate_status,
-      </if>
-      <if test="createUserId != null" >
-        create_user_id,
-      </if>
-      <if test="modifyUserId != null" >
-        modify_user_id,
-      </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="modifyTime != null" >
-        modify_time,
-      </if>
-      <if test="notes != null" >
-        notes,
-      </if>
-      <if test="enabled != null" >
-        enabled,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="truckTeamId != null" >
-        #{truckTeamId,jdbcType=INTEGER},
-      </if>
-      <if test="truckId != null" >
-        #{truckId,jdbcType=INTEGER},
-      </if>
-      <if test="driverId != null" >
-        #{driverId,jdbcType=INTEGER},
-      </if>
-      <if test="certificateType != null" >
-        #{certificateType,jdbcType=INTEGER},
-      </if>
-      <if test="certificateImageUrl != null" >
-        #{certificateImageUrl,jdbcType=VARCHAR},
-      </if>
-      <if test="certificateStatus != null" >
-        #{certificateStatus,jdbcType=INTEGER},
-      </if>
-      <if test="createUserId != null" >
-        #{createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="modifyUserId != null" >
-        #{modifyUserId,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifyTime != null" >
-        #{modifyTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="notes != null" >
-        #{notes,jdbcType=VARCHAR},
-      </if>
-      <if test="enabled != null" >
-        #{enabled,jdbcType=TINYINT},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.TruckQualification" >
-    update truck_qualification
-    <set >
-      <if test="truckTeamId != null" >
-        truck_team_id = #{truckTeamId,jdbcType=INTEGER},
-      </if>
-      <if test="truckId != null" >
-        truck_id = #{truckId,jdbcType=INTEGER},
-      </if>
-      <if test="driverId != null" >
-        driver_id = #{driverId,jdbcType=INTEGER},
-      </if>
-      <if test="certificateType != null" >
-        certificate_type = #{certificateType,jdbcType=INTEGER},
-      </if>
-      <if test="certificateImageUrl != null" >
-        certificate_image_url = #{certificateImageUrl,jdbcType=VARCHAR},
-      </if>
-      <if test="certificateStatus != null" >
-        certificate_status = #{certificateStatus,jdbcType=INTEGER},
-      </if>
-      <if test="createUserId != null" >
-        create_user_id = #{createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="modifyUserId != null" >
-        modify_user_id = #{modifyUserId,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifyTime != null" >
-        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="notes != null" >
-        notes = #{notes,jdbcType=VARCHAR},
-      </if>
-      <if test="enabled != null" >
-        enabled = #{enabled,jdbcType=TINYINT},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.TruckQualification" >
+    <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.TruckQualification" useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id">
+        insert into truck_qualification
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="truckTeamId != null">
+                truck_team_id,
+            </if>
+            <if test="truckId != null">
+                truck_id,
+            </if>
+            <if test="driverId != null">
+                driver_id,
+            </if>
+            <if test="certificateType != null">
+                certificate_type,
+            </if>
+            <if test="certificateImageUrl != null">
+                certificate_image_url,
+            </if>
+            <if test="certificateStatus != null">
+                certificate_status,
+            </if>
+            <if test="createUserId != null">
+                create_user_id,
+            </if>
+            <if test="modifyUserId != null">
+                modify_user_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="modifyTime != null">
+                modify_time,
+            </if>
+            <if test="notes != null">
+                notes,
+            </if>
+            <if test="enabled != null">
+                enabled,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="truckTeamId != null">
+                #{truckTeamId,jdbcType=INTEGER},
+            </if>
+            <if test="truckId != null">
+                #{truckId,jdbcType=INTEGER},
+            </if>
+            <if test="driverId != null">
+                #{driverId,jdbcType=INTEGER},
+            </if>
+            <if test="certificateType != null">
+                #{certificateType,jdbcType=INTEGER},
+            </if>
+            <if test="certificateImageUrl != null">
+                #{certificateImageUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="certificateStatus != null">
+                #{certificateStatus,jdbcType=INTEGER},
+            </if>
+            <if test="createUserId != null">
+                #{createUserId,jdbcType=INTEGER},
+            </if>
+            <if test="modifyUserId != null">
+                #{modifyUserId,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyTime != null">
+                #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="notes != null">
+                #{notes,jdbcType=VARCHAR},
+            </if>
+            <if test="enabled != null">
+                #{enabled,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.TruckQualification">
+        update truck_qualification
+        <set>
+            <if test="truckTeamId != null">
+                truck_team_id = #{truckTeamId,jdbcType=INTEGER},
+            </if>
+            <if test="truckId != null">
+                truck_id = #{truckId,jdbcType=INTEGER},
+            </if>
+            <if test="driverId != null">
+                driver_id = #{driverId,jdbcType=INTEGER},
+            </if>
+            <if test="certificateType != null">
+                certificate_type = #{certificateType,jdbcType=INTEGER},
+            </if>
+            <if test="certificateImageUrl != null">
+                certificate_image_url = #{certificateImageUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="certificateStatus != null">
+                certificate_status = #{certificateStatus,jdbcType=INTEGER},
+            </if>
+            <if test="createUserId != null">
+                create_user_id = #{createUserId,jdbcType=INTEGER},
+            </if>
+            <if test="modifyUserId != null">
+                modify_user_id = #{modifyUserId,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="notes != null">
+                notes = #{notes,jdbcType=VARCHAR},
+            </if>
+            <if test="enabled != null">
+                enabled = #{enabled,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.TruckQualification">
     update truck_qualification
     set truck_team_id = #{truckTeamId,jdbcType=INTEGER},
       truck_id = #{truckId,jdbcType=INTEGER},
@@ -187,4 +202,29 @@
       enabled = #{enabled,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+    <select id="listByCriteria" resultMap="ReturnCheckMap"
+            parameterType="com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto">
+        select
+        <include refid="Base_Column_List"/>
+        from truck_qualification
+        where 1=1
+        <if test="truckTeamId != null">
+            truck_team_id = #{truckTeamId}
+        </if>
+        <if test="certificateStatus != null">
+            certificate_status = #{certificateStatus}
+        </if>
+        and enabled = 1
+    </select>
+    <select id="listByTeamId" resultMap="ReturnCheckMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from truck_qualification
+        where 1=1
+        <if test="truckTeamId != null">
+            truck_team_id = #{truckTeamId}
+        </if>
+        and certificate_status = 0
+        and enabled = 1
+    </select>
 </mapper>
