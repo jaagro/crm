@@ -9,6 +9,7 @@ import com.jaagro.crm.biz.mapper.TruckTypeMapper;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
+import feign.FeignException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,11 +62,10 @@ public class TruckController {
         BaseResponse response;
         try {
             response = BaseResponse.service(truckService.createTruck(truck));
-        } catch (RuntimeException e) {
+        } catch (FeignException e) {
             e.printStackTrace();
             response = BaseResponse.errorInstance(e.getMessage());
         }
-
         return response;
     }
 

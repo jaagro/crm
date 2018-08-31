@@ -48,13 +48,14 @@ public class TruckServiceImpl implements TruckService {
 
     /**
      * 获取单条
+     *
      * @param id
      * @return
      */
     @Override
     public Map<String, Object> getTruckById(Integer id) {
         GetTruckDto result = truckMapper.getTruckById(id);
-        if(StringUtils.isEmpty(result)){
+        if (StringUtils.isEmpty(result)) {
             return ServiceResult.error(ResponseStatusCode.FORBIDDEN_ERROR.getCode(), id + ": 无效");
         }
         List<DriverReturnDto> drivers = driverClientService.listByTruckId(id);
@@ -64,6 +65,7 @@ public class TruckServiceImpl implements TruckService {
 
     /**
      * 创建车辆对象
+     *
      * @return
      */
     @Override
@@ -71,10 +73,11 @@ public class TruckServiceImpl implements TruckService {
     public Map<String, Object> createTruck(CreateTruckDto truckDto) {
         Truck truck = new Truck();
         BeanUtils.copyProperties(truckDto, truck);
+        truck.setCreateUserId(this.currentUserService.getCurrentUser().getId());
         truckMapper.insertSelective(truck);
 
         //车辆资质列表
-        if(truckDto.getTruckQualifications() != null && truckDto.getTruckQualifications().size() > 0) {
+        if (truckDto.getTruckQualifications() != null && truckDto.getTruckQualifications().size() > 0) {
             CreateListTruckQualificationDto listTruckQualification = new CreateListTruckQualificationDto();
             listTruckQualification
                     .setTruckTeamId(truck.getTruckTeamId())
@@ -84,21 +87,21 @@ public class TruckServiceImpl implements TruckService {
         }
 
         //司机列表
-        if(truckDto.getDriver() != null && truckDto.getDriver().size() > 0) {
-            for(CreateDriverDto driverDto : truckDto.getDriver()){
+        if (truckDto.getDriver() != null && truckDto.getDriver().size() > 0) {
+            for (CreateDriverDto driverDto : truckDto.getDriver()) {
                 Integer driverId = 0;
                 driverDto
                         .setTruckId(truck.getId())
                         .setTruckTeamId(truck.getTruckTeamId());
                 try {
                     driverId = driverClientService.createDriverReturnId(driverDto);
-                }catch (RuntimeException e) {
+                } catch (RuntimeException e) {
                     log.error("司机新建失败：" + e.getMessage());
                     throw e;
                 }
 
                 //司机资质列表
-                if(driverDto.getDriverQualifications() != null && driverDto.getDriverQualifications().size() > 0){
+                if (driverDto.getDriverQualifications() != null && driverDto.getDriverQualifications().size() > 0) {
                     CreateListTruckQualificationDto listTruckQualification = new CreateListTruckQualificationDto();
                     listTruckQualification
                             .setTruckTeamId(truck.getTruckTeamId())
@@ -120,7 +123,7 @@ public class TruckServiceImpl implements TruckService {
      */
     @Override
     public Map<String, Object> updateTruck(CreateTruckDto truckDto) {
-        if(truckMapper.selectByPrimaryKey(truckDto.getTruckTeamId()) == null){
+        if (truckMapper.selectByPrimaryKey(truckDto.getTruckTeamId()) == null) {
             return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), truckDto.getId() + " ：id不正确");
         }
         Truck truck = new Truck();
@@ -141,7 +144,7 @@ public class TruckServiceImpl implements TruckService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> deleteTruck(Integer id) {
-        if(truckMapper.selectByPrimaryKey(id) == null){
+        if (truckMapper.selectByPrimaryKey(id) == null) {
             return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), id + " ：id不正确");
         }
         //删除车辆所属的司机
@@ -152,11 +155,11 @@ public class TruckServiceImpl implements TruckService {
     }
 
     @Override
-    public Map<String, Object> listTruck(ListTruckCriteriaDto criteria){
+    public Map<String, Object> listTruck(ListTruckCriteriaDto criteria) {
         PageHelper.startPage(criteria.getPageNum(), criteria.getPageSize());
         List<ListTruckDto> result = truckMapper.listTruckByTeamId(criteria.getTruckTeamId(), criteria.getTruckNumber());
-        if (result == null || result.size() == 0){
-            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(),"查无数据");
+        if (result == null || result.size() == 0) {
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查无数据");
         }
         return ServiceResult.toResult(new PageInfo<>(result));
     }

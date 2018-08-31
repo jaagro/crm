@@ -186,7 +186,7 @@
         from customer_qualification
         where customer_id = #{id,jdbcType=INTEGER}
     </select>
-    <select id="getByQualificationCriteriDto" resultMap="ReturnMap"
+    <select id="getByQualificationCriteriDto" resultMap="ReturnCheckMap"
             parameterType="com.jaagro.crm.api.dto.request.customer.ListCustomerQualificationCriteriaDto">
         select
         <include refid="Base_Column_List"/>
