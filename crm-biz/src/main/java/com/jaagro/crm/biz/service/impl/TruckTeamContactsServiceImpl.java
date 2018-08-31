@@ -51,7 +51,7 @@ public class TruckTeamContactsServiceImpl implements TruckTeamContactsService {
                     return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "联系人姓名不能为空");
                 }
                 TruckTeamContacts contacts = new TruckTeamContacts();
-                BeanUtils.copyProperties(truckTeamContacts, contacts);
+                BeanUtils.copyProperties(contactsDto, contacts);
                 contacts
                         .setCreateUserId(currentUserService.getCurrentUser().getId());
                 truckTeamContactsMapper.insertSelective(contacts);
