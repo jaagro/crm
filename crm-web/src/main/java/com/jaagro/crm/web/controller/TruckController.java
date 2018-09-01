@@ -64,7 +64,7 @@ public class TruckController {
             response = BaseResponse.service(truckService.createTruck(truck));
         } catch (FeignException e) {
             e.printStackTrace();
-            response = BaseResponse.errorInstance(e.getMessage());
+            response = BaseResponse.errorInstance("司机创建失败");
         }
         return response;
     }

@@ -7,6 +7,7 @@ import com.jaagro.crm.biz.mapper.*;
 import com.jaagro.utils.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
@@ -31,7 +32,7 @@ public class CustomerController {
     @Autowired
     private CustomerContactsMapper customerContactsMapper;
     @Autowired
-    private CustomerContractService customerContractService;
+    private CustomerContactsService customerContactsService;
     @Autowired
     private CustomerQualificationMapper qualificationMapper;
     @Autowired
@@ -145,6 +146,17 @@ public class CustomerController {
         return BaseResponse.service(this.customerService.listByCriteria(criteriaDto));
     }
 
+    /**
+     * 获取客户显示对象，提供给feign
+     * @param id
+     * @return
+     */
+    @Ignore
+    @GetMapping("/getShowCustomer/{id}")
+    public ShowCustomerDto getShowCustomerById(@PathVariable("id") Integer id) {
+        return customerService.getShowCustomerById(id);
+    }
+
     //-------------------------------------------------客户联系人---------------------------------
 
     /**
@@ -155,10 +167,10 @@ public class CustomerController {
      */
     @ApiOperation("客户联系人新增")
     @PostMapping("/createCustomerContacts")
-    public BaseResponse createCustomerContacts(@RequestBody List<CreateCustomerContractDto> contractDtos) {
+    public BaseResponse createCustomerContacts(@RequestBody List<CreateCustomerContactsDto> contractDtos) {
         Integer customerId = 0;
         if (contractDtos != null && contractDtos.size() > 0) {
-            for (CreateCustomerContractDto contractDto : contractDtos) {
+            for (CreateCustomerContactsDto contractDto : contractDtos) {
                 if (StringUtils.isEmpty(contractDto.getCustomerId())) {
                     return BaseResponse.errorInstance("联系人客户id不能为空");
                 }
@@ -175,7 +187,7 @@ public class CustomerController {
             }
         }
         customerId = contractDtos.get(0).getCustomerId();
-        return BaseResponse.service(this.customerContractService.createCustomerContract(contractDtos, customerId));
+        return BaseResponse.service(this.customerContactsService.createCustomerContacts(contractDtos, customerId));
     }
 
     /**
@@ -186,9 +198,9 @@ public class CustomerController {
      */
     @ApiOperation("客户联系人修改")
     @PostMapping("/updateCustomerContacts")
-    public BaseResponse updateCustomerContacts(@RequestBody List<UpdateCustomerContractDto> contractDtos) {
+    public BaseResponse updateCustomerContacts(@RequestBody List<UpdateCustomerContactsDto> contractDtos) {
         if (contractDtos != null && contractDtos.size() > 0) {
-            for (UpdateCustomerContractDto contractDto : contractDtos) {
+            for (UpdateCustomerContactsDto contractDto : contractDtos) {
                 if (StringUtils.isEmpty(contractDto.getId())) {
                     return BaseResponse.idNull("联系人id不能为空");
                 }
@@ -208,7 +220,7 @@ public class CustomerController {
                 if (StringUtils.isEmpty(contractDto.getPosition())) {
                     return BaseResponse.errorInstance("联系人职位不能为空");
                 }
-                this.customerContractService.updateCustomerContract(contractDto);
+                this.customerContactsService.updateCustomerContacts(contractDto);
             }
             return BaseResponse.successInstance("修改成功");
         } else {
@@ -228,7 +240,7 @@ public class CustomerController {
         if (this.customerContactsMapper.selectByPrimaryKey(id) == null) {
             return BaseResponse.errorInstance("查询不到相应数据");
         }
-        return BaseResponse.service(this.customerContractService.disableCustomerContract(id));
+        return BaseResponse.service(this.customerContactsService.disableCustomerContacts(id));
     }
 
     /**

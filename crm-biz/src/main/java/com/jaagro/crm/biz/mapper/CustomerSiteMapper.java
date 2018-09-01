@@ -1,6 +1,7 @@
 package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.api.dto.request.customer.ListSiteCriteriaDto;
+import com.jaagro.crm.api.dto.request.customer.ShowSiteDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerSiteDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto;
 import com.jaagro.crm.api.dto.response.selectValue.ReturnSelectSiteDto;
@@ -69,4 +70,11 @@ public interface CustomerSiteMapper {
      * @return
      */
     List<ReturnSelectSiteDto> listAllSite(ListSiteCriteriaDto criteriaDto);
+
+    /**
+     * 获取显示地址对象
+     * @param id
+     * @return
+     */
+    ShowSiteDto getShowSiteById(Integer id);
 }

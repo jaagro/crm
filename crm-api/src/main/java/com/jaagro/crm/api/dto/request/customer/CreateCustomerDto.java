@@ -94,7 +94,7 @@ public class CreateCustomerDto implements Serializable {
    /* *//**
      * 客户联系人
      *//*
-    private List<CreateCustomerContractDto> contracts;
+    private List<CreateCustomerContactsDto> contracts;
 
     *//**
      * 收发货地址

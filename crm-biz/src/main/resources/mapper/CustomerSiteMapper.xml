@@ -51,6 +51,9 @@
     city, county, address, latitude, longitude, shipment_require, notes, create_time,
     modify_time, create_user_id, modify_user_id
   </sql>
+    <sql id="Show_Column">
+        id, site_type, site_name
+    </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
@@ -351,5 +354,11 @@
             and id != #{id}
         </if>
         and site_status = 1
+    </select>
+    <select id="getShowSiteById" resultType="com.jaagro.crm.api.dto.request.customer.ShowSiteDto">
+        select
+        <include refid="Show_Column"/>
+        form customer_site
+        where id = #{id}
     </select>
 </mapper>

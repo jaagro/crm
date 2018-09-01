@@ -2,11 +2,12 @@ package com.jaagro.crm.biz.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.jaagro.crm.api.dto.request.customer.CreateCustomerContractDto;
+import com.jaagro.crm.api.dto.request.customer.CreateCustomerContactsDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerContactsCriteriaDto;
-import com.jaagro.crm.api.dto.request.customer.UpdateCustomerContractDto;
+import com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto;
+import com.jaagro.crm.api.dto.request.customer.UpdateCustomerContactsDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerContactsReturnDto;
-import com.jaagro.crm.api.service.CustomerContractService;
+import com.jaagro.crm.api.service.CustomerContactsService;
 import com.jaagro.crm.biz.entity.CustomerContacts;
 import com.jaagro.crm.biz.mapper.CustomerContactsMapper;
 import com.jaagro.utils.ServiceResult;
@@ -21,13 +22,13 @@ import java.util.Map;
  * @author baiyiran
  */
 @Service
-public class CustomerContractServiceImpl implements CustomerContractService {
+public class CustomerContactsServiceImpl implements CustomerContactsService {
 
     @Autowired
     private CustomerContactsMapper customerContactsMapper;
 
     @Override
-    public Map<String, Object> createCustomerContract(CreateCustomerContractDto dto) {
+    public Map<String, Object> createCustomerContacts(CreateCustomerContactsDto dto) {
         CustomerContacts customerContacts = new CustomerContacts();
         BeanUtils.copyProperties(dto, customerContacts);
         customerContacts
@@ -37,9 +38,9 @@ public class CustomerContractServiceImpl implements CustomerContractService {
     }
 
     @Override
-    public Map<String, Object> createCustomerContract(List<CreateCustomerContractDto> dtos, Integer CustomerId) {
+    public Map<String, Object> createCustomerContacts(List<CreateCustomerContactsDto> dtos, Integer CustomerId) {
         if (dtos != null && dtos.size() > 0) {
-            for (CreateCustomerContractDto dto : dtos) {
+            for (CreateCustomerContactsDto dto : dtos) {
                 CustomerContacts customerContacts = new CustomerContacts();
                 BeanUtils.copyProperties(dto, customerContacts);
                 customerContacts
@@ -51,7 +52,7 @@ public class CustomerContractServiceImpl implements CustomerContractService {
     }
 
     @Override
-    public Map<String, Object> updateCustomerContract(UpdateCustomerContractDto dto) {
+    public Map<String, Object> updateCustomerContacts(UpdateCustomerContactsDto dto) {
         CustomerContacts customerContacts = new CustomerContacts();
         BeanUtils.copyProperties(dto, customerContacts);
         customerContactsMapper.updateByPrimaryKeySelective(customerContacts);
@@ -59,9 +60,9 @@ public class CustomerContractServiceImpl implements CustomerContractService {
     }
 
     @Override
-    public Map<String, Object> updateCustomerContract(List<UpdateCustomerContractDto> dtos) {
+    public Map<String, Object> updateCustomerContacts(List<UpdateCustomerContactsDto> dtos) {
         if (dtos != null && dtos.size() > 0) {
-            for (UpdateCustomerContractDto dto : dtos) {
+            for (UpdateCustomerContactsDto dto : dtos) {
                 CustomerContacts customerContacts = new CustomerContacts();
                 BeanUtils.copyProperties(dto, customerContacts);
                 customerContactsMapper.updateByPrimaryKeySelective(customerContacts);
@@ -83,14 +84,14 @@ public class CustomerContractServiceImpl implements CustomerContractService {
     }
 
     @Override
-    public Map<String, Object> disableCustomerContract(Integer id) {
+    public Map<String, Object> disableCustomerContacts(Integer id) {
         CustomerContacts customerContacts = this.customerContactsMapper.selectByPrimaryKey(id);
         customerContacts.setEnabled(false);
         return ServiceResult.toResult("客户联系人停用成功");
     }
 
     @Override
-    public Map<String, Object> disableCustomerContract(List<CustomerContactsReturnDto> customerContactsReturnDtos) {
+    public Map<String, Object> disableCustomerContacts(List<CustomerContactsReturnDto> customerContactsReturnDtos) {
         if (customerContactsReturnDtos != null && customerContactsReturnDtos.size() > 0) {
             for (CustomerContactsReturnDto contractReturnDto : customerContactsReturnDtos) {
                 CustomerContacts customerContacts = this.customerContactsMapper.selectByPrimaryKey(contractReturnDto.getId());
@@ -104,6 +105,17 @@ public class CustomerContractServiceImpl implements CustomerContractService {
     @Override
     public Map<String, Object> listByCustomerId(Integer customerId) {
         return ServiceResult.toResult(this.customerContactsMapper.listByCustomerId(customerId));
+    }
+
+    /**
+     * 获取显示客户合同
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public ShowCustomerContractDto getCustomerContactsById(Integer id) {
+        return null;
     }
 
 }

@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 客户联系人新增dto
@@ -13,7 +12,7 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-public class CreateCustomerContractDto implements Serializable {
+public class CreateCustomerContactsDto implements Serializable {
 
     /**
      * 外键关联客户ID(References customer)
