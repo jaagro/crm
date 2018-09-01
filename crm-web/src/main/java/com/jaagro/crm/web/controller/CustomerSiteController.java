@@ -2,14 +2,15 @@ package com.jaagro.crm.web.controller;
 
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerSiteDto;
 import com.jaagro.crm.api.dto.request.customer.ListSiteCriteriaDto;
+import com.jaagro.crm.api.dto.request.customer.ShowSiteDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerSiteDto;
-import com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto;
 import com.jaagro.crm.api.service.CustomerSiteService;
 import com.jaagro.crm.biz.mapper.CustomerMapper;
 import com.jaagro.crm.biz.mapper.CustomerSiteMapper;
 import com.jaagro.utils.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -113,5 +114,10 @@ public class CustomerSiteController {
                 .setCustomerId(customerId)
                 .setSiteType(siteType);
         return BaseResponse.successInstance(this.siteMapper.listAllSite(criteriaDto));
+    }
+    @Ignore
+    @GetMapping("/getShowSite/{id}")
+    public ShowSiteDto getShowSiteById(@PathVariable("id") Integer id){
+        return siteService.getShowSiteById(id);
     }
 }

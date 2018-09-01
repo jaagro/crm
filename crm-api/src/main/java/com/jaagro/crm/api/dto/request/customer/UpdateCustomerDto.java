@@ -107,7 +107,7 @@ public class UpdateCustomerDto implements Serializable {
     /* *//**
      * 客户联系人
      *//*
-    private List<UpdateCustomerContractDto> customerContractDtos;
+    private List<UpdateCustomerContactsDto> customerContractDtos;
 
     *//**
      * 收发货地址

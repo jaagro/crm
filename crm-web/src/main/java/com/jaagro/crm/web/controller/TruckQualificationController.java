@@ -6,7 +6,6 @@ import com.jaagro.crm.api.dto.request.customer.UpdateCustomerQualificationDto;
 import com.jaagro.crm.api.dto.request.truck.CreateListTruckQualificationDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckQualificationDto;
-import com.jaagro.crm.api.dto.response.truck.DriverReturnDto;
 import com.jaagro.crm.api.dto.response.truck.ReturnTruckQualificationDto;
 import com.jaagro.crm.api.service.DriverClientService;
 import com.jaagro.crm.api.service.QualificationCertificService;
