@@ -84,6 +84,12 @@ public class TruckController {
         return BaseResponse.service(truckService.deleteTruck(id));
     }
 
+    /**
+     * 分页查询车辆
+     *
+     * @param truckCriteria
+     * @return
+     */
     @PostMapping("/listTruck")
     public BaseResponse listTruck(@RequestBody ListTruckCriteriaDto truckCriteria) {
         if (StringUtils.isEmpty(truckCriteria.getTruckTeamId())) {
