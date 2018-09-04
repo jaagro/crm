@@ -3,6 +3,7 @@ package com.jaagro.crm.biz.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.dto.request.contract.*;
+import com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractPriceDto;
 import com.jaagro.crm.api.service.ContractPriceService;
@@ -283,6 +284,17 @@ public class ContractServiceImpl implements ContractService {
             }
         }
         return ServiceResult.toResult("合同删除成功");
+    }
+
+    /**
+     * 获取显示客户合同对象
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public ShowCustomerContractDto getShowCustomerContractById(Integer id) {
+        return customerContractMapper.getShowCustomerContractById(id);
     }
 
 }

@@ -19,7 +19,7 @@
         <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER"/>
         <result column="notes" property="notes" jdbcType="VARCHAR"/>
     </resultMap>
-    <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.truck.TruckTeamReturnDto">
+    <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.truck.ListTruckTeamDto">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="team_name" property="teamName" jdbcType="VARCHAR"/>
         <result column="team_type" property="teamType" jdbcType="INTEGER"/>

@@ -1,6 +1,7 @@
 package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
+import com.jaagro.crm.api.dto.request.customer.ShowCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerReturnDto;
 import com.jaagro.crm.api.dto.response.customer.ListCustomerDto;
@@ -71,4 +72,11 @@ public interface CustomerMapper {
      * @return
      */
     ReturnCustomerDto getCheckById(Integer id);
+
+    /**
+     * 客户显示对象
+     * @param id
+     * @return
+     */
+    ShowCustomerDto getShowCustomerById(Integer id);
 }

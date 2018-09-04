@@ -36,7 +36,7 @@ public class ListTruckDto implements Serializable {
     /**
      * 关联车辆类型ID
      */
-    private TruckTypeReturnDto truckTypeId;
+    private ListTruckTypeDto truckTypeId;
 
     /**
      * 最大载重

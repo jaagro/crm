@@ -1,7 +1,7 @@
 package com.jaagro.crm.biz.mapper;
 
 
-import com.jaagro.crm.api.dto.response.truck.TruckTypeReturnDto;
+import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
 import com.jaagro.crm.biz.entity.TruckType;
 
 import java.util.List;
@@ -43,12 +43,12 @@ public interface TruckTypeMapper {
      * @param id
      * @return
      */
-    TruckTypeReturnDto getById(Integer id);
+    ListTruckTypeDto getById(Integer id);
 
     /**
      * 查询全部车型
      *
      * @return
      */
-    List<TruckTypeReturnDto> listAll();
+    List<ListTruckTypeDto> listAll();
 }

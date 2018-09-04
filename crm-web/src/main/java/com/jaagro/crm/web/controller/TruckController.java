@@ -2,6 +2,7 @@ package com.jaagro.crm.web.controller;
 
 import com.jaagro.crm.api.dto.request.truck.CreateTruckDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto;
+import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
 import com.jaagro.crm.api.service.TruckService;
 import com.jaagro.crm.biz.mapper.TruckMapper;
 import com.jaagro.crm.biz.mapper.TruckTeamMapper;
@@ -9,13 +10,16 @@ import com.jaagro.crm.biz.mapper.TruckTypeMapper;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
+import feign.FeignException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -61,9 +65,9 @@ public class TruckController {
         BaseResponse response;
         try {
             response = BaseResponse.service(truckService.createTruck(truck));
-        } catch (RuntimeException e) {
+        } catch (FeignException e) {
             e.printStackTrace();
-            response = BaseResponse.errorInstance(e.getMessage());
+            response = BaseResponse.errorInstance("司机创建失败");
         }
 
         return response;
@@ -95,8 +99,12 @@ public class TruckController {
     @ApiOperation("获取全部车型")
     @GetMapping("/listTruckType")
     public BaseResponse listTruckType() {
-        return BaseResponse.successInstance(truckTypeMapper.listAll());
+        return BaseResponse.successInstance(truckService.listTruckType());
     }
 
-
+    @Ignore
+    @GetMapping("/listTruckTypeToFeign")
+    public List<ListTruckTypeDto> listTruckTypeReturnDto(){
+        return truckService.listTruckType();
+    }
 }

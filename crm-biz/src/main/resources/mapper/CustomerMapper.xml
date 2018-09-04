@@ -73,6 +73,9 @@
     address, latitude, longitude, billing_period, enable_invoice, invoice_type, invoice_header,
     tax_number, notes, create_time, modify_time, create_user_id, modify_user_id
   </sql>
+    <sql id="show_column">
+        id, customer_name
+    </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
@@ -366,7 +369,7 @@
         from customer
         where customer_name = #{customerName}
         <if test="id != null">
-            and id != #{id}
+            and id != #{id,jdbcType=INTEGER}
         </if>
         and customer_status <![CDATA[ <= ]]> 1
     </select>
@@ -374,6 +377,12 @@
         select
         <include refid="Base_Column_List"/>
         from customer
-        where id = #{id}
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="getShowCustomerById" resultType="com.jaagro.crm.api.dto.request.customer.ShowCustomerDto">
+        select
+        <include refid="show_column"></include>
+        from customer
+        where id = #{id,jdbcType=INTEGER}
     </select>
 </mapper>

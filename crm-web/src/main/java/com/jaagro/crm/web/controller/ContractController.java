@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.dto.request.contract.*;
 import com.jaagro.crm.api.dto.request.customer.CreateQualificationVerifyLogDto;
+import com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnCheckContractQualificationDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
 import com.jaagro.crm.api.service.ContractQualificationService;
@@ -17,6 +18,7 @@ import com.jaagro.crm.biz.mapper.CustomerMapper;
 import com.jaagro.utils.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
@@ -292,5 +294,11 @@ public class ContractController {
                 // 审核类型（1-客户资质 2- 客户合同 3-运力资质 4-运力合同）
                 .setCertificateType(2);
         return BaseResponse.service(this.logService.createVerifyLog(logDto));
+    }
+
+    @Ignore
+    @GetMapping("/getShowCustomerContract/{id}")
+    public ShowCustomerContractDto getShowCustomerContractById(@PathVariable("id") Integer id) {
+        return customerContractMapper.getShowCustomerContractById(id);
     }
 }

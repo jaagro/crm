@@ -2,6 +2,7 @@ package com.jaagro.crm.api.service;
 
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
+import com.jaagro.crm.api.dto.request.customer.ShowCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
 
 import java.util.Map;
@@ -61,5 +62,12 @@ public interface CustomerService {
      * @return
      */
     Map<String, Object> disableCustomer(Integer id);
+
+    /**
+     * 通过id获取客户显示对象，
+     * @param id
+     * @return
+     */
+    ShowCustomerDto getShowCustomerById(Integer id);
 
 }

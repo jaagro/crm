@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
+import com.jaagro.crm.api.dto.request.customer.ShowCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerReturnDto;
 import com.jaagro.crm.api.dto.response.customer.ListCustomerDto;
@@ -45,7 +46,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private QualificationCertificService certificService;
     @Autowired
-    private CustomerContractService customerContractService;
+    private CustomerContactsService customerContactsService;
     @Autowired
     private CustomerContractMapper contractMapper;
     @Autowired
@@ -73,7 +74,7 @@ public class CustomerServiceImpl implements CustomerService {
         return ServiceResult.toResult(customer.getId());
         /* //新增联系人对象
         if (dto.getContracts() != null && dto.getContracts().size() > 0) {
-            this.customerContractService.createCustomerContract(dto.getContracts(), customer.getId());
+            this.customerContactsService.createCustomerContract(dto.getContracts(), customer.getId());
         }
         //新增客户合同
         if (dto.getCreateContractDtos() != null && dto.getCreateContractDtos().size() > 0) {
@@ -120,7 +121,7 @@ public class CustomerServiceImpl implements CustomerService {
             }
             //修改联系人
             if (dto.getCreateContractDtos() != null && dto.getCreateContractDtos().size() > 0) {
-                this.customerContractService.updateCustomerContract(dto.getCustomerContractDtos());
+                this.customerContactsService.updateCustomerContract(dto.getCustomerContractDtos());
             }*/
         }
         return ServiceResult.toResult("客户修改成功");
@@ -187,7 +188,7 @@ public class CustomerServiceImpl implements CustomerService {
             }
             //逻辑删除 联系人
             if (customerDto.getCustomerContactsReturnDtos() != null && customerDto.getCustomerContactsReturnDtos().size() > 0) {
-                this.customerContractService.disableCustomerContract(customerDto.getCustomerContactsReturnDtos());
+                this.customerContactsService.disableCustomerContacts(customerDto.getCustomerContactsReturnDtos());
             }
             //逻辑删除 证件照
             if (customerDto.getQualifications() != null && customerDto.getQualifications().size() > 0) {
@@ -199,5 +200,16 @@ public class CustomerServiceImpl implements CustomerService {
             }
         }
         return ServiceResult.toResult("客户删除成功");
+    }
+
+    /**
+     * 通过id获取客户显示对象，
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public ShowCustomerDto getShowCustomerById(Integer id) {
+        return customerMapper.getShowCustomerById(id);
     }
 }

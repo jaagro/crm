@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 @Data
 @Accessors(chain = true)
-public class TruckTypeReturnDto implements Serializable {
+public class ListTruckTypeDto implements Serializable {
     /**
      * 车型表主键id
      */
@@ -19,7 +19,12 @@ public class TruckTypeReturnDto implements Serializable {
     /**
      * 车型名称
      */
-    private String name;
+    private String typeName;
+
+    /**
+     * 货物类型名称
+     */
+    private String productName;
 
     /**
      * 车长
@@ -35,9 +40,4 @@ public class TruckTypeReturnDto implements Serializable {
      * 承载总数
      */
     private String truckAmount;
-
-    /**
-     * 是否有效
-     */
-    private Boolean enabled;
 }
