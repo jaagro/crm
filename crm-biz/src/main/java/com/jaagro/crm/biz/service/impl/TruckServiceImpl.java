@@ -10,11 +10,13 @@ import com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto;
 import com.jaagro.crm.api.dto.response.truck.DriverReturnDto;
 import com.jaagro.crm.api.dto.response.truck.GetTruckDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckDto;
+import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
 import com.jaagro.crm.api.service.DriverClientService;
 import com.jaagro.crm.api.service.TruckQualificationService;
 import com.jaagro.crm.api.service.TruckService;
 import com.jaagro.crm.biz.entity.Truck;
 import com.jaagro.crm.biz.mapper.TruckMapper;
+import com.jaagro.crm.biz.mapper.TruckTypeMapper;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
@@ -45,6 +47,8 @@ public class TruckServiceImpl implements TruckService {
     private TruckQualificationService truckQualificationService;
     @Autowired
     private CurrentUserService currentUserService;
+    @Autowired
+    private TruckTypeMapper truckTypeMapper;
 
     /**
      * 获取单条
@@ -159,5 +163,10 @@ public class TruckServiceImpl implements TruckService {
             return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(),"查无数据");
         }
         return ServiceResult.toResult(new PageInfo<>(result));
+    }
+
+    @Override
+    public List<ListTruckTypeDto> listTruckType(){
+        return truckTypeMapper.listAll();
     }
 }

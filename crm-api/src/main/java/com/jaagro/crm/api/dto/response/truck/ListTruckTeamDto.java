@@ -11,7 +11,7 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-public class TruckTeamReturnDto implements Serializable {
+public class ListTruckTeamDto implements Serializable {
     /**
      * 主键车队表ID
      */
