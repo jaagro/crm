@@ -3,6 +3,7 @@ package com.jaagro.crm.api.service;
 import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
 import com.jaagro.crm.api.dto.request.contract.ListContractCriteriaDto;
 import com.jaagro.crm.api.dto.request.contract.UpdateContractDto;
+import com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
 
 import java.util.List;
@@ -76,5 +77,12 @@ public interface ContractService {
      * @return
      */
     Map<String, Object> disableByID(List<ReturnContractDto> dtos);
+
+    /**
+     * 获取显示客户合同对象
+     * @param id
+     * @return
+     */
+    ShowCustomerContractDto getShowCustomerContractById(Integer id);
 
 }

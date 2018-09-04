@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 修改客户联系人帮助类
@@ -13,7 +12,7 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-public class UpdateCustomerContractDto implements Serializable {
+public class UpdateCustomerContactsDto implements Serializable {
     /**
      * 客户审核记录主键id
      */

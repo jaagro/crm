@@ -1,7 +1,7 @@
 package com.jaagro.crm.api.service;
 
 import com.jaagro.crm.api.dto.request.customer.*;
-import com.jaagro.crm.api.dto.request.customer.CreateCustomerContractDto;
+import com.jaagro.crm.api.dto.request.customer.CreateCustomerContactsDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerContactsReturnDto;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.Map;
  *
  * @author baiyiran
  */
-public interface CustomerContractService {
+public interface CustomerContactsService {
 
     /**
      * 新增单个客户联系人，注意新增CreateDto
@@ -20,7 +20,7 @@ public interface CustomerContractService {
      * @param dto
      * @return
      */
-    Map<String, Object> createCustomerContract(CreateCustomerContractDto dto);
+    Map<String, Object> createCustomerContacts(CreateCustomerContactsDto dto);
 
     /**
      * 新增客户联系人列表
@@ -28,7 +28,7 @@ public interface CustomerContractService {
      * @param dtos
      * @return
      */
-    Map<String, Object> createCustomerContract(List<CreateCustomerContractDto> dtos, Integer CustomerId);
+    Map<String, Object> createCustomerContacts(List<CreateCustomerContactsDto> dtos, Integer CustomerId);
 
     /**
      * 修改单个客户联系人，注意新增updateDto
@@ -36,7 +36,7 @@ public interface CustomerContractService {
      * @param dto
      * @return
      */
-    Map<String, Object> updateCustomerContract(UpdateCustomerContractDto dto);
+    Map<String, Object> updateCustomerContacts(UpdateCustomerContactsDto dto);
 
     /**
      * 修改客户联系人列表
@@ -44,7 +44,7 @@ public interface CustomerContractService {
      * @param dtos
      * @return
      */
-    Map<String, Object> updateCustomerContract(List<UpdateCustomerContractDto> dtos);
+    Map<String, Object> updateCustomerContacts(List<UpdateCustomerContactsDto> dtos);
 
     /**
      * 获取单条记录
@@ -68,7 +68,7 @@ public interface CustomerContractService {
      * @param id
      * @return
      */
-    Map<String, Object> disableCustomerContract(Integer id);
+    Map<String, Object> disableCustomerContacts(Integer id);
 
     /**
      * 删除客户联系人，注意逻辑删除
@@ -76,7 +76,7 @@ public interface CustomerContractService {
      * @param id
      * @return
      */
-    Map<String, Object> disableCustomerContract(List<CustomerContactsReturnDto> customerContactsReturnDtos);
+    Map<String, Object> disableCustomerContacts(List<CustomerContactsReturnDto> customerContactsReturnDtos);
 
     /**
      * 根据客户id查询
@@ -85,4 +85,11 @@ public interface CustomerContractService {
      * @return
      */
     Map<String, Object> listByCustomerId(Integer customerId);
+
+    /**
+     * 获取显示客户合同
+     * @param id
+     * @return
+     */
+    ShowCustomerContractDto getCustomerContactsById(Integer id);
 }

@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerSiteDto;
 import com.jaagro.crm.api.dto.request.customer.ListSiteCriteriaDto;
+import com.jaagro.crm.api.dto.request.customer.ShowSiteDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerSiteDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto;
 import com.jaagro.crm.api.service.CustomerSiteService;
@@ -128,6 +129,17 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
     @Override
     public Map<String, Object> getBySiteDto(UpdateCustomerSiteDto siteDto) {
         return ServiceResult.toResult(this.siteMapper.getSiteDto(siteDto));
+    }
+
+    /**
+     * 获取显示地址对象
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public ShowSiteDto getShowSiteById(Integer id) {
+        return siteMapper.getShowSiteById(id);
     }
 
 }

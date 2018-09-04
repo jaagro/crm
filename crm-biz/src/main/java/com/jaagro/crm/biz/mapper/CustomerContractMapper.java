@@ -2,6 +2,7 @@ package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.api.dto.request.contract.ListContractCriteriaDto;
 import com.jaagro.crm.api.dto.request.contract.UpdateContractDto;
+import com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnCheckContractDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnCheckContractQualificationDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
@@ -87,5 +88,12 @@ public interface CustomerContractMapper {
      * @return
      */
     List<ReturnCheckContractDto> listByCustomerIdAndStatus(Integer customerId);
+
+    /**
+     * 获取显示客户合同
+     * @param id
+     * @return
+     */
+    ShowCustomerContractDto getShowCustomerContractById(Integer id);
 
 }

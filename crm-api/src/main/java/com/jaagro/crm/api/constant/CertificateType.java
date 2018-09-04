@@ -13,39 +13,39 @@ public final class CertificateType {
     public static final Integer BUSINESS_LICENSE = 1;
 
     /**
-     * 身份证正面
-     */
-    public static final Integer FRONT_ID_CARD = 2;
-
-    /**
-     * 身份证反面
-     */
-    public static final Integer BACK_ID_CARD = 3;
-
-    /**
      * 行驶证原件
      */
-    public static final Integer DRIVING_LICENSE_ORIGINAL = 4;
+    public static final Integer DRIVING_LICENSE_ORIGINAL = 2;
 
     /**
      * 行驶证副本
      */
-    public static final Integer DRIVING_LICENSE_COPY = 5;
+    public static final Integer DRIVING_LICENSE_COPY = 3;
 
     /**
      * 营运证
      */
-    public static final Integer OPERATION_LICENSE = 6;
+    public static final Integer OPERATION_LICENSE = 4;
 
     /**
      * 交强险
      */
-    public static final Integer COMPULSORY_INSURANCE = 7;
+    public static final Integer COMPULSORY_INSURANCE = 5;
 
     /**
      * 商业险
      */
-    public static final Integer BUSINESS_INSURANCE = 8;
+    public static final Integer BUSINESS_INSURANCE = 6;
+
+    /**
+     * 身份证正面
+     */
+    public static final Integer FRONT_ID_CARD = 7;
+
+    /**
+     * 身份证反面
+     */
+    public static final Integer BACK_ID_CARD = 8;
 
     /**
      * 驾驶证原件
