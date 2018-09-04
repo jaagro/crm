@@ -373,6 +373,18 @@
         where truck_number = #{truckNumber,jdbcType=VARCHAR}
         limit 1
     </select>
+    <select id="listTruckByTeamId" resultMap="listTruck">
+        select
+        <include refid="Base_Column_List"/>
+        from truck
+        where 1=1
+        <if test="teamId != null">
+            and truck_team_id = #{teamId}
+        </if>
+        <if test="truckNumber != null">
+            and truck_number = #{truckNumber}
+        </if>
+    </select>
     <select id="listTruckByCriteria" resultMap="listTruck"
             parameterType="com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto">
         SELECT

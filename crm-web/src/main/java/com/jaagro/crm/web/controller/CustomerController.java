@@ -62,28 +62,8 @@ public class CustomerController {
         }*/
         UpdateCustomerDto updateCustomerDto = new UpdateCustomerDto();
         updateCustomerDto.setCustomerName(customer.getCustomerName());
-        /*if (this.customerMapper.getByCustomerDto(updateCustomerDto) != null) {
-            return BaseResponse.idNull("客户名称:[customerName]已存在");
-        }*/
         return BaseResponse.service(customerService.createCustomer(customer));
     }
-
-    /*@ApiOperation("新增客户")
-    @PostMapping("/customer")
-    public BaseResponse insertCustomer(@RequestBody CreateCustomerDto customer) {
-        if (customer.getCustomerType() == null) {
-            return BaseResponse.errorInstance("客户类型:[customerType]不能为空");
-        }
-        if (customer.getCustomerName() == null) {
-            return BaseResponse.errorInstance("客户名称:[customerName]不能为空");
-        }
-        UpdateCustomerDto updateCustomerDto = new UpdateCustomerDto();
-        updateCustomerDto.setCustomerName(customer.getCustomerName());
-        if (this.customerMapper.getByCustomerDto(updateCustomerDto) != null) {
-            return BaseResponse.idNull("客户名称:[customerName]已存在");
-        }
-        return BaseResponse.service(customerService.createCustomer(customer));
-    }*/
 
     /**
      * 删除客户[逻辑]
@@ -112,9 +92,6 @@ public class CustomerController {
         if (this.customerMapper.selectByPrimaryKey(customer.getId()) == null) {
             return BaseResponse.errorInstance("客户不存在");
         }
-        /*if (this.customerMapper.getByCustomerDto(customer) != null) {
-            return BaseResponse.errorInstance("客户名称:[customerName]已存在");
-        }*/
         return BaseResponse.service(customerService.updateById(customer));
     }
 

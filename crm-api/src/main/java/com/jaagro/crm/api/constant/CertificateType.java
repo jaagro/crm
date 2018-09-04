@@ -63,7 +63,18 @@ public final class CertificateType {
     public static final Integer TRANSPORT_QUALIFICATION = 11;
 
     /**
+     * 人车合影
+     */
+    public static final Integer GROUP_PHOTO = 12;
+
+    /**
+     * 车队整体照片
+     */
+    public static final Integer TEAM_PHOTOS = 13;
+
+    /**
      * 其他
      */
     public static final Integer ELSE = 80;
+
 }
