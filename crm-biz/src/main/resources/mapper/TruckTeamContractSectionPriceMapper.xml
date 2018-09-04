@@ -23,7 +23,8 @@
     delete from truck_team_contract_section_price
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.TruckTeamContractSectionPrice" >
+  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.TruckTeamContractSectionPrice" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
     insert into truck_team_contract_section_price (id, contract_price_id, section_type, 
       upper_limit, lower_limit, price, 
       selection_status)
@@ -31,7 +32,8 @@
       #{upperLimit,jdbcType=DECIMAL}, #{lowerLimit,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL}, 
       #{selectionStatus,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.TruckTeamContractSectionPrice" >
+  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.TruckTeamContractSectionPrice" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
     insert into truck_team_contract_section_price
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
