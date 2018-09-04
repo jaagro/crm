@@ -10,13 +10,13 @@
         <result column="truck_amount" property="truckAmount" jdbcType="VARCHAR"/>
         <result column="enabled" property="enabled" jdbcType="TINYINT"/>
     </resultMap>
-    <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.truck.TruckTypeReturnDto">
+    <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="type_name" property="typeName" jdbcType="VARCHAR"/>
+        <result column="product_name" property="productName" jdbcType="VARCHAR"/>
         <result column="truck_length" property="truckLength" jdbcType="VARCHAR"/>
         <result column="truck_weight" property="truckWeight" jdbcType="VARCHAR"/>
         <result column="truck_amount" property="truckAmount" jdbcType="VARCHAR"/>
-        <result column="enabled" property="enabled" jdbcType="TINYINT"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, type_name, product_name, truck_length, truck_weight, truck_amount, enabled
