@@ -128,4 +128,9 @@ public class GetTruckDto implements Serializable {
      * 司机列表
      */
     private List<DriverReturnDto> drivers;
+
+    /**
+     * 车辆资质列表
+     */
+    private List<ReturnTruckQualificationDto> qualificationDtoList;
 }

@@ -90,11 +90,9 @@ public class TruckController {
      * @param truckCriteria
      * @return
      */
+    @ApiOperation("分页查询车辆")
     @PostMapping("/listTruck")
     public BaseResponse listTruck(@RequestBody ListTruckCriteriaDto truckCriteria) {
-        if (StringUtils.isEmpty(truckCriteria.getTruckTeamId())) {
-            return BaseResponse.idError("truckTeamId不能为空");
-        }
         return BaseResponse.service(truckService.listTruck(truckCriteria));
     }
 

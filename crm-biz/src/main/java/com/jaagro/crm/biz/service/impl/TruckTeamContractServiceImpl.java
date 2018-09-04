@@ -1,8 +1,12 @@
 package com.jaagro.crm.biz.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.constant.ContractStatus;
 import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContractDto;
+import com.jaagro.crm.api.dto.request.truck.ListTruckTeamContractCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamContractDto;
+import com.jaagro.crm.api.dto.response.truck.ListTruckTeamContractDto;
 import com.jaagro.crm.api.dto.response.truck.TruckTeamContractReturnDto;
 import com.jaagro.crm.api.service.TruckTeamContractService;
 import com.jaagro.crm.biz.entity.TruckTeamContract;
@@ -32,6 +36,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
 
     /**
      * 创建车队合同
+     *
      * @param dto
      * @return
      */
@@ -40,9 +45,9 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     public Map<String, Object> createTruckTeamContract(CreateTruckTeamContractDto dto) {
         //创建合同对象
         TruckTeamContract truckTeamContract = new TruckTeamContract();
-        BeanUtils.copyProperties(dto,truckTeamContract);
+        BeanUtils.copyProperties(dto, truckTeamContract);
         TruckTeamContractReturnDto byId = truckTeamContractMapper.getById(dto.getId());
-        if(byId.getContractNumber().equals(dto.getContractNumber())){
+        if (byId.getContractNumber().equals(dto.getContractNumber())) {
             throw new RuntimeException("合同编号不能相同");
         }
         truckTeamContract
@@ -54,6 +59,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
 
     /**
      * 根据合同ID查询合同
+     *
      * @param id
      * @return
      */
@@ -64,6 +70,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
 
     /**
      * 根据合同编号查询合同
+     *
      * @param contractNumber
      * @return
      */
@@ -74,6 +81,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
 
     /**
      * 修改车队合同
+     *
      * @param dto
      * @return
      */
@@ -82,12 +90,12 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     public Map<String, Object> updateTruckTeamContract(UpdateTruckTeamContractDto dto) {
         //创建车队合同对象
         TruckTeamContract truckTeamContract = new TruckTeamContract();
-        BeanUtils.copyProperties(dto,truckTeamContract);
+        BeanUtils.copyProperties(dto, truckTeamContract);
         TruckTeamContractReturnDto byId = truckTeamContractMapper.getById(dto.getId());
-        if(byId.getContractNumber().equals(dto.getContractNumber())){
+        if (byId.getContractNumber().equals(dto.getContractNumber())) {
             throw new RuntimeException("合同编号不能相同");
         }
-        if(truckTeamContract != null) {
+        if (truckTeamContract != null) {
             truckTeamContract
                     .setContractStatus(ContractStatus.UNAUDITED);
             truckTeamContractMapper.updateByPrimaryKeySelective(truckTeamContract);
@@ -97,6 +105,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
 
     /**
      * 创建车队合同表
+     *
      * @param dto
      * @param truckTeamId
      * @return
@@ -104,11 +113,11 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> createTruckTeamContracts(List<CreateTruckTeamContractDto> dto, Integer truckTeamId) {
-        if(dto != null && dto.size() > 0){
-            for(CreateTruckTeamContractDto ctt: dto) {
+        if (dto != null && dto.size() > 0) {
+            for (CreateTruckTeamContractDto ctt : dto) {
                 //创建车队合同对象
                 TruckTeamContract truckTeamContract = new TruckTeamContract();
-                BeanUtils.copyProperties(ctt,truckTeamContract);
+                BeanUtils.copyProperties(ctt, truckTeamContract);
                 truckTeamContract
                         .setContractStatus(ContractStatus.UNAUDITED)
                         .setTruckTeamId(truckTeamId);
@@ -116,5 +125,12 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
             }
         }
         return ServiceResult.toResult("车队合同创建成功");
+    }
+
+    @Override
+    public Map<String, Object> listByCriteria(ListTruckTeamContractCriteriaDto criteriaDto) {
+        PageHelper.startPage(criteriaDto.getPageNum(), criteriaDto.getPageSize());
+        List<ListTruckTeamContractDto> returnDtoList = this.truckTeamContractMapper.listByCriteria(criteriaDto);
+        return ServiceResult.toResult(new PageInfo<>(returnDtoList));
     }
 }

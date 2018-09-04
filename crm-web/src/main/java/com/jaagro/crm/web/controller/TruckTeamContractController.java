@@ -1,6 +1,8 @@
 package com.jaagro.crm.web.controller;
 
 import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContractDto;
+import com.jaagro.crm.api.dto.request.truck.ListTruckTeamContractCriteriaDto;
+import com.jaagro.crm.api.dto.request.truck.ListTruckTeamCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamContractDto;
 import com.jaagro.crm.api.service.TruckTeamContractService;
 import com.jaagro.crm.biz.mapper.TruckTeamContractMapper;
@@ -29,11 +31,11 @@ public class TruckTeamContractController {
 
     @ApiOperation("新增合同")
     @PostMapping("/truckTeamContract")
-    public BaseResponse insert(@RequestBody CreateTruckTeamContractDto dto){
-        if(StringUtils.isEmpty(dto.getContractNumber())){
+    public BaseResponse insert(@RequestBody CreateTruckTeamContractDto dto) {
+        if (StringUtils.isEmpty(dto.getContractNumber())) {
             return BaseResponse.errorInstance("合同编号不能为空");
         }
-        if(StringUtils.isEmpty(dto.getContractDate())){
+        if (StringUtils.isEmpty(dto.getContractDate())) {
             return BaseResponse.errorInstance("签约日期不能为空");
         }
         return BaseResponse.service(truckTeamContractService.createTruckTeamContract(dto));
@@ -59,13 +61,20 @@ public class TruckTeamContractController {
         return BaseResponse.service(result);
     }
 
+    @ApiOperation("分页查询合同")
+    @PostMapping("/listTruckTeam")
+    public BaseResponse listTruckTeam(@RequestBody ListTruckTeamContractCriteriaDto criteriaDto) {
+        Map<String, Object> result = truckTeamContractService.listByCriteria(criteriaDto);
+        return BaseResponse.service(result);
+    }
+
     @ApiOperation("修改合同")
     @PostMapping("/updateTruckTeamContract")
-    public BaseResponse updateTruckTeamContract(@RequestBody UpdateTruckTeamContractDto dto){
-        if(StringUtils.isEmpty(dto.getContractNumber())){
+    public BaseResponse updateTruckTeamContract(@RequestBody UpdateTruckTeamContractDto dto) {
+        if (StringUtils.isEmpty(dto.getContractNumber())) {
             return BaseResponse.errorInstance("合同编号不能为空");
         }
-        if(StringUtils.isEmpty(dto.getContractDate())){
+        if (StringUtils.isEmpty(dto.getContractDate())) {
             return BaseResponse.errorInstance("签约日期不能为空");
         }
         return BaseResponse.service(truckTeamContractService.updateTruckTeamContract(dto));

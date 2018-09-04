@@ -19,7 +19,7 @@ public class TruckTypeReturnDto implements Serializable {
     /**
      * 车型名称
      */
-    private String name;
+    private String typeName;
 
     /**
      * 车长

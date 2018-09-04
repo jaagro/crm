@@ -10,13 +10,19 @@ import java.io.Serializable;
  */
 @Data
 @Accessors(chain = true)
-public class ListTruckCriteriaDto implements Serializable {
+public class ListTruckTeamContractCriteriaDto implements Serializable {
+    /**
+     * 起始页
+     */
     private Integer pageNum;
-    private Integer pageSize;
-    private String truckNumber;
-    private Integer truckTeamId;
-    private Integer teamType;
-    private Integer truckStatus;
-    private Integer truckTypeId;
 
+    /**
+     * 每页条数
+     */
+    private Integer pageSize;
+
+    /**
+     *车队id
+     */
+    private Integer truckTeamId;
 }

@@ -1,5 +1,6 @@
 package com.jaagro.crm.biz.mapper;
 
+import com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto;
 import com.jaagro.crm.api.dto.response.truck.GetTruckDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckDto;
 import com.jaagro.crm.api.dto.response.truck.ReturnCheckTruckDto;
@@ -68,7 +69,7 @@ public interface TruckMapper {
      * @param truckNumber
      * @return
      */
-    List<ListTruckDto> listTruckByTeamId(@Param("teamId") Integer teamId, @Param("truckNumber") String truckNumber);
+    List<ListTruckDto> listTruckByCriteria(ListTruckCriteriaDto criteria);
 
     /**
      * 根据id获取待审核车辆信息

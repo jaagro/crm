@@ -1,6 +1,7 @@
 package com.jaagro.crm.api.service;
 
 import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContractDto;
+import com.jaagro.crm.api.dto.request.truck.ListTruckTeamContractCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamContractDto;
 
 import java.util.List;
@@ -47,4 +48,12 @@ public interface TruckTeamContractService {
      * @return
      */
     Map<String, Object> createTruckTeamContracts(List<CreateTruckTeamContractDto> dto, Integer truckTeamId);
+
+    /**
+     * 分页查询车队合同
+     *
+     * @param criteriaDto
+     * @return
+     */
+    Map<String, Object> listByCriteria(ListTruckTeamContractCriteriaDto criteriaDto);
 }
