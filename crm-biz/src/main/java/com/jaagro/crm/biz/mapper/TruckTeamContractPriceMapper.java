@@ -1,8 +1,8 @@
 package com.jaagro.crm.biz.mapper;
 
-import com.jaagro.crm.biz.entity.truckTeamContractPrice;
+import com.jaagro.crm.biz.entity.TruckTeamContractPrice;
 
-public interface truckTeamContractPriceMapper {
+public interface TruckTeamContractPriceMapper {
     /**
      *
      * @mbggenerated 2018-09-04
@@ -13,29 +13,29 @@ public interface truckTeamContractPriceMapper {
      *
      * @mbggenerated 2018-09-04
      */
-    int insert(truckTeamContractPrice record);
+    int insert(TruckTeamContractPrice record);
 
     /**
      *
      * @mbggenerated 2018-09-04
      */
-    int insertSelective(truckTeamContractPrice record);
+    int insertSelective(TruckTeamContractPrice record);
 
     /**
      *
      * @mbggenerated 2018-09-04
      */
-    truckTeamContractPrice selectByPrimaryKey(Integer id);
+    TruckTeamContractPrice selectByPrimaryKey(Integer id);
 
     /**
      *
      * @mbggenerated 2018-09-04
      */
-    int updateByPrimaryKeySelective(truckTeamContractPrice record);
+    int updateByPrimaryKeySelective(TruckTeamContractPrice record);
 
     /**
      *
      * @mbggenerated 2018-09-04
      */
-    int updateByPrimaryKey(truckTeamContractPrice record);
+    int updateByPrimaryKey(TruckTeamContractPrice record);
 }

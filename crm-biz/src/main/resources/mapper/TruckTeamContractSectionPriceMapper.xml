@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jaagro.crm.biz.mapper.truckTeamContractSectionPriceMapper" >
-  <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.truckTeamContractSectionPrice" >
+<mapper namespace="com.jaagro.crm.biz.mapper.TruckTeamContractSectionPriceMapper" >
+  <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.TruckTeamContractSectionPrice" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="contract_price_id" property="contractPriceId" jdbcType="INTEGER" />
     <result column="section_type" property="sectionType" jdbcType="INTEGER" />
@@ -23,7 +23,7 @@
     delete from truck_team_contract_section_price
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.truckTeamContractSectionPrice" >
+  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.TruckTeamContractSectionPrice" >
     insert into truck_team_contract_section_price (id, contract_price_id, section_type, 
       upper_limit, lower_limit, price, 
       selection_status)
@@ -31,7 +31,7 @@
       #{upperLimit,jdbcType=DECIMAL}, #{lowerLimit,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL}, 
       #{selectionStatus,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.truckTeamContractSectionPrice" >
+  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.TruckTeamContractSectionPrice" >
     insert into truck_team_contract_section_price
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -80,7 +80,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.truckTeamContractSectionPrice" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.TruckTeamContractSectionPrice" >
     update truck_team_contract_section_price
     <set >
       <if test="contractPriceId != null" >
@@ -104,7 +104,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.truckTeamContractSectionPrice" >
+  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.TruckTeamContractSectionPrice" >
     update truck_team_contract_section_price
     set contract_price_id = #{contractPriceId,jdbcType=INTEGER},
       section_type = #{sectionType,jdbcType=INTEGER},
