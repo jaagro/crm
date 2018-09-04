@@ -69,7 +69,7 @@ public interface TruckMapper {
      * @param truckNumber
      * @return
      */
-    List<ListTruckDto> listTruckByTeamId(@Param("teamId") Integer teamId, @Param("truckNumber") String truckNumber);
+    List<GetTruckDto> listTruckByTeamId(@Param("teamId") Integer teamId, @Param("truckNumber") String truckNumber);
 
     /**
      * 运力管理

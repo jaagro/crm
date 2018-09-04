@@ -70,13 +70,13 @@ public class TruckQualificationController {
     }
 
     @ApiOperation("待审核资质下一条")
-    @GetMapping("/getQualificationAuto")
-    public BaseResponse listQualification(@PathVariable Integer teamId) {
-        if (this.truckTeamMapper.selectByPrimaryKey(teamId) == null) {
+    @GetMapping("/getQualificationAuto/{truckTeamId}")
+    public BaseResponse getQualificationAuto(@PathVariable Integer truckTeamId) {
+        if (this.truckTeamMapper.selectByPrimaryKey(truckTeamId) == null) {
             BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "当前车队不存在"));
         }
         //返回待审核资质下一条
-        List<ReturnTruckQualificationDto> qualificationDtos = this.truckQualificationMapper.listByTeamId(teamId);
+        List<ReturnTruckQualificationDto> qualificationDtos = this.truckQualificationMapper.listByTeamId(truckTeamId);
         if (qualificationDtos != null && qualificationDtos.size() > 0) {
             ReturnTruckQualificationDto qualificationDto = qualificationDtos.get(0);
             //填充司机信息

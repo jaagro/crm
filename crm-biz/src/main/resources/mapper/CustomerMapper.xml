@@ -344,11 +344,12 @@
         m.id,
         m.city,
         m.customer_status,
-        c.contact,
-        c.phone
-        from customer m
-        left join customer_contacts c on m.id = c.customer_id
-        where 1=1
+        m.province,
+        m.county
+        FROM
+        customer m
+        LEFT JOIN customer_contacts c ON m.id = c.customer_id
+        WHERE 1=1
         <if test="customerType != null">
             and m.customer_type = #{customerType}
         </if>
@@ -361,7 +362,7 @@
         <if test="customerName != null">
             <![CDATA[and (m.customer_name like concat('%',#{customerName},'%') )]]>
         </if>
-        order by m.create_time desc
+        GROUP BY m.id
     </select>
     <select id="getByCustomerDto" resultMap="BaseResultMap"
             parameterType="com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto">

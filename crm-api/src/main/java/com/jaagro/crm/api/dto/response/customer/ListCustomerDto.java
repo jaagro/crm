@@ -44,6 +44,16 @@ public class ListCustomerDto implements Serializable {
     private String city;
 
     /**
+     * 省份
+     */
+    private String province;
+
+    /**
+     * 区
+     */
+    private String county;
+
+    /**
      * 审核状态
      */
     private Integer customerStatus;

@@ -73,7 +73,7 @@ public class CustomerServiceImpl implements CustomerService {
         customer
                 .setCreateUserId(userService.getCurrentUser().getId());
         if (StringUtils.isEmpty(customer.getCustomerType())) {
-            throw new RuntimeException("客户类型不能为空");
+            throw new NullPointerException("客户类型不能为空");
         }
         customerMapper.insertSelective(customer);
         return ServiceResult.toResult(customer.getId());
@@ -137,7 +137,6 @@ public class CustomerServiceImpl implements CustomerService {
             }
         }
         return ServiceResult.toResult(new PageInfo<>(customerReturnDtos));
-
     }
 
     /**

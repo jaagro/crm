@@ -52,7 +52,7 @@
         <collection property="qualificationDtoList" column="id"
                     select="com.jaagro.crm.biz.mapper.TruckQualificationMapper.listByTruckId"></collection>
     </resultMap>
-    <resultMap id="listTruck" type="com.jaagro.crm.api.dto.response.truck.ListTruckDto">
+    <resultMap id="listTruck" type="com.jaagro.crm.api.dto.response.truck.GetTruckDto">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER"/>
         <result column="truck_number" property="truckNumber" jdbcType="VARCHAR"/>
@@ -385,7 +385,7 @@
             and truck_number = #{truckNumber}
         </if>
     </select>
-    <select id="listTruckByCriteria" resultMap="listTruck"
+    <select id="listTruckByCriteria" resultType="com.jaagro.crm.api.dto.response.truck.ListTruckDto"
             parameterType="com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto">
         SELECT
         m.team_name,

@@ -4,6 +4,7 @@ import com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckQualificationDto;
 import com.jaagro.crm.api.dto.response.truck.ReturnTruckQualificationDto;
 import com.jaagro.crm.biz.entity.TruckQualification;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -49,7 +50,7 @@ public interface TruckQualificationMapper {
      * @param teamId
      * @return
      */
-    List<ReturnTruckQualificationDto> listByTeamId(Integer truckTeamId);
+    List<ReturnTruckQualificationDto> listByTeamId(@Param("truckTeamId") Integer truckTeamId);
 
     /**
      * 根据车辆id查询运力资质列表

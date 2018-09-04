@@ -209,10 +209,10 @@
         from truck_qualification
         where 1=1
         <if test="truckTeamId != null">
-            truck_team_id = #{truckTeamId}
+           and truck_team_id = #{truckTeamId}
         </if>
         <if test="certificateStatus != null">
-            certificate_status = #{certificateStatus}
+            and certificate_status = #{certificateStatus}
         </if>
         and enabled = 1
     </select>
@@ -222,7 +222,7 @@
         from truck_qualification
         where 1=1
         <if test="truckTeamId != null">
-            truck_team_id = #{truckTeamId}
+           and truck_team_id = #{truckTeamId}
         </if>
         and certificate_status = 0
         and enabled = 1
@@ -233,7 +233,7 @@
         from truck_qualification
         where 1=1
         <if test="truckId != null">
-            truck_id = #{truckId}
+            and truck_id = #{truckId}
         </if>
         and enabled = 1
     </select>
