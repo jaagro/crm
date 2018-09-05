@@ -1,4 +1,4 @@
-package com.jaagro.crm.biz.entity;
+package com.jaagro.crm.api.dto.response.truck;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -6,13 +6,14 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
- * @author tony
+ * @author baiyiran
  */
 @Data
 @Accessors(chain = true)
-public class TruckTeamContractPrice implements Serializable {
+public class TruckTeamContractPriceReturnDto implements Serializable {
     /**
      *
      */
@@ -66,4 +67,9 @@ public class TruckTeamContractPrice implements Serializable {
      * 报价截止时间
      */
     private Date endDate;
+
+    /**
+     * 阶梯报价
+     */
+    private List<TruckTeamContractSectionPriceReturnDto> sectionPriceReturnDtoList;
 }

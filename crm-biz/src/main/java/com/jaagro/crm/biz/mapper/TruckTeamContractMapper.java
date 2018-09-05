@@ -45,11 +45,6 @@ public interface TruckTeamContractMapper {
     TruckTeamContractReturnDto getById(Integer id);
 
     /**
-     * 查询合同dto
-     */
-    TruckTeamContractReturnDto getByContractNumber(String contractNumber);
-
-    /**
      * 根据车队id查询
      *
      * @param TruckTeamId
@@ -64,4 +59,12 @@ public interface TruckTeamContractMapper {
      * @return
      */
     List<ListTruckTeamContractDto> listByCriteria(ListTruckTeamContractCriteriaDto criteriaDto);
+
+    /**
+     * 根据合同编号查询合同
+     *
+     * @param contractNumber
+     * @return
+     */
+    TruckTeamContractReturnDto getByContractNumber(String contractNumber);
 }

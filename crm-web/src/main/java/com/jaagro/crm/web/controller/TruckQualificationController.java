@@ -62,6 +62,18 @@ public class TruckQualificationController {
         return BaseResponse.service(truckQualificationService.createTruckQualification(dto));
     }
 
+    /**
+     * 根据三种id查询资质列表
+     *
+     * @param criteriaDto
+     * @return
+     */
+    @ApiOperation("根据三种id查询资质列表")
+    @PostMapping("/listQualificationByTeamId")
+    public BaseResponse listQualificationByTeamId(@RequestBody ListTruckQualificationCriteriaDto criteriaDto) {
+        return BaseResponse.service(truckQualificationService.listQualificationByTruckIds(criteriaDto));
+    }
+
     //-----------------------------------------------------审核-------------------------------------------------------
 
     @ApiOperation("待审核资质分页")
@@ -77,7 +89,9 @@ public class TruckQualificationController {
             BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "当前车队不存在"));
         }
         //返回待审核资质下一条
-        List<ReturnTruckQualificationDto> qualificationDtos = this.truckQualificationMapper.listByTeamId(truckTeamId);
+        ListTruckQualificationCriteriaDto criteriaDto = new ListTruckQualificationCriteriaDto();
+        criteriaDto.setTruckTeamId(truckTeamId);
+        List<ReturnTruckQualificationDto> qualificationDtos = this.truckQualificationMapper.listByIds(criteriaDto);
         if (qualificationDtos != null && qualificationDtos.size() > 0) {
             ReturnTruckQualificationDto qualificationDto = qualificationDtos.get(0);
             //填充司机信息

@@ -23,7 +23,7 @@
         <result column="contract_status" property="contractStatus" jdbcType="INTEGER"/>
         <result column="notes" property="notes" jdbcType="VARCHAR"/>
     </resultMap>
-    <resultMap id="ReturnInfo" type="com.jaagro.crm.api.dto.response.truck.ListTruckTeamContractDto">
+    <resultMap id="ReturnInfo" type="com.jaagro.crm.api.dto.response.truck.TruckTeamContractReturnDto">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER"/>
         <result column="contract_number" property="contractNumber" jdbcType="VARCHAR"/>
@@ -33,6 +33,10 @@
         <result column="end_date" property="endDate" jdbcType="TIMESTAMP"/>
         <result column="contract_status" property="contractStatus" jdbcType="INTEGER"/>
         <result column="notes" property="notes" jdbcType="VARCHAR"/>
+        <collection property="contractPriceDtoList" column="id"
+                    select="com.jaagro.crm.biz.mapper.TruckTeamContractPriceMapper.listByContractId"></collection>
+        <collection property="qualificationDtoList" column="id"
+                    select="com.jaagro.crm.biz.mapper.ContractQualificationMapper.listByContractId"></collection>
     </resultMap>
     <sql id="Base_Column_List">
     id, truck_team_id, contract_number, bussiness_type, contract_date, start_date, end_date, 
@@ -168,17 +172,11 @@
       notes = #{notes,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-    <select id="getById" parameterType="java.lang.Integer" resultMap="DetailInfo">
+    <select id="getById" parameterType="java.lang.Integer" resultMap="ReturnInfo">
         select
         <include refid="Base_Column_List"/>
         from truck_team_contract
         where id = #{id,jdbcType=INTEGER}
-    </select>
-    <select id="getByContractNumber" parameterType="java.lang.String" resultMap="DetailInfo">
-        select
-        <include refid="Base_Column_List"/>
-        from truck_team_contract
-        where contract_number = #{contract_number,jdbcType=INTEGER}
     </select>
     <select id="listByTruckTeamId" parameterType="java.lang.Integer" resultMap="DetailInfo">
         select
@@ -194,6 +192,16 @@
         where 1=1
         <if test="truckTeamId != null">
             and truck_team_id = #{truckTeamId,jdbcType=INTEGER}
+        </if>
+    </select>
+    <select id="getByContractNumber" parameterType="java.lang.String"
+            resultMap="DetailInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from truck_team_contract
+        where contract_status = 1
+        <if test="contract_number != null">
+            and contract_number = #{contractNumber}
         </if>
     </select>
 </mapper>

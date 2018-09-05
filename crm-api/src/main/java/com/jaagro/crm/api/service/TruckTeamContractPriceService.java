@@ -1,5 +1,7 @@
 package com.jaagro.crm.api.service;
 
+import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContractPriceDto;
+
 import java.util.Map;
 
 /**
@@ -9,7 +11,12 @@ import java.util.Map;
  */
 public interface TruckTeamContractPriceService {
 
-    Map<String, Object> createPrice();
-
+    /**
+     * 新增
+     *
+     * @param createContractPriceDto
+     * @return
+     */
+    Map<String, Object> createPrice(CreateTruckTeamContractPriceDto createContractPriceDto);
 
 }

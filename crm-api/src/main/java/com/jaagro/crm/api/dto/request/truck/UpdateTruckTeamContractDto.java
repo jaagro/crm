@@ -1,10 +1,12 @@
 package com.jaagro.crm.api.dto.request.truck;
 
+import com.jaagro.crm.api.dto.request.contract.CreateContractQualificationDto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Administrator
@@ -33,11 +35,6 @@ public class UpdateTruckTeamContractDto implements Serializable {
     private Integer bussinessType;
 
     /**
-     * 签约日期
-     */
-    private Date contractDate;
-
-    /**
      * 合同开始时间
      */
     private Date startDate;
@@ -56,4 +53,14 @@ public class UpdateTruckTeamContractDto implements Serializable {
      * 备注信息
      */
     private String notes;
+
+    /**
+     * 合同报价
+     */
+    private List<CreateTruckTeamContractPriceDto> contractPriceDtoList;
+
+    /**
+     * 资质证件照
+     */
+    private List<CreateContractQualificationDto> qualificationDtoList;
 }

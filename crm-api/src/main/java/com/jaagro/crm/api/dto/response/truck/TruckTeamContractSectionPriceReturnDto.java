@@ -1,4 +1,4 @@
-package com.jaagro.crm.api.dto.request.contract;
+package com.jaagro.crm.api.dto.response.truck;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -7,13 +7,21 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * 阶梯报价新增帮助类
- *
  * @author baiyiran
  */
 @Data
 @Accessors(chain = true)
-public class CreateContractSectionPriceDto implements Serializable {
+public class TruckTeamContractSectionPriceReturnDto implements Serializable {
+
+    /**
+     *
+     */
+    private Integer id;
+
+    /**
+     *
+     */
+    private Integer contractPriceId;
 
     /**
      * 1-重量阶梯报价 2-里程阶梯报价
@@ -35,4 +43,8 @@ public class CreateContractSectionPriceDto implements Serializable {
      */
     private BigDecimal price;
 
+    /**
+     * 是否有效 1-有效，0-无效
+     */
+    private Integer selectionStatus;
 }

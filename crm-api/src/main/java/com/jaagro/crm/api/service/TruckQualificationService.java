@@ -24,4 +24,11 @@ public interface TruckQualificationService {
      * @return
      */
     Map<String, Object> listQualification(ListTruckQualificationCriteriaDto criteriaDto);
+
+    /**
+     * 分页查询运力资质根据车队id
+     *
+     * @return
+     */
+    Map<String, Object> listQualificationByTruckIds(ListTruckQualificationCriteriaDto criteriaDto);
 }

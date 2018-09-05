@@ -209,22 +209,29 @@
         from truck_qualification
         where 1=1
         <if test="truckTeamId != null">
-           and truck_team_id = #{truckTeamId}
+            and truck_team_id = #{truckTeamId}
         </if>
         <if test="certificateStatus != null">
             and certificate_status = #{certificateStatus}
         </if>
         and enabled = 1
     </select>
-    <select id="listByTeamId" resultMap="ReturnCheckMap" parameterType="java.lang.Integer">
+    <select id="listByIds" resultMap="ReturnCheckMap"
+            parameterType="com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto">
         select
         <include refid="Base_Column_List"/>
         from truck_qualification
         where 1=1
         <if test="truckTeamId != null">
-           and truck_team_id = #{truckTeamId}
+            and truck_team_id = #{truckTeamId} and truck_id = null and driver_id = null
         </if>
-        and certificate_status = 0
+        <if test="truckId != null">
+            and truck_id = #{truckId} and driver_id = null
+        </if>
+        <if test="driverId != null">
+            and driver_id = #{driverId}
+        </if>
+        and certificate_status = 0 or certificate_status = 2
         and enabled = 1
     </select>
     <select id="listByTruckId" resultMap="BaseResultMap">

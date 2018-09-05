@@ -50,7 +50,7 @@ public interface TruckQualificationMapper {
      * @param teamId
      * @return
      */
-    List<ReturnTruckQualificationDto> listByTeamId(@Param("truckTeamId") Integer truckTeamId);
+    List<ReturnTruckQualificationDto> listByIds(ListTruckQualificationCriteriaDto criteriaDto);
 
     /**
      * 根据车辆id查询运力资质列表
