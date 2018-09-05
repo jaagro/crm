@@ -336,6 +336,8 @@ public class ContractController {
         return BaseResponse.service(this.logService.createVerifyLog(logDto));
     }
 
+    //--------------------------------------------------提供给微服务调用------------------------------------------------------
+
     @Ignore
     @GetMapping("/getShowCustomerContract/{id}")
     public ShowCustomerContractDto getShowCustomerContractById(@PathVariable("id") Integer id) {
