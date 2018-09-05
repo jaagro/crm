@@ -325,4 +325,12 @@
         from customer_contract
         where id = #{id,jdbcType=INTEGER}
     </select>
+    <select id="listShowCustomerContractByCustomerId"
+            resultType="com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto">
+        select
+        <include refid="Show_Column"/>
+        from customer_contract
+        where customer_id = #{customerId,jdbcType=INTEGER}
+        and contract_status = 1
+    </select>
 </mapper>

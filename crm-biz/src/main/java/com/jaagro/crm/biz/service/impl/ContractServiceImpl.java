@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 客户合同service
  * @author tony
  */
 @Service
@@ -240,6 +241,7 @@ public class ContractServiceImpl implements ContractService {
         return ServiceResult.toResult(customerContractMapper.getById(contractId));
     }
 
+
     /**
      * 分页查询
      *
@@ -295,6 +297,17 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public ShowCustomerContractDto getShowCustomerContractById(Integer id) {
         return customerContractMapper.getShowCustomerContractById(id);
+    }
+
+    /**
+     * 通过客户id获取当前客户所有合同（显示对象）
+     *
+     * @param customerId
+     * @return
+     */
+    @Override
+    public List<ShowCustomerContractDto> listShowCustomerContractByCustomerId(Integer customerId) {
+        return customerContractMapper.listShowCustomerContractByCustomerId(customerId);
     }
 
 }

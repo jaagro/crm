@@ -1,6 +1,7 @@
 package com.jaagro.crm.web.controller;
 
 import com.jaagro.constant.UserInfo;
+import com.jaagro.crm.api.service.OssSignUrlClientService;
 import com.jaagro.crm.api.service.UserClientService;
 import com.jaagro.crm.biz.service.impl.CurrentUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class TestController {
     UserClientService userClientService;
     @Autowired
     CurrentUserService currentUserService;
+    @Autowired
+    OssSignUrlClientService ossSignUrlClientService;
 
     @GetMapping("/test")
     public UserInfo getToken(){

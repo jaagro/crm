@@ -140,6 +140,16 @@ public class ContractController {
         return BaseResponse.service(contractService.listByCriteria(dto));
     }
 
+    @ApiOperation(("查询客户有效合同"))
+    @GetMapping("/listContractByCustomerId/{customerId}")
+    public BaseResponse listByCustomerId(@PathVariable("customerId") Integer customerId) {
+        List<ShowCustomerContractDto> result = contractService.listShowCustomerContractByCustomerId(customerId);
+        if(StringUtils.isEmpty(result)){
+            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查无数据"));
+        }
+        return BaseResponse.successInstance(result);
+    }
+
     //----------------------------------------------合同资质-------------------------------------------------
 
     /**
@@ -249,7 +259,7 @@ public class ContractController {
     /**
      * 合同资质待审核获取下一个
      *
-     * @param customerId
+     * @param
      * @return
      */
     @ApiOperation("合同资质待审核获取下一个[客户&司机]")
