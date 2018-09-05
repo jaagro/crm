@@ -19,4 +19,19 @@ public interface TruckTeamContractPriceService {
      */
     Map<String, Object> createPrice(CreateTruckTeamContractPriceDto createContractPriceDto);
 
+    /**
+     * 根据合同id逻辑删除
+     *
+     * @param id
+     * @return
+     */
+    Map<String, Object> disableByContractId(Integer id);
+
+    /**
+     * 根据合同id删除
+     *
+     * @param id
+     * @return
+     */
+    Map<String, Object> deleteByContractId(Integer id);
 }

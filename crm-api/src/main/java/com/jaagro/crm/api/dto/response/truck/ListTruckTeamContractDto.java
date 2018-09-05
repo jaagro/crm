@@ -20,24 +20,19 @@ public class ListTruckTeamContractDto implements Serializable {
     private Integer id;
 
     /**
+     * 客户名称
+     */
+    private String truckTeamName;
+
+    /**
      * 关联车队表ID
      */
     private Integer truckTeamId;
 
     /**
-     * 客户名称
-     */
-    private Integer customerName;
-
-    /**
      * 合同编号
      */
     private String contractNumber;
-
-    /**
-     * 业务类型(1 饲料运输 2 毛鸡运输 3 猪运输)
-     */
-    private Integer bussinessType;
 
     /**
      * 签约日期
@@ -59,8 +54,4 @@ public class ListTruckTeamContractDto implements Serializable {
      */
     private Integer contractStatus;
 
-    /**
-     * 备注信息
-     */
-    private String notes;
 }

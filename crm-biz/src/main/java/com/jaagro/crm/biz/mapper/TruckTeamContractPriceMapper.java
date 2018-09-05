@@ -43,4 +43,20 @@ public interface TruckTeamContractPriceMapper {
      * @return
      */
     List<TruckTeamContractPriceReturnDto> listByContractId(Integer contrctId);
+
+    /**
+     * 根据合同id逻辑删除
+     *
+     * @param id
+     * @return
+     */
+    int disableByContractId(Integer id);
+
+    /**
+     * 根据合同id删除
+     *
+     * @param id
+     * @return
+     */
+    int deleteByContractId(Integer id);
 }

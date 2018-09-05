@@ -22,7 +22,8 @@ public class ListTruckTeamContractCriteriaDto implements Serializable {
     private Integer pageSize;
 
     /**
-     *车队id
+     * 车队id
      */
     private Integer truckTeamId;
+
 }

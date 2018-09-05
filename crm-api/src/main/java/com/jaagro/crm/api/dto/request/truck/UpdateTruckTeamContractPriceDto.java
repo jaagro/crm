@@ -6,6 +6,7 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author baiyiran
@@ -66,4 +67,9 @@ public class UpdateTruckTeamContractPriceDto implements Serializable {
      * 报价截止时间
      */
     private Date endDate;
+
+    /**
+     * 阶梯报价列表
+     */
+    private List<UpdateTruckTeamContractSectionPriceDto> contractSectionPriceDtoList;
 }

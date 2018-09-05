@@ -67,6 +67,28 @@ public class TruckTeamContractController {
         return BaseResponse.service(resultMap);
     }
 
+    @ApiOperation("修改合同")
+    @PostMapping("/updateTruckTeamContract")
+    public BaseResponse updateTruckTeamContract(@RequestBody UpdateTruckTeamContractDto dto) {
+        if (StringUtils.isEmpty(dto.getTruckTeamId())) {
+            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队ID不能为空"));
+        }
+        if (StringUtils.isEmpty(dto.getBussinessType())) {
+            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "业务类型不能为空"));
+        }
+        if (StringUtils.isEmpty(dto.getContractNumber())) {
+            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同编号不能为空"));
+        }
+        return BaseResponse.service(truckTeamContractService.updateTruckTeamContract(dto));
+    }
+
+    @ApiOperation("删除合同[逻辑]")
+    @GetMapping("/deleteTeamContract/{id}")
+    public BaseResponse deleteTeamContract(@PathVariable Integer id) {
+        Map<String, Object> result = truckTeamContractService.getById(id);
+        return BaseResponse.service(result);
+    }
+
     @ApiOperation("查询单个合同")
     @GetMapping("/truckTeamContract/{id}")
     public BaseResponse getById(@PathVariable Integer id) {
@@ -94,12 +116,4 @@ public class TruckTeamContractController {
         return BaseResponse.service(result);
     }
 
-    @ApiOperation("修改合同")
-    @PostMapping("/updateTruckTeamContract")
-    public BaseResponse updateTruckTeamContract(@RequestBody UpdateTruckTeamContractDto dto) {
-        if (StringUtils.isEmpty(dto.getContractNumber())) {
-            return BaseResponse.errorInstance("合同编号不能为空");
-        }
-        return BaseResponse.service(truckTeamContractService.updateTruckTeamContract(dto));
-    }
 }

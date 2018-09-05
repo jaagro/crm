@@ -162,4 +162,14 @@
         from truck_team_contract_price
         where truck_team_contract_id = #{contractId,jdbcType=INTEGER}
     </select>
+    <update id="disableByContractId" parameterType="java.lang.Integer">
+        update truck_team_contract_price
+        set price_status = 0
+        where truck_team_contract_id = #{id}
+      </update>
+    <delete id="deleteByContractId" parameterType="java.lang.Integer">
+        delete from truck_team_contract_price
+        where truck_team_contract_id = #{id}
+    </delete>
+
 </mapper>

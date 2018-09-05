@@ -17,4 +17,18 @@ public interface TruckTeamContractSectionPriceService {
      * @return
      */
     Map<String, Object> createSectionPrice(CreateTruckTeamContractSectionPriceDto contractSectionPriceDto);
+
+    /**
+     * 根据报价id逻辑删除阶梯报价
+     *
+     * @param id
+     */
+    Map<String, Object> disableByPriceId(Integer id);
+
+    /**
+     * 根据报价id删除阶梯报价
+     *
+     * @param id
+     */
+    Map<String, Object> deleteByPriceId(Integer id);
 }

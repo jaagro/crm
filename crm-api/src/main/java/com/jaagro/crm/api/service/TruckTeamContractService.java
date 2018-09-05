@@ -56,4 +56,11 @@ public interface TruckTeamContractService {
      * @return
      */
     Map<String, Object> listByCriteria(ListTruckTeamContractCriteriaDto criteriaDto);
+
+    /**
+     * 逻辑删除
+     *
+     * @return
+     */
+    Map<String, Object> disableContract(Integer id);
 }

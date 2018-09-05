@@ -30,4 +30,16 @@ public class TruckTeamContractSectionPriceServiceImpl implements TruckTeamContra
         this.sectionPriceMapper.insertSelective(sectionPrice);
         return ServiceResult.toResult("新增成功");
     }
+
+    @Override
+    public Map<String, Object> disableByPriceId(Integer id) {
+        this.sectionPriceMapper.disableByPriceId(id);
+        return ServiceResult.toResult("删除成功");
+    }
+
+    @Override
+    public Map<String, Object> deleteByPriceId(Integer id) {
+        this.sectionPriceMapper.deleteByPriceId(id);
+        return ServiceResult.toResult("删除成功");
+    }
 }

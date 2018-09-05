@@ -140,6 +140,9 @@ public class ContractController {
     @ApiOperation("分页查询合同")
     @PostMapping("/listContractByCriteria")
     public BaseResponse listByCriteria(@RequestBody ListContractCriteriaDto dto) {
+        if (dto.getCustomerId() == null) {
+            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户id不能为空"));
+        }
         return BaseResponse.service(contractService.listByCriteria(dto));
     }
 
