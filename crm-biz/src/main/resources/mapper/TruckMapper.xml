@@ -47,10 +47,8 @@
         <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER"/>
         <result column="create_user_id" property="createUserId" jdbcType="INTEGER"/>
         <result column="driving_permit" property="drivingPermit" jdbcType="VARCHAR"/>
-        <association property="truckTypeId" select="com.jaagro.crm.biz.mapper.TruckTypeMapper.getById"
-                     column="truck_type_id"></association>
         <collection property="qualificationDtoList" column="id"
-                    select="com.jaagro.crm.biz.mapper.TruckQualificationMapper.listByTruckId"></collection>
+        select="com.jaagro.crm.biz.mapper.TruckQualificationMapper.listByTruckId"></collection>
     </resultMap>
     <resultMap id="listTruck" type="com.jaagro.crm.api.dto.response.truck.GetTruckDto">
         <id column="id" property="id" jdbcType="INTEGER"/>
@@ -364,7 +362,7 @@
         select
         <include refid="Base_Column_List"/>
         from truck
-        where id = #{id,jdbcType=INTEGER}
+        where id = #{truckId}
     </select>
     <select id="getByTruckNumber" resultType="com.jaagro.crm.biz.entity.Truck">
         select

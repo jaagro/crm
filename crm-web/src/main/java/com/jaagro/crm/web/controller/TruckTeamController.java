@@ -3,11 +3,14 @@ package com.jaagro.crm.web.controller;
 import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContactsDto;
 import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto;
+import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamDto;
 import com.jaagro.crm.api.service.TruckService;
 import com.jaagro.crm.api.service.TruckTeamContactsService;
 import com.jaagro.crm.api.service.TruckTeamService;
 import com.jaagro.crm.biz.mapper.TruckTeamMapper;
 import com.jaagro.utils.BaseResponse;
+import com.jaagro.utils.ResponseStatusCode;
+import com.jaagro.utils.ServiceResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,15 +40,21 @@ public class TruckTeamController {
     @ApiOperation("新增车队")
     @PostMapping("/truckTeam")
     public BaseResponse insertTruckTeam(@RequestBody CreateTruckTeamDto truckTeam) {
+        if (StringUtils.isEmpty(truckTeam.getTeamType())) {
+            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队类型不能为空"));
+        }
         if (StringUtils.isEmpty(truckTeam.getTeamName())) {
-            return BaseResponse.errorInstance("车队名称不能为空");
+            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队名称不能为空"));
+        }
+        if (StringUtils.isEmpty(truckTeam.getCreditCode())) {
+            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "creditCode不能为空"));
         }
         return BaseResponse.service(truckTeamService.createTruckTeam(truckTeam));
     }
 
     @ApiOperation("车队修改")
     @PutMapping("/truckTeam")
-    public BaseResponse updateTruckTeam(@RequestBody CreateTruckTeamDto truckTeam) {
+    public BaseResponse updateTruckTeam(@RequestBody UpdateTruckTeamDto truckTeam) {
         if (StringUtils.isEmpty(truckTeam.getId())) {
             return BaseResponse.idError("id");
         }

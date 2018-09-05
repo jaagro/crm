@@ -38,12 +38,12 @@ public class TruckController {
     private TruckTypeMapper truckTypeMapper;
 
     @ApiOperation("查询单个车辆")
-    @GetMapping("/truck/{id}")
-    public BaseResponse getTruckById(@PathVariable Integer id) {
-        if (this.truckMapper.selectByPrimaryKey(id) == null) {
+    @GetMapping("/truck/{truckId}")
+    public BaseResponse getTruckById(@PathVariable("truckId") Integer truckId) {
+        if (this.truckMapper.selectByPrimaryKey(truckId) == null) {
             return BaseResponse.errorInstance("查询不到车辆信息");
         }
-        Map<String, Object> result = truckService.getTruckById(id);
+        Map<String, Object> result = truckService.getTruckById(truckId);
         return BaseResponse.service(result);
     }
 

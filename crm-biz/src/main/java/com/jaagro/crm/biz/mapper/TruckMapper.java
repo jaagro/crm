@@ -43,7 +43,7 @@ public interface TruckMapper {
     /**
      * 查询车辆dto
      */
-    GetTruckDto getTruckById(Integer id);
+    GetTruckDto getTruckById(@Param("truckId") Integer truckId);
 
     /**
      * 通过车牌号码查询车辆

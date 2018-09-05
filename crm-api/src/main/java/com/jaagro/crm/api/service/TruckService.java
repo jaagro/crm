@@ -13,11 +13,10 @@ import java.util.Map;
 public interface TruckService {
     /**
      * 获取单条车辆
-     *
-     * @param id
+     * @param truckId
      * @return
      */
-    Map<String, Object> getTruckById(Integer id);
+    Map<String, Object> getTruckById(Integer truckId);
 
     /**
      * 创建车辆

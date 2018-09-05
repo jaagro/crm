@@ -227,15 +227,11 @@
         and certificate_status = 0
         and enabled = 1
     </select>
-    <select id="listByTruckId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    <select id="listByTruckId" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from truck_qualification
-        where 1=1
-        <if test="truckId != null">
-            and truck_id = #{truckId}
-        </if>
-        and enabled = 1
+        where enabled = 1
+        and truck_id = #{truckId}
     </select>
-
 </mapper>

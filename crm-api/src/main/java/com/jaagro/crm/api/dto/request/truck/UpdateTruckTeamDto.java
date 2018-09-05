@@ -6,11 +6,17 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 
 /**
- * @author liqiangping
+ * @author baiyiran
  */
 @Data
 @Accessors(chain = true)
-public class CreateTruckTeamDto implements Serializable {
+public class UpdateTruckTeamDto implements Serializable {
+
+    /**
+     * id
+     */
+    private Integer id;
+
     /**
      * 车队名称
      */

@@ -57,13 +57,19 @@ public class TruckServiceImpl implements TruckService {
      * @return
      */
     @Override
-    public Map<String, Object> getTruckById(Integer id) {
-        GetTruckDto result = truckMapper.getTruckById(id);
-        if (StringUtils.isEmpty(result)) {
-            return ServiceResult.error(ResponseStatusCode.FORBIDDEN_ERROR.getCode(), id + ": 无效");
+    public Map<String, Object> getTruckById(Integer truckId) {
+        Truck truck = this.truckMapper.selectByPrimaryKey(truckId);
+        if (truck == null) {
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_EMPTY.getCode(), "车辆不存在");
         }
-        List<DriverReturnDto> drivers = driverClientService.listByTruckId(id);
-        result.setDrivers(drivers);
+        GetTruckDto result = truckMapper.getTruckById(truckId);
+        if (StringUtils.isEmpty(result)) {
+            return ServiceResult.error(ResponseStatusCode.FORBIDDEN_ERROR.getCode(), truckId + ": 无效");
+        }
+        List<DriverReturnDto> drivers = driverClientService.listByTruckId(truckId);
+        result
+                .setDrivers(drivers)
+                .setTruckTypeId(this.truckTypeMapper.getById(truck.getTruckTypeId()));
         return ServiceResult.toResult(result);
     }
 
