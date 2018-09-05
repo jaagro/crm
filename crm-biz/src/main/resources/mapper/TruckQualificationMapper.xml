@@ -223,10 +223,10 @@
         from truck_qualification
         where 1=1
         <if test="truckTeamId != null">
-            and truck_team_id = #{truckTeamId} and truck_id = null and driver_id = null
+            and truck_team_id = #{truckTeamId} and truck_id is null and driver_id is null
         </if>
         <if test="truckId != null">
-            and truck_id = #{truckId} and driver_id = null
+            and truck_id = #{truckId} and driver_id is null
         </if>
         <if test="driverId != null">
             and driver_id = #{driverId}
