@@ -22,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +53,8 @@ public class ContractController {
     private TruckTeamMapper teamMapper;
     @Autowired
     private TruckTeamContractMapper truckTeamContractMapper;
+    @Autowired
+    private OssSignUrlClientService ossSignUrlClientService;
 
     /**
      * 合同新增
@@ -144,7 +147,7 @@ public class ContractController {
     @GetMapping("/listContractByCustomerId/{customerId}")
     public BaseResponse listByCustomerId(@PathVariable("customerId") Integer customerId) {
         List<ShowCustomerContractDto> result = contractService.listShowCustomerContractByCustomerId(customerId);
-        if(StringUtils.isEmpty(result)){
+        if (StringUtils.isEmpty(result)) {
             return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查无数据"));
         }
         return BaseResponse.successInstance(result);
@@ -241,7 +244,7 @@ public class ContractController {
         return BaseResponse.successInstance(qualificationMapper.listByContractId(contractId));
     }
 
-    //--------------------------------------------------审核合同------------------------------------------------------
+    //--------------------------------------------------------审核合同--------------------------------------------------------
 
     /**
      * 待审核合同资质分页
@@ -293,10 +296,16 @@ public class ContractController {
         dto
                 .setRelevanceId(relevanceId)
                 .setRelevanceType(relevanceType);
+
         //返回要审核的合同
         List<ReturnCheckContractQualificationDto> contractDtos = this.qualificationMapper.listByCriteria(dto);
         if (contractDtos != null && contractDtos.size() > 0) {
-            return BaseResponse.successInstance(contractDtos.get(0));
+            ReturnCheckContractQualificationDto checkContractQualificationDto = contractDtos.get(0);
+            //替换资质证照地址
+            String[] strArray = {checkContractQualificationDto.getCertificateImageUrl()};
+            List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+            checkContractQualificationDto.setCertificateImageUrl(urlList.get(0).toString());
+            return BaseResponse.successInstance(checkContractQualificationDto);
         }
         return BaseResponse.queryDataEmpty();
     }

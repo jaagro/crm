@@ -1,9 +1,11 @@
 package com.jaagro.crm.api.service;
 
-import com.jaagro.utils.BaseResponse;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.net.URL;
+import java.util.List;
 
 /**
  * @author tony
@@ -17,5 +19,5 @@ public interface OssSignUrlClientService {
      * @return
      */
     @PostMapping("/listSignedUrl")
-    BaseResponse listSignedUrl(@RequestParam("filePath") String[] filePath);
+    List<URL> listSignedUrl(@RequestParam("filePath") String[] filePath);
 }

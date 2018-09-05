@@ -7,10 +7,7 @@ import com.jaagro.crm.api.dto.request.truck.CreateListTruckQualificationDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckQualificationDto;
 import com.jaagro.crm.api.dto.response.truck.ReturnTruckQualificationDto;
-import com.jaagro.crm.api.service.DriverClientService;
-import com.jaagro.crm.api.service.QualificationCertificService;
-import com.jaagro.crm.api.service.QualificationVerifyLogService;
-import com.jaagro.crm.api.service.TruckQualificationService;
+import com.jaagro.crm.api.service.*;
 import com.jaagro.crm.biz.mapper.TruckMapper;
 import com.jaagro.crm.biz.mapper.TruckQualificationMapper;
 import com.jaagro.crm.biz.mapper.TruckTeamMapper;
@@ -25,6 +22,8 @@ import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,6 +47,8 @@ public class TruckQualificationController {
     private QualificationVerifyLogService logService;
     @Autowired
     private DriverClientService driverClientService;
+    @Autowired
+    private OssSignUrlClientService ossSignUrlClientService;
 
     @ApiOperation("新增资质")
     @PostMapping("/truckQualification")
@@ -87,6 +88,10 @@ public class TruckQualificationController {
             if (qualificationDto.getTruckId() != null) {
                 qualificationDto.setTruckDto(this.truckMapper.getCheckById(qualificationDto.getTruckId()));
             }
+            //替换资质证照地址
+            String[] strArray = {qualificationDto.getCertificateImageUrl()};
+            List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+            qualificationDto.setCertificateImageUrl(urlList.get(0).toString());
             return BaseResponse.successInstance(qualificationDto);
         }
         return BaseResponse.queryDataEmpty();
