@@ -16,6 +16,8 @@ import com.jaagro.crm.biz.mapper.ContractQualificationMapper;
 import com.jaagro.crm.biz.mapper.CustomerContractMapper;
 import com.jaagro.crm.biz.mapper.CustomerMapper;
 import com.jaagro.utils.BaseResponse;
+import com.jaagro.utils.ResponseStatusCode;
+import com.jaagro.utils.ServiceResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import jdk.nashorn.internal.ir.annotations.Ignore;
@@ -136,6 +138,16 @@ public class ContractController {
         return BaseResponse.service(contractService.listByCriteria(dto));
     }
 
+    @ApiOperation(("查询客户有效合同"))
+    @GetMapping("/listContractByCustomerId/{customerId}")
+    public BaseResponse listByCustomerId(@PathVariable("customerId") Integer customerId) {
+        List<ShowCustomerContractDto> result = contractService.listShowCustomerContractByCustomerId(customerId);
+        if(StringUtils.isEmpty(result)){
+            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查无数据"));
+        }
+        return BaseResponse.successInstance(result);
+    }
+
     //----------------------------------------------合同资质-------------------------------------------------
 
     /**
@@ -245,7 +257,7 @@ public class ContractController {
     /**
      * 客户合同资质待审核获取下一个
      *
-     * @param customerId
+     * @param
      * @return
      */
     @ApiOperation("客户合同资质待审核获取下一个")

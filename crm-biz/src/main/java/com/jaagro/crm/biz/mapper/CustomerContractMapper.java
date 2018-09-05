@@ -96,4 +96,10 @@ public interface CustomerContractMapper {
      */
     ShowCustomerContractDto getShowCustomerContractById(Integer id);
 
+    /**
+     * 根据客户id获取合同显示对象
+     * @param customerId
+     * @return
+     */
+    List<ShowCustomerContractDto> listShowCustomerContractByCustomerId(Integer customerId);
 }

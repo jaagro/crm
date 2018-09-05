@@ -17,5 +17,5 @@ public interface OssSignUrlClientService {
      * @return
      */
     @PostMapping("/listSignedUrl")
-    BaseResponse listSignedUrl(@RequestParam String[] filePath);
+    BaseResponse listSignedUrl(@RequestParam("filePath") String[] filePath);
 }
