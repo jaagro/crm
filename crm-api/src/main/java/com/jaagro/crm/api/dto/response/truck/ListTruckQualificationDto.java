@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author tony
@@ -48,32 +47,8 @@ public class ListTruckQualificationDto implements Serializable {
     private Integer certificateStatus;
 
     /**
-     * 创建人(关联用户ID)
-     */
-    private Integer createUserId;
-
-    /**
-     * 修改人(关联用户ID)
-     */
-    private Integer modifyUserId;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 修改时间
-     */
-    private Date modifyTime;
-
-    /**
      * 描述信息
      */
     private String notes;
 
-    /**
-     * 是否可用(0不可用 1可用)
-     */
-    private Boolean enabled;
 }

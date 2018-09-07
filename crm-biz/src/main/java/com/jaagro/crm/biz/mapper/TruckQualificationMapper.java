@@ -56,4 +56,12 @@ public interface TruckQualificationMapper {
      * 根据车辆id查询运力资质列表
      */
     List<ListTruckQualificationDto> listByTruckId(@Param("truckId") Integer truckId);
+
+    /**
+     * 根据司机id查询资质列表
+     *
+     * @param driverId
+     * @return
+     */
+    List<ListTruckQualificationDto> listByDriverId(@Param("driverId") Integer driverId);
 }

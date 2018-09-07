@@ -62,6 +62,18 @@ public class TruckQualificationController {
         return BaseResponse.service(truckQualificationService.createTruckQualification(dto));
     }
 
+    @ApiOperation("修改资质")
+    @PutMapping("/truckQualification")
+    public BaseResponse update(@RequestBody List<UpdateTruckQualificationDto> dto) {
+        return BaseResponse.service(truckQualificationService.updateQualification(dto));
+    }
+
+    @ApiOperation("删除资质")
+    @PostMapping("/deleteTruckQualification")
+    public BaseResponse update(@RequestBody Integer[] ids) {
+        return BaseResponse.service(truckQualificationService.deleteQualification(ids));
+    }
+
     /**
      * 根据三种id查询资质列表
      *

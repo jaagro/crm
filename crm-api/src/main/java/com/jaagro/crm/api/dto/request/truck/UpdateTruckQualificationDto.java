@@ -22,6 +22,11 @@ public class UpdateTruckQualificationDto implements Serializable {
     private Integer certificateType;
 
     /**
+     * 证件图片地址
+     */
+    private String certificateImageUrl;
+
+    /**
      * 证件状态(0；审核未通过 1；未审核 2；已审核)
      */
     private Integer certificateStatus;
@@ -30,5 +35,7 @@ public class UpdateTruckQualificationDto implements Serializable {
      * 描述信息
      */
     private String description;
+
+    private String notes;
 
 }

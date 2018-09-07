@@ -7,15 +7,14 @@ import com.jaagro.crm.api.dto.request.truck.CreateDriverDto;
 import com.jaagro.crm.api.dto.request.truck.CreateListTruckQualificationDto;
 import com.jaagro.crm.api.dto.request.truck.CreateTruckDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto;
-import com.jaagro.crm.api.dto.response.truck.DriverReturnDto;
-import com.jaagro.crm.api.dto.response.truck.GetTruckDto;
-import com.jaagro.crm.api.dto.response.truck.ListTruckDto;
-import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
+import com.jaagro.crm.api.dto.response.truck.*;
 import com.jaagro.crm.api.service.DriverClientService;
+import com.jaagro.crm.api.service.OssSignUrlClientService;
 import com.jaagro.crm.api.service.TruckQualificationService;
 import com.jaagro.crm.api.service.TruckService;
 import com.jaagro.crm.biz.entity.Truck;
 import com.jaagro.crm.biz.mapper.TruckMapper;
+import com.jaagro.crm.biz.mapper.TruckQualificationMapper;
 import com.jaagro.crm.biz.mapper.TruckTypeMapper;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
@@ -27,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +49,20 @@ public class TruckServiceImpl implements TruckService {
     private CurrentUserService currentUserService;
     @Autowired
     private TruckTypeMapper truckTypeMapper;
+    @Autowired
+    private TruckQualificationMapper truckQualificationMapper;
+    @Autowired
+    private OssSignUrlClientService ossSignUrlClientService;
+
+    private void changeUrl(List<ListTruckQualificationDto> driverQualificationList){
+        for (ListTruckQualificationDto dto : driverQualificationList
+        ) {
+            //替换资质证照地址
+            String[] strArray = {dto.getCertificateImageUrl()};
+            List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+            dto.setCertificateImageUrl(urlList.get(0).toString());
+        }
+    }
 
     /**
      * 获取单条
@@ -66,7 +80,21 @@ public class TruckServiceImpl implements TruckService {
         if (StringUtils.isEmpty(result)) {
             return ServiceResult.error(ResponseStatusCode.FORBIDDEN_ERROR.getCode(), truckId + ": 无效");
         }
+        //替换车辆资质证地址
+        if (result.getQualificationDtoList().size() > 0) {
+            changeUrl(result.getQualificationDtoList());
+        }
         List<DriverReturnDto> drivers = driverClientService.listByTruckId(truckId);
+        if (drivers.size() > 0) {
+            //填充司机资质证照列表
+            for (DriverReturnDto driverReturnDto : drivers) {
+                List<ListTruckQualificationDto> driverQualificationList = this.truckQualificationMapper.listByDriverId(driverReturnDto.getId());
+                if (driverQualificationList.size() > 0) {
+                    changeUrl(driverQualificationList);
+                }
+                driverReturnDto.setDriverQualificationList(driverQualificationList);
+            }
+        }
         result
                 .setDrivers(drivers)
                 .setTruckTypeId(this.truckTypeMapper.getById(truck.getTruckTypeId()));

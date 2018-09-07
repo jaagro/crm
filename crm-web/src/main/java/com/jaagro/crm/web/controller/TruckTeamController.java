@@ -1,9 +1,6 @@
 package com.jaagro.crm.web.controller;
 
-import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContactsDto;
-import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamDto;
-import com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto;
-import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamDto;
+import com.jaagro.crm.api.dto.request.truck.*;
 import com.jaagro.crm.api.service.TruckService;
 import com.jaagro.crm.api.service.TruckTeamContactsService;
 import com.jaagro.crm.api.service.TruckTeamService;
@@ -78,6 +75,12 @@ public class TruckTeamController {
     @PostMapping("/truckTeamContacts")
     public BaseResponse createTruckTeamContacts(@RequestBody List<CreateTruckTeamContactsDto> contacts) {
         return BaseResponse.service(truckTeamContactsService.createTruckTeamContacts(contacts));
+    }
+
+    @ApiOperation("修改车队联系人")
+    @PutMapping("/truckTeamContacts")
+    public BaseResponse updateTruckTeamContacts(@RequestBody List<UpdateTruckTeamContactsDto> contacts) {
+        return BaseResponse.service(truckTeamContactsService.updateContacts(contacts));
     }
 
     @ApiOperation("获取车队联系人列表")

@@ -56,7 +56,7 @@ public class UpdateTruckTeamContractPriceDto implements Serializable {
     /**
      * 是否有效
      */
-    private Boolean priceStatus;
+    private Integer priceStatus;
 
     /**
      * 报价生效时间

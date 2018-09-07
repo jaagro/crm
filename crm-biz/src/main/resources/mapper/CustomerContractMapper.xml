@@ -66,8 +66,7 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
     <insert id="insert" parameterType="com.jaagro.crm.biz.entity.CustomerContract" useGeneratedKeys="true"
-            keyProperty="id"
-            keyColumn="id">
+            keyProperty="id" keyColumn="id">
     insert into customer_contract (id, customer_id, contract_status,
       start_date, end_date, contract_date,
       type, theme, product,

@@ -2,6 +2,7 @@ package com.jaagro.crm.biz.service.impl;
 
 
 import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContactsDto;
+import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamContactsDto;
 import com.jaagro.crm.api.service.TruckTeamContactsService;
 import com.jaagro.crm.biz.entity.TruckTeamContacts;
 import com.jaagro.crm.biz.mapper.TruckTeamContactsMapper;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -71,5 +73,25 @@ public class TruckTeamContactsServiceImpl implements TruckTeamContactsService {
             return ServiceResult.error(ResponseStatusCode.QUERY_DATA_EMPTY.getCode(), "查无数据");
         }
         return ServiceResult.toResult(contacts);
+    }
+
+    @Override
+    public Map<String, Object> updateContacts(List<UpdateTruckTeamContactsDto> contacts) {
+        if (contacts != null && contacts.size() > 0) {
+            if (StringUtils.isEmpty(contacts.get(0).getTruckTeamId())) {
+                return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队id不能为空");
+            }
+            this.truckTeamContactsMapper.deleteByTruckTeamId(contacts.get(0).getTruckTeamId());
+            for (UpdateTruckTeamContactsDto contactsDto : contacts) {
+                TruckTeamContacts teamContacts = new TruckTeamContacts();
+                BeanUtils.copyProperties(contactsDto, teamContacts);
+                teamContacts
+                        .setCreateUserId(this.currentUserService.getCurrentUser().getId());
+                this.truckTeamContactsMapper.insertSelective(teamContacts);
+            }
+        } else {
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "联系人列表不能为空");
+        }
+        return ServiceResult.toResult("修改成功");
     }
 }

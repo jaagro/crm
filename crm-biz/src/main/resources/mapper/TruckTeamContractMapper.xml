@@ -239,7 +239,7 @@
         <include refid="Base_Column_List"/>
         from truck_team_contract
         where contract_status = 1
-        <if test="contract_number != null">
+        <if test="contractNumber != null">
             and contract_number = #{contractNumber}
         </if>
     </select>
