@@ -52,4 +52,11 @@ public interface TruckService {
      * @return
      */
     List<ListTruckTypeDto> listTruckType();
+
+    /**
+     * 获取单条车辆类型
+     * @param id
+     * @return
+     */
+    ListTruckTypeDto  getTruckTypeById(Integer id);
 }

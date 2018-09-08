@@ -107,4 +107,10 @@ public class TruckController {
     public List<ListTruckTypeDto> listTruckTypeReturnDto(){
         return truckService.listTruckType();
     }
+
+    @Ignore
+    @GetMapping("/getTruckTypeById/{id}")
+    public ListTruckTypeDto getTruckTypeById(@PathVariable("id") Integer id) {
+        return truckService.getTruckTypeById(id);
+    }
 }

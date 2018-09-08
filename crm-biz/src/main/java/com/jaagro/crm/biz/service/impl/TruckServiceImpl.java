@@ -169,4 +169,15 @@ public class TruckServiceImpl implements TruckService {
     public List<ListTruckTypeDto> listTruckType(){
         return truckTypeMapper.listAll();
     }
+
+    /**
+     * 获取单条车辆类型
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public ListTruckTypeDto getTruckTypeById(Integer id) {
+        return truckTypeMapper.getById(id);
+    }
 }
