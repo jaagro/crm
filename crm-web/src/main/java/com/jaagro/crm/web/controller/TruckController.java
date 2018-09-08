@@ -38,12 +38,12 @@ public class TruckController {
     private TruckTypeMapper truckTypeMapper;
 
     @ApiOperation("查询单个车辆")
-    @GetMapping("/truck/{id}")
-    public BaseResponse getTruckById(@PathVariable Integer id) {
-        if (this.truckMapper.selectByPrimaryKey(id) == null) {
+    @GetMapping("/truck/{truckId}")
+    public BaseResponse getTruckById(@PathVariable("truckId") Integer truckId) {
+        if (this.truckMapper.selectByPrimaryKey(truckId) == null) {
             return BaseResponse.errorInstance("查询不到车辆信息");
         }
-        Map<String, Object> result = truckService.getTruckById(id);
+        Map<String, Object> result = truckService.getTruckById(truckId);
         return BaseResponse.service(result);
     }
 
@@ -69,7 +69,6 @@ public class TruckController {
             e.printStackTrace();
             response = BaseResponse.errorInstance("司机创建失败");
         }
-
         return response;
     }
 
@@ -88,11 +87,15 @@ public class TruckController {
         return BaseResponse.service(truckService.deleteTruck(id));
     }
 
+    /**
+     * 分页查询车辆
+     *
+     * @param truckCriteria
+     * @return
+     */
+    @ApiOperation("分页查询车辆")
     @PostMapping("/listTruck")
     public BaseResponse listTruck(@RequestBody ListTruckCriteriaDto truckCriteria) {
-        if (StringUtils.isEmpty(truckCriteria.getTruckTeamId())) {
-            return BaseResponse.idError("truckTeamId不能为空");
-        }
         return BaseResponse.service(truckService.listTruck(truckCriteria));
     }
 

@@ -6,7 +6,7 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 
 /**
- * @author tony
+ * @author baiyiran
  */
 @Data
 @Accessors(chain = true)
@@ -18,21 +18,25 @@ public class ListCustomerDto implements Serializable {
     private Integer id;
 
     /**
-     * 客户名称(个体客户时，就是自然人姓名)
+     * 客户姓名
      */
     private String customerName;
 
     /**
-     * 客户类型
-     (1:个体客户 2:企业客户 )
+     * 联系人姓名
      */
-    private Integer customerType;
+    private String contactName;
 
     /**
-     * 审核状态
-     (0未审核，1-正常合作  10-停止合作 11-审核未通过 13-作废)
+     * 联系人电话
      */
-    private Integer customerStatus;
+    private String phone;
+
+    /**
+     * 客户类型
+     * (1:个体客户 2:企业客户 )
+     */
+    private Integer customerType;
 
     /**
      * 所属城市
@@ -40,39 +44,18 @@ public class ListCustomerDto implements Serializable {
     private String city;
 
     /**
-     * 所属省份
+     * 省份
      */
     private String province;
 
     /**
-     * 所属区县
+     * 区
      */
     private String county;
 
     /**
-     * 是否开票
-     0:否 1:是
+     * 审核状态
      */
-    private Boolean enableInvoice;
+    private Integer customerStatus;
 
-    /**
-     * 发票类型
-     1:增值税普通发票 2:增值税专用发票
-     */
-    private Integer invoiceType;
-
-    /**
-     * 发票抬头
-     */
-    private String invoiceHeader;
-
-    /**
-     * 税务编号
-     */
-    private String taxNumber;
-
-    /**
-     * 备注信息(用车要求)
-     */
-    private String notes;
 }

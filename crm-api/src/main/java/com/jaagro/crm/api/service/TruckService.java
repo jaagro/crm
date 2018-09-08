@@ -13,14 +13,14 @@ import java.util.Map;
 public interface TruckService {
     /**
      * 获取单条车辆
-     *
-     * @param id
+     * @param truckId
      * @return
      */
-    Map<String, Object> getTruckById(Integer id);
+    Map<String, Object> getTruckById(Integer truckId);
 
     /**
      * 创建车辆
+     *
      * @param truckDto
      * @return
      */
@@ -28,6 +28,7 @@ public interface TruckService {
 
     /**
      * 修改车辆
+     *
      * @param truckDto
      * @return
      */
@@ -35,6 +36,7 @@ public interface TruckService {
 
     /**
      * 删除车辆
+     *
      * @param id
      * @return
      */
@@ -42,13 +44,23 @@ public interface TruckService {
 
     /**
      * 获取list
+     *
      * @param criteriaDto
      * @return
      */
     Map<String, Object> listTruck(ListTruckCriteriaDto criteriaDto);
 
     /**
+     * 运力管理
+     *
+     * @param criteriaDto
+     * @return
+     */
+    Map<String, Object> listTruckByCriteria(ListTruckCriteriaDto criteriaDto);
+
+    /**
      * 获取车辆类型列表
+     *
      * @return
      */
     List<ListTruckTypeDto> listTruckType();

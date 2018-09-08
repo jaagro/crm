@@ -14,25 +14,25 @@ import java.util.Date;
 @Accessors(chain = true)
 public class TruckTeamContractPrice implements Serializable {
     /**
-     * 
+     *
      */
     private Integer id;
 
     /**
      * 合同id
- Nullable
- References: contract
+     * Nullable
+     * References: contract
      */
     private Integer truckTeamContractId;
 
     /**
      * 计价方式
- 说明：
- 1、按重量; 
- 2、按数量;
- 3、按重量＊里程； 
- 4，按数量＊里程
- Nullable
+     * 说明：
+     * 1、按重量;
+     * 2、按数量;
+     * 3、按重量＊里程；
+     * 4，按数量＊里程
+     * Nullable
      */
     private Integer pricingType;
 
@@ -48,14 +48,14 @@ public class TruckTeamContractPrice implements Serializable {
 
     /**
      * 单价
- Nullable
+     * Nullable
      */
     private BigDecimal price;
 
     /**
      * 是否有效
      */
-    private Boolean priceStatus;
+    private Integer priceStatus;
 
     /**
      * 报价生效时间

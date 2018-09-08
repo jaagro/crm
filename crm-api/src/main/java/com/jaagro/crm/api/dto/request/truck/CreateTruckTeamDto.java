@@ -12,11 +12,6 @@ import java.io.Serializable;
 @Accessors(chain = true)
 public class CreateTruckTeamDto implements Serializable {
     /**
-     * 主键车队表ID
-     */
-    private Integer id;
-
-    /**
      * 车队名称
      */
     private String teamName;
@@ -35,11 +30,6 @@ public class CreateTruckTeamDto implements Serializable {
      * 统一社会信用码（个体司机时，为司机身份证号码）
      */
     private String creditCode;
-
-    /**
-     * 车队状态(0；停止合作  1；审核未通过 2未审核，3正常合作)
-     */
-    private Integer teamStatus;
 
     /**
      * 车队合作类型(1-自有  2-加盟 3-－外请是啥？请产品确认)

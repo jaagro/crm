@@ -66,8 +66,7 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
     <insert id="insert" parameterType="com.jaagro.crm.biz.entity.CustomerContract" useGeneratedKeys="true"
-            keyProperty="id"
-            keyColumn="id">
+            keyProperty="id" keyColumn="id">
     insert into customer_contract (id, customer_id, contract_status,
       start_date, end_date, contract_date,
       type, theme, product,
@@ -275,8 +274,10 @@
         select
         <include refid="Base_Column_List"/>
         from customer_contract
-        where 1 = 1
-        and contract_status = 1
+        where contract_status = 1
+        <if test="customerId != null">
+            and customer_id = #{customerId}
+        </if>
         order by create_time desc
     </select>
     <select id="getById" parameterType="java.lang.Integer" resultMap="DetailInfo">

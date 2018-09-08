@@ -2,6 +2,7 @@ package com.jaagro.crm.biz.service.impl;
 
 import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamDto;
+import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTeamDto;
 import com.jaagro.crm.api.service.TruckTeamService;
 import com.jaagro.crm.biz.entity.TruckTeam;
@@ -54,7 +55,7 @@ public class TruckTeamServiceImpl implements TruckTeamService {
      * @return
      */
     @Override
-    public Map<String, Object> updateTruckTeam(CreateTruckTeamDto truckTeamDto) {
+    public Map<String, Object> updateTruckTeam(UpdateTruckTeamDto truckTeamDto) {
         if (truckTeamMapper.selectByPrimaryKey(truckTeamDto.getId()) == null) {
             ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), truckTeamDto.getId() + " ：该车队不存在");
         }

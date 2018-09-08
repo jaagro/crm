@@ -1,142 +1,175 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jaagro.crm.biz.mapper.TruckTeamContractPriceMapper" >
-  <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.TruckTeamContractPrice" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="truck_team_contract_id" property="truckTeamContractId" jdbcType="INTEGER" />
-    <result column="pricing_type" property="pricingType" jdbcType="INTEGER" />
-    <result column="vehicle_type" property="vehicleType" jdbcType="INTEGER" />
-    <result column="product_type" property="productType" jdbcType="INTEGER" />
-    <result column="price" property="price" jdbcType="DECIMAL" />
-    <result column="price_status" property="priceStatus" jdbcType="BIT" />
-    <result column="start_date" property="startDate" jdbcType="TIMESTAMP" />
-    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
-  </resultMap>
-  <sql id="Base_Column_List" >
+<mapper namespace="com.jaagro.crm.biz.mapper.TruckTeamContractPriceMapper">
+    <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.TruckTeamContractPrice">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="truck_team_contract_id" property="truckTeamContractId" jdbcType="INTEGER"/>
+        <result column="pricing_type" property="pricingType" jdbcType="INTEGER"/>
+        <result column="vehicle_type" property="vehicleType" jdbcType="INTEGER"/>
+        <result column="product_type" property="productType" jdbcType="INTEGER"/>
+        <result column="price" property="price" jdbcType="DECIMAL"/>
+        <result column="price_status" property="priceStatus" jdbcType="INTEGER"/>
+        <result column="start_date" property="startDate" jdbcType="TIMESTAMP"/>
+        <result column="end_date" property="endDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <resultMap id="ReturnMap" type="com.jaagro.crm.api.dto.response.truck.TruckTeamContractPriceReturnDto">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="truck_team_contract_id" property="truckTeamContractId" jdbcType="INTEGER"/>
+        <result column="pricing_type" property="pricingType" jdbcType="INTEGER"/>
+        <result column="vehicle_type" property="vehicleType" jdbcType="INTEGER"/>
+        <result column="product_type" property="productType" jdbcType="INTEGER"/>
+        <result column="price" property="price" jdbcType="DECIMAL"/>
+        <result column="price_status" property="priceStatus" jdbcType="INTEGER"/>
+        <result column="start_date" property="startDate" jdbcType="TIMESTAMP"/>
+        <result column="end_date" property="endDate" jdbcType="TIMESTAMP"/>
+        <collection property="sectionPriceReturnDtoList" column="id"
+                    select="com.jaagro.crm.biz.mapper.TruckTeamContractSectionPriceMapper.listByPriceId"></collection>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, truck_team_contract_id, pricing_type, vehicle_type, product_type, price, price_status, 
     start_date, end_date
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from truck_team_contract_price
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from truck_team_contract_price
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from truck_team_contract_price
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.TruckTeamContractPrice" >
+    <insert id="insert" parameterType="com.jaagro.crm.biz.entity.TruckTeamContractPrice" useGeneratedKeys="true"
+            keyProperty="id"
+            keyColumn="id">
     insert into truck_team_contract_price (id, truck_team_contract_id, pricing_type, 
       vehicle_type, product_type, price, 
       price_status, start_date, end_date
       )
     values (#{id,jdbcType=INTEGER}, #{truckTeamContractId,jdbcType=INTEGER}, #{pricingType,jdbcType=INTEGER}, 
       #{vehicleType,jdbcType=INTEGER}, #{productType,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL}, 
-      #{priceStatus,jdbcType=BIT}, #{startDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP}
+      #{priceStatus,jdbcType=INTEGER}, #{startDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.TruckTeamContractPrice" >
-    insert into truck_team_contract_price
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="truckTeamContractId != null" >
-        truck_team_contract_id,
-      </if>
-      <if test="pricingType != null" >
-        pricing_type,
-      </if>
-      <if test="vehicleType != null" >
-        vehicle_type,
-      </if>
-      <if test="productType != null" >
-        product_type,
-      </if>
-      <if test="price != null" >
-        price,
-      </if>
-      <if test="priceStatus != null" >
-        price_status,
-      </if>
-      <if test="startDate != null" >
-        start_date,
-      </if>
-      <if test="endDate != null" >
-        end_date,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="truckTeamContractId != null" >
-        #{truckTeamContractId,jdbcType=INTEGER},
-      </if>
-      <if test="pricingType != null" >
-        #{pricingType,jdbcType=INTEGER},
-      </if>
-      <if test="vehicleType != null" >
-        #{vehicleType,jdbcType=INTEGER},
-      </if>
-      <if test="productType != null" >
-        #{productType,jdbcType=INTEGER},
-      </if>
-      <if test="price != null" >
-        #{price,jdbcType=DECIMAL},
-      </if>
-      <if test="priceStatus != null" >
-        #{priceStatus,jdbcType=BIT},
-      </if>
-      <if test="startDate != null" >
-        #{startDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="endDate != null" >
-        #{endDate,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.TruckTeamContractPrice" >
-    update truck_team_contract_price
-    <set >
-      <if test="truckTeamContractId != null" >
-        truck_team_contract_id = #{truckTeamContractId,jdbcType=INTEGER},
-      </if>
-      <if test="pricingType != null" >
-        pricing_type = #{pricingType,jdbcType=INTEGER},
-      </if>
-      <if test="vehicleType != null" >
-        vehicle_type = #{vehicleType,jdbcType=INTEGER},
-      </if>
-      <if test="productType != null" >
-        product_type = #{productType,jdbcType=INTEGER},
-      </if>
-      <if test="price != null" >
-        price = #{price,jdbcType=DECIMAL},
-      </if>
-      <if test="priceStatus != null" >
-        price_status = #{priceStatus,jdbcType=BIT},
-      </if>
-      <if test="startDate != null" >
-        start_date = #{startDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="endDate != null" >
-        end_date = #{endDate,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.TruckTeamContractPrice" >
+    <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.TruckTeamContractPrice"
+            useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id">
+        insert into truck_team_contract_price
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="truckTeamContractId != null">
+                truck_team_contract_id,
+            </if>
+            <if test="pricingType != null">
+                pricing_type,
+            </if>
+            <if test="vehicleType != null">
+                vehicle_type,
+            </if>
+            <if test="productType != null">
+                product_type,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="priceStatus != null">
+                price_status,
+            </if>
+            <if test="startDate != null">
+                start_date,
+            </if>
+            <if test="endDate != null">
+                end_date,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="truckTeamContractId != null">
+                #{truckTeamContractId,jdbcType=INTEGER},
+            </if>
+            <if test="pricingType != null">
+                #{pricingType,jdbcType=INTEGER},
+            </if>
+            <if test="vehicleType != null">
+                #{vehicleType,jdbcType=INTEGER},
+            </if>
+            <if test="productType != null">
+                #{productType,jdbcType=INTEGER},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="priceStatus != null">
+                #{priceStatus,jdbcType=INTEGER},
+            </if>
+            <if test="startDate != null">
+                #{startDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endDate != null">
+                #{endDate,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.TruckTeamContractPrice">
+        update truck_team_contract_price
+        <set>
+            <if test="truckTeamContractId != null">
+                truck_team_contract_id = #{truckTeamContractId,jdbcType=INTEGER},
+            </if>
+            <if test="pricingType != null">
+                pricing_type = #{pricingType,jdbcType=INTEGER},
+            </if>
+            <if test="vehicleType != null">
+                vehicle_type = #{vehicleType,jdbcType=INTEGER},
+            </if>
+            <if test="productType != null">
+                product_type = #{productType,jdbcType=INTEGER},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="priceStatus != null">
+                price_status = #{priceStatus,jdbcType=INTEGER},
+            </if>
+            <if test="startDate != null">
+                start_date = #{startDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endDate != null">
+                end_date = #{endDate,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.TruckTeamContractPrice">
     update truck_team_contract_price
     set truck_team_contract_id = #{truckTeamContractId,jdbcType=INTEGER},
       pricing_type = #{pricingType,jdbcType=INTEGER},
       vehicle_type = #{vehicleType,jdbcType=INTEGER},
       product_type = #{productType,jdbcType=INTEGER},
       price = #{price,jdbcType=DECIMAL},
-      price_status = #{priceStatus,jdbcType=BIT},
+      price_status = #{priceStatus,jdbcType=INTEGER},
       start_date = #{startDate,jdbcType=TIMESTAMP},
       end_date = #{endDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+    <select id="listByContractId" resultMap="ReturnMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from truck_team_contract_price
+        where truck_team_contract_id = #{contractId,jdbcType=INTEGER}
+    </select>
+    <update id="disableByContractId" parameterType="java.lang.Integer">
+        update truck_team_contract_price
+        set price_status = 0
+        where truck_team_contract_id = #{id}
+      </update>
+    <delete id="deleteByContractId" parameterType="java.lang.Integer">
+        delete from truck_team_contract_price
+        where truck_team_contract_id = #{id}
+    </delete>
+
 </mapper>

@@ -1,6 +1,7 @@
 package com.jaagro.crm.api.service;
 
 import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamDto;
+import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamDto;
 
 import java.util.Map;
 
@@ -22,7 +23,7 @@ public interface TruckTeamService {
      * @param dto
      * @return
      */
-    Map<String, Object> updateTruckTeam(CreateTruckTeamDto dto);
+    Map<String, Object> updateTruckTeam(UpdateTruckTeamDto dto);
 
     /**
      * 获取单条车辆
