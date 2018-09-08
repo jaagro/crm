@@ -241,7 +241,7 @@
         <if test="driverId != null">
             and driver_id = #{driverId}
         </if>
-        and certificate_status = 0 or certificate_status = 2
+        and certificate_status in (0,2)
         and enabled = 1
     </select>
     <select id="listByTruckId" resultMap="ReturnMap">
