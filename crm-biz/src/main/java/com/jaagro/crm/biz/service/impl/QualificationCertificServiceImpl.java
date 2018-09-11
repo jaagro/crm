@@ -60,6 +60,10 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
         return ServiceResult.toResult("资质证件照列表创建成功");
     }
 
+    /**
+     * 这里只能审核客户资质，车队资质审核在哪里？？？
+     */
+
     @Override
     public Map<String, Object> updateQualificationCertific(UpdateCustomerQualificationDto certificDto) {
         CustomerQualification qc = new CustomerQualification();

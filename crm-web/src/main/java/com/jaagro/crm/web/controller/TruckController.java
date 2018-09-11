@@ -2,6 +2,7 @@ package com.jaagro.crm.web.controller;
 
 import com.jaagro.crm.api.dto.request.truck.CreateTruckDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto;
+import com.jaagro.crm.api.dto.response.truck.GetTruckDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
 import com.jaagro.crm.api.service.TruckService;
 import com.jaagro.crm.biz.mapper.TruckMapper;
@@ -45,6 +46,11 @@ public class TruckController {
         }
         Map<String, Object> result = truckService.getTruckById(truckId);
         return BaseResponse.service(result);
+    }
+
+    @GetMapping("/truckToFeign/{truckId}")
+    public GetTruckDto getTruckByIdReturnObject(@PathVariable("truckId") Integer truckId) {
+        return truckService.getTruckByIdReturnObject(truckId);
     }
 
     @ApiOperation("新增车辆")
