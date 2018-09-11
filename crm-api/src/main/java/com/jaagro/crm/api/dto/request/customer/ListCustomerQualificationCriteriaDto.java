@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 资质证件照分页查询帮助类
@@ -28,17 +27,7 @@ public class ListCustomerQualificationCriteriaDto implements Serializable {
     /**
      * 客户id
      */
-    private Long customerId;
-
-    /**
-     * 开始日期
-     */
-    private Date startDate;
-
-    /**
-     * 结束日期
-     */
-    private Date endDate;
+    private Integer customerId;
 
     /**
      * 证件类型(1-工商执照 2-身份证正面 3-身份证反面 4-......)

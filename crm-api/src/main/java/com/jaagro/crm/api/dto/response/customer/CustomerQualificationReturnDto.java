@@ -24,6 +24,11 @@ public class CustomerQualificationReturnDto implements Serializable {
     private Integer certificateType;
 
     /**
+     * 证件图片地址
+     */
+    private String certificateImageUrl;
+
+    /**
      * 证件状态(-1；审核未通过 0；未审核 1；已审核)
      */
     private Integer certificateStatus;
@@ -32,6 +37,8 @@ public class CustomerQualificationReturnDto implements Serializable {
      * 外键关联客户ID(References customer)
      */
     private Integer customerId;
+
+    private String description;
 
     /**
      * 是否可用（0不可用 1可用）

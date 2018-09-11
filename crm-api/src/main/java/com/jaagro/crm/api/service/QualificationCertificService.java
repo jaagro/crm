@@ -71,7 +71,15 @@ public interface QualificationCertificService {
     Map<String, Object> listByCriteria(ListCustomerQualificationCriteriaDto dto);
 
     /**
-     * 删除资质证件照，注意逻辑删除
+     * 删除资质证件照
+     *
+     * @param id
+     * @return
+     */
+    Map<String, Object> deleteQualificationCertific(List<Integer> ids);
+
+    /**
+     * 逻辑删除资质证件照
      *
      * @param id
      * @return
@@ -79,7 +87,7 @@ public interface QualificationCertificService {
     Map<String, Object> disableQualificationCertific(Integer id);
 
     /**
-     * 删除资质证件照，注意逻辑删除
+     * 逻辑删除资质证件照
      *
      * @param id
      * @return

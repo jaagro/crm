@@ -97,16 +97,22 @@ public class QualificationCertificController {
      * @param certificDto
      * @return
      */
-    @ApiOperation("修改单个资质")
+    @ApiOperation("修改资质")
     @PutMapping("/qualificationCertific")
-    public BaseResponse updateSite(@RequestBody UpdateCustomerQualificationDto certificDto) {
-        if (certificDto.getId() == null) {
-            return BaseResponse.idNull("证件id:[id]不能为空");
-        }
-        if (this.certificMapper.selectByPrimaryKey(certificDto.getId()) == null) {
-            return BaseResponse.idNull("证件id:[id]不能为空");
-        }
+    public BaseResponse updateSite(@RequestBody List<UpdateCustomerQualificationDto> certificDto) {
         return BaseResponse.service(certificService.updateQualificationCertific(certificDto));
+    }
+
+    /**
+     * 删除资质
+     *
+     * @param ids
+     * @return
+     */
+    @ApiOperation("删除资质")
+    @PostMapping("/deleteQualificationCertific")
+    public BaseResponse deleteQualificationCertific(@RequestBody List<Integer> ids) {
+        return BaseResponse.service(certificService.deleteQualificationCertific(ids));
     }
 
     /**
@@ -159,8 +165,10 @@ public class QualificationCertificController {
         if (returnDtos.size() < 1) {
             return BaseResponse.errorInstance("客户未上传资质证");
         }
+        ListCustomerQualificationCriteriaDto dto = new ListCustomerQualificationCriteriaDto();
+        dto.setCustomerId(customerId);
         //返回要审核的资质信息
-        List<ReturnQualificationDto> qualificationDtos = this.certificMapper.listByCustomerIdAndStatus(customerId);
+        List<ReturnQualificationDto> qualificationDtos = this.certificMapper.listByCustomerIdAndStatus(dto);
         if (qualificationDtos != null && qualificationDtos.size() > 0) {
             return BaseResponse.successInstance(qualificationDtos.get(0));
         }

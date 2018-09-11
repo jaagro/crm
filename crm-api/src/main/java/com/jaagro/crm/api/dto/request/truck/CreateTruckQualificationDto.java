@@ -12,6 +12,8 @@ import java.io.Serializable;
 @Accessors(chain = true)
 public class CreateTruckQualificationDto implements Serializable {
 
+
+
     /**
      * 资质类型(1-工商执照 2-身份证正面 3-身份证反面 4-......)
      */

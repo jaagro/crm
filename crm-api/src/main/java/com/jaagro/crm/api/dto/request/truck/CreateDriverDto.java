@@ -46,5 +46,5 @@ public class CreateDriverDto implements Serializable {
     /**
      * 司机资质列表
      */
-    private List<CreateTruckQualificationDto> driverQualifications;
+    private List<UpdateTruckQualificationDto> driverQualifications;
 }
