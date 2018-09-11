@@ -63,8 +63,7 @@ public class TruckServiceImpl implements TruckService {
 
     /**
      * 获取单条
-     *
-     * @param id
+     * @param truckId
      * @return
      */
     @Override
@@ -99,8 +98,24 @@ public class TruckServiceImpl implements TruckService {
     }
 
     /**
-     * 创建车辆对象
+     * 获取单条车辆 返回对象
      *
+     * @param truckId
+     * @return
+     */
+    @Override
+    public GetTruckDto getTruckByIdReturnObject(Integer truckId) {
+        Truck truck = this.truckMapper.selectByPrimaryKey(truckId);
+        GetTruckDto result = truckMapper.getTruckById(truckId);
+        List<DriverReturnDto> drivers = driverClientService.listByTruckId(truckId);
+        result
+                .setDrivers(drivers)
+                .setTruckTypeId(this.truckTypeMapper.getById(truck.getTruckTypeId()));
+        return result;
+    }
+
+    /**
+     * 创建车辆对象
      * @return
      */
     @Override
@@ -211,7 +226,6 @@ public class TruckServiceImpl implements TruckService {
 
     /**
      * 删除车辆
-     *
      * @param id
      * @return
      */
@@ -255,7 +269,6 @@ public class TruckServiceImpl implements TruckService {
 
     /**
      * 获取单条车辆类型
-     *
      * @param id
      * @return
      */

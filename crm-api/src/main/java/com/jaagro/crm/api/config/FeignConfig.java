@@ -23,7 +23,7 @@ public class FeignConfig implements RequestInterceptor {
     @Override
     public void apply(RequestTemplate requestTemplate) {
         requestTemplate.header("token", getHeaders(getHttpServletRequest()).get("token"));
-        log.info("当前token: " + getHeaders(getHttpServletRequest()).get("token"));
+//        log.info("当前token: " + getHeaders(getHttpServletRequest()).get("token"));
     }
 
     private HttpServletRequest getHttpServletRequest() {

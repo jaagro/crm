@@ -16,14 +16,15 @@ public final class ProductType {
     public static final Integer FODDER = 2;
 
     /**
+     * 母猪
+     */
+    public static final Integer SOW = 3;
+
+    /**
      * 公猪
      */
     public static final Integer BOAR = 4;
 
-    /**
-     * 母猪
-     */
-    public static final Integer SOW = 3;
 
     /**
      * 仔猪

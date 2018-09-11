@@ -2,6 +2,7 @@ package com.jaagro.crm.api.service;
 
 import com.jaagro.crm.api.dto.request.truck.CreateTruckDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto;
+import com.jaagro.crm.api.dto.response.truck.GetTruckDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
 
 import java.util.List;
@@ -17,6 +18,13 @@ public interface TruckService {
      * @return
      */
     Map<String, Object> getTruckById(Integer truckId);
+
+    /**
+     * 获取单条车辆 返回对象
+     * @param truckId
+     * @return
+     */
+    GetTruckDto getTruckByIdReturnObject(Integer truckId);
 
     /**
      * 创建车辆
