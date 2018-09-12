@@ -73,7 +73,7 @@ public interface ContractService {
     /**
      * 删除，注意逻辑删除
      *
-     * @param id
+     * @param dtos
      * @return
      */
     Map<String, Object> disableByID(List<ReturnContractDto> dtos);
@@ -84,5 +84,12 @@ public interface ContractService {
      * @return
      */
     ShowCustomerContractDto getShowCustomerContractById(Integer id);
+
+    /**
+     * 通过客户id获取当前客户所有合同（显示对象）
+     * @param customerId
+     * @return
+     */
+    List<ShowCustomerContractDto> listShowCustomerContractByCustomerId(Integer customerId);
 
 }

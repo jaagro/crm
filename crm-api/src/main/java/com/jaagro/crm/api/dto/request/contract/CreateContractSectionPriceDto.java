@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
+ * 阶梯报价新增帮助类
+ *
  * @author baiyiran
  */
 @Data

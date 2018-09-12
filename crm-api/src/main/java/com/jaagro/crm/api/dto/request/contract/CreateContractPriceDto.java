@@ -87,5 +87,8 @@ public class CreateContractPriceDto implements Serializable {
      */
     private BigDecimal minMoney;
 
+    /**
+     * 阶梯报价列表
+     */
     private List<CreateContractSectionPriceDto> sectionPrice;
 }

@@ -2,11 +2,11 @@ package com.jaagro.crm.biz.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.jaagro.crm.api.constant.CertificateStatus;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerQualificationDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerQualificationCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerQualificationDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerQualificationReturnDto;
+import com.jaagro.crm.api.service.OssSignUrlClientService;
 import com.jaagro.crm.api.service.QualificationCertificService;
 import com.jaagro.crm.biz.entity.CustomerQualification;
 import com.jaagro.crm.biz.mapper.CustomerQualificationMapper;
@@ -33,6 +33,8 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
     private CustomerQualificationMapper certificMapper;
     @Autowired
     private CurrentUserService userService;
+    @Autowired
+    private OssSignUrlClientService ossSignUrlClientService;
 
     @Override
     public Map<String, Object> createQualificationCertific(CreateCustomerQualificationDto certificDto) {
@@ -57,6 +59,10 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
         }
         return ServiceResult.toResult("资质证件照列表创建成功");
     }
+
+    /**
+     * 这里只能审核客户资质，车队资质审核在哪里？？？
+     */
 
     @Override
     public Map<String, Object> updateQualificationCertific(UpdateCustomerQualificationDto certificDto) {

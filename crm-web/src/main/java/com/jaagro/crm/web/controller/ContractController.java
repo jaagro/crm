@@ -7,15 +7,13 @@ import com.jaagro.crm.api.dto.request.customer.CreateQualificationVerifyLogDto;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnCheckContractQualificationDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
-import com.jaagro.crm.api.service.ContractQualificationService;
-import com.jaagro.crm.api.service.ContractService;
-import com.jaagro.crm.api.service.CustomerService;
-import com.jaagro.crm.api.service.QualificationVerifyLogService;
+import com.jaagro.crm.api.dto.response.truck.TruckTeamContractReturnDto;
+import com.jaagro.crm.api.service.*;
 import com.jaagro.crm.biz.entity.ContractQualification;
-import com.jaagro.crm.biz.mapper.ContractQualificationMapper;
-import com.jaagro.crm.biz.mapper.CustomerContractMapper;
-import com.jaagro.crm.biz.mapper.CustomerMapper;
+import com.jaagro.crm.biz.mapper.*;
 import com.jaagro.utils.BaseResponse;
+import com.jaagro.utils.ResponseStatusCode;
+import com.jaagro.utils.ServiceResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import jdk.nashorn.internal.ir.annotations.Ignore;
@@ -24,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +47,14 @@ public class ContractController {
     private CustomerService customerService;
     @Autowired
     private QualificationVerifyLogService logService;
+    @Autowired
+    private DriverClientService driverClientService;
+    @Autowired
+    private TruckTeamMapper teamMapper;
+    @Autowired
+    private TruckTeamContractMapper truckTeamContractMapper;
+    @Autowired
+    private OssSignUrlClientService ossSignUrlClientService;
 
     /**
      * 合同新增
@@ -133,7 +140,20 @@ public class ContractController {
     @ApiOperation("分页查询合同")
     @PostMapping("/listContractByCriteria")
     public BaseResponse listByCriteria(@RequestBody ListContractCriteriaDto dto) {
+        if (dto.getCustomerId() == null) {
+            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户id不能为空"));
+        }
         return BaseResponse.service(contractService.listByCriteria(dto));
+    }
+
+    @ApiOperation(("查询客户有效合同"))
+    @GetMapping("/listContractByCustomerId/{customerId}")
+    public BaseResponse listByCustomerId(@PathVariable("customerId") Integer customerId) {
+        List<ShowCustomerContractDto> result = contractService.listShowCustomerContractByCustomerId(customerId);
+        if (StringUtils.isEmpty(result)) {
+            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查无数据"));
+        }
+        return BaseResponse.successInstance(result);
     }
 
     //----------------------------------------------合同资质-------------------------------------------------
@@ -227,7 +247,7 @@ public class ContractController {
         return BaseResponse.successInstance(qualificationMapper.listByContractId(contractId));
     }
 
-    //--------------------------------------------------审核合同------------------------------------------------------
+    //--------------------------------------------------------审核合同--------------------------------------------------------
 
     /**
      * 待审核合同资质分页
@@ -235,7 +255,7 @@ public class ContractController {
      * @param dto
      * @return
      */
-    @ApiOperation("待审核合同资质分页")
+    @ApiOperation("待审核合同资质分页[客户&司机]")
     @PostMapping("/listContractQuaByCriteria")
     public BaseResponse listContractQuaByCriteria(@RequestBody ListContractQualificationCriteriaDto dto) {
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
@@ -243,41 +263,73 @@ public class ContractController {
     }
 
     /**
-     * 客户合同资质待审核获取下一个
+     * 合同资质待审核获取下一个
      *
-     * @param customerId
+     * @param
      * @return
      */
-    @ApiOperation("客户合同资质待审核获取下一个")
-    @GetMapping("/getContractByCustmIdAuto/{relevanceId}")
-    public BaseResponse getContractByCustmIdAuto(@PathVariable Integer relevanceId) {
-        if (this.customerMapper.selectByPrimaryKey(relevanceId) == null) {
-            return BaseResponse.errorInstance("客户不存在");
+    @ApiOperation("合同资质待审核获取下一个[客户&司机]")
+    @GetMapping("/getContractByCustmIdAuto/{relevanceId}/{relevanceType}")
+    public BaseResponse getContractByCustmIdAuto(@PathVariable Integer relevanceId, @PathVariable Integer relevanceType) {
+        /**
+         * 客户合同
+         */
+        if (relevanceType == 1) {
+            if (this.customerMapper.selectByPrimaryKey(relevanceId) == null) {
+                return BaseResponse.errorInstance("客户不存在");
+            }
+            //查询此客户是否有合同
+            List<ReturnContractDto> contractDtoList = this.customerContractMapper.getByCustomerId(relevanceId);
+            if (contractDtoList.size() < 1) {
+                return BaseResponse.errorInstance("客户未上传合同");
+            }
+        } else {
+            /**
+             * 车队合同
+             */
+            if (this.teamMapper.selectByPrimaryKey(relevanceId) == null) {
+                return BaseResponse.errorInstance("车队不存在");
+            }
+            List<TruckTeamContractReturnDto> teamContractReturnDtos = this.truckTeamContractMapper.listByTruckTeamId(relevanceId);
+            if (teamContractReturnDtos.size() < 1) {
+                return BaseResponse.errorInstance("车队没有相关合同");
+            }
         }
-        //查询此客户是否有合同
-        List<ReturnContractDto> contractDtoList = this.customerContractMapper.getByCustomerId(relevanceId);
-        if (contractDtoList.size() < 1) {
-            return BaseResponse.errorInstance("客户未上传合同");
-        }
-        //返回要审核的客户合同
-        List<ReturnCheckContractQualificationDto> contractDtos = this.qualificationMapper.listByCriteria(new ListContractQualificationCriteriaDto());
+        ListContractQualificationCriteriaDto dto = new ListContractQualificationCriteriaDto();
+        dto
+                .setRelevanceId(relevanceId)
+                .setRelevanceType(relevanceType);
+
+        //返回要审核的合同
+        List<ReturnCheckContractQualificationDto> contractDtos = this.qualificationMapper.listByCriteria(dto);
         if (contractDtos != null && contractDtos.size() > 0) {
-            return BaseResponse.successInstance(contractDtos.get(0));
+            ReturnCheckContractQualificationDto checkContractQualificationDto = contractDtos.get(0);
+            //替换资质证照地址
+            String[] strArray = {checkContractQualificationDto.getCertificateImageUrl()};
+            List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+            checkContractQualificationDto.setCertificateImageUrl(urlList.get(0).toString());
+            return BaseResponse.successInstance(checkContractQualificationDto);
         }
         return BaseResponse.queryDataEmpty();
     }
 
     /**
-     * 审核客户合同资质
+     * 审核合同资质
      *
      * @param dto
      * @return
      */
-    @ApiOperation("审核客户合同资质")
+    @ApiOperation("审核客户合同资质[客户&司机]")
     @PostMapping("/checkContractQualification")
     public BaseResponse listConQualfctnByContractId(@RequestBody UpdateContractQualificationDto dto) {
         if (dto.getId() == null) {
-            return BaseResponse.queryDataEmpty();
+            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质id[id]不能为空"));
+        }
+        if (this.qualificationMapper.selectByPrimaryKey(dto.getId()) == null) {
+            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质不存在"));
+        }
+        if (dto.getRelevance_type() == null) {
+            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质关联类型[RelevanceType]不能为空"));
         }
         //审核记录
         CreateQualificationVerifyLogDto logDto = new CreateQualificationVerifyLogDto();
@@ -295,6 +347,8 @@ public class ContractController {
                 .setCertificateType(2);
         return BaseResponse.service(this.logService.createVerifyLog(logDto));
     }
+
+    //--------------------------------------------------提供给微服务调用------------------------------------------------------
 
     @Ignore
     @GetMapping("/getShowCustomerContract/{id}")

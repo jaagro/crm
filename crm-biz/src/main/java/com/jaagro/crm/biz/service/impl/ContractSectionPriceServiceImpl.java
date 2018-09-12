@@ -1,5 +1,6 @@
 package com.jaagro.crm.biz.service.impl;
 
+import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractSectionPriceDto;
 import com.jaagro.crm.api.service.ContractSectionPriceService;
 import com.jaagro.crm.biz.entity.CustomerContractSectionPrice;
@@ -28,7 +29,6 @@ public class ContractSectionPriceServiceImpl implements ContractSectionPriceServ
         ) {
             CustomerContractSectionPrice sectionPrice = new CustomerContractSectionPrice();
             BeanUtils.copyProperties(returnDto, sectionPrice);
-            sectionPrice.setSelectionStatus(0);
             this.sectionPriceMapper.updateByPrimaryKeySelective(sectionPrice);
         }
         return ServiceResult.toResult("删除成功");

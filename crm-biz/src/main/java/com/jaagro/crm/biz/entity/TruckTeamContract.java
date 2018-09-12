@@ -56,4 +56,24 @@ public class TruckTeamContract implements Serializable {
      * 备注信息
      */
     private String notes;
+
+    /**
+     * 新建时间
+     */
+    private Date createTime;
+
+    /**
+     * 新建人
+     */
+    private Integer createUserId;
+
+    /**
+     * 修改时间
+     */
+    private Date modifyTime;
+
+    /**
+     * 修改人
+     */
+    private Integer modifyUserId;
 }

@@ -7,8 +7,10 @@ import com.jaagro.crm.api.dto.request.customer.UpdateCustomerQualificationDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerQualificationReturnDto;
 import com.jaagro.crm.api.dto.response.customer.ReturnQualificationDto;
 import com.jaagro.crm.api.service.CustomerService;
+import com.jaagro.crm.api.service.OssSignUrlClientService;
 import com.jaagro.crm.api.service.QualificationCertificService;
 import com.jaagro.crm.api.service.QualificationVerifyLogService;
+import com.jaagro.crm.biz.entity.CustomerQualification;
 import com.jaagro.crm.biz.mapper.CustomerMapper;
 import com.jaagro.crm.biz.mapper.CustomerQualificationMapper;
 import com.jaagro.utils.BaseResponse;
@@ -19,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URL;
 import java.util.List;
 
 
@@ -41,6 +44,8 @@ public class QualificationCertificController {
     private CustomerQualificationMapper certificMapper;
     @Autowired
     private QualificationVerifyLogService logService;
+    @Autowired
+    private OssSignUrlClientService ossSignUrlClientService;
 
     /**
      * 新增资质
@@ -116,7 +121,12 @@ public class QualificationCertificController {
         if (this.certificMapper.selectByPrimaryKey(id) == null) {
             return BaseResponse.queryDataEmpty();
         }
-        return BaseResponse.successInstance(this.certificMapper.selectByPrimaryKey(id));
+        CustomerQualification customerQualification = this.certificMapper.selectByPrimaryKey(id);
+        //替换资质证照地址
+        String[] strArray = {customerQualification.getCertificateImageUrl()};
+        List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+        customerQualification.setCertificateImageUrl(urlList.get(0).toString());
+        return BaseResponse.successInstance(customerQualification);
     }
 
     /**

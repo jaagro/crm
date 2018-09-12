@@ -186,7 +186,7 @@
         from customer_qualification
         where customer_id = #{id,jdbcType=INTEGER}
     </select>
-    <select id="getByQualificationCriteriDto" resultMap="ReturnMap"
+    <select id="getByQualificationCriteriDto" resultMap="ReturnCheckMap"
             parameterType="com.jaagro.crm.api.dto.request.customer.ListCustomerQualificationCriteriaDto">
         select
         <include refid="Base_Column_List"/>
@@ -213,7 +213,7 @@
         from customer_qualification
         where 1=1
         and customer_id = #{customerId}
-        and certificate_status = 0
+        and certificate_status in (0,2)
         and enabled = 1
         order by create_time desc
     </select>
@@ -223,7 +223,7 @@
         from customer_qualification
         where 1=1
         and id = #{id}
-        and certificate_status = 0
+        and certificate_status in (0,2)
         and enabled = 1
     </select>
     <select id="countByCustomerIdAndStatus" parameterType="java.lang.Integer" resultType="int">

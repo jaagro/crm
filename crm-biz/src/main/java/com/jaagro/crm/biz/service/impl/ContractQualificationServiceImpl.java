@@ -1,5 +1,6 @@
 package com.jaagro.crm.biz.service.impl;
 
+import com.jaagro.crm.api.dto.request.contract.CreateContractQualificationDto;
 import com.jaagro.crm.api.dto.request.contract.UpdateContractQualificationDto;
 import com.jaagro.crm.api.service.ContractQualificationService;
 import com.jaagro.crm.biz.entity.ContractQualification;
@@ -25,6 +26,15 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
     private ContractQualificationMapper qualificationMapper;
     @Autowired
     private CurrentUserService userService;
+
+    @Override
+    public Map<String, Object> createQuation(CreateContractQualificationDto qualificationDto) {
+        ContractQualification qualification = new ContractQualification();
+        BeanUtils.copyProperties(qualificationDto, qualification);
+        qualification.setCreateUserId(this.userService.getCurrentUser().getId());
+        this.qualificationMapper.insertSelective(qualification);
+        return ServiceResult.toResult("新增成功");
+    }
 
     @Override
     public Map<String, Object> updateContractQuaion(UpdateContractQualificationDto qualificationDto) {

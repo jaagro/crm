@@ -29,6 +29,16 @@
         <association property="teamDto" column="truck_team_id"
                      select="com.jaagro.crm.biz.mapper.TruckTeamMapper.getTeamById"/>
     </resultMap>
+    <resultMap id="ReturnMap" type="com.jaagro.crm.api.dto.response.truck.ListTruckQualificationDto">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER"/>
+        <result column="truck_id" property="truckId" jdbcType="INTEGER"/>
+        <result column="driver_id" property="driverId" jdbcType="INTEGER"/>
+        <result column="certificate_type" property="certificateType" jdbcType="INTEGER"/>
+        <result column="certificate_image_url" property="certificateImageUrl" jdbcType="VARCHAR"/>
+        <result column="certificate_status" property="certificateStatus" jdbcType="INTEGER"/>
+        <result column="notes" property="notes" jdbcType="VARCHAR"/>
+    </resultMap>
     <sql id="Base_Column_List">
     id, truck_team_id, truck_id, driver_id, certificate_type, certificate_image_url, 
     certificate_status, create_user_id, modify_user_id, create_time, modify_time, notes, 
@@ -209,22 +219,43 @@
         from truck_qualification
         where 1=1
         <if test="truckTeamId != null">
-            truck_team_id = #{truckTeamId}
+            and truck_team_id = #{truckTeamId}
         </if>
         <if test="certificateStatus != null">
-            certificate_status = #{certificateStatus}
+            and certificate_status = #{certificateStatus}
         </if>
         and enabled = 1
     </select>
-    <select id="listByTeamId" resultMap="ReturnCheckMap" parameterType="java.lang.Integer">
+    <select id="listByIds" resultMap="ReturnCheckMap"
+            parameterType="com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto">
         select
         <include refid="Base_Column_List"/>
         from truck_qualification
         where 1=1
         <if test="truckTeamId != null">
-            truck_team_id = #{truckTeamId}
+            and truck_team_id = #{truckTeamId} and truck_id is null and driver_id is null
         </if>
-        and certificate_status = 0
+        <if test="truckId != null">
+            and truck_id = #{truckId} and driver_id is null
+        </if>
+        <if test="driverId != null">
+            and driver_id = #{driverId}
+        </if>
+        and certificate_status in (0,2)
         and enabled = 1
+    </select>
+    <select id="listByTruckId" resultMap="ReturnMap">
+        select
+        <include refid="Base_Column_List"/>
+        from truck_qualification
+        where enabled = 1
+        and truck_id = #{truckId}
+    </select>
+    <select id="listByDriverId" resultMap="ReturnMap">
+        select
+        <include refid="Base_Column_List"/>
+        from truck_qualification
+        where enabled = 1
+        and driver_id = #{driverId}
     </select>
 </mapper>

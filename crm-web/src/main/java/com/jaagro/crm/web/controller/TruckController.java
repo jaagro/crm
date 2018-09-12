@@ -2,6 +2,7 @@ package com.jaagro.crm.web.controller;
 
 import com.jaagro.crm.api.dto.request.truck.CreateTruckDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto;
+import com.jaagro.crm.api.dto.response.truck.GetTruckDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
 import com.jaagro.crm.api.service.TruckService;
 import com.jaagro.crm.biz.mapper.TruckMapper;
@@ -38,13 +39,18 @@ public class TruckController {
     private TruckTypeMapper truckTypeMapper;
 
     @ApiOperation("查询单个车辆")
-    @GetMapping("/truck/{id}")
-    public BaseResponse getTruckById(@PathVariable Integer id) {
-        if (this.truckMapper.selectByPrimaryKey(id) == null) {
+    @GetMapping("/truck/{truckId}")
+    public BaseResponse getTruckById(@PathVariable("truckId") Integer truckId) {
+        if (this.truckMapper.selectByPrimaryKey(truckId) == null) {
             return BaseResponse.errorInstance("查询不到车辆信息");
         }
-        Map<String, Object> result = truckService.getTruckById(id);
+        Map<String, Object> result = truckService.getTruckById(truckId);
         return BaseResponse.service(result);
+    }
+
+    @GetMapping("/truckToFeign/{truckId}")
+    public GetTruckDto getTruckByIdReturnObject(@PathVariable("truckId") Integer truckId) {
+        return truckService.getTruckByIdReturnObject(truckId);
     }
 
     @ApiOperation("新增车辆")
@@ -69,7 +75,6 @@ public class TruckController {
             e.printStackTrace();
             response = BaseResponse.errorInstance("司机创建失败");
         }
-
         return response;
     }
 
@@ -88,11 +93,15 @@ public class TruckController {
         return BaseResponse.service(truckService.deleteTruck(id));
     }
 
+    /**
+     * 分页查询车辆
+     *
+     * @param truckCriteria
+     * @return
+     */
+    @ApiOperation("分页查询车辆")
     @PostMapping("/listTruck")
     public BaseResponse listTruck(@RequestBody ListTruckCriteriaDto truckCriteria) {
-        if (StringUtils.isEmpty(truckCriteria.getTruckTeamId())) {
-            return BaseResponse.idError("truckTeamId不能为空");
-        }
         return BaseResponse.service(truckService.listTruck(truckCriteria));
     }
 
@@ -106,5 +115,11 @@ public class TruckController {
     @GetMapping("/listTruckTypeToFeign")
     public List<ListTruckTypeDto> listTruckTypeReturnDto(){
         return truckService.listTruckType();
+    }
+
+    @Ignore
+    @GetMapping("/getTruckTypeById/{id}")
+    public ListTruckTypeDto getTruckTypeById(@PathVariable("id") Integer id) {
+        return truckService.getTruckTypeById(id);
     }
 }

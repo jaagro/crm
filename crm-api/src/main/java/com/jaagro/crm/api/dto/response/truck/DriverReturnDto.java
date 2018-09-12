@@ -5,6 +5,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author tony
@@ -30,7 +31,7 @@ public class DriverReturnDto implements Serializable {
     /**
      * 司机姓名
      */
-    private String driverName;
+    private String name;
 
     /**
      * 身份证号码
@@ -121,4 +122,9 @@ public class DriverReturnDto implements Serializable {
      * 所属区县
      */
     private String county;
+
+    /**
+     * 司机资质证照
+     */
+    private List<ListTruckQualificationDto> driverQualificationList;
 }

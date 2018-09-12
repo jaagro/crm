@@ -13,6 +13,11 @@ import java.io.Serializable;
 public class CreateContractQualificationDto implements Serializable {
 
     /**
+     * 关联id
+     */
+    private Integer relevanceId;
+
+    /**
      * 关联类型：1-客户合同 2-司机合同
      */
     private Integer relevanceType;
