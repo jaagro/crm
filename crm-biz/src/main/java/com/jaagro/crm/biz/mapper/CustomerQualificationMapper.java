@@ -60,7 +60,7 @@ public interface CustomerQualificationMapper {
      * @param customerId
      * @return
      */
-    List<ReturnQualificationDto> listByCustomerIdAndStatus(Integer customerId);
+    List<ReturnQualificationDto> listByCustomerIdAndStatus(ListCustomerQualificationCriteriaDto certificDto);
 
     /**
      * 查询客户除审核成功的个数

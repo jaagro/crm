@@ -3,10 +3,7 @@ package com.jaagro.crm.biz.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.constant.AuditStatus;
-import com.jaagro.crm.api.dto.request.truck.CreateDriverDto;
-import com.jaagro.crm.api.dto.request.truck.CreateListTruckQualificationDto;
-import com.jaagro.crm.api.dto.request.truck.CreateTruckDto;
-import com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto;
+import com.jaagro.crm.api.dto.request.truck.*;
 import com.jaagro.crm.api.dto.response.truck.*;
 import com.jaagro.crm.api.service.DriverClientService;
 import com.jaagro.crm.api.service.OssSignUrlClientService;
@@ -54,7 +51,7 @@ public class TruckServiceImpl implements TruckService {
     @Autowired
     private OssSignUrlClientService ossSignUrlClientService;
 
-    private void changeUrl(List<ListTruckQualificationDto> driverQualificationList){
+    private void changeUrl(List<ListTruckQualificationDto> driverQualificationList) {
         for (ListTruckQualificationDto dto : driverQualificationList
         ) {
             //替换资质证照地址
@@ -179,12 +176,51 @@ public class TruckServiceImpl implements TruckService {
         if (truckMapper.selectByPrimaryKey(truckDto.getTruckTeamId()) == null) {
             return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), truckDto.getId() + " ：id不正确");
         }
+        //车辆
         Truck truck = new Truck();
         BeanUtils.copyProperties(truckDto, truck);
         truck
                 .setModifyUserId(currentUserService.getCurrentUser().getId())
                 .setModifyTime(new Date());
         truckMapper.updateByPrimaryKeySelective(truck);
+        //司机
+        if (truckDto.getDriver() != null && truckDto.getDriver().size() > 0) {
+            for (CreateDriverDto createDriverDto : truckDto.getDriver()
+            ) {
+                UpdateDriverDto updateDriverDto = new UpdateDriverDto();
+                BeanUtils.copyProperties(createDriverDto, updateDriverDto);
+                this.driverClientService.updateDriverFeign(updateDriverDto);
+                //司机资质
+                if (createDriverDto.getDriverQualifications() != null && createDriverDto.getDriverQualifications().size() > 0) {
+                    for (UpdateTruckQualificationDto truckQualificationDto : createDriverDto.getDriverQualifications()
+                    ) {
+                        // id为null - 新增
+                        if (truckQualificationDto.getId() == null) {
+                            CreateListTruckQualificationDto createListTruckQualificationDto = new CreateListTruckQualificationDto();
+                            BeanUtils.copyProperties(truckQualificationDto, createListTruckQualificationDto);
+
+                            this.truckQualificationService.createTruckQualification(createListTruckQualificationDto);
+                        }
+                        //修改
+                        this.truckQualificationService.updateQualificationCertific(truckQualificationDto);
+                    }
+                }
+            }
+        }
+        //车辆资质
+        if (truckDto.getTruckQualifications() != null && truckDto.getTruckQualifications().size() > 0) {
+            for (UpdateTruckQualificationDto truckQualificationDto : truckDto.getTruckQualifications()
+            ) {
+                // id为null - 新增
+                if (truckQualificationDto.getId() == null) {
+                    CreateListTruckQualificationDto createListTruckQualificationDto = new CreateListTruckQualificationDto();
+                    BeanUtils.copyProperties(truckQualificationDto, createListTruckQualificationDto);
+                    this.truckQualificationService.createTruckQualification(createListTruckQualificationDto);
+                }
+                //修改
+                this.truckQualificationService.updateQualificationCertific(truckQualificationDto);
+            }
+        }
         return ServiceResult.toResult(truckMapper.getTruckById(truckDto.getId()));
     }
 

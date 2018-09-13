@@ -15,6 +15,5 @@ public class CreateListTruckQualificationDto implements Serializable {
     private Integer truckTeamId;
     private Integer truckId;
     private Integer driverId;
-    private Integer certificateType;
-    private List<CreateTruckQualificationDto> qualification;
+    private List<UpdateTruckQualificationDto> qualification;
 }

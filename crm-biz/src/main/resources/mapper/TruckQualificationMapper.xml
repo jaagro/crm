@@ -231,7 +231,7 @@
         select
         <include refid="Base_Column_List"/>
         from truck_qualification
-        where 1=1
+        where enabled = 1
         <if test="truckTeamId != null">
             and truck_team_id = #{truckTeamId} and truck_id is null and driver_id is null
         </if>
@@ -241,8 +241,13 @@
         <if test="driverId != null">
             and driver_id = #{driverId}
         </if>
-        and certificate_status in (0,2)
-        and enabled = 1
+        <if test="certificateStatus != null">
+            and certificate_status = #{certificateStatus}
+        </if>
+        <if test="certificateStatus == null">
+            and certificate_status in (0,2)
+        </if>
+        ORDER BY certificate_status
     </select>
     <select id="listByTruckId" resultMap="ReturnMap">
         select

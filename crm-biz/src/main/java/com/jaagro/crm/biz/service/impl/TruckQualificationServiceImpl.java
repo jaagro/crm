@@ -51,10 +51,11 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> createTruckQualification(CreateListTruckQualificationDto dto) {
-        for (CreateTruckQualificationDto qualification : dto.getQualification()) {
+        for (UpdateTruckQualificationDto qualification : dto.getQualification()) {
             TruckQualification truckQualification = new TruckQualification();
             BeanUtils.copyProperties(qualification, truckQualification);
             truckQualification
+                    .setId(null)
                     .setTruckTeamId(dto.getTruckTeamId())
                     .setTruckId(dto.getTruckId())
                     .setDriverId(dto.getDriverId())
@@ -124,6 +125,20 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
             }
         }
         return ServiceResult.toResult(returnTruckQualificationDtoList);
+    }
+
+    @Override
+    public Map<String, Object> updateQualificationCertific(UpdateTruckQualificationDto dto) {
+        if (dto.getId() == null) {
+            throw new NullPointerException("资质id不能为空");
+        }
+        TruckQualification qualification = new TruckQualification();
+        BeanUtils.copyProperties(dto, qualification);
+        qualification
+                .setModifyTime(new Date())
+                .setModifyUserId(this.currentUserService.getCurrentUser().getId());
+        truckQualificationMapper.updateByPrimaryKeySelective(qualification);
+        return ServiceResult.toResult("修改成功");
     }
 
 }

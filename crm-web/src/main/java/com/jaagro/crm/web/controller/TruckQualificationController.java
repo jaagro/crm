@@ -1,13 +1,15 @@
 package com.jaagro.crm.web.controller;
 
 import com.jaagro.crm.api.constant.AuditStatus;
-import com.jaagro.crm.api.dto.request.customer.CreateQualificationVerifyLogDto;
-import com.jaagro.crm.api.dto.request.customer.UpdateCustomerQualificationDto;
 import com.jaagro.crm.api.dto.request.truck.CreateListTruckQualificationDto;
+import com.jaagro.crm.api.dto.request.truck.CreateTruckVerifyLogDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckQualificationDto;
 import com.jaagro.crm.api.dto.response.truck.ReturnTruckQualificationDto;
-import com.jaagro.crm.api.service.*;
+import com.jaagro.crm.api.service.DriverClientService;
+import com.jaagro.crm.api.service.OssSignUrlClientService;
+import com.jaagro.crm.api.service.TruckQualificationService;
+import com.jaagro.crm.api.service.TruckVerifyLogService;
 import com.jaagro.crm.biz.mapper.TruckMapper;
 import com.jaagro.crm.biz.mapper.TruckQualificationMapper;
 import com.jaagro.crm.biz.mapper.TruckTeamMapper;
@@ -23,7 +25,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,9 +43,7 @@ public class TruckQualificationController {
     @Autowired
     private TruckMapper truckMapper;
     @Autowired
-    private QualificationCertificService certificService;
-    @Autowired
-    private QualificationVerifyLogService logService;
+    private TruckVerifyLogService logService;
     @Autowired
     private DriverClientService driverClientService;
     @Autowired
@@ -139,10 +138,10 @@ public class TruckQualificationController {
             BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "审核结果不能为空"));
         }
         //审核记录
-        CreateQualificationVerifyLogDto logDto = new CreateQualificationVerifyLogDto();
-        UpdateCustomerQualificationDto dto = new UpdateCustomerQualificationDto();
+        CreateTruckVerifyLogDto logDto = new CreateTruckVerifyLogDto();
+        UpdateTruckQualificationDto dto = new UpdateTruckQualificationDto();
         BeanUtils.copyProperties(criteriaDto, dto);
-        this.certificService.updateQualificationCertific(dto);
+        this.truckQualificationService.updateQualificationCertific(dto);
         if (!criteriaDto.getCertificateStatus().equals(AuditStatus.AUDIT_FAILED)) {
             if (StringUtils.isEmpty(criteriaDto.getDescription())) {
                 BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "审核不通过时需填写描述信息"));
@@ -150,10 +149,10 @@ public class TruckQualificationController {
             logDto.setDescription(dto.getDescription());
         }
         logDto
-                .setVertifyResult(dto.getCertificateStatus())
+                .setAuditResult(dto.getCertificateStatus())
                 .setReferencesId(dto.getId())
-                .setCertificateType(3);
-        return BaseResponse.service(this.logService.createVerifyLog(logDto));
+                .setVerifyType(3);
+        return BaseResponse.service(this.logService.createTruckVerifyLog(logDto));
     }
 
 
