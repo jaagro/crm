@@ -10,6 +10,7 @@ import com.jaagro.crm.api.dto.response.customer.ReturnQualificationDto;
 import com.jaagro.crm.api.service.OssSignUrlClientService;
 import com.jaagro.crm.api.service.QualificationCertificService;
 import com.jaagro.crm.biz.entity.CustomerQualification;
+import com.jaagro.crm.biz.mapper.CustomerMapper;
 import com.jaagro.crm.biz.mapper.CustomerQualificationMapper;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
@@ -39,6 +40,8 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
     private CurrentUserService userService;
     @Autowired
     private OssSignUrlClientService ossSignUrlClientService;
+    @Autowired
+    private CustomerMapper customerMapper;
 
     @Override
     public Map<String, Object> createQualificationCertific(CreateCustomerQualificationDto certificDto) {
@@ -115,7 +118,12 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
 
     @Override
     public Map<String, Object> getDetailById(Integer id) {
-        return ServiceResult.toResult(this.certificMapper.getDetailById(id));
+        ReturnQualificationDto returnQualificationDto = this.certificMapper.getDetailById(id);
+        //替换资质证照地址
+        String[] strArray = {returnQualificationDto.getCertificateImageUrl()};
+        List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+        returnQualificationDto.setCertificateImageUrl(urlList.get(0).toString());
+        return ServiceResult.toResult(returnQualificationDto);
     }
 
     @Override
@@ -131,6 +139,25 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
             }
         }
         return ServiceResult.toResult(new PageInfo<>(certificReturnDtos));
+    }
+
+    @Override
+    public Map<String, Object> listByCustomerId(Integer customerId) {
+        if (this.customerMapper.selectByPrimaryKey(customerId) == null) {
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "此客户不存在");
+        }
+        ListCustomerQualificationCriteriaDto dto = new ListCustomerQualificationCriteriaDto();
+        dto.setCustomerId(customerId);
+        List<ReturnQualificationDto> certificReturnDtos = this.certificMapper.listByCustomerIdAndStatus(dto);
+        if (certificReturnDtos != null && certificReturnDtos.size() > 0) {
+            for (ReturnQualificationDto qualificationReturnDto : certificReturnDtos) {
+                //替换资质证照地址
+                String[] strArray = {qualificationReturnDto.getCertificateImageUrl()};
+                List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+                qualificationReturnDto.setCertificateImageUrl(urlList.get(0).toString());
+            }
+        }
+        return ServiceResult.toResult(certificReturnDtos);
     }
 
     @Override

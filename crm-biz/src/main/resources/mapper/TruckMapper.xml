@@ -48,7 +48,7 @@
         <result column="create_user_id" property="createUserId" jdbcType="INTEGER"/>
         <result column="driving_permit" property="drivingPermit" jdbcType="VARCHAR"/>
         <collection property="qualificationDtoList" column="id"
-        select="com.jaagro.crm.biz.mapper.TruckQualificationMapper.listByTruckId"></collection>
+                    select="com.jaagro.crm.biz.mapper.TruckQualificationMapper.listByTruckId"></collection>
     </resultMap>
     <resultMap id="listTruck" type="com.jaagro.crm.api.dto.response.truck.GetTruckDto">
         <id column="id" property="id" jdbcType="INTEGER"/>
@@ -323,7 +323,7 @@
                 create_user_id = #{createUserId,jdbcType=INTEGER},
             </if>
             <if test="drivingPermit != null">
-                #{drivingPermit,jdbcType=VARCHAR},
+                driving_permit = #{drivingPermit,jdbcType=VARCHAR},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}

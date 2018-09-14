@@ -63,6 +63,7 @@ public class TruckServiceImpl implements TruckService {
 
     /**
      * 获取单条
+     *
      * @param truckId
      * @return
      */
@@ -80,6 +81,7 @@ public class TruckServiceImpl implements TruckService {
         if (result.getQualificationDtoList().size() > 0) {
             changeUrl(result.getQualificationDtoList());
         }
+        //司机列表
         List<DriverReturnDto> drivers = driverClientService.listByTruckId(truckId);
         if (drivers.size() > 0) {
             //填充司机资质证照列表
@@ -116,6 +118,7 @@ public class TruckServiceImpl implements TruckService {
 
     /**
      * 创建车辆对象
+     *
      * @return
      */
     @Override
@@ -173,7 +176,7 @@ public class TruckServiceImpl implements TruckService {
      */
     @Override
     public Map<String, Object> updateTruck(CreateTruckDto truckDto) {
-        if (truckMapper.selectByPrimaryKey(truckDto.getTruckTeamId()) == null) {
+        if (truckMapper.selectByPrimaryKey(truckDto.getId()) == null) {
             return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), truckDto.getId() + " ：id不正确");
         }
         //车辆
@@ -187,9 +190,24 @@ public class TruckServiceImpl implements TruckService {
         if (truckDto.getDriver() != null && truckDto.getDriver().size() > 0) {
             for (CreateDriverDto createDriverDto : truckDto.getDriver()
             ) {
-                UpdateDriverDto updateDriverDto = new UpdateDriverDto();
-                BeanUtils.copyProperties(createDriverDto, updateDriverDto);
-                this.driverClientService.updateDriverFeign(updateDriverDto);
+                Integer driverId = 0;
+                //新增司机
+                if (createDriverDto.getId() == null) {
+                    CreateDriverDto driverDto = new CreateDriverDto();
+                    BeanUtils.copyProperties(createDriverDto, driverDto);
+                    driverDto
+                            .setTruckId(truck.getId())
+                            .setTruckTeamId(truck.getTruckTeamId());
+                    driverId = this.driverClientService.createDriverReturnId(driverDto);
+                    if (driverId < 1) {
+                        throw new RuntimeException("司机创建失败");
+                    }
+                } else {
+                    //修改
+                    UpdateDriverDto updateDriverDto = new UpdateDriverDto();
+                    BeanUtils.copyProperties(createDriverDto, updateDriverDto);
+                    this.driverClientService.updateDriverFeign(updateDriverDto);
+                }
                 //司机资质
                 if (createDriverDto.getDriverQualifications() != null && createDriverDto.getDriverQualifications().size() > 0) {
                     for (UpdateTruckQualificationDto truckQualificationDto : createDriverDto.getDriverQualifications()
@@ -197,12 +215,16 @@ public class TruckServiceImpl implements TruckService {
                         // id为null - 新增
                         if (truckQualificationDto.getId() == null) {
                             CreateListTruckQualificationDto createListTruckQualificationDto = new CreateListTruckQualificationDto();
-                            BeanUtils.copyProperties(truckQualificationDto, createListTruckQualificationDto);
-
+                            createListTruckQualificationDto
+                                    .setTruckId(truck.getId())
+                                    .setTruckTeamId(truck.getTruckTeamId())
+                                    .setDriverId(driverId)
+                                    .setQualification(createDriverDto.getDriverQualifications());
                             this.truckQualificationService.createTruckQualification(createListTruckQualificationDto);
+                        } else {
+                            //修改
+                            this.truckQualificationService.updateQualificationCertific(truckQualificationDto);
                         }
-                        //修改
-                        this.truckQualificationService.updateQualificationCertific(truckQualificationDto);
                     }
                 }
             }
@@ -216,9 +238,10 @@ public class TruckServiceImpl implements TruckService {
                     CreateListTruckQualificationDto createListTruckQualificationDto = new CreateListTruckQualificationDto();
                     BeanUtils.copyProperties(truckQualificationDto, createListTruckQualificationDto);
                     this.truckQualificationService.createTruckQualification(createListTruckQualificationDto);
+                } else {
+                    //修改
+                    this.truckQualificationService.updateQualificationCertific(truckQualificationDto);
                 }
-                //修改
-                this.truckQualificationService.updateQualificationCertific(truckQualificationDto);
             }
         }
         return ServiceResult.toResult(truckMapper.getTruckById(truckDto.getId()));
@@ -226,6 +249,7 @@ public class TruckServiceImpl implements TruckService {
 
     /**
      * 删除车辆
+     *
      * @param id
      * @return
      */
@@ -269,6 +293,7 @@ public class TruckServiceImpl implements TruckService {
 
     /**
      * 获取单条车辆类型
+     *
      * @param id
      * @return
      */

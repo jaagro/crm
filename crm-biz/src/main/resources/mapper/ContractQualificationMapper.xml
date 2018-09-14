@@ -22,7 +22,6 @@
         <result column="certificate_type" property="certificateType" jdbcType="INTEGER"/>
         <result column="certificate_image_url" property="certificateImageUrl" jdbcType="VARCHAR"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>
-
         <association property="contractDto" column="relevance_id"
                      select="com.jaagro.crm.biz.mapper.CustomerContractMapper.getById">
             <id column="id" property="id" jdbcType="INTEGER"/>
@@ -187,7 +186,7 @@
       enabled = #{enabled,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
-    <select id="listByContractId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    <select id="listByContractId" resultMap="ReturnCheckMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
         from contract_qualification

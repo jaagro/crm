@@ -71,6 +71,14 @@ public interface QualificationCertificService {
     Map<String, Object> listByCriteria(ListCustomerQualificationCriteriaDto dto);
 
     /**
+     * 根据客户id获取list
+     *
+     * @param dto
+     * @return
+     */
+    Map<String, Object> listByCustomerId(Integer customerId);
+
+    /**
      * 删除资质证件照
      *
      * @param id

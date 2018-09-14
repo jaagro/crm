@@ -14,6 +14,8 @@ import com.jaagro.crm.biz.entity.CustomerQualification;
 import com.jaagro.crm.biz.mapper.CustomerMapper;
 import com.jaagro.crm.biz.mapper.CustomerQualificationMapper;
 import com.jaagro.utils.BaseResponse;
+import com.jaagro.utils.ResponseStatusCode;
+import com.jaagro.utils.ServiceResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -145,6 +147,21 @@ public class QualificationCertificController {
     @PostMapping("/listQualificationCertificByCriteria")
     public BaseResponse listByCriteria(@RequestBody ListCustomerQualificationCriteriaDto criteriaDto) {
         return BaseResponse.service(this.certificService.listByCriteria(criteriaDto));
+    }
+
+    /**
+     * 根据客户id查询资质列表
+     *
+     * @param criteriaDto
+     * @return
+     */
+    @ApiOperation("根据客户id查询资质列表")
+    @GetMapping("/listQualificationByCustomerId/{customerId}")
+    public BaseResponse listByCriteria(@PathVariable("customerId") Integer customerId) {
+        if (customerId == null) {
+            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户id不能为空"));
+        }
+        return BaseResponse.service(this.certificService.listByCustomerId(customerId));
     }
 
     /**

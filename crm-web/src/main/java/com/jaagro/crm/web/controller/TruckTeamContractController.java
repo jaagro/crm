@@ -93,7 +93,7 @@ public class TruckTeamContractController {
     @GetMapping("/truckTeamContract/{id}")
     public BaseResponse getById(@PathVariable Integer id) {
         if (truckTeamContractMapper.selectByPrimaryKey(id) == null) {
-            return BaseResponse.errorInstance("查询不到合同ID");
+            return BaseResponse.errorInstance("此合同不存在");
         }
         Map<String, Object> result = truckTeamContractService.getById(id);
         return BaseResponse.service(result);

@@ -6,9 +6,11 @@ import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.constant.ContractStatus;
 import com.jaagro.crm.api.dto.request.contract.CreateContractQualificationDto;
 import com.jaagro.crm.api.dto.request.truck.*;
+import com.jaagro.crm.api.dto.response.contract.ReturnCheckContractQualificationDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTeamContractDto;
 import com.jaagro.crm.api.dto.response.truck.TruckTeamContractReturnDto;
 import com.jaagro.crm.api.service.ContractQualificationService;
+import com.jaagro.crm.api.service.OssSignUrlClientService;
 import com.jaagro.crm.api.service.TruckTeamContractPriceService;
 import com.jaagro.crm.api.service.TruckTeamContractService;
 import com.jaagro.crm.biz.entity.TruckTeam;
@@ -25,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +52,8 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     private CurrentUserService userService;
     @Autowired
     private ContractQualificationService contractQualificationService;
+    @Autowired
+    private OssSignUrlClientService ossSignUrlClientService;
 
     /**
      * 创建车队合同
@@ -95,7 +100,17 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
      */
     @Override
     public Map<String, Object> getById(Integer id) {
-        return ServiceResult.toResult(truckTeamContractMapper.getById(id));
+        TruckTeamContractReturnDto contractReturnDto = truckTeamContractMapper.getById(id);
+        if (contractReturnDto.getQualificationDtoList().size() > 0) {
+            for (ReturnCheckContractQualificationDto qualificationDto : contractReturnDto.getQualificationDtoList()
+            ) {
+                //替换资质证照地址
+                String[] strArray = {qualificationDto.getCertificateImageUrl()};
+                List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+                qualificationDto.setCertificateImageUrl(urlList.get(0).toString());
+            }
+        }
+        return ServiceResult.toResult(contractReturnDto);
     }
 
     /**
