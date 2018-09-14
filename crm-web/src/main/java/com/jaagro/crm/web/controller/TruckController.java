@@ -4,6 +4,7 @@ import com.jaagro.crm.api.dto.request.truck.CreateTruckDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto;
 import com.jaagro.crm.api.dto.response.truck.GetTruckDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
+import com.jaagro.crm.api.dto.response.truck.ListTruckWithDriversDto;
 import com.jaagro.crm.api.service.TruckService;
 import com.jaagro.crm.biz.mapper.TruckMapper;
 import com.jaagro.crm.biz.mapper.TruckTeamMapper;
@@ -121,5 +122,22 @@ public class TruckController {
     @GetMapping("/getTruckTypeById/{id}")
     public ListTruckTypeDto getTruckTypeById(@PathVariable("id") Integer id) {
         return truckService.getTruckTypeById(id);
+    }
+
+    /**
+     * @Author gavin
+     * @param criteriaDto
+     * @return
+     */
+    @ApiOperation("派单指派车辆列表")
+    @PostMapping("/listTrucksWithDrivers")
+    public BaseResponse listTrucksWithDrivers(@RequestBody ListTruckCriteriaDto criteriaDto) {
+        try {
+            List<ListTruckWithDriversDto> result = truckService.listTrucksWithDrivers(criteriaDto);
+            return BaseResponse.successInstance(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("查询指派车辆失败:"+e.getMessage());
+        }
     }
 }

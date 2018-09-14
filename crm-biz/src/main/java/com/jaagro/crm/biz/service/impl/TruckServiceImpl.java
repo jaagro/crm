@@ -21,9 +21,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -300,5 +302,27 @@ public class TruckServiceImpl implements TruckService {
     @Override
     public ListTruckTypeDto getTruckTypeById(Integer id) {
         return truckTypeMapper.getById(id);
+    }
+
+    /**
+     * @Author gavin
+     * @param criteriaDto
+     * @return
+     */
+    @Override
+    public List<ListTruckWithDriversDto> listTrucksWithDrivers(ListTruckCriteriaDto criteriaDto) {
+        List<ListTruckWithDriversDto> result = new ArrayList<>();
+        PageHelper.startPage(criteriaDto.getPageNum(), criteriaDto.getPageSize());
+        List<ListTruckDto> truckList = truckMapper.listTruckByCriteria(criteriaDto);
+        if (!CollectionUtils.isEmpty(truckList)) {
+            for (ListTruckDto listTruckDto : truckList) {
+                ListTruckWithDriversDto truckWithDriversDto = new ListTruckWithDriversDto();
+                List<DriverReturnDto> drivers = driverClientService.listByTruckId(listTruckDto.getTruckId());
+                truckWithDriversDto.setListTruckDto(listTruckDto);
+                truckWithDriversDto.setDrivers(drivers);
+                result.add(truckWithDriversDto);
+            }
+        }
+        return result;
     }
 }
