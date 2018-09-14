@@ -238,7 +238,7 @@
         select
         <include refid="Base_Column_List"/>
         from truck_team_contract
-        where contract_status = 1
+        and contract_status != 3
         <if test="contractNumber != null">
             and contract_number = #{contractNumber}
         </if>

@@ -32,13 +32,4 @@ public class ListContractCriteriaDto implements Serializable {
      */
     private Integer contractStatus;
 
-    /**
-     * 合同类型
-     */
-    private Integer type;
-
-    /**
-     * 关键字
-     */
-    private String keywords;
 }

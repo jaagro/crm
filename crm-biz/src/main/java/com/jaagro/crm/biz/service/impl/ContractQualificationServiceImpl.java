@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
@@ -27,6 +28,7 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
     @Autowired
     private CurrentUserService userService;
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> createQuation(CreateContractQualificationDto qualificationDto) {
         ContractQualification qualification = new ContractQualification();
@@ -36,6 +38,7 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
         return ServiceResult.toResult("新增成功");
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> updateContractQuaion(UpdateContractQualificationDto qualificationDto) {
         ContractQualification qualification = new ContractQualification();
@@ -46,6 +49,7 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
         return ServiceResult.toResult("客户资质修改成功");
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> disableContractQuaion(Integer id) {
         ContractQualification qualification = this.qualificationMapper.selectByPrimaryKey(id);
