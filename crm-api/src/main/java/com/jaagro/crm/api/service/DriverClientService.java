@@ -54,9 +54,9 @@ public interface DriverClientService {
     /**
      * 通过司机id获取司机
      *
-     * @param id
+     * @param driver
      * @return
      */
-    @PutMapping("/updateDriverFeign")
+    @PostMapping("/updateDriverFeign")
     BaseResponse updateDriverFeign(@RequestBody UpdateDriverDto driver);
 }

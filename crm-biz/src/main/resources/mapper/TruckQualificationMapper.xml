@@ -255,6 +255,7 @@
         from truck_qualification
         where enabled = 1
         and truck_id = #{truckId}
+        and driver_id is null
     </select>
     <select id="listByDriverId" resultMap="ReturnMap">
         select

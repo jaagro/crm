@@ -1,13 +1,20 @@
 package com.jaagro.crm.api.dto.request.truck;
 
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+
 /**
  * @author baiyiran
  */
-public class UpdateDriverDto {
+@Data
+@Accessors(chain = true)
+public class UpdateDriverDto implements Serializable {
     /**
      * 司机id
      */
-    private Integer driverId;
+    private Integer id;
 
     /**
      * 司机姓名

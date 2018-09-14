@@ -177,28 +177,7 @@ public class CustomerController {
     @PostMapping("/updateCustomerContacts")
     public BaseResponse updateCustomerContacts(@RequestBody List<UpdateCustomerContactsDto> contractDtos) {
         if (contractDtos != null && contractDtos.size() > 0) {
-            for (UpdateCustomerContactsDto contractDto : contractDtos) {
-                if (StringUtils.isEmpty(contractDto.getId())) {
-                    return BaseResponse.idNull("联系人id不能为空");
-                }
-                if (StringUtils.isEmpty(contractDto.getCustomerId())) {
-                    return BaseResponse.errorInstance("联系人客户id不能为空");
-                }
-                Customer customer = this.customerMapper.selectByPrimaryKey(contractDto.getCustomerId());
-                if (customer == null) {
-                    return BaseResponse.errorInstance("客户不存在");
-                }
-                if (StringUtils.isEmpty(contractDto.getPhone())) {
-                    return BaseResponse.errorInstance("联系人电话不能为空");
-                }
-                if (StringUtils.isEmpty(contractDto.getContact())) {
-                    return BaseResponse.errorInstance("联系人姓名不能为空");
-                }
-                if (StringUtils.isEmpty(contractDto.getPosition())) {
-                    return BaseResponse.errorInstance("联系人职位不能为空");
-                }
-                this.customerContactsService.updateCustomerContacts(contractDto);
-            }
+            this.customerContactsService.updateCustomerContacts(contractDtos);
             return BaseResponse.successInstance("修改成功");
         } else {
             return BaseResponse.errorInstance("修改失败");

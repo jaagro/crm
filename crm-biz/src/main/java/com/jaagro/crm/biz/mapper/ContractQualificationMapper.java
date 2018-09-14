@@ -46,7 +46,7 @@ public interface ContractQualificationMapper {
      * @param contractId
      * @return
      */
-    List<ContractQualification> listByContractId(Integer contractId);
+    List<ReturnCheckContractQualificationDto> listByContractId(Integer contractId);
 
     /**
      * 合同资质证分页

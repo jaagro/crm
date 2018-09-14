@@ -2,6 +2,7 @@ package com.jaagro.crm.biz.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.dto.request.contract.*;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
@@ -72,6 +73,7 @@ public class ContractServiceImpl implements ContractService {
         CustomerContract customerContract = new CustomerContract();
         BeanUtils.copyProperties(dto, customerContract);
         customerContract
+                .setContractStatus(AuditStatus.UNCHECKED)
                 .setCreateUser(userService.getCurrentUser().getId());
         customerContractMapper.insertSelective(customerContract);
 

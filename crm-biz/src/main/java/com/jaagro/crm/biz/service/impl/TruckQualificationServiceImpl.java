@@ -51,6 +51,9 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> createTruckQualification(CreateListTruckQualificationDto dto) {
+        if (dto.getQualification().size() < 1) {
+            throw new NullPointerException("资质列表为空");
+        }
         for (UpdateTruckQualificationDto qualification : dto.getQualification()) {
             TruckQualification truckQualification = new TruckQualification();
             BeanUtils.copyProperties(qualification, truckQualification);

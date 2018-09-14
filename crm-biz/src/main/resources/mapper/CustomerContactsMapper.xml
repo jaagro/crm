@@ -185,4 +185,9 @@
         and enabled = 1
         order by create_time
     </select>
+    <delete id="deleteByCustomerId">
+        delete from customer_contacts
+        where customer_id = #{customerId}
+    </delete>
+
 </mapper>
