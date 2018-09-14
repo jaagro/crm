@@ -187,6 +187,9 @@ public class QualificationCertificController {
         //返回要审核的资质信息
         List<ReturnQualificationDto> qualificationDtos = this.certificMapper.listByCustomerIdAndStatus(dto);
         if (qualificationDtos != null && qualificationDtos.size() > 0) {
+            String[] strArray = {qualificationDtos.get(0).getCertificateImageUrl()};
+            List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+            qualificationDtos.get(0).setCertificateImageUrl(urlList.get(0).toString());
             return BaseResponse.successInstance(qualificationDtos.get(0));
         }
         return BaseResponse.queryDataEmpty();
