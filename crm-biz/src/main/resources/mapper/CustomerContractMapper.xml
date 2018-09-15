@@ -35,7 +35,7 @@
         <collection property="prices" column="id"
                     select="com.jaagro.crm.biz.mapper.CustomerContractPriceMapper.getByContractId"></collection>
         <collection property="qualifications" column="id"
-                    select="com.jaagro.crm.biz.mapper.ContractQualificationMapper.listByContractId"></collection>
+                    select="com.jaagro.crm.biz.mapper.ContractQualificationMapper.listQualificationByContractId"></collection>
     </resultMap>
     <resultMap id="ReturnCheckMap" type="com.jaagro.crm.api.dto.response.contract.ReturnCheckContractDto">
         <id column="id" property="id" jdbcType="INTEGER"/>
@@ -321,6 +321,7 @@
         where
         customer_id = #{customerId}
         and contract_status != 1
+        order by create_time desc
     </select>
     <select id="getShowCustomerContractById"
             resultType="com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto">

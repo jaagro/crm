@@ -1,7 +1,7 @@
 package com.jaagro.crm.api.dto.response.truck;
 
 import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContractPriceDto;
-import com.jaagro.crm.api.dto.response.contract.ReturnCheckContractQualificationDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnContractQualificationDto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -24,6 +24,11 @@ public class TruckTeamContractReturnDto implements Serializable {
      * 关联车队表ID
      */
     private Integer truckTeamId;
+
+    /**
+     * 车队名称
+     */
+    private String truckTeamName;
 
     /**
      * 合同编号
@@ -68,5 +73,5 @@ public class TruckTeamContractReturnDto implements Serializable {
     /**
      * 资质证件照
      */
-    private List<ReturnCheckContractQualificationDto> qualificationDtoList;
+    private List<ReturnContractQualificationDto> qualificationDtoList;
 }

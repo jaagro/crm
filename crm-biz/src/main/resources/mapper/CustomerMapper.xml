@@ -363,6 +363,7 @@
             <![CDATA[and (m.customer_name like concat('%',#{customerName},'%') )]]>
         </if>
         GROUP BY m.id
+        order by m.create_time desc
     </select>
     <select id="getByCustomerDto" resultMap="BaseResultMap"
             parameterType="com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto">

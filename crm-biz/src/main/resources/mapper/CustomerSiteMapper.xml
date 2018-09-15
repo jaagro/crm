@@ -300,7 +300,7 @@
         select
         <include refid="Base_Column_List"/>
         from customer_site
-        where customer_id = #{customer_id,jdbcType=INTEGER}
+        where customer_id = #{customerId,jdbcType=INTEGER}
         and site_status = 1
     </select>
     <select id="listAllSite" resultMap="ReturnSelectMap"

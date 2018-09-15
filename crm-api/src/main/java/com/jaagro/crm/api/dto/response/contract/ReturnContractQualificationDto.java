@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.util.Date;
 
 
 /**
@@ -14,7 +13,6 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-
 public class ReturnContractQualificationDto implements Serializable {
     /**
      * 合同资质证照主键id
@@ -51,28 +49,4 @@ public class ReturnContractQualificationDto implements Serializable {
      */
     private String description;
 
-    /**
-     * 创建人(References: user)
-     */
-    private Integer createUserId;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 修改人(References: user)
-     */
-    private Integer modifyUserId;
-
-    /**
-     * 修改时间
-     */
-    private Date modifyTime;
-
-    /**
-     * 是否可用（0不可用 1可用）
-     */
-    private Boolean enabled;
 }

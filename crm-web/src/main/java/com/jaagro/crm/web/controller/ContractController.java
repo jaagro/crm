@@ -7,9 +7,12 @@ import com.jaagro.crm.api.dto.request.customer.CreateQualificationVerifyLogDto;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnCheckContractQualificationDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
+import com.jaagro.crm.api.dto.response.truck.ListTruckTeamContractDto;
 import com.jaagro.crm.api.dto.response.truck.TruckTeamContractReturnDto;
 import com.jaagro.crm.api.service.*;
 import com.jaagro.crm.biz.entity.ContractQualification;
+import com.jaagro.crm.biz.entity.TruckTeam;
+import com.jaagro.crm.biz.entity.TruckTeamContract;
 import com.jaagro.crm.biz.mapper.*;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
@@ -55,6 +58,8 @@ public class ContractController {
     private TruckTeamContractMapper truckTeamContractMapper;
     @Autowired
     private OssSignUrlClientService ossSignUrlClientService;
+    @Autowired
+    private TruckTeamMapper truckTeamMapper;
 
     /**
      * 合同新增
@@ -256,7 +261,20 @@ public class ContractController {
     @PostMapping("/listContractQuaByCriteria")
     public BaseResponse listContractQuaByCriteria(@RequestBody ListContractQualificationCriteriaDto dto) {
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
-        return BaseResponse.successInstance(new PageInfo<>(qualificationMapper.listByCriteria(dto)));
+        List<ReturnCheckContractQualificationDto> qualificationDtos = qualificationMapper.listByCriteria(dto);
+        if (qualificationDtos.size() > 0) {
+            for (ReturnCheckContractQualificationDto checkContractQualificationDto : qualificationDtos
+            ) {
+                TruckTeamContractReturnDto contractReturnDto = checkContractQualificationDto.getTruckTeamContractReturnDto();
+                if (contractReturnDto != null) {
+                    TruckTeam truckTeam = this.truckTeamMapper.selectByPrimaryKey(contractReturnDto.getTruckTeamId());
+                    if (truckTeam != null) {
+                        contractReturnDto.setTruckTeamName(truckTeam.getTeamName());
+                    }
+                }
+            }
+        }
+        return BaseResponse.successInstance(new PageInfo<>(qualificationDtos));
     }
 
     /**
@@ -284,10 +302,11 @@ public class ContractController {
             /**
              * 车队合同
              */
-            if (this.teamMapper.selectByPrimaryKey(relevanceId) == null) {
-                return BaseResponse.errorInstance("车队不存在");
+            TruckTeamContract teamContract = this.truckTeamContractMapper.selectByPrimaryKey(relevanceId);
+            if (teamContract == null) {
+                return BaseResponse.errorInstance("车队合同不存在");
             }
-            List<TruckTeamContractReturnDto> teamContractReturnDtos = this.truckTeamContractMapper.listByTruckTeamId(relevanceId);
+            List<TruckTeamContractReturnDto> teamContractReturnDtos = this.truckTeamContractMapper.listByTruckTeamId(teamContract.getTruckTeamId());
             if (teamContractReturnDtos.size() < 1) {
                 return BaseResponse.errorInstance("车队没有相关合同");
             }
@@ -305,9 +324,11 @@ public class ContractController {
             String[] strArray = {checkContractQualificationDto.getCertificateImageUrl()};
             List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
             checkContractQualificationDto.setCertificateImageUrl(urlList.get(0).toString());
+            //填充运力合同信息
+            checkContractQualificationDto.setTruckTeamContractReturnDto(this.truckTeamContractMapper.getById(checkContractQualificationDto.getRelevanceId()));
             return BaseResponse.successInstance(checkContractQualificationDto);
         }
-        return BaseResponse.queryDataEmpty();
+        return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "没有查询到需要审核的资质"));
     }
 
     /**
@@ -325,7 +346,7 @@ public class ContractController {
         if (this.qualificationMapper.selectByPrimaryKey(dto.getId()) == null) {
             return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质不存在"));
         }
-        if (dto.getRelevance_type() == null) {
+        if (dto.getRelevanceType() == null) {
             return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质关联类型[RelevanceType]不能为空"));
         }
         //审核记录
@@ -340,8 +361,7 @@ public class ContractController {
         logDto
                 .setVertifyResult(dto.getCertificateStatus())
                 .setReferencesId(dto.getId())
-                // 审核类型（1-客户资质 2- 客户合同 3-运力资质 4-运力合同）
-                .setCertificateType(2);
+                .setCertificateType(dto.getRelevanceType());
         return BaseResponse.service(this.logService.createVerifyLog(logDto));
     }
 

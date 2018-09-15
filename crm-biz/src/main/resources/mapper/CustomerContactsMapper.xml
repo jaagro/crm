@@ -183,7 +183,7 @@
         from customer_contacts
         where customer_id = #{id,jdbcType=INTEGER}
         and enabled = 1
-        order by create_time
+        order by create_time desc
     </select>
     <delete id="deleteByCustomerId">
         delete from customer_contacts

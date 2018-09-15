@@ -85,7 +85,7 @@ public class TruckTeamContractController {
     @ApiOperation("删除合同[逻辑]")
     @GetMapping("/deleteTeamContract/{id}")
     public BaseResponse deleteTeamContract(@PathVariable Integer id) {
-        Map<String, Object> result = truckTeamContractService.getById(id);
+        Map<String, Object> result = truckTeamContractService.disableContract(id);
         return BaseResponse.service(result);
     }
 
