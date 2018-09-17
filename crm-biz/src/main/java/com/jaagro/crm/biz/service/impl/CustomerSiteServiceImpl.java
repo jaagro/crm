@@ -142,4 +142,16 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
         return siteMapper.getShowSiteById(id);
     }
 
+    /**
+     * 根据地址名称查询
+     *
+     * @param siteName
+     * @param customerId
+     * @return
+     */
+    @Override
+    public ShowSiteDto getBySiteName(String siteName, Integer customerId) {
+        return this.siteMapper.getBySiteName(siteName, customerId);
+    }
+
 }

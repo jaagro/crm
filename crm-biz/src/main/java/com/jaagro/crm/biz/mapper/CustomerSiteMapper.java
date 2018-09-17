@@ -79,4 +79,13 @@ public interface CustomerSiteMapper {
      * @return
      */
     ShowSiteDto getShowSiteById(@Param("id") Integer id);
+
+    /**
+     * 根据地址名称查询
+     *
+     * @param siteName
+     * @param customerId
+     * @return
+     */
+    ShowSiteDto getBySiteName(String siteName, Integer customerId);
 }

@@ -361,4 +361,13 @@
         from customer_site
         where id = #{id}
     </select>
+    <select id="getBySiteName" resultType="com.jaagro.crm.api.dto.request.customer.ShowSiteDto">
+        select
+        <include refid="Show_Column"/>
+        from customer_site
+        where
+        customer_id = #{customerId}
+        and site_name = #{siteName}
+        and site_status = 1
+    </select>
 </mapper>
