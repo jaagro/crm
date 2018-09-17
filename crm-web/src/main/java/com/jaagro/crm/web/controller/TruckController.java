@@ -105,6 +105,18 @@ public class TruckController {
         return BaseResponse.service(truckService.listTruck(truckCriteria));
     }
 
+    /**
+     * 分页车辆管理列表
+     *
+     * @param truckCriteria
+     * @return
+     */
+    @ApiOperation("分页车辆管理列表")
+    @PostMapping("/listTruckByCriteria")
+    public BaseResponse listTruckTeamByCriteria(@RequestBody ListTruckCriteriaDto truckCriteria) {
+        return BaseResponse.service(truckService.listTruckByCriteria(truckCriteria));
+    }
+
     @ApiOperation("获取全部车型")
     @GetMapping("/listTruckType")
     public BaseResponse listTruckType() {
@@ -113,7 +125,7 @@ public class TruckController {
 
     @Ignore
     @GetMapping("/listTruckTypeToFeign")
-    public List<ListTruckTypeDto> listTruckTypeReturnDto(){
+    public List<ListTruckTypeDto> listTruckTypeReturnDto() {
         return truckService.listTruckType();
     }
 

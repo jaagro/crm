@@ -1,9 +1,12 @@
 package com.jaagro.crm.biz.mapper;
 
 
-import com.jaagro.crm.api.dto.response.truck.ReturnCheckTruckTeamDto;
+import com.jaagro.crm.api.dto.request.truck.ListTruckTeamCriteriaDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTeamDto;
+import com.jaagro.crm.api.dto.response.truck.ReturnCheckTruckTeamDto;
 import com.jaagro.crm.biz.entity.TruckTeam;
+
+import java.util.List;
 
 public interface TruckTeamMapper {
     /**
@@ -55,4 +58,11 @@ public interface TruckTeamMapper {
      * @return
      */
     ReturnCheckTruckTeamDto getTeamById(Integer teamId);
+
+    /**
+     * 分页查询车队
+     *
+     * @param truckCriteria
+     */
+    List<ListTruckTeamDto> listByCeriteria(ListTruckTeamCriteriaDto truckCriteria);
 }

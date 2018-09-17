@@ -28,11 +28,6 @@ public class ListTruckTeamDto implements Serializable {
     private Integer teamType;
 
     /**
-     * 法人姓名
-     */
-    private String legalName;
-
-    /**
      * 统一社会信用码（个体司机时，为司机身份证号码）
      */
     private String creditCode;
@@ -71,21 +66,6 @@ public class ListTruckTeamDto implements Serializable {
      * 创建日期
      */
     private Date createTime;
-
-    /**
-     * 修改日期
-     */
-    private Date modifyTime;
-
-    /**
-     * 创建人(关联用户ID)
-     */
-    private Integer createUserId;
-
-    /**
-     * 修改人(关联用户ID)
-     */
-    private Integer modifyUserId;
 
     /**
      * 备注信息
