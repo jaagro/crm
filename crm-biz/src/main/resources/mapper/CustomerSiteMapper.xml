@@ -358,7 +358,7 @@
     <select id="getShowSiteById" resultType="com.jaagro.crm.api.dto.request.customer.ShowSiteDto">
         select
         <include refid="Show_Column"/>
-        form customer_site
+        FROM customer_site
         where id = #{id}
     </select>
 </mapper>
