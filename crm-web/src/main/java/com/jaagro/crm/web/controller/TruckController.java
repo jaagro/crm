@@ -140,4 +140,9 @@ public class TruckController {
             throw new RuntimeException("查询指派车辆失败:"+e.getMessage());
         }
     }
+
+    @GetMapping("/getTruckByToken")
+    public GetTruckDto getTruckByToken(){
+        return truckService.getTruckByToken();
+    }
 }

@@ -2,13 +2,11 @@ package com.jaagro.crm.biz.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.dto.request.truck.*;
 import com.jaagro.crm.api.dto.response.truck.*;
-import com.jaagro.crm.api.service.DriverClientService;
-import com.jaagro.crm.api.service.OssSignUrlClientService;
-import com.jaagro.crm.api.service.TruckQualificationService;
-import com.jaagro.crm.api.service.TruckService;
+import com.jaagro.crm.api.service.*;
 import com.jaagro.crm.biz.entity.Truck;
 import com.jaagro.crm.biz.mapper.TruckMapper;
 import com.jaagro.crm.biz.mapper.TruckQualificationMapper;
@@ -24,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,6 +51,10 @@ public class TruckServiceImpl implements TruckService {
     private TruckQualificationMapper truckQualificationMapper;
     @Autowired
     private OssSignUrlClientService ossSignUrlClientService;
+    @Autowired
+    private HttpServletRequest request;
+    @Autowired
+    private UserClientService userClientService;
 
     private void changeUrl(List<ListTruckQualificationDto> driverQualificationList) {
         for (ListTruckQualificationDto dto : driverQualificationList
@@ -324,5 +327,19 @@ public class TruckServiceImpl implements TruckService {
             }
         }
         return result;
+    }
+
+    /**
+     * 通过token获取truck
+     * @author tony
+     * @return
+     */
+    @Override
+    public GetTruckDto getTruckByToken() {
+        String token = request.getHeader("token");
+        UserInfo userInfo = userClientService.getUserByToken(token);
+        DriverReturnDto driver = driverClientService.getDriverReturnObject(userInfo.getId());
+        GetTruckDto truck = truckMapper.getTruckById(driver.getTruckId());
+        return truck;
     }
 }

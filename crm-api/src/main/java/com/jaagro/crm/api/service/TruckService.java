@@ -88,4 +88,10 @@ public interface TruckService {
      * @return
      */
     List<ListTruckWithDriversDto> listTrucksWithDrivers(ListTruckCriteriaDto criteriaDto);
+
+    /**
+     * 通过token获取truck
+     * @return
+     */
+    GetTruckDto getTruckByToken();
 }
