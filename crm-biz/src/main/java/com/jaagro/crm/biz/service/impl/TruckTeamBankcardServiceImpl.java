@@ -3,7 +3,7 @@ package com.jaagro.crm.biz.service.impl;
 import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamBankcardDto;
 import com.jaagro.crm.api.service.TruckTeamBankcardService;
 import com.jaagro.crm.biz.entity.TruckTeamBankcard;
-import com.jaagro.crm.biz.mapper.TruckTeamBankcardMapper;
+import com.jaagro.crm.biz.mapper.TruckTeamBankcardMapperExt;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ public class TruckTeamBankcardServiceImpl implements TruckTeamBankcardService {
     private static final Logger log = LoggerFactory.getLogger(TruckTeamBankcardService.class);
 
     @Autowired
-    private TruckTeamBankcardMapper truckTeamBankcardMapper;
+    private TruckTeamBankcardMapperExt truckTeamBankcardMapper;
 
     /**
      * 创建车队银行卡号成功

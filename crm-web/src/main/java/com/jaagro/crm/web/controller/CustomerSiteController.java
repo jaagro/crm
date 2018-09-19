@@ -5,8 +5,8 @@ import com.jaagro.crm.api.dto.request.customer.ListSiteCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.ShowSiteDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerSiteDto;
 import com.jaagro.crm.api.service.CustomerSiteService;
-import com.jaagro.crm.biz.mapper.CustomerMapper;
-import com.jaagro.crm.biz.mapper.CustomerSiteMapper;
+import com.jaagro.crm.biz.mapper.CustomerMapperExt;
+import com.jaagro.crm.biz.mapper.CustomerSiteMapperExt;
 import com.jaagro.utils.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,11 +26,11 @@ import org.springframework.web.bind.annotation.*;
 public class CustomerSiteController {
 
     @Autowired
-    private CustomerMapper customerMapper;
+    private CustomerMapperExt customerMapper;
     @Autowired
     private CustomerSiteService siteService;
     @Autowired
-    private CustomerSiteMapper siteMapper;
+    private CustomerSiteMapperExt siteMapper;
 
     @ApiOperation(value = "新增单个地址")
     @PostMapping("/site")

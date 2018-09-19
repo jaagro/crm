@@ -36,11 +36,11 @@ public class ContractController {
     @Autowired
     private ContractService contractService;
     @Autowired
-    private CustomerContractMapper customerContractMapper;
+    private CustomerContractMapperExt customerContractMapper;
     @Autowired
-    private CustomerMapper customerMapper;
+    private CustomerMapperExt customerMapper;
     @Autowired
-    private ContractQualificationMapper qualificationMapper;
+    private ContractQualificationMapperExt qualificationMapper;
     @Autowired
     private ContractQualificationService contractQualificationService;
     @Autowired
@@ -50,9 +50,9 @@ public class ContractController {
     @Autowired
     private DriverClientService driverClientService;
     @Autowired
-    private TruckTeamMapper teamMapper;
+    private TruckTeamMapperExt teamMapper;
     @Autowired
-    private TruckTeamContractMapper truckTeamContractMapper;
+    private TruckTeamContractMapperExt truckTeamContractMapper;
     @Autowired
     private OssSignUrlClientService ossSignUrlClientService;
 

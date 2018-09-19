@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jaagro.crm.biz.mapper.TruckQualificationMapper">
+<mapper namespace="com.jaagro.crm.biz.mapper.TruckQualificationMapperExt">
     <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.TruckQualification">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER"/>
@@ -16,29 +16,7 @@
         <result column="notes" property="notes" jdbcType="VARCHAR"/>
         <result column="enabled" property="enabled" jdbcType="TINYINT"/>
     </resultMap>
-    <resultMap id="ReturnCheckMap" type="com.jaagro.crm.api.dto.response.truck.ReturnTruckQualificationDto">
-        <id column="id" property="id" jdbcType="INTEGER"/>
-        <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER"/>
-        <result column="truck_id" property="truckId" jdbcType="INTEGER"/>
-        <result column="driver_id" property="driverId" jdbcType="INTEGER"/>
-        <result column="certificate_type" property="certificateType" jdbcType="INTEGER"/>
-        <result column="certificate_image_url" property="certificateImageUrl" jdbcType="VARCHAR"/>
-        <result column="certificate_status" property="certificateStatus" jdbcType="INTEGER"/>
-        <result column="notes" property="notes" jdbcType="VARCHAR"/>
 
-        <association property="teamDto" column="truck_team_id"
-                     select="com.jaagro.crm.biz.mapper.TruckTeamMapper.getTeamById"/>
-    </resultMap>
-    <resultMap id="ReturnMap" type="com.jaagro.crm.api.dto.response.truck.ListTruckQualificationDto">
-        <id column="id" property="id" jdbcType="INTEGER"/>
-        <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER"/>
-        <result column="truck_id" property="truckId" jdbcType="INTEGER"/>
-        <result column="driver_id" property="driverId" jdbcType="INTEGER"/>
-        <result column="certificate_type" property="certificateType" jdbcType="INTEGER"/>
-        <result column="certificate_image_url" property="certificateImageUrl" jdbcType="VARCHAR"/>
-        <result column="certificate_status" property="certificateStatus" jdbcType="INTEGER"/>
-        <result column="notes" property="notes" jdbcType="VARCHAR"/>
-    </resultMap>
     <sql id="Base_Column_List">
     id, truck_team_id, truck_id, driver_id, certificate_type, certificate_image_url, 
     certificate_status, create_user_id, modify_user_id, create_time, modify_time, notes, 
@@ -212,56 +190,5 @@
       enabled = #{enabled,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
-    <select id="listByCriteria" resultMap="ReturnCheckMap"
-            parameterType="com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto">
-        select
-        <include refid="Base_Column_List"/>
-        from truck_qualification
-        where 1=1
-        <if test="truckTeamId != null">
-            and truck_team_id = #{truckTeamId}
-        </if>
-        <if test="certificateStatus != null">
-            and certificate_status = #{certificateStatus}
-        </if>
-        and enabled = 1
-    </select>
-    <select id="listByIds" resultMap="ReturnCheckMap"
-            parameterType="com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto">
-        select
-        <include refid="Base_Column_List"/>
-        from truck_qualification
-        where enabled = 1
-        <if test="truckTeamId != null">
-            and truck_team_id = #{truckTeamId} and truck_id is null and driver_id is null
-        </if>
-        <if test="truckId != null">
-            and truck_id = #{truckId} and driver_id is null
-        </if>
-        <if test="driverId != null">
-            and driver_id = #{driverId}
-        </if>
-        <if test="certificateStatus != null">
-            and certificate_status = #{certificateStatus}
-        </if>
-        <if test="certificateStatus == null">
-            and certificate_status in (0,2)
-        </if>
-        ORDER BY certificate_status
-    </select>
-    <select id="listByTruckId" resultMap="ReturnMap">
-        select
-        <include refid="Base_Column_List"/>
-        from truck_qualification
-        where enabled = 1
-        and truck_id = #{truckId}
-        and driver_id is null
-    </select>
-    <select id="listByDriverId" resultMap="ReturnMap">
-        select
-        <include refid="Base_Column_List"/>
-        from truck_qualification
-        where enabled = 1
-        and driver_id = #{driverId}
-    </select>
+
 </mapper>

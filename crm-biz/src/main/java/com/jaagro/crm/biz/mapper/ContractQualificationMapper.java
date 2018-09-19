@@ -40,19 +40,4 @@ public interface ContractQualificationMapper {
      */
     int updateByPrimaryKey(ContractQualification record);
 
-    /**
-     * 根据合同id查询
-     *
-     * @param contractId
-     * @return
-     */
-    List<ReturnCheckContractQualificationDto> listByContractId(Integer contractId);
-
-    /**
-     * 合同资质证分页
-     *
-     * @param dto
-     * @return
-     */
-    List<ReturnCheckContractQualificationDto> listByCriteria(ListContractQualificationCriteriaDto dto);
 }

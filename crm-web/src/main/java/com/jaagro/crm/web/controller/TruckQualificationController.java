@@ -10,9 +10,9 @@ import com.jaagro.crm.api.service.DriverClientService;
 import com.jaagro.crm.api.service.OssSignUrlClientService;
 import com.jaagro.crm.api.service.TruckQualificationService;
 import com.jaagro.crm.api.service.TruckVerifyLogService;
-import com.jaagro.crm.biz.mapper.TruckMapper;
-import com.jaagro.crm.biz.mapper.TruckQualificationMapper;
-import com.jaagro.crm.biz.mapper.TruckTeamMapper;
+import com.jaagro.crm.biz.mapper.TruckMapperExt;
+import com.jaagro.crm.biz.mapper.TruckQualificationMapperExt;
+import com.jaagro.crm.biz.mapper.TruckTeamMapperExt;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
@@ -37,11 +37,11 @@ public class TruckQualificationController {
     @Autowired
     private TruckQualificationService truckQualificationService;
     @Autowired
-    private TruckQualificationMapper truckQualificationMapper;
+    private TruckQualificationMapperExt truckQualificationMapper;
     @Autowired
-    private TruckTeamMapper truckTeamMapper;
+    private TruckTeamMapperExt truckTeamMapper;
     @Autowired
-    private TruckMapper truckMapper;
+    private TruckMapperExt truckMapper;
     @Autowired
     private TruckVerifyLogService logService;
     @Autowired

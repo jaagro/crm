@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jaagro.crm.biz.mapper.TruckTeamMapper">
+<mapper namespace="com.jaagro.crm.biz.mapper.TruckTeamMapperExt">
     <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.TruckTeam">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="team_name" property="teamName" jdbcType="VARCHAR"/>
@@ -19,32 +19,7 @@
         <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER"/>
         <result column="notes" property="notes" jdbcType="VARCHAR"/>
     </resultMap>
-    <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.truck.ListTruckTeamDto">
-        <id column="id" property="id" jdbcType="INTEGER"/>
-        <result column="team_name" property="teamName" jdbcType="VARCHAR"/>
-        <result column="team_type" property="teamType" jdbcType="INTEGER"/>
-        <result column="legal_name" property="legalName" jdbcType="VARCHAR"/>
-        <result column="credit_code" property="creditCode" jdbcType="VARCHAR"/>
-        <result column="team_status" property="teamStatus" jdbcType="INTEGER"/>
-        <result column="cooperation_type" property="cooperationType" jdbcType="INTEGER"/>
-        <result column="province" property="province" jdbcType="VARCHAR"/>
-        <result column="city" property="city" jdbcType="VARCHAR"/>
-        <result column="county" property="county" jdbcType="VARCHAR"/>
-        <result column="address" property="address" jdbcType="VARCHAR"/>
-        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
-        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
-        <result column="create_user_id" property="createUserId" jdbcType="INTEGER"/>
-        <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER"/>
-        <result column="notes" property="notes" jdbcType="VARCHAR"/>
-    </resultMap>
-    <resultMap id="ReturnCheckDto" type="com.jaagro.crm.api.dto.response.truck.ReturnCheckTruckTeamDto">
-        <id column="id" property="id" jdbcType="INTEGER"/>
-        <result column="team_name" property="teamName" jdbcType="VARCHAR"/>
-        <result column="team_type" property="teamType" jdbcType="INTEGER"/>
-        <result column="legal_name" property="legalName" jdbcType="VARCHAR"/>
-        <result column="credit_code" property="creditCode" jdbcType="VARCHAR"/>
-        <result column="team_status" property="teamStatus" jdbcType="INTEGER"/>
-    </resultMap>
+
     <sql id="Base_Column_List">
     id, team_name, team_type, legal_name, credit_code, team_status, cooperation_type, 
     province, city, county, address, create_time, modify_time, create_user_id, modify_user_id, 
@@ -60,11 +35,7 @@
     delete from truck_team
     where id = #{id,jdbcType=INTEGER}
   </delete>
-    <update id="deleteByLogic" parameterType="java.lang.Integer">
-    update truck_team
-    set team_status = 0
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+
     <insert id="insert" parameterType="com.jaagro.crm.biz.entity.TruckTeam" useGeneratedKeys="true" keyProperty="id"
             keyColumn="id">
     insert into truck_team (id, team_name, team_type, 
@@ -254,16 +225,4 @@
       notes = #{notes,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-    <select id="getTruckTeamById" parameterType="java.lang.Integer" resultMap="DetailInfo">
-        select
-        <include refid="Base_Column_List"/>
-        from truck_team
-        where id = #{id,jdbcType=INTEGER}
-    </select>
-    <select id="getTeamById" parameterType="java.lang.Integer" resultMap="ReturnCheckDto">
-        select
-        <include refid="Base_Column_List"/>
-        from truck_team
-        where id = #{id,jdbcType=INTEGER}
-    </select>
 </mapper>

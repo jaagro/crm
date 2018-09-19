@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jaagro.crm.biz.mapper.CustomerSiteMapper">
+<mapper namespace="com.jaagro.crm.biz.mapper.CustomerSiteMapperExt">
     <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.CustomerSite">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="dept_id" property="deptId" jdbcType="INTEGER"/>
@@ -23,37 +23,13 @@
         <result column="create_user_id" property="createUserId" jdbcType="INTEGER"/>
         <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER"/>
     </resultMap>
-    <resultMap id="ReturnMap" type="com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto">
-        <id column="id" property="id" jdbcType="INTEGER"/>
-        <result column="dept_id" property="deptId" jdbcType="INTEGER"/>
-        <result column="site_type" property="siteType" jdbcType="INTEGER"/>
-        <result column="customer_id" property="customerId" jdbcType="INTEGER"/>
-        <result column="site_name" property="siteName" jdbcType="VARCHAR"/>
-        <result column="site_status" property="siteStatus" jdbcType="INTEGER"/>
-        <result column="contact" property="contact" jdbcType="VARCHAR"/>
-        <result column="phone" property="phone" jdbcType="VARCHAR"/>
-        <result column="province" property="province" jdbcType="VARCHAR"/>
-        <result column="city" property="city" jdbcType="VARCHAR"/>
-        <result column="county" property="county" jdbcType="VARCHAR"/>
-        <result column="address" property="address" jdbcType="VARCHAR"/>
-        <result column="latitude" property="latitude" jdbcType="DECIMAL"/>
-        <result column="longitude" property="longitude" jdbcType="DECIMAL"/>
-        <result column="shipment_require" property="shipmentRequire" jdbcType="VARCHAR"/>
-        <result column="notes" property="notes" jdbcType="VARCHAR"/>
-    </resultMap>
-    <resultMap id="ReturnSelectMap" type="com.jaagro.crm.api.dto.response.selectValue.ReturnSelectSiteDto">
-        <id column="id" property="id" jdbcType="INTEGER"/>
-        <result column="site_type" property="siteType" jdbcType="INTEGER"/>
-        <result column="site_name" property="siteName" jdbcType="VARCHAR"/>
-    </resultMap>
+
     <sql id="Base_Column_List">
     id, dept_id, site_type, customer_id, site_name, site_status, contact, phone, province,
     city, county, address, latitude, longitude, shipment_require, notes, create_time,
     modify_time, create_user_id, modify_user_id
   </sql>
-    <sql id="Show_Column">
-        id, site_type, site_name, contact, phone, province, city, county, address, latitude, longitude
-    </sql>
+
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
@@ -296,69 +272,5 @@
       modify_user_id = #{modifyUserId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
-    <select id="getByCustomerSiteId" resultMap="ReturnMap" parameterType="java.lang.Integer">
-        select
-        <include refid="Base_Column_List"/>
-        from customer_site
-        where customer_id = #{customer_id,jdbcType=INTEGER}
-        and site_status = 1
-    </select>
-    <select id="listAllSite" resultMap="ReturnSelectMap"
-            parameterType="com.jaagro.crm.api.dto.request.customer.ListSiteCriteriaDto">
-        select
-        <include refid="Base_Column_List"/>
-        from customer_site
-        where 1=1
-        <if test="customerId != null">
-            and customer_id = #{customerId,jdbcType=INTEGER}
-        </if>
-        <if test="siteType != null">
-            and site_type = #{siteType,jdbcType=INTEGER}
-        </if>
-        and site_status = 1
-    </select>
-    <select id="getByCriteriDto" resultMap="ReturnMap"
-            parameterType="com.jaagro.crm.api.dto.request.customer.ListSiteCriteriaDto">
-        select
-        <include refid="Base_Column_List"/>
-        from customer_site
-        where 1=1
-        <if test="siteType != null">
-            and site_type = #{siteType}
-        </if>
-        <if test="customerId != null">
-            and customer_id = #{customerId}
-        </if>
-        <if test="endDate != null">
-            <![CDATA[and create_time <= #{endDate}]]>
-        </if>
-        <if test="startDate != null">
-            <![CDATA[and create_time >= #{startDate}]]>
-        </if>
-        <if test="keywords != null">
-            and (
-            site_name like concat('%',#{keywords},'%') or
-            contact like concat('%',#{keywords},'%') or
-            phone like concat('%',#{keywords},'%')
-        </if>
-        and site_status = 1
-        order by create_time desc
-    </select>
-    <select id="getSiteDto" parameterType="com.jaagro.crm.api.dto.request.customer.UpdateCustomerSiteDto"
-            resultMap="ReturnMap">
-        select
-        <include refid="Base_Column_List"/>
-        from customer_site
-        where site_name = #{siteName}
-        <if test="id != null">
-            and id != #{id}
-        </if>
-        and site_status = 1
-    </select>
-    <select id="getShowSiteById" resultType="com.jaagro.crm.api.dto.request.customer.ShowSiteDto">
-        select
-        <include refid="Show_Column"/>
-        from customer_site
-        where id = #{id}
-    </select>
+
 </mapper>

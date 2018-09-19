@@ -28,15 +28,15 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
     @Autowired
-    private CustomerMapper customerMapper;
+    private CustomerMapperExt customerMapper;
     @Autowired
-    private CustomerContactsMapper customerContactsMapper;
+    private CustomerContactsMapperExt customerContactsMapper;
     @Autowired
     private CustomerContactsService customerContactsService;
     @Autowired
-    private CustomerQualificationMapper qualificationMapper;
+    private CustomerQualificationMapperExt qualificationMapper;
     @Autowired
-    private CustomerContractMapper contractMapper;
+    private CustomerContractMapperExt contractMapper;
 
     /**
      * 新增客户

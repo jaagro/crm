@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jaagro.crm.biz.mapper.CustomerMapper">
+<mapper namespace="com.jaagro.crm.biz.mapper.CustomerMapperExt">
     <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.Customer">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="customer_name" property="customerName" jdbcType="VARCHAR"/>
@@ -24,87 +24,42 @@
         <result column="create_user_id" property="createUserId" jdbcType="INTEGER"/>
         <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER"/>
     </resultMap>
-    <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.customer.CustomerReturnDto">
-        <id column="id" property="id" jdbcType="INTEGER"/>
-        <result column="customer_name" property="customerName" jdbcType="VARCHAR"/>
-        <result column="customer_type" property="customerType" jdbcType="INTEGER"/>
-        <result column="credit_code" property="creditCode" jdbcType="VARCHAR"/>
-        <result column="customer_status" property="customerStatus" jdbcType="INTEGER"/>
-        <result column="city" property="city" jdbcType="VARCHAR"/>
-        <result column="province" property="province" jdbcType="VARCHAR"/>
-        <result column="county" property="county" jdbcType="VARCHAR"/>
-        <result column="address" property="address" jdbcType="VARCHAR"/>
-        <result column="latitude" property="latitude" jdbcType="DECIMAL"/>
-        <result column="longitude" property="longitude" jdbcType="DECIMAL"/>
-        <result column="billing_period" property="billingPeriod" jdbcType="INTEGER"/>
-        <result column="enable_invoice" property="enableInvoice" jdbcType="BIT"/>
-        <result column="invoice_type" property="invoiceType" jdbcType="INTEGER"/>
-        <result column="invoice_header" property="invoiceHeader" jdbcType="VARCHAR"/>
-        <result column="tax_number" property="taxNumber" jdbcType="VARCHAR"/>
-        <result column="notes" property="notes" jdbcType="VARCHAR"/>
-        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
-        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
-        <result column="create_user_id" property="createUserId" jdbcType="INTEGER"/>
-        <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER"/>
 
-        <collection property="customerContactsReturnDtos" column="id"
-                    select="com.jaagro.crm.biz.mapper.CustomerContactsMapper.listByCustomerId"/>
-        <collection property="returnContractDtos" column="id"
-                    select="com.jaagro.crm.biz.mapper.CustomerContractMapper.getByCustomerId"/>
-        <collection property="sites" column="id"
-                    select="com.jaagro.crm.biz.mapper.CustomerSiteMapper.getByCustomerSiteId"/>
-        <collection property="qualifications" column="id"
-                    select="com.jaagro.crm.biz.mapper.CustomerQualificationMapper.getByCustomerQualificationId"/>
-    </resultMap>
-    <resultMap id="ReturnCheckMap" type="com.jaagro.crm.api.dto.response.customer.ReturnCustomerDto">
-        <id column="id" property="id" jdbcType="INTEGER"/>
-        <result column="customer_name" property="customerName" jdbcType="VARCHAR"/>
-        <result column="customer_type" property="customerType" jdbcType="INTEGER"/>
-        <result column="credit_code" property="creditCode" jdbcType="VARCHAR"/>
-        <result column="customer_status" property="customerStatus" jdbcType="INTEGER"/>
-        <result column="city" property="city" jdbcType="VARCHAR"/>
-        <result column="province" property="province" jdbcType="VARCHAR"/>
-        <result column="county" property="county" jdbcType="VARCHAR"/>
-        <result column="address" property="address" jdbcType="VARCHAR"/>
-        <result column="notes" property="notes" jdbcType="VARCHAR"/>
-    </resultMap>
     <sql id="Base_Column_List">
     id, customer_name, customer_type, credit_code, customer_status, city, province, county,
     address, latitude, longitude, billing_period, enable_invoice, invoice_type, invoice_header,
     tax_number, notes, create_time, modify_time, create_user_id, modify_user_id
   </sql>
-    <sql id="show_column">
-        id, customer_name
-    </sql>
+
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
         from customer
         where id = #{id,jdbcType=INTEGER}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from customer
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-    <insert id="insert" parameterType="com.jaagro.crm.biz.entity.Customer" useGeneratedKeys="true" keyProperty="id"
-            keyColumn="id">
-    insert into customer (id, customer_name, customer_type,
-      credit_code, customer_status, city,
-      province, county, address,
-      latitude, longitude, billing_period,
-      enable_invoice, invoice_type, invoice_header,
-      tax_number, notes, create_time,
-      modify_time, create_user_id, modify_user_id
-      )
-    values (#{id,jdbcType=INTEGER}, #{customerName,jdbcType=VARCHAR}, #{customerType,jdbcType=INTEGER},
-      #{creditCode,jdbcType=VARCHAR}, #{customerStatus,jdbcType=INTEGER}, #{city,jdbcType=VARCHAR},
-      #{province,jdbcType=VARCHAR}, #{county,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
-      #{latitude,jdbcType=DECIMAL}, #{longitude,jdbcType=DECIMAL}, #{billingPeriod,jdbcType=INTEGER},
-      #{enableInvoice,jdbcType=BIT}, #{invoiceType,jdbcType=INTEGER}, #{invoiceHeader,jdbcType=VARCHAR},
-      #{taxNumber,jdbcType=VARCHAR}, #{notes,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
-      #{modifyTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, #{modifyUserId,jdbcType=INTEGER}
-      )
-  </insert>
+      <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from customer
+        where id = #{id,jdbcType=INTEGER}
+      </delete>
+      <insert id="insert" parameterType="com.jaagro.crm.biz.entity.Customer" useGeneratedKeys="true" keyProperty="id"
+                keyColumn="id">
+        insert into customer (id, customer_name, customer_type,
+          credit_code, customer_status, city,
+          province, county, address,
+          latitude, longitude, billing_period,
+          enable_invoice, invoice_type, invoice_header,
+          tax_number, notes, create_time,
+          modify_time, create_user_id, modify_user_id
+          )
+        values (#{id,jdbcType=INTEGER}, #{customerName,jdbcType=VARCHAR}, #{customerType,jdbcType=INTEGER},
+          #{creditCode,jdbcType=VARCHAR}, #{customerStatus,jdbcType=INTEGER}, #{city,jdbcType=VARCHAR},
+          #{province,jdbcType=VARCHAR}, #{county,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
+          #{latitude,jdbcType=DECIMAL}, #{longitude,jdbcType=DECIMAL}, #{billingPeriod,jdbcType=INTEGER},
+          #{enableInvoice,jdbcType=BIT}, #{invoiceType,jdbcType=INTEGER}, #{invoiceHeader,jdbcType=VARCHAR},
+          #{taxNumber,jdbcType=VARCHAR}, #{notes,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+          #{modifyTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, #{modifyUserId,jdbcType=INTEGER}
+          )
+      </insert>
     <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.Customer" useGeneratedKeys="true"
             keyProperty="id"
             keyColumn="id">
@@ -330,61 +285,5 @@
       modify_user_id = #{modifyUserId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
-    <select id="getById" parameterType="java.lang.Integer" resultMap="DetailInfo">
-        select
-        <include refid="Base_Column_List"/>
-        from customer
-        where id = #{id,jdbcType=INTEGER}
-    </select>
-    <select id="listByCriteriaDto" resultType="com.jaagro.crm.api.dto.response.customer.ListCustomerDto"
-            parameterType="com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto">
-        SELECT
-        m.customer_type,
-        m.customer_name,
-        m.id,
-        m.city,
-        m.customer_status,
-        m.province,
-        m.county
-        FROM
-        customer m
-        LEFT JOIN customer_contacts c ON m.id = c.customer_id
-        WHERE 1=1
-        <if test="customerType != null">
-            and m.customer_type = #{customerType}
-        </if>
-        <if test="phone != null">
-            and c.phone = #{phone}
-        </if>
-        <if test="customerStatus != null">
-            and m.customer_status = #{customerStatus}
-        </if>
-        <if test="customerName != null">
-            <![CDATA[and (m.customer_name like concat('%',#{customerName},'%') )]]>
-        </if>
-        GROUP BY m.id
-    </select>
-    <select id="getByCustomerDto" resultMap="BaseResultMap"
-            parameterType="com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto">
-        select
-        <include refid="Base_Column_List"/>
-        from customer
-        where customer_name = #{customerName}
-        <if test="id != null">
-            and id != #{id,jdbcType=INTEGER}
-        </if>
-        and customer_status <![CDATA[ <= ]]> 1
-    </select>
-    <select id="getCheckById" resultMap="ReturnCheckMap" parameterType="java.lang.Integer">
-        select
-        <include refid="Base_Column_List"/>
-        from customer
-        where id = #{id,jdbcType=INTEGER}
-    </select>
-    <select id="getShowCustomerById" resultType="com.jaagro.crm.api.dto.request.customer.ShowCustomerDto">
-        select
-        <include refid="show_column"></include>
-        from customer
-        where id = #{id,jdbcType=INTEGER}
-    </select>
+
 </mapper>

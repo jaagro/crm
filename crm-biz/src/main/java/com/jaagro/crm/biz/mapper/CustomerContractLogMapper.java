@@ -1,7 +1,9 @@
 package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.biz.entity.CustomerContractLog;
-
+/**
+ * @author baiyiran
+ */
 public interface CustomerContractLogMapper {
     /**
      *

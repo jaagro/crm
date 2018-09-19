@@ -6,9 +6,9 @@ import com.jaagro.crm.api.dto.response.truck.GetTruckDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckWithDriversDto;
 import com.jaagro.crm.api.service.TruckService;
-import com.jaagro.crm.biz.mapper.TruckMapper;
-import com.jaagro.crm.biz.mapper.TruckTeamMapper;
-import com.jaagro.crm.biz.mapper.TruckTypeMapper;
+import com.jaagro.crm.biz.mapper.TruckMapperExt;
+import com.jaagro.crm.biz.mapper.TruckTeamMapperExt;
+import com.jaagro.crm.biz.mapper.TruckTypeMapperExt;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
@@ -33,11 +33,11 @@ public class TruckController {
     @Autowired
     private TruckService truckService;
     @Autowired
-    private TruckMapper truckMapper;
+    private TruckMapperExt truckMapper;
     @Autowired
-    private TruckTeamMapper truckTeamMapper;
+    private TruckTeamMapperExt truckTeamMapper;
     @Autowired
-    private TruckTypeMapper truckTypeMapper;
+    private TruckTypeMapperExt truckTypeMapper;
 
     @ApiOperation("查询单个车辆")
     @GetMapping("/truck/{truckId}")

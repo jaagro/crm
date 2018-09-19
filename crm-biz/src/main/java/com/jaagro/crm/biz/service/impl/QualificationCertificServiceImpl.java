@@ -10,8 +10,8 @@ import com.jaagro.crm.api.dto.response.customer.ReturnQualificationDto;
 import com.jaagro.crm.api.service.OssSignUrlClientService;
 import com.jaagro.crm.api.service.QualificationCertificService;
 import com.jaagro.crm.biz.entity.CustomerQualification;
-import com.jaagro.crm.biz.mapper.CustomerMapper;
-import com.jaagro.crm.biz.mapper.CustomerQualificationMapper;
+import com.jaagro.crm.biz.mapper.CustomerMapperExt;
+import com.jaagro.crm.biz.mapper.CustomerQualificationMapperExt;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
@@ -35,13 +35,13 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
     private static final Logger log = LoggerFactory.getLogger(QualificationCertificServiceImpl.class);
 
     @Autowired
-    private CustomerQualificationMapper certificMapper;
+    private CustomerQualificationMapperExt certificMapper;
     @Autowired
     private CurrentUserService userService;
     @Autowired
     private OssSignUrlClientService ossSignUrlClientService;
     @Autowired
-    private CustomerMapper customerMapper;
+    private CustomerMapperExt customerMapper;
 
     @Override
     public Map<String, Object> createQualificationCertific(CreateCustomerQualificationDto certificDto) {

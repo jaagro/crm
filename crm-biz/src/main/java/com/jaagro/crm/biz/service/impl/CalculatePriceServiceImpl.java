@@ -6,8 +6,8 @@ import com.jaagro.crm.api.dto.response.PriceReturnDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractPriceDto;
 import com.jaagro.crm.api.service.CalculatePriceService;
 import com.jaagro.crm.biz.entity.CustomerContractSectionPrice;
-import com.jaagro.crm.biz.mapper.CustomerContractPriceMapper;
-import com.jaagro.crm.biz.mapper.CustomerContractSectionPriceMapper;
+import com.jaagro.crm.biz.mapper.CustomerContractPriceMapperExt;
+import com.jaagro.crm.biz.mapper.CustomerContractSectionPriceMapperExt;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +24,9 @@ import java.util.Map;
 public class CalculatePriceServiceImpl implements CalculatePriceService {
 
     @Autowired
-    private CustomerContractPriceMapper customerContractPriceMapper;
+    private CustomerContractPriceMapperExt customerContractPriceMapper;
     @Autowired
-    private CustomerContractSectionPriceMapper customerContractSectionPriceMapper;
+    private CustomerContractSectionPriceMapperExt customerContractSectionPriceMapper;
 
     /**
      * 根据条件计算费用

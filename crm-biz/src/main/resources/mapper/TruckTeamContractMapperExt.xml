@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jaagro.crm.biz.mapper.TruckTeamContractMapperExt">
+    <resultMap id="ReturnListInfo" type="com.jaagro.crm.api.dto.response.truck.ListTruckTeamContractDto">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER"/>
+        <result column="contract_number" property="contractNumber" jdbcType="VARCHAR"/>
+        <result column="contract_date" property="contractDate" jdbcType="TIMESTAMP"/>
+        <result column="start_date" property="startDate" jdbcType="TIMESTAMP"/>
+        <result column="end_date" property="endDate" jdbcType="TIMESTAMP"/>
+        <result column="contract_status" property="contractStatus" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap id="ReturnInfo" type="com.jaagro.crm.api.dto.response.truck.TruckTeamContractReturnDto">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER"/>
+        <result column="contract_number" property="contractNumber" jdbcType="VARCHAR"/>
+        <result column="bussiness_type" property="bussinessType" jdbcType="INTEGER"/>
+        <result column="contract_date" property="contractDate" jdbcType="TIMESTAMP"/>
+        <result column="start_date" property="startDate" jdbcType="TIMESTAMP"/>
+        <result column="end_date" property="endDate" jdbcType="TIMESTAMP"/>
+        <result column="contract_status" property="contractStatus" jdbcType="INTEGER"/>
+        <result column="notes" property="notes" jdbcType="VARCHAR"/>
+        <collection property="contractPriceDtoList" column="id"
+                    select="com.jaagro.crm.biz.mapper.TruckTeamContractPriceMapperExt.listByContractId"></collection>
+        <collection property="qualificationDtoList" column="id"
+                    select="com.jaagro.crm.biz.mapper.ContractQualificationMapperExt.listByContractId"></collection>
+    </resultMap>
+    <select id="getById" parameterType="java.lang.Integer" resultMap="ReturnInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from truck_team_contract
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="listByTruckTeamId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from truck_team_contract
+        where truck_team_id = #{truckTeamId,jdbcType=INTEGER}
+    </select>
+    <select id="listByCriteria" parameterType="com.jaagro.crm.api.dto.request.truck.ListTruckTeamContractCriteriaDto"
+            resultMap="ReturnListInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from truck_team_contract
+        where 1=1
+        <if test="truckTeamId != null">
+            and truck_team_id = #{truckTeamId}
+        </if>
+    </select>
+    <select id="getByContractNumber" parameterType="java.lang.String"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from truck_team_contract
+        where contract_status != 3
+        <if test="contractNumber != null">
+            and contract_number = #{contractNumber}
+        </if>
+    </select>
+</mapper>

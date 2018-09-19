@@ -15,9 +15,9 @@ import com.jaagro.crm.api.service.TruckTeamContractPriceService;
 import com.jaagro.crm.api.service.TruckTeamContractService;
 import com.jaagro.crm.biz.entity.TruckTeam;
 import com.jaagro.crm.biz.entity.TruckTeamContract;
-import com.jaagro.crm.biz.mapper.ContractQualificationMapper;
-import com.jaagro.crm.biz.mapper.TruckTeamContractMapper;
-import com.jaagro.crm.biz.mapper.TruckTeamMapper;
+import com.jaagro.crm.biz.mapper.ContractQualificationMapperExt;
+import com.jaagro.crm.biz.mapper.TruckTeamContractMapperExt;
+import com.jaagro.crm.biz.mapper.TruckTeamMapperExt;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
@@ -41,13 +41,13 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     private static final Logger log = LoggerFactory.getLogger(TruckTeamContractServiceImpl.class);
 
     @Autowired
-    private TruckTeamContractMapper truckTeamContractMapper;
+    private TruckTeamContractMapperExt truckTeamContractMapper;
     @Autowired
     private TruckTeamContractPriceService contractPriceService;
     @Autowired
-    private TruckTeamMapper truckTeamMapper;
+    private TruckTeamMapperExt truckTeamMapper;
     @Autowired
-    private ContractQualificationMapper contractQualificationMapper;
+    private ContractQualificationMapperExt contractQualificationMapper;
     @Autowired
     private CurrentUserService userService;
     @Autowired

@@ -4,7 +4,7 @@ import com.jaagro.crm.api.dto.request.contract.CreateContractQualificationDto;
 import com.jaagro.crm.api.dto.request.contract.UpdateContractQualificationDto;
 import com.jaagro.crm.api.service.ContractQualificationService;
 import com.jaagro.crm.biz.entity.ContractQualification;
-import com.jaagro.crm.biz.mapper.ContractQualificationMapper;
+import com.jaagro.crm.biz.mapper.ContractQualificationMapperExt;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
     private static final Logger log = LoggerFactory.getLogger(ContractQualificationServiceImpl.class);
 
     @Autowired
-    private ContractQualificationMapper qualificationMapper;
+    private ContractQualificationMapperExt qualificationMapper;
     @Autowired
     private CurrentUserService userService;
 

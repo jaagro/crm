@@ -4,12 +4,11 @@ import com.jaagro.crm.api.dto.request.customer.CreateQualificationVerifyLogDto;
 import com.jaagro.crm.api.service.QualificationVerifyLogService;
 import com.jaagro.crm.biz.entity.Customer;
 import com.jaagro.crm.biz.entity.CustomerQualification;
-import com.jaagro.crm.biz.entity.QualificationCertific;
 import com.jaagro.crm.biz.entity.QualificationVerifyLog;
-import com.jaagro.crm.biz.mapper.CustomerContractMapper;
-import com.jaagro.crm.biz.mapper.CustomerMapper;
-import com.jaagro.crm.biz.mapper.CustomerQualificationMapper;
-import com.jaagro.crm.biz.mapper.QualificationVerifyLogMapper;
+import com.jaagro.crm.biz.mapper.CustomerContractMapperExt;
+import com.jaagro.crm.biz.mapper.CustomerMapperExt;
+import com.jaagro.crm.biz.mapper.CustomerQualificationMapperExt;
+import com.jaagro.crm.biz.mapper.QualificationVerifyLogMapperExt;
 import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +27,13 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
     @Autowired
     private CurrentUserService userService;
     @Autowired
-    private CustomerMapper customerMapper;
+    private CustomerMapperExt customerMapper;
     @Autowired
-    private CustomerContractMapper contractMapper;
+    private CustomerContractMapperExt contractMapper;
     @Autowired
-    private CustomerQualificationMapper qualificationMapper;
+    private CustomerQualificationMapperExt qualificationMapper;
     @Autowired
-    private QualificationVerifyLogMapper verifyLogMapper;
+    private QualificationVerifyLogMapperExt verifyLogMapper;
 
     /**
      * 新增审核记录

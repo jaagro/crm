@@ -6,7 +6,7 @@ import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTeamDto;
 import com.jaagro.crm.api.service.TruckTeamService;
 import com.jaagro.crm.biz.entity.TruckTeam;
-import com.jaagro.crm.biz.mapper.TruckTeamMapper;
+import com.jaagro.crm.biz.mapper.TruckTeamMapperExt;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
@@ -27,7 +27,7 @@ public class TruckTeamServiceImpl implements TruckTeamService {
     private static final Logger log = LoggerFactory.getLogger(TruckTeamServiceImpl.class);
 
     @Autowired
-    private TruckTeamMapper truckTeamMapper;
+    private TruckTeamMapperExt truckTeamMapper;
     @Autowired
     private CurrentUserService currentUserService;
 

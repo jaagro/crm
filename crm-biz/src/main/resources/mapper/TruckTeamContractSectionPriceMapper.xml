@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jaagro.crm.biz.mapper.TruckTeamContractSectionPriceMapper">
+<mapper namespace="com.jaagro.crm.biz.mapper.TruckTeamContractSectionPriceMapperExt">
     <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.TruckTeamContractSectionPrice">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="contract_price_id" property="contractPriceId" jdbcType="INTEGER"/>
@@ -10,15 +10,7 @@
         <result column="price" property="price" jdbcType="DECIMAL"/>
         <result column="selection_status" property="selectionStatus" jdbcType="INTEGER"/>
     </resultMap>
-    <resultMap id="ReturnMap" type="com.jaagro.crm.api.dto.response.truck.TruckTeamContractSectionPriceReturnDto">
-        <id column="id" property="id" jdbcType="INTEGER"/>
-        <result column="contract_price_id" property="contractPriceId" jdbcType="INTEGER"/>
-        <result column="section_type" property="sectionType" jdbcType="INTEGER"/>
-        <result column="upper_limit" property="upperLimit" jdbcType="DECIMAL"/>
-        <result column="lower_limit" property="lowerLimit" jdbcType="DECIMAL"/>
-        <result column="price" property="price" jdbcType="DECIMAL"/>
-        <result column="selection_status" property="selectionStatus" jdbcType="INTEGER"/>
-    </resultMap>
+
     <sql id="Base_Column_List">
     id, contract_price_id, section_type, upper_limit, lower_limit, price, selection_status
   </sql>
@@ -127,19 +119,4 @@
       selection_status = #{selectionStatus,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
-    <select id="listByPriceId" resultMap="ReturnMap" parameterType="java.lang.Integer">
-        select
-        <include refid="Base_Column_List"/>
-        from truck_team_contract_section_price
-        where contract_price_id = #{priceId,jdbcType=INTEGER}
-    </select>
-    <update id="disableByPriceId" parameterType="java.lang.Integer">
-        update truck_team_contract_section_price
-        set selection_status = 0
-        where contract_price_id = #{id,jdbcType=INTEGER}
-    </update>
-    <delete id="deleteByPriceId" parameterType="java.lang.Integer">
-        delete from truck_team_contract_section_price
-        where contract_price_id = #{id,jdbcType=INTEGER}
-    </delete>
 </mapper>

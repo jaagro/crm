@@ -5,8 +5,8 @@ import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContactsDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamContactsDto;
 import com.jaagro.crm.api.service.TruckTeamContactsService;
 import com.jaagro.crm.biz.entity.TruckTeamContacts;
-import com.jaagro.crm.biz.mapper.TruckTeamContactsMapper;
-import com.jaagro.crm.biz.mapper.TruckTeamMapper;
+import com.jaagro.crm.biz.mapper.TruckTeamContactsMapperExt;
+import com.jaagro.crm.biz.mapper.TruckTeamMapperExt;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -29,11 +28,11 @@ public class TruckTeamContactsServiceImpl implements TruckTeamContactsService {
     private static final Logger log = LoggerFactory.getLogger(TruckTeamContractServiceImpl.class);
 
     @Autowired
-    private TruckTeamContactsMapper truckTeamContactsMapper;
+    private TruckTeamContactsMapperExt truckTeamContactsMapper;
     @Autowired
     private CurrentUserService currentUserService;
     @Autowired
-    private TruckTeamMapper truckTeamMapper;
+    private TruckTeamMapperExt truckTeamMapper;
 
     /**
      * 创建车队联系人对象

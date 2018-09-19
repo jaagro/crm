@@ -3,15 +3,13 @@ package com.jaagro.crm.biz.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.dto.request.truck.CreateListTruckQualificationDto;
-import com.jaagro.crm.api.dto.request.truck.CreateTruckQualificationDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckQualificationDto;
 import com.jaagro.crm.api.dto.response.truck.ReturnTruckQualificationDto;
 import com.jaagro.crm.api.service.OssSignUrlClientService;
 import com.jaagro.crm.api.service.TruckQualificationService;
 import com.jaagro.crm.biz.entity.TruckQualification;
-import com.jaagro.crm.biz.mapper.TruckQualificationMapper;
-import com.jaagro.utils.BaseResponse;
+import com.jaagro.crm.biz.mapper.TruckQualificationMapperExt;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
@@ -36,7 +34,7 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
     private static final Logger log = LoggerFactory.getLogger(TruckQualificationServiceImpl.class);
 
     @Autowired
-    private TruckQualificationMapper truckQualificationMapper;
+    private TruckQualificationMapperExt truckQualificationMapper;
     @Autowired
     private CurrentUserService currentUserService;
     @Autowired

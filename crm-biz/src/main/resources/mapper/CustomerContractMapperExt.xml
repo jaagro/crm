@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jaagro.crm.biz.mapper.CustomerContractMapperExt">
+
+    <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.contract.ReturnContractDto">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="customer_id" property="customerId" jdbcType="INTEGER"/>
+        <result column="start_date" property="startDate" jdbcType="DATE"/>
+        <result column="end_date" property="endDate" jdbcType="DATE"/>
+        <result column="contract_date" property="contractDate" jdbcType="TIMESTAMP"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="theme" property="theme" jdbcType="VARCHAR"/>
+        <result column="product" property="product" jdbcType="VARCHAR"/>
+        <result column="context" property="context" jdbcType="VARCHAR"/>
+        <result column="contract_number" property="contractNumber" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <collection property="prices" column="id"
+                    select="com.jaagro.crm.biz.mapper.CustomerContractPriceMapperExt.getByContractId"></collection>
+        <collection property="qualifications" column="id"
+                    select="com.jaagro.crm.biz.mapper.ContractQualificationMapperExt.listByContractId"></collection>
+    </resultMap>
+    <resultMap id="ReturnCheckMap" type="com.jaagro.crm.api.dto.response.contract.ReturnCheckContractDto">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="customer_id" property="customerId" jdbcType="INTEGER"/>
+        <result column="contract_status" property="contractStatus" jdbcType="INTEGER"/>
+        <result column="start_date" property="startDate" jdbcType="DATE"/>
+        <result column="end_date" property="endDate" jdbcType="DATE"/>
+        <result column="contract_date" property="contractDate" jdbcType="TIMESTAMP"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="contract_number" property="contractNumber" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Show_Column">
+        id, contract_number, type
+    </sql>
+
+    <select id="listByPage" parameterType="com.jaagro.crm.api.dto.request.contract.ListContractCriteriaDto"
+            resultMap="DetailInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from customer_contract
+        where 1 = 1
+        <if test="contractStatus != null">
+            and contract_status = #{contractStatus}
+        </if>
+        <if test="customerId != null">
+            and customer_id = #{customerId}
+        </if>
+        order by create_time desc
+    </select>
+    <select id="getById" parameterType="java.lang.Integer" resultMap="DetailInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from customer_contract
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="getByCustomerId" parameterType="java.lang.Integer" resultMap="DetailInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from customer_contract
+        where customer_id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="getByUpdateDto" parameterType="com.jaagro.crm.api.dto.request.contract.UpdateContractDto"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from customer_contract
+        where contract_number = #{contractNumber}
+        <if test="id != null">
+            and id != #{id}
+        </if>
+        and contract_status != 3
+    </select>
+    <select id="countByCustomerId" parameterType="java.lang.Integer" resultType="int">
+        select
+        count(1)
+        from customer_contract
+        where
+        customer_id = #{customerId}
+        and contract_status != 1
+    </select>
+    <select id="listByCustomerIdAndStatus" parameterType="java.lang.Integer" resultMap="ReturnCheckMap">
+        select
+        <include refid="Base_Column_List"/>
+        from customer_contract
+        where
+        customer_id = #{customerId}
+        and contract_status != 1
+    </select>
+    <select id="getShowCustomerContractById"
+            resultType="com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto">
+        select
+        <include refid="Show_Column"/>
+        from customer_contract
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="listShowCustomerContractByCustomerId"
+            resultType="com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto">
+        select
+        <include refid="Show_Column"/>
+        from customer_contract
+        where customer_id = #{customerId,jdbcType=INTEGER}
+        and contract_status = 1
+        and (select now() between start_date and end_date)
+    </select>
+</mapper>

@@ -41,42 +41,4 @@ public interface CustomerSiteMapper {
      */
     int updateByPrimaryKey(CustomerSite record);
 
-    /**
-     * 查询客户Id查询收发货地址
-     *
-     * @param dto
-     * @return
-     */
-    List<CustomerSiteReturnDto> getByCustomerSiteId(Integer customer_id);
-
-    /**
-     * 查询客户Id查询收发货地址
-     *
-     * @param dto
-     * @return
-     */
-    List<CustomerSiteReturnDto> getByCriteriDto(ListSiteCriteriaDto criteriaDto);
-
-    /**
-     * 根据地址名称查询
-     *
-     * @param siteName
-     */
-    CustomerSiteReturnDto getSiteDto(UpdateCustomerSiteDto siteDto);
-
-    /**
-     * 查询客户Id查询收发货地址
-     *
-     * @param dto
-     * @return
-     */
-    List<ReturnSelectSiteDto> listAllSite(ListSiteCriteriaDto criteriaDto);
-
-    /**
-     * 获取显示地址对象
-     *
-     * @param id
-     * @return
-     */
-    ShowSiteDto getShowSiteById(@Param("id") Integer id);
 }

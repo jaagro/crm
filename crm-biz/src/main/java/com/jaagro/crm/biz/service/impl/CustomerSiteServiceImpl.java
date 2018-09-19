@@ -9,7 +9,7 @@ import com.jaagro.crm.api.dto.request.customer.UpdateCustomerSiteDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto;
 import com.jaagro.crm.api.service.CustomerSiteService;
 import com.jaagro.crm.biz.entity.CustomerSite;
-import com.jaagro.crm.biz.mapper.CustomerSiteMapper;
+import com.jaagro.crm.biz.mapper.CustomerSiteMapperExt;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,7 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
     private static final Logger log = LoggerFactory.getLogger(CustomerSiteServiceImpl.class);
 
     @Autowired
-    private CustomerSiteMapper siteMapper;
+    private CustomerSiteMapperExt siteMapper;
     @Autowired
     private CurrentUserService userService;
 

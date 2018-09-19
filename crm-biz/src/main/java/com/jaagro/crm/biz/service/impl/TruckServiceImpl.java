@@ -8,9 +8,9 @@ import com.jaagro.crm.api.dto.request.truck.*;
 import com.jaagro.crm.api.dto.response.truck.*;
 import com.jaagro.crm.api.service.*;
 import com.jaagro.crm.biz.entity.Truck;
-import com.jaagro.crm.biz.mapper.TruckMapper;
-import com.jaagro.crm.biz.mapper.TruckQualificationMapper;
-import com.jaagro.crm.biz.mapper.TruckTypeMapper;
+import com.jaagro.crm.biz.mapper.TruckMapperExt;
+import com.jaagro.crm.biz.mapper.TruckQualificationMapperExt;
+import com.jaagro.crm.biz.mapper.TruckTypeMapperExt;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
@@ -38,7 +38,7 @@ public class TruckServiceImpl implements TruckService {
     private static final Logger log = LoggerFactory.getLogger(TruckServiceImpl.class);
 
     @Autowired
-    private TruckMapper truckMapper;
+    private TruckMapperExt truckMapper;
     @Autowired
     private DriverClientService driverClientService;
     @Autowired
@@ -46,9 +46,9 @@ public class TruckServiceImpl implements TruckService {
     @Autowired
     private CurrentUserService currentUserService;
     @Autowired
-    private TruckTypeMapper truckTypeMapper;
+    private TruckTypeMapperExt truckTypeMapper;
     @Autowired
-    private TruckQualificationMapper truckQualificationMapper;
+    private TruckQualificationMapperExt truckQualificationMapper;
     @Autowired
     private OssSignUrlClientService ossSignUrlClientService;
     @Autowired

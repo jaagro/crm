@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jaagro.crm.biz.mapper.CustomerQualificationMapperExt">
+
+    <resultMap id="ReturnMap" type="com.jaagro.crm.api.dto.response.customer.CustomerQualificationReturnDto">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="certificate_type" property="certificateType" jdbcType="INTEGER"/>
+        <result column="certificate_status" property="certificateStatus" jdbcType="INTEGER"/>
+        <result column="certificate_image_url" property="certificateImageUrl" jdbcType="VARCHAR"/>
+        <result column="customer_id" property="customerId" jdbcType="INTEGER"/>
+        <result column="enabled" property="enabled" jdbcType="TINYINT"/>
+    </resultMap>
+    <resultMap id="ReturnCheckMap" type="com.jaagro.crm.api.dto.response.customer.ReturnQualificationDto">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="certificate_type" property="certificateType" jdbcType="INTEGER"/>
+        <result column="certificate_image_url" property="certificateImageUrl" jdbcType="VARCHAR"/>
+        <result column="certificate_status" property="certificateStatus" jdbcType="INTEGER"/>
+        <result column="customer_id" property="customerId" jdbcType="INTEGER"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <association property="returnCustomerDto" column="customer_id"
+                     select="com.jaagro.crm.biz.mapper.CustomerMapperExt.getCheckById"/>
+    </resultMap>
+
+    <select id="getByCustomerQualificationId" resultMap="ReturnMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from customer_qualification
+        where customer_id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="getByQualificationCriteriDto" resultMap="ReturnMap"
+            parameterType="com.jaagro.crm.api.dto.request.customer.ListCustomerQualificationCriteriaDto">
+        select
+        <include refid="Base_Column_List"/>
+        from customer_qualification
+        where enabled = 1
+        <if test="customerId != null">
+            and customer_id = #{customerId}
+        </if>
+        <if test="certificateType != null">
+            and certificate_type = #{certificateType}
+        </if>
+        <if test="certificateStatus != null">
+            and certificate_status = #{certificateStatus}
+        </if>
+        order by create_time desc
+    </select>
+    <select id="listByCustomerIdAndStatus" resultMap="ReturnCheckMap"
+            parameterType="com.jaagro.crm.api.dto.request.customer.ListCustomerQualificationCriteriaDto">
+        select
+        <include refid="Base_Column_List"/>
+        from customer_qualification
+        where enabled = 1
+        <if test="customerId != null">
+            and customer_id = #{customerId}
+        </if>
+        <if test="certificateType != null">
+            and certificate_type = #{certificateType}
+        </if>
+        <if test="certificateStatus != null">
+            and certificate_status = #{certificateStatus}
+        </if>
+        <if test="certificateStatus == null">
+            and certificate_status in (0,2)
+        </if>
+        order by create_time desc
+    </select>
+    <select id="getDetailById" resultMap="ReturnCheckMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from customer_qualification
+        where 1=1
+        and id = #{id}
+        and certificate_status in (0,2)
+        and enabled = 1
+    </select>
+    <select id="countByCustomerIdAndStatus" parameterType="java.lang.Integer" resultType="int">
+        select
+        count(1)
+        from customer_qualification
+        where 1=1
+        and customer_id = #{customerId}
+        and certificate_status != 1
+        and enabled = 1
+    </select>
+</mapper>

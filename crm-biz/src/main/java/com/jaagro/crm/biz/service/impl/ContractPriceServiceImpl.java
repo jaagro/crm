@@ -4,7 +4,7 @@ import com.jaagro.crm.api.dto.response.contract.ReturnContractPriceDto;
 import com.jaagro.crm.api.service.ContractPriceService;
 import com.jaagro.crm.api.service.ContractSectionPriceService;
 import com.jaagro.crm.biz.entity.CustomerContractPrice;
-import com.jaagro.crm.biz.mapper.CustomerContractPriceMapper;
+import com.jaagro.crm.biz.mapper.CustomerContractPriceMapperExt;
 import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import java.util.Map;
 public class ContractPriceServiceImpl implements ContractPriceService {
 
     @Autowired
-    private CustomerContractPriceMapper priceMapper;
+    private CustomerContractPriceMapperExt priceMapper;
     @Autowired
     private ContractSectionPriceService sectionPriceService;
 

@@ -2,10 +2,9 @@ package com.jaagro.crm.web.controller;
 
 import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContractDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckTeamContractCriteriaDto;
-import com.jaagro.crm.api.dto.request.truck.ListTruckTeamCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamContractDto;
 import com.jaagro.crm.api.service.TruckTeamContractService;
-import com.jaagro.crm.biz.mapper.TruckTeamContractMapper;
+import com.jaagro.crm.biz.mapper.TruckTeamContractMapperExt;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
@@ -29,7 +28,7 @@ public class TruckTeamContractController {
     private TruckTeamContractService truckTeamContractService;
 
     @Autowired
-    private TruckTeamContractMapper truckTeamContractMapper;
+    private TruckTeamContractMapperExt truckTeamContractMapper;
 
     /**
      * 新增合同

@@ -11,8 +11,8 @@ import com.jaagro.crm.api.service.OssSignUrlClientService;
 import com.jaagro.crm.api.service.QualificationCertificService;
 import com.jaagro.crm.api.service.QualificationVerifyLogService;
 import com.jaagro.crm.biz.entity.CustomerQualification;
-import com.jaagro.crm.biz.mapper.CustomerMapper;
-import com.jaagro.crm.biz.mapper.CustomerQualificationMapper;
+import com.jaagro.crm.biz.mapper.CustomerMapperExt;
+import com.jaagro.crm.biz.mapper.CustomerQualificationMapperExt;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
@@ -39,11 +39,11 @@ public class QualificationCertificController {
     @Autowired
     private CustomerService customerService;
     @Autowired
-    private CustomerMapper customerMapper;
+    private CustomerMapperExt customerMapper;
     @Autowired
     private QualificationCertificService certificService;
     @Autowired
-    private CustomerQualificationMapper certificMapper;
+    private CustomerQualificationMapperExt certificMapper;
     @Autowired
     private QualificationVerifyLogService logService;
     @Autowired

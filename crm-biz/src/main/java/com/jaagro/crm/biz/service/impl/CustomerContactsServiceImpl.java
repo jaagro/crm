@@ -10,9 +10,8 @@ import com.jaagro.crm.api.dto.response.customer.CustomerContactsReturnDto;
 import com.jaagro.crm.api.service.CustomerContactsService;
 import com.jaagro.crm.biz.entity.Customer;
 import com.jaagro.crm.biz.entity.CustomerContacts;
-import com.jaagro.crm.biz.mapper.CustomerContactsMapper;
-import com.jaagro.crm.biz.mapper.CustomerMapper;
-import com.jaagro.utils.BaseResponse;
+import com.jaagro.crm.biz.mapper.CustomerContactsMapperExt;
+import com.jaagro.crm.biz.mapper.CustomerMapperExt;
 import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +28,11 @@ import java.util.Map;
 public class CustomerContactsServiceImpl implements CustomerContactsService {
 
     @Autowired
-    private CustomerContactsMapper customerContactsMapper;
+    private CustomerContactsMapperExt customerContactsMapper;
     @Autowired
     private CurrentUserService userService;
     @Autowired
-    private CustomerMapper customerMapper;
+    private CustomerMapperExt customerMapper;
 
     @Override
     public Map<String, Object> createCustomerContacts(CreateCustomerContactsDto dto) {

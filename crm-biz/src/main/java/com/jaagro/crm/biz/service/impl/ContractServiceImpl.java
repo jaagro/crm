@@ -41,23 +41,23 @@ public class ContractServiceImpl implements ContractService {
     private static final Logger log = LoggerFactory.getLogger(ContractServiceImpl.class);
 
     @Autowired
-    private CustomerContractMapper customerContractMapper;
+    private CustomerContractMapperExt customerContractMapper;
     @Autowired
-    private CustomerContractPriceMapper customerContractPriceMapper;
+    private CustomerContractPriceMapperExt customerContractPriceMapper;
     @Autowired
-    private CustomerContractSectionPriceMapper customerContractSectionPriceMapper;
+    private CustomerContractSectionPriceMapperExt customerContractSectionPriceMapper;
     @Autowired
-    private CustomerContractLogMapper customerContractLogMapper;
+    private CustomerContractLogMapperExt customerContractLogMapper;
     @Autowired
     private CurrentUserService userService;
     @Autowired
     private ContractPriceService priceService;
     @Autowired
-    private CustomerSiteMapper siteMapper;
+    private CustomerSiteMapperExt siteMapper;
     @Autowired
-    private ContractQualificationMapper contractQualificationMapper;
+    private ContractQualificationMapperExt contractQualificationMapper;
     @Autowired
-    private CustomerMapper customerMapper;
+    private CustomerMapperExt customerMapper;
     @Autowired
     private ContractQualificationService contractQualificationService;
 
