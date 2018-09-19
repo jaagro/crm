@@ -12,7 +12,7 @@ import com.jaagro.crm.api.service.TruckQualificationService;
 import com.jaagro.crm.api.service.TruckVerifyLogService;
 import com.jaagro.crm.biz.mapper.TruckMapperExt;
 import com.jaagro.crm.biz.mapper.TruckQualificationMapperExt;
-import com.jaagro.crm.biz.mapper.TruckTeamMapperExt;
+import com.jaagro.crm.biz.mapper.TruckTeamMapper;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
@@ -39,7 +39,7 @@ public class TruckQualificationController {
     @Autowired
     private TruckQualificationMapperExt truckQualificationMapper;
     @Autowired
-    private TruckTeamMapperExt truckTeamMapper;
+    private TruckTeamMapper truckTeamMapper;
     @Autowired
     private TruckMapperExt truckMapper;
     @Autowired
