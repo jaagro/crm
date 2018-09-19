@@ -36,6 +36,7 @@
         from customer_site
         where customer_id = #{customer_id,jdbcType=INTEGER}
         and site_status = 1
+        order by create_time desc
     </select>
     <select id="listAllSite" resultMap="ReturnSelectMap"
             parameterType="com.jaagro.crm.api.dto.request.customer.ListSiteCriteriaDto">
@@ -50,6 +51,7 @@
             and site_type = #{siteType,jdbcType=INTEGER}
         </if>
         and site_status = 1
+        order by create_time desc
     </select>
     <select id="getByCriteriDto" resultMap="ReturnMap"
             parameterType="com.jaagro.crm.api.dto.request.customer.ListSiteCriteriaDto">

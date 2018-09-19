@@ -59,7 +59,7 @@ public class ContractController {
     @Autowired
     private OssSignUrlClientService ossSignUrlClientService;
     @Autowired
-    private TruckTeamMapper truckTeamMapper;
+    private TruckTeamMapperExt truckTeamMapper;
 
     /**
      * 合同新增

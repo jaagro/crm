@@ -27,6 +27,8 @@ public class ListTruckTeamDto implements Serializable {
      */
     private Integer teamType;
 
+    private String legalName;
+
     /**
      * 统一社会信用码（个体司机时，为司机身份证号码）
      */

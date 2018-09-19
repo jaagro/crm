@@ -29,14 +29,14 @@
         select
         <include refid="Base_Column_List"/>
         from truck_qualification
-        where 1=1
+        where enabled = 1
         <if test="truckTeamId != null">
             and truck_team_id = #{truckTeamId}
         </if>
         <if test="certificateStatus != null">
             and certificate_status = #{certificateStatus}
         </if>
-        and enabled = 1
+        order by create_time desc
     </select>
     <select id="listByIds" resultMap="ReturnCheckMap"
             parameterType="com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto">
@@ -68,6 +68,7 @@
         where enabled = 1
         and truck_id = #{truckId}
         and driver_id is null
+        order by create_time desc
     </select>
     <select id="listByDriverId" resultMap="ReturnMap">
         select
@@ -75,6 +76,7 @@
         from truck_qualification
         where enabled = 1
         and driver_id = #{driverId}
+        order by create_time desc
     </select>
     <select id="getById" resultMap="ReturnCheckMap" parameterType="java.lang.Integer">
         select

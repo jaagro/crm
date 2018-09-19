@@ -92,6 +92,7 @@
         <if test="truckNumber != null">
             and truck_number = #{truckNumber}
         </if>
+        order by create_time desc
     </select>
     <select id="listTruckByCriteria" resultType="com.jaagro.crm.api.dto.response.truck.ListTruckDto"
             parameterType="com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto">
@@ -125,6 +126,7 @@
         <if test="truckTypeId != null">
             and t.truck_type_id = #{truckTypeId}
         </if>
+        order by t.create_time desc
     </select>
     <select id="getCheckById" resultMap="ReturnCheckMap" parameterType="java.lang.Integer">
         select

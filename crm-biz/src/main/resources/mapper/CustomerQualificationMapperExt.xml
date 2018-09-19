@@ -26,6 +26,7 @@
         <include refid="Base_Column_List"/>
         from customer_qualification
         where customer_id = #{id,jdbcType=INTEGER}
+        order by create_time desc
     </select>
     <select id="getByQualificationCriteriDto" resultMap="ReturnMap"
             parameterType="com.jaagro.crm.api.dto.request.customer.ListCustomerQualificationCriteriaDto">

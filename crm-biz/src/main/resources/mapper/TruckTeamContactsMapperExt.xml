@@ -8,6 +8,7 @@
         <include refid="Base_Column_List"/>
         from truck_team_contacts
         where truck_team_id = #{teamId,jdbcType=INTEGER}
+        order by create_time desc
     </select>
 
     <delete id="deleteByTruckTeamId" parameterType="java.lang.Integer">

@@ -83,6 +83,7 @@
         <if test="customerName != null">
             <![CDATA[and (m.customer_name like concat('%',#{customerName},'%') )]]>
         </if>
+        order by m.create_time desc
         GROUP BY m.id
     </select>
     <select id="getByCustomerDto" resultMap="BaseResultMap"

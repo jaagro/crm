@@ -13,9 +13,27 @@
                      select="com.jaagro.crm.biz.mapper.CustomerContractMapperExt.getById">
             <id column="id" property="id" jdbcType="INTEGER"/>
         </association>
+        <association property="truckTeamContractReturnDto" column="relevance_id"
+                     select="com.jaagro.crm.biz.mapper.TruckTeamContractMapperExt.getById">
+            <id column="id" property="id" jdbcType="INTEGER"/>
+        </association>
     </resultMap>
-
+    <resultMap id="ReturnMap" type="com.jaagro.crm.api.dto.response.contract.ReturnContractQualificationDto">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="relevance_type" property="relevanceType" jdbcType="INTEGER"/>
+        <result column="relevance_id" property="relevanceId" jdbcType="INTEGER"/>
+        <result column="certificate_type" property="certificateType" jdbcType="INTEGER"/>
+        <result column="certificate_image_url" property="certificateImageUrl" jdbcType="VARCHAR"/>
+        <result column="certificate_status" property="certificateStatus" jdbcType="INTEGER"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+    </resultMap>
     <select id="listByContractId" resultMap="ReturnCheckMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from contract_qualification
+        where relevance_id = #{contractId,jdbcType=INTEGER}
+    </select>
+    <select id="listQualificationByContractId" resultMap="ReturnMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
         from contract_qualification
@@ -49,5 +67,12 @@
         where enabled = 1
         and certificate_status in (0,2)
         and id = #{id}
+    </select>
+    <select id="listUnCheckByContractId" resultMap="ReturnCheckMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from contract_qualification
+        where relevance_id = #{contractId,jdbcType=INTEGER}
+        and certificate_status in (0,3)
     </select>
 </mapper>

@@ -20,13 +20,11 @@
         <result column="new_update_user" property="newUpdateUser" jdbcType="INTEGER"/>
         <result column="version" property="version" jdbcType="INTEGER"/>
     </resultMap>
-
     <sql id="Base_Column_List">
         id, customer_id, contract_status, start_date, end_date, contract_date, type, theme,
         product, context, contract_number, remark, create_time, create_user, new_update_time,
         new_update_user, version
     </sql>
-
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
@@ -241,5 +239,4 @@
       version = #{version,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
-
 </mapper>

@@ -17,8 +17,7 @@ public interface CustomerContractMapperExt extends CustomerContractMapper{
     /**
      * 查询单个Dto
      *
-     * @param id
-     * @return
+     * @param idgetById
      */
     ReturnContractDto getById(Integer id);
 

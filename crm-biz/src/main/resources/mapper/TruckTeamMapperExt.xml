@@ -15,9 +15,6 @@
         <result column="county" property="county" jdbcType="VARCHAR"/>
         <result column="address" property="address" jdbcType="VARCHAR"/>
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
-        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
-        <result column="create_user_id" property="createUserId" jdbcType="INTEGER"/>
-        <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER"/>
         <result column="notes" property="notes" jdbcType="VARCHAR"/>
     </resultMap>
     <resultMap id="ReturnCheckDto" type="com.jaagro.crm.api.dto.response.truck.ReturnCheckTruckTeamDto">
@@ -38,6 +35,7 @@
         <include refid="Base_Column_List"/>
         from truck_team
         where id = #{id,jdbcType=INTEGER}
+        order by create_time desc
     </select>
     <select id="getTeamById" parameterType="java.lang.Integer" resultMap="ReturnCheckDto">
         select
