@@ -1,5 +1,6 @@
 package com.jaagro.crm.api.dto.response.contract;
 
+import com.jaagro.crm.api.dto.response.truck.TruckTeamContractReturnDto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -51,9 +52,14 @@ public class ReturnCheckContractQualificationDto implements Serializable {
     private String description;
 
     /**
-     * 合同信息
+     * 客户合同信息
      */
     private ReturnContractDto contractDto;
+
+    /**
+     * 运力合同信息
+     */
+    private TruckTeamContractReturnDto truckTeamContractReturnDto;
 
 
 }

@@ -6,9 +6,13 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 
 /**
- * @author tony
+ * @author baiyiran
  */
 @Data
 @Accessors(chain = true)
 public class ListTruckTeamCriteriaDto implements Serializable {
+    private Integer pageNum;
+    private Integer pageSize;
+    private Integer teamType;
+    private Integer truckStatus;
 }

@@ -90,15 +90,18 @@ public class TruckTeamController {
     }
 
     /**
-     * 分页运力管理列表
+     * 分页车队管理列表
      *
      * @param truckCriteria
      * @return
      */
-    @ApiOperation("分页运力管理列表")
+    @ApiOperation("分页车队管理列表")
     @PostMapping("/listTruckTeamByCriteria")
-    public BaseResponse listTruckTeamByCriteria(@RequestBody ListTruckCriteriaDto truckCriteria) {
-        return BaseResponse.service(truckService.listTruckByCriteria(truckCriteria));
+    public BaseResponse listTruckTeamByCriteria(@RequestBody ListTruckTeamCriteriaDto truckCriteria) {
+        if (StringUtils.isEmpty(truckCriteria.getPageNum()) || StringUtils.isEmpty(truckCriteria.getPageSize())) {
+            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "分页查询条件必传"));
+        }
+        return BaseResponse.service(truckTeamService.listTruckTeamByCerteria(truckCriteria));
     }
 
 }

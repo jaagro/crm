@@ -6,7 +6,7 @@ import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.constant.ContractStatus;
 import com.jaagro.crm.api.dto.request.contract.CreateContractQualificationDto;
 import com.jaagro.crm.api.dto.request.truck.*;
-import com.jaagro.crm.api.dto.response.contract.ReturnCheckContractQualificationDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnContractQualificationDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTeamContractDto;
 import com.jaagro.crm.api.dto.response.truck.TruckTeamContractReturnDto;
 import com.jaagro.crm.api.service.ContractQualificationService;
@@ -82,7 +82,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                 this.contractPriceService.createPrice(truckTeamContractPriceDto);
             }
         }
-        //创建资质证
+        //创建合同资质证
         if (dto.getQualificationDtoList() != null && dto.getQualificationDtoList().size() > 0) {
             for (CreateContractQualificationDto qualificationDto : dto.getQualificationDtoList()) {
                 qualificationDto.setRelevanceId(truckTeamContract.getId());
@@ -102,7 +102,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     public Map<String, Object> getById(Integer id) {
         TruckTeamContractReturnDto contractReturnDto = truckTeamContractMapper.getById(id);
         if (contractReturnDto.getQualificationDtoList().size() > 0) {
-            for (ReturnCheckContractQualificationDto qualificationDto : contractReturnDto.getQualificationDtoList()
+            for (ReturnContractQualificationDto qualificationDto : contractReturnDto.getQualificationDtoList()
             ) {
                 //替换资质证照地址
                 String[] strArray = {qualificationDto.getCertificateImageUrl()};
@@ -200,10 +200,11 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
         return ServiceResult.toResult(new PageInfo<>(returnDtoList));
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> disableContract(Integer id) {
         if (truckTeamContractMapper.selectByPrimaryKey(id) == null) {
-            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到合同ID");
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到合同");
         }
         TruckTeamContractReturnDto contractReturnDto = truckTeamContractMapper.getById(id);
         if (contractReturnDto != null) {
