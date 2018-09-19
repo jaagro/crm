@@ -45,4 +45,18 @@
         from truck_team
         where id = #{id,jdbcType=INTEGER}
     </select>
+    <select id="listByCeriteria" parameterType="com.jaagro.crm.api.dto.request.truck.ListTruckTeamCriteriaDto"
+            resultMap="DetailInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from truck_team
+        where team_status != 3
+        <if test="teamType != null">
+            and team_type = #{teamType}
+        </if>
+        <if test="truckStatus != null">
+            and truck_status = #{truckStatus}
+        </if>
+        order by create_time desc
+    </select>
 </mapper>

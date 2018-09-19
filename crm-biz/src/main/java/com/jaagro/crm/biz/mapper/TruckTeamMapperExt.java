@@ -28,4 +28,6 @@ public interface TruckTeamMapperExt extends TruckTeamMapper{
      * @return
      */
     ReturnCheckTruckTeamDto getTeamById(Integer teamId);
+
+
 }
