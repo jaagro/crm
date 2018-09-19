@@ -42,4 +42,12 @@
         and enabled = 1
         order by create_time desc
     </select>
+    <select id="getById" resultMap="ReturnCheckMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from contract_qualification
+        where enabled = 1
+        and certificate_status in (0,2)
+        and id = #{id}
+    </select>
 </mapper>

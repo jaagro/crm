@@ -37,4 +37,12 @@ public interface TruckQualificationMapperExt extends TruckQualificationMapper{
      * @return
      */
     List<ListTruckQualificationDto> listByDriverId(@Param("driverId") Integer driverId);
+
+    /**
+     * 根据id获取审核运力资质
+     *
+     * @param id
+     * @return
+     */
+    ReturnTruckQualificationDto getById(Integer id);
 }
