@@ -332,6 +332,33 @@ public class ContractController {
     }
 
     /**
+     * 获取待审核合同资质详情[客户&司机]
+     *
+     * @param
+     * @return
+     */
+    @ApiOperation("获取待审核合同资质详情[客户&司机]")
+    @GetMapping("/getContractById/{id}")
+    public BaseResponse getContractById(@PathVariable Integer id) {
+        ContractQualification qualification = qualificationMapper.selectByPrimaryKey(id);
+        if (qualification == null) {
+            return BaseResponse.errorInstance("合同资质查询无此相关数据");
+        }
+        //返回要审核的合同
+        ReturnCheckContractQualificationDto checkContractQualificationDto = this.qualificationMapper.getById(id);
+        if (checkContractQualificationDto != null) {
+            //替换资质证照地址
+            String[] strArray = {checkContractQualificationDto.getCertificateImageUrl()};
+            List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+            checkContractQualificationDto.setCertificateImageUrl(urlList.get(0).toString());
+            //填充运力合同信息
+            checkContractQualificationDto.setTruckTeamContractReturnDto(this.truckTeamContractMapper.getById(checkContractQualificationDto.getRelevanceId()));
+            return BaseResponse.successInstance(checkContractQualificationDto);
+        }
+        return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "没有查询到需要审核的资质"));
+    }
+
+    /**
      * 审核合同资质
      *
      * @param dto

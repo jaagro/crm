@@ -45,7 +45,15 @@ public interface TruckQualificationMapper {
     List<ReturnTruckQualificationDto> listByCriteria(ListTruckQualificationCriteriaDto criteriaDto);
 
     /**
-     * 待根据车队id获取审核运力资质列表
+     * 根据id获取审核运力资质
+     *
+     * @param id
+     * @return
+     */
+    ReturnTruckQualificationDto getById(Integer id);
+
+    /**
+     * 根据车队id获取待审核运力资质列表
      *
      * @param teamId
      * @return

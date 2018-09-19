@@ -57,7 +57,8 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                 throw new RuntimeException("审核不通过时描述信息必填");
             }
         }
-        // 审核类型（1-客户资质 2-运力资质）
+        // 审核类型
+        // 1-客户资质 2- 客户合同 3-运力资质 4-运力合同
         switch (verifyLog.getCertificateType()) {
             // 客户资质
             case 1:

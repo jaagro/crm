@@ -72,4 +72,12 @@ public interface ContractQualificationMapper {
      * @return
      */
     List<ReturnCheckContractQualificationDto> listByCriteria(ListContractQualificationCriteriaDto dto);
+
+    /**
+     * 根据id查询待审核合同资质详情
+     *
+     * @param id
+     * @return
+     */
+    ReturnCheckContractQualificationDto getById(Integer id);
 }

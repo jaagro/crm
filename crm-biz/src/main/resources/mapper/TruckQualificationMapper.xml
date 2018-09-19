@@ -226,6 +226,14 @@
         </if>
         and enabled = 1
     </select>
+    <select id="getById" resultMap="ReturnCheckMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from truck_qualification
+        where enabled = 1
+        and id = #{id}
+        and certificate_status in (0,2)
+    </select>
     <select id="listByIds" resultMap="ReturnCheckMap"
             parameterType="com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto">
         select

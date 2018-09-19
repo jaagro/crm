@@ -196,6 +196,23 @@ public class QualificationCertificController {
     }
 
     /**
+     * 待审核资质详情
+     *
+     * @param customerId
+     * @return
+     */
+    @ApiOperation("待审核资质详情")
+    @GetMapping("/getQalfcationById/{id}")
+    @ApiImplicitParam(name = "id", value = "资质证id", required = true, dataType = "Integer", paramType = "path")
+    public BaseResponse getQalfcationById(@PathVariable Integer id) {
+        CustomerQualification qualification = this.certificMapper.selectByPrimaryKey(id);
+        if (qualification == null) {
+            return BaseResponse.errorInstance("资质不存在");
+        }
+        return BaseResponse.service(certificService.getDetailById(id));
+    }
+
+    /**
      * 审核资质
      *
      * @param dto
@@ -220,6 +237,7 @@ public class QualificationCertificController {
                 .setVertifyResult(dto.getCertificateStatus())
                 .setReferencesId(dto.getId())
                 .setCertificateType(1);
+        //1-客户资质 2- 客户合同 3-运力资质 4-运力合同
         return BaseResponse.service(this.logService.createVerifyLog(logDto));
     }
 }
