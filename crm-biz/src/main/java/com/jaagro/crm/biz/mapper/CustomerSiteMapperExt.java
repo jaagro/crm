@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author gavin
  */
-public interface CustomerSiteMapperExt extends CustomerSiteMapper{
+public interface CustomerSiteMapperExt extends CustomerSiteMapper {
 
     /**
      * 查询客户Id查询收发货地址
@@ -52,4 +52,14 @@ public interface CustomerSiteMapperExt extends CustomerSiteMapper{
      * @return
      */
     ShowSiteDto getShowSiteById(@Param("id") Integer id);
+
+    /**
+     * 根据地址查询
+     *
+     * @param siteName
+     * @param customerId
+     * @return
+     */
+    ShowSiteDto getBySiteName(String siteName, Integer customerId);
+
 }
