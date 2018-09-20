@@ -373,6 +373,7 @@ public class ContractController {
         if (this.qualificationMapper.selectByPrimaryKey(dto.getId()) == null) {
             return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质不存在"));
         }
+        //1-客户合同 2-司机合同
         if (dto.getRelevanceType() == null) {
             return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质关联类型[RelevanceType]不能为空"));
         }
@@ -387,8 +388,13 @@ public class ContractController {
         this.contractQualificationService.updateContractQuaion(dto);
         logDto
                 .setVertifyResult(dto.getCertificateStatus())
-                .setReferencesId(dto.getId())
-                .setCertificateType(dto.getRelevanceType());
+                .setReferencesId(dto.getId());
+        // 1-客户资质 2-运力资质 3-客户合同 4-运力合同
+        if (dto.getRelevanceType() == 1) {
+            logDto.setCertificateType(3);
+        } else {
+            logDto.setCertificateType(4);
+        }
         return BaseResponse.service(this.logService.createVerifyLog(logDto));
     }
 

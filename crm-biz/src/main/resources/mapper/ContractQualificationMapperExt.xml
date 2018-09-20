@@ -75,4 +75,14 @@
         where relevance_id = #{contractId,jdbcType=INTEGER}
         and certificate_status in (0,3)
     </select>
+    <select id="listCheckedByContract" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from contract_qualification
+        where
+        relevance_id = #{relevanceId,jdbcType=INTEGER}
+        and relevance_type in (16,17,18)
+        and certificate_status = 1
+        and certificate_type = #{type,jdbcType=INTEGER}
+    </select>
 </mapper>

@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 public class CreateQualificationVerifyLogDto {
 
     /**
-     * 审核类型（1-客户资质 2- 客户合同 3-运力资质 4-运力合同）
+     * 审核类型（1-客户资质 2-运力资质 3-客户合同 4-运力合同）
      */
     private Integer certificateType;
 

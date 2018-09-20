@@ -1,18 +1,16 @@
 package com.jaagro.crm.web.controller;
 
 import com.jaagro.crm.api.constant.AuditStatus;
+import com.jaagro.crm.api.dto.request.customer.CreateQualificationVerifyLogDto;
 import com.jaagro.crm.api.dto.request.truck.CreateListTruckQualificationDto;
 import com.jaagro.crm.api.dto.request.truck.CreateTruckVerifyLogDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckQualificationDto;
 import com.jaagro.crm.api.dto.response.truck.ReturnTruckQualificationDto;
-import com.jaagro.crm.api.service.DriverClientService;
-import com.jaagro.crm.api.service.OssSignUrlClientService;
-import com.jaagro.crm.api.service.TruckQualificationService;
-import com.jaagro.crm.api.service.TruckVerifyLogService;
+import com.jaagro.crm.api.service.*;
 import com.jaagro.crm.biz.mapper.TruckMapperExt;
 import com.jaagro.crm.biz.mapper.TruckQualificationMapperExt;
-import com.jaagro.crm.biz.mapper.TruckTeamMapper;
+import com.jaagro.crm.biz.mapper.TruckTeamMapperExt;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
@@ -39,9 +37,11 @@ public class TruckQualificationController {
     @Autowired
     private TruckQualificationMapperExt truckQualificationMapper;
     @Autowired
-    private TruckTeamMapper truckTeamMapper;
+    private TruckTeamMapperExt truckTeamMapper;
     @Autowired
     private TruckMapperExt truckMapper;
+    @Autowired
+    private QualificationVerifyLogService qualificationVerifyLogService;
     @Autowired
     private TruckVerifyLogService logService;
     @Autowired
@@ -163,7 +163,7 @@ public class TruckQualificationController {
             BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "审核结果不能为空"));
         }
         //审核记录
-        CreateTruckVerifyLogDto logDto = new CreateTruckVerifyLogDto();
+        CreateQualificationVerifyLogDto logDto = new CreateQualificationVerifyLogDto();
         UpdateTruckQualificationDto dto = new UpdateTruckQualificationDto();
         BeanUtils.copyProperties(criteriaDto, dto);
         this.truckQualificationService.updateQualificationCertific(dto);
@@ -174,10 +174,11 @@ public class TruckQualificationController {
             logDto.setDescription(dto.getDescription());
         }
         logDto
-                .setAuditResult(dto.getCertificateStatus())
+                .setVertifyResult(dto.getCertificateStatus())
                 .setReferencesId(dto.getId())
-                .setVerifyType(3);
-        return BaseResponse.service(this.logService.createTruckVerifyLog(logDto));
+                .setCertificateType(2);
+        // 1-客户资质 2-运力资质 3-客户合同 4-运力合同
+        return BaseResponse.service(this.qualificationVerifyLogService.createVerifyLog(logDto));
     }
 
 

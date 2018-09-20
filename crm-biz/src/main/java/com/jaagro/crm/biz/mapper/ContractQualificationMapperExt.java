@@ -3,6 +3,7 @@ package com.jaagro.crm.biz.mapper;
 import com.jaagro.crm.api.dto.request.contract.ListContractQualificationCriteriaDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnCheckContractQualificationDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractQualificationDto;
+import com.jaagro.crm.biz.entity.ContractQualification;
 
 import java.util.List;
 
@@ -52,5 +53,11 @@ public interface ContractQualificationMapperExt extends ContractQualificationMap
     List<ReturnCheckContractQualificationDto> listUnCheckByContractId(Integer contractId);
 
 
-
+    /**
+     * 根据合同id查询资质类型6、17、18是否都以审核通过
+     *
+     * @param relevanceId
+     * @return
+     */
+    List<ContractQualification> listCheckedByContract(Integer relevanceId,Integer type);
 }
