@@ -15,7 +15,6 @@ import com.jaagro.crm.biz.entity.CustomerContract;
 import com.jaagro.crm.biz.entity.CustomerContractPrice;
 import com.jaagro.crm.biz.entity.CustomerContractSectionPrice;
 import com.jaagro.crm.biz.mapper.*;
-import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
@@ -223,7 +222,6 @@ public class ContractServiceImpl implements ContractService {
                     throw new RuntimeException("收货地址:[" + customerContractPrice.getUnloadSiteId() + "]不存在");
                 }
                 customerContractPriceMapper.insertSelective(customerContractPrice);
-                log.info("【客户合同报价新增】------成功\nCustomerContractPrice:" + customerContractPrice.toString());
                 //创建contractSectionPrice对象
                 if (cp.getSectionPrice() != null && cp.getSectionPrice().size() > 0) {
                     for (CreateContractSectionPriceDto cspDto : cp.getSectionPrice()) {
@@ -233,7 +231,6 @@ public class ContractServiceImpl implements ContractService {
                                 .setContractPriceId(customerContractPrice.getId())
                                 .setSelectionStatus(1);
                         customerContractSectionPriceMapper.insertSelective(csp);
-                        log.info("【客户合同阶梯报价新增】------成功\nCustomerContractSectionPrice:" + csp.toString());
                     }
                 }
             }
@@ -253,7 +250,6 @@ public class ContractServiceImpl implements ContractService {
         }
         return ServiceResult.toResult(customerContractMapper.getById(contractId));
     }
-
 
     /**
      * 分页查询
@@ -284,7 +280,6 @@ public class ContractServiceImpl implements ContractService {
         if (contractDto.getPrices() != null && contractDto.getPrices().size() > 0) {
             this.priceService.disableByContractId(customerContract.getId());
         }
-        log.info("【客户合同删除】------成功\nCustomerContract:" + id);
         return ServiceResult.toResult("合同删除成功");
     }
 
