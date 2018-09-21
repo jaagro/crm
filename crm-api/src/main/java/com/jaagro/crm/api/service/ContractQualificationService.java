@@ -1,5 +1,6 @@
 package com.jaagro.crm.api.service;
 
+import com.jaagro.crm.api.dto.request.contract.CreateContractQualificationDto;
 import com.jaagro.crm.api.dto.request.contract.UpdateContractQualificationDto;
 
 import java.util.Map;
@@ -10,6 +11,14 @@ import java.util.Map;
  * @author baiyiran
  */
 public interface ContractQualificationService {
+
+    /**
+     * 新增
+     *
+     * @param qualificationDto
+     * @return
+     */
+    Map<String, Object> createQuation(CreateContractQualificationDto qualificationDto);
 
     /**
      * 修改

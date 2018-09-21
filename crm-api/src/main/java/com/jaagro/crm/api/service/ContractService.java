@@ -28,7 +28,7 @@ public interface ContractService {
      * @param dtos
      * @return
      */
-    Map<String, Object> createContract(List<CreateContractDto> dtos,Integer CustomerId);
+    Map<String, Object> createContract(List<CreateContractDto> dtos, Integer CustomerId);
 
     /**
      * 修改合同
@@ -73,16 +73,25 @@ public interface ContractService {
     /**
      * 删除，注意逻辑删除
      *
-     * @param id
+     * @param dtos
      * @return
      */
     Map<String, Object> disableByID(List<ReturnContractDto> dtos);
 
     /**
      * 获取显示客户合同对象
+     *
      * @param id
      * @return
      */
     ShowCustomerContractDto getShowCustomerContractById(Integer id);
+
+    /**
+     * 通过客户id获取当前客户所有合同（显示对象）
+     *
+     * @param customerId
+     * @return
+     */
+    List<ShowCustomerContractDto> listShowCustomerContractByCustomerId(Integer customerId);
 
 }

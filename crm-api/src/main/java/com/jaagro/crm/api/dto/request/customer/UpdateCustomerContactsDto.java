@@ -13,10 +13,6 @@ import java.io.Serializable;
 @Data
 @Accessors(chain = true)
 public class UpdateCustomerContactsDto implements Serializable {
-    /**
-     * 客户审核记录主键id
-     */
-    private Integer id;
 
     /**
      * 外键关联客户ID(References customer)

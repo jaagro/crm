@@ -47,10 +47,10 @@
         <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER"/>
         <result column="create_user_id" property="createUserId" jdbcType="INTEGER"/>
         <result column="driving_permit" property="drivingPermit" jdbcType="VARCHAR"/>
-        <association property="truckTypeId" select="com.jaagro.crm.biz.mapper.TruckTypeMapper.getById"
-                     column="truck_type_id"></association>
+        <collection property="qualificationDtoList" column="id"
+                    select="com.jaagro.crm.biz.mapper.TruckQualificationMapper.listByTruckId"></collection>
     </resultMap>
-    <resultMap id="listTruck" type="com.jaagro.crm.api.dto.response.truck.ListTruckDto">
+    <resultMap id="listTruck" type="com.jaagro.crm.api.dto.response.truck.GetTruckDto">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER"/>
         <result column="truck_number" property="truckNumber" jdbcType="VARCHAR"/>
@@ -187,7 +187,7 @@
                 create_user_id,
             </if>
             <if test="drivingPermit != null">
-               driving_permit,
+                driving_permit,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -323,7 +323,7 @@
                 create_user_id = #{createUserId,jdbcType=INTEGER},
             </if>
             <if test="drivingPermit != null">
-                #{drivingPermit,jdbcType=VARCHAR},
+                driving_permit = #{drivingPermit,jdbcType=VARCHAR},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
@@ -362,7 +362,7 @@
         select
         <include refid="Base_Column_List"/>
         from truck
-        where id = #{id,jdbcType=INTEGER}
+        where id = #{truckId}
     </select>
     <select id="getByTruckNumber" resultType="com.jaagro.crm.biz.entity.Truck">
         select
@@ -375,9 +375,45 @@
         select
         <include refid="Base_Column_List"/>
         from truck
-        where truck_team_id = #{teamId,jdbcType=INTEGER}
+        where 1=1
+        <if test="teamId != null">
+            and truck_team_id = #{teamId}
+        </if>
         <if test="truckNumber != null">
             and truck_number = #{truckNumber}
+        </if>
+    </select>
+    <select id="listTruckByCriteria" resultType="com.jaagro.crm.api.dto.response.truck.ListTruckDto"
+            parameterType="com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto">
+        SELECT
+        m.team_name,
+        m.team_type,
+        t.city,
+        t.truck_status,
+        t.truck_number,
+        p.type_name,
+        t.truck_number,
+        m.id as truck_team_id,
+        t.id as truck_id
+        FROM
+        truck t
+        left join truck_team m on t.truck_team_id = m.id
+        left join truck_type p on t.truck_type_id = p.id
+        where 1=1
+        <if test="truckTeamId != null">
+            and m.truck_team_id = #{truckTeamId}
+        </if>
+        <if test="truckNumber != null">
+            and t.truck_number = #{truckNumber}
+        </if>
+        <if test="teamType != null">
+            and m.team_type = #{teamType}
+        </if>
+        <if test="truckStatus != null">
+            and t.truck_status = #{truckStatus}
+        </if>
+        <if test="truckTypeId != null">
+            and t.truck_type_id = #{truckTypeId}
         </if>
     </select>
     <select id="getCheckById" resultMap="ReturnCheckMap" parameterType="java.lang.Integer">

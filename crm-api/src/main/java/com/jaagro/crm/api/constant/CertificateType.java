@@ -63,7 +63,43 @@ public final class CertificateType {
     public static final Integer TRANSPORT_QUALIFICATION = 11;
 
     /**
+     * 人车合影
+     */
+    public static final Integer GROUP_PHOTO = 12;
+
+    /**
+     * 车队整体照片
+     */
+    public static final Integer TEAM_PHOTOS = 13;
+
+    /**
+     * 农舍内观
+     */
+    public static final Integer FARMHOUSE_VIPASSANA = 14;
+
+    /**
+     * 农舍外观
+     */
+    public static final Integer FARMHOUSE_OUTSIDE = 15;
+
+    /**
+     * 合同首页
+     */
+    public static final Integer CONTTRACT_INDEX = 16;
+
+    /**
+     * 合同盖章页
+     */
+    public static final Integer CONTTRACT_SCEAU = 17;
+
+    /**
+     * 合同价格页
+     */
+    public static final Integer CONTTRACT_PRICE = 18;
+
+    /**
      * 其他
      */
     public static final Integer ELSE = 80;
+
 }

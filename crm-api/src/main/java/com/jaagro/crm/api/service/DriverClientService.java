@@ -1,6 +1,7 @@
 package com.jaagro.crm.api.service;
 
 import com.jaagro.crm.api.dto.request.truck.CreateDriverDto;
+import com.jaagro.crm.api.dto.request.truck.UpdateDriverDto;
 import com.jaagro.crm.api.dto.response.truck.DriverReturnDto;
 import com.jaagro.utils.BaseResponse;
 import org.springframework.cloud.netflix.feign.FeignClient;
@@ -16,6 +17,7 @@ public interface DriverClientService {
 
     /**
      * 创建司机对象
+     *
      * @param driver
      * @return
      */
@@ -24,6 +26,7 @@ public interface DriverClientService {
 
     /**
      * 通过车辆id获取司机list
+     *
      * @param truckId
      * @return
      */
@@ -32,6 +35,7 @@ public interface DriverClientService {
 
     /**
      * 删除司机【逻辑】
+     *
      * @param truckId
      * @return
      */
@@ -40,9 +44,19 @@ public interface DriverClientService {
 
     /**
      * 通过司机id获取司机
+     *
      * @param id
      * @return
      */
     @GetMapping("/driverFeign/{id}")
     DriverReturnDto getDriverReturnObject(@PathVariable("id") Integer id);
+
+    /**
+     * 通过司机id获取司机
+     *
+     * @param driver
+     * @return
+     */
+    @PostMapping("/updateDriverFeign")
+    BaseResponse updateDriverFeign(@RequestBody UpdateDriverDto driver);
 }

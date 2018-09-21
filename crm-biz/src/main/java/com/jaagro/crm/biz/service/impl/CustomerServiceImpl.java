@@ -6,10 +6,13 @@ import com.jaagro.crm.api.dto.request.customer.CreateCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnCheckContractDto;
+import com.jaagro.crm.api.dto.response.customer.CustomerContactsReturnDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerReturnDto;
 import com.jaagro.crm.api.dto.response.customer.ListCustomerDto;
 import com.jaagro.crm.api.service.*;
 import com.jaagro.crm.biz.entity.Customer;
+import com.jaagro.crm.biz.mapper.CustomerContactsMapper;
 import com.jaagro.crm.biz.mapper.CustomerContractMapper;
 import com.jaagro.crm.biz.mapper.CustomerMapper;
 import com.jaagro.crm.biz.mapper.CustomerQualificationMapper;
@@ -51,6 +54,8 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerContractMapper contractMapper;
     @Autowired
     private CustomerQualificationMapper qualificationMapper;
+    @Autowired
+    private CustomerContactsMapper customerContactsMapper;
 
     /**
      * 创建客户
@@ -68,26 +73,10 @@ public class CustomerServiceImpl implements CustomerService {
         customer
                 .setCreateUserId(userService.getCurrentUser().getId());
         if (StringUtils.isEmpty(customer.getCustomerType())) {
-            throw new RuntimeException("客户类型不能为空");
+            throw new NullPointerException("客户类型不能为空");
         }
         customerMapper.insertSelective(customer);
         return ServiceResult.toResult(customer.getId());
-        /* //新增联系人对象
-        if (dto.getContracts() != null && dto.getContracts().size() > 0) {
-            this.customerContactsService.createCustomerContract(dto.getContracts(), customer.getId());
-        }
-        //新增客户合同
-        if (dto.getCreateContractDtos() != null && dto.getCreateContractDtos().size() > 0) {
-            this.contractService.createContract(dto.getCreateContractDtos(), customer.getId());
-        }
-        //新增客户资质证件照
-        if (dto.getQualificationCertificDtos() != null && dto.getQualificationCertificDtos().size() > 0) {
-            certificService.createQualificationCertific(dto.getQualificationCertificDtos(), customer.getId());
-        }
-        //新增收发货地址
-        if (dto.getCustomerSites() != null && dto.getCustomerSites().size() > 0) {
-            siteService.createSite(dto.getCustomerSites(), customer.getId());
-        }*/
     }
 
     /**
@@ -107,22 +96,6 @@ public class CustomerServiceImpl implements CustomerService {
                     .setModifyTime(new Date())
                     .setModifyUserId(userService.getCurrentUser().getId());
             this.customerMapper.updateByPrimaryKeySelective(customer);
-            /*//修改合同表
-            if (dto.getCreateContractDtos() != null && dto.getCreateContractDtos().size() > 0) {
-                this.contractService.updateContract(dto.getCreateContractDtos());
-            }
-            //修改收发货地址
-            if (dto.getCustomerSites() != null && dto.getCustomerSites().size() > 0) {
-                this.siteService.updateSite(dto.getCustomerSites());
-            }
-            //修改资质证件照
-            if (dto.getQualificationCertificDtos() != null && dto.getQualificationCertificDtos().size() > 0) {
-                this.certificService.updateQualificationCertific(dto.getQualificationCertificDtos());
-            }
-            //修改联系人
-            if (dto.getCreateContractDtos() != null && dto.getCreateContractDtos().size() > 0) {
-                this.customerContactsService.updateCustomerContract(dto.getCustomerContractDtos());
-            }*/
         }
         return ServiceResult.toResult("客户修改成功");
     }
@@ -150,9 +123,20 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Map<String, Object> listByCriteria(ListCustomerCriteriaDto dto) {
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
-        List<ListCustomerDto> customerReturnDtos = this.customerMapper.getByCriteriaDto(dto);
+        List<ListCustomerDto> customerReturnDtos = this.customerMapper.listByCriteriaDto(dto);
+        if (customerReturnDtos != null && customerReturnDtos.size() > 0) {
+            for (ListCustomerDto customerDto : customerReturnDtos
+            ) {
+                List<CustomerContactsReturnDto> contractDtoList = this.customerContactsMapper.listByCustomerId(customerDto.getId());
+                if (contractDtoList.size() > 0) {
+                    CustomerContactsReturnDto contactsReturnDto = contractDtoList.get(0);
+                    customerDto
+                            .setContactName(contactsReturnDto.getContact())
+                            .setPhone(contactsReturnDto.getPhone());
+                }
+            }
+        }
         return ServiceResult.toResult(new PageInfo<>(customerReturnDtos));
-
     }
 
     /**

@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 客户分页查询帮助类
@@ -25,19 +24,14 @@ public class ListCustomerCriteriaDto implements Serializable {
     private Integer pageSize;
 
     /**
-     * 关键字
+     * 客户名称
      */
-    private String keywords;
+    private String customerName;
 
     /**
-     * 开始日期
+     * 联系人电话
      */
-    private Date startDate;
-
-    /**
-     * 结束日期
-     */
-    private Date endDate;
+    private String phone;
 
     /**
      * 客户类型
@@ -47,14 +41,8 @@ public class ListCustomerCriteriaDto implements Serializable {
 
     /**
      * 审核状态
-     * (0未审核，1正常合作 2审核未通过，4停止合作)
      */
     private Integer customerStatus;
 
-    /**
-     * 发票类型
-     * 1:增值税普通发票 2:增值税专用发票
-     */
-    private Integer invoiceType;
 }
 

@@ -82,7 +82,7 @@ public interface CustomerContractMapper {
     int countByCustomerId(Integer customerId);
 
     /**
-     * 根绝客户id查询需要审核的合同
+     * 根据客户id查询需要审核的合同
      *
      * @param customerId
      * @return
@@ -91,9 +91,17 @@ public interface CustomerContractMapper {
 
     /**
      * 获取显示客户合同
+     *
      * @param id
      * @return
      */
     ShowCustomerContractDto getShowCustomerContractById(Integer id);
 
+    /**
+     * 根据客户id获取合同显示对象
+     *
+     * @param customerId
+     * @return
+     */
+    List<ShowCustomerContractDto> listShowCustomerContractByCustomerId(Integer customerId);
 }

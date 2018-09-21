@@ -7,11 +7,15 @@ import com.jaagro.crm.api.dto.request.customer.UpdateCustomerQualificationDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerQualificationReturnDto;
 import com.jaagro.crm.api.dto.response.customer.ReturnQualificationDto;
 import com.jaagro.crm.api.service.CustomerService;
+import com.jaagro.crm.api.service.OssSignUrlClientService;
 import com.jaagro.crm.api.service.QualificationCertificService;
 import com.jaagro.crm.api.service.QualificationVerifyLogService;
+import com.jaagro.crm.biz.entity.CustomerQualification;
 import com.jaagro.crm.biz.mapper.CustomerMapper;
 import com.jaagro.crm.biz.mapper.CustomerQualificationMapper;
 import com.jaagro.utils.BaseResponse;
+import com.jaagro.utils.ResponseStatusCode;
+import com.jaagro.utils.ServiceResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -19,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URL;
 import java.util.List;
 
 
@@ -41,6 +46,8 @@ public class QualificationCertificController {
     private CustomerQualificationMapper certificMapper;
     @Autowired
     private QualificationVerifyLogService logService;
+    @Autowired
+    private OssSignUrlClientService ossSignUrlClientService;
 
     /**
      * 新增资质
@@ -92,16 +99,22 @@ public class QualificationCertificController {
      * @param certificDto
      * @return
      */
-    @ApiOperation("修改单个资质")
+    @ApiOperation("修改资质")
     @PutMapping("/qualificationCertific")
-    public BaseResponse updateSite(@RequestBody UpdateCustomerQualificationDto certificDto) {
-        if (certificDto.getId() == null) {
-            return BaseResponse.idNull("证件id:[id]不能为空");
-        }
-        if (this.certificMapper.selectByPrimaryKey(certificDto.getId()) == null) {
-            return BaseResponse.idNull("证件id:[id]不能为空");
-        }
+    public BaseResponse updateSite(@RequestBody List<UpdateCustomerQualificationDto> certificDto) {
         return BaseResponse.service(certificService.updateQualificationCertific(certificDto));
+    }
+
+    /**
+     * 删除资质
+     *
+     * @param ids
+     * @return
+     */
+    @ApiOperation("删除资质")
+    @PostMapping("/deleteQualificationCertific")
+    public BaseResponse deleteQualificationCertific(@RequestBody List<Integer> ids) {
+        return BaseResponse.service(certificService.deleteQualificationCertific(ids));
     }
 
     /**
@@ -116,7 +129,12 @@ public class QualificationCertificController {
         if (this.certificMapper.selectByPrimaryKey(id) == null) {
             return BaseResponse.queryDataEmpty();
         }
-        return BaseResponse.successInstance(this.certificMapper.selectByPrimaryKey(id));
+        CustomerQualification customerQualification = this.certificMapper.selectByPrimaryKey(id);
+        //替换资质证照地址
+        String[] strArray = {customerQualification.getCertificateImageUrl()};
+        List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+        customerQualification.setCertificateImageUrl(urlList.get(0).toString());
+        return BaseResponse.successInstance(customerQualification);
     }
 
     /**
@@ -129,6 +147,21 @@ public class QualificationCertificController {
     @PostMapping("/listQualificationCertificByCriteria")
     public BaseResponse listByCriteria(@RequestBody ListCustomerQualificationCriteriaDto criteriaDto) {
         return BaseResponse.service(this.certificService.listByCriteria(criteriaDto));
+    }
+
+    /**
+     * 根据客户id查询资质列表
+     *
+     * @param criteriaDto
+     * @return
+     */
+    @ApiOperation("根据客户id查询资质列表")
+    @GetMapping("/listQualificationByCustomerId/{customerId}")
+    public BaseResponse listByCriteria(@PathVariable("customerId") Integer customerId) {
+        if (customerId == null) {
+            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户id不能为空"));
+        }
+        return BaseResponse.service(this.certificService.listByCustomerId(customerId));
     }
 
     /**
@@ -149,9 +182,14 @@ public class QualificationCertificController {
         if (returnDtos.size() < 1) {
             return BaseResponse.errorInstance("客户未上传资质证");
         }
+        ListCustomerQualificationCriteriaDto dto = new ListCustomerQualificationCriteriaDto();
+        dto.setCustomerId(customerId);
         //返回要审核的资质信息
-        List<ReturnQualificationDto> qualificationDtos = this.certificMapper.listByCustomerIdAndStatus(customerId);
+        List<ReturnQualificationDto> qualificationDtos = this.certificMapper.listByCustomerIdAndStatus(dto);
         if (qualificationDtos != null && qualificationDtos.size() > 0) {
+            String[] strArray = {qualificationDtos.get(0).getCertificateImageUrl()};
+            List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+            qualificationDtos.get(0).setCertificateImageUrl(urlList.get(0).toString());
             return BaseResponse.successInstance(qualificationDtos.get(0));
         }
         return BaseResponse.queryDataEmpty();

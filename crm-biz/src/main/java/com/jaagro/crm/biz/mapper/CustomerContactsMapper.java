@@ -53,4 +53,11 @@ public interface CustomerContactsMapper {
      */
     List<CustomerContactsReturnDto> getByCriteriDto(ListCustomerContactsCriteriaDto dto);
 
+    /**
+     * 根据客户id删除联系人
+     *
+     * @param customerId
+     * @return
+     */
+    int deleteByCustomerId(Integer customerId);
 }

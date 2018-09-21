@@ -336,31 +336,33 @@
         from customer
         where id = #{id,jdbcType=INTEGER}
     </select>
-    <select id="getByCriteriaDto" resultType="com.jaagro.crm.api.dto.response.customer.ListCustomerDto"
+    <select id="listByCriteriaDto" resultType="com.jaagro.crm.api.dto.response.customer.ListCustomerDto"
             parameterType="com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto">
-        select
-        <include refid="Base_Column_List"/>
-        from customer
-        where 1=1
+        SELECT
+        m.customer_type,
+        m.customer_name,
+        m.id,
+        m.city,
+        m.customer_status,
+        m.province,
+        m.county
+        FROM
+        customer m
+        LEFT JOIN customer_contacts c ON m.id = c.customer_id
+        WHERE 1=1
         <if test="customerType != null">
-            and customer_type = #{customerType}
+            and m.customer_type = #{customerType}
+        </if>
+        <if test="phone != null">
+            and c.phone = #{phone}
         </if>
         <if test="customerStatus != null">
-            and customer_status = #{customerStatus}
+            and m.customer_status = #{customerStatus}
         </if>
-        <if test="invoiceType != null">
-            and invoice_type = #{invoiceType }
+        <if test="customerName != null">
+            <![CDATA[and (m.customer_name like concat('%',#{customerName},'%') )]]>
         </if>
-        <if test="endDate != null">
-            <![CDATA[and create_time <= #{endDate}]]>
-        </if>
-        <if test="startDate != null">
-            <![CDATA[and create_time >= #{startDate}]]>
-        </if>
-        <if test="keywords != null">
-            <![CDATA[and (customer_name like concat('%',#{keywords},'%') or city like concat('%',#{keywords},'%') or province like concat('%',#{keywords},'%') or county like concat('%',#{keywords},'%') or address like concat('%',#{keywords},'%') or credit_code like concat('%',#{keywords},'%') )]]>
-        </if>
-        order by create_time desc
+        GROUP BY m.id
     </select>
     <select id="getByCustomerDto" resultMap="BaseResultMap"
             parameterType="com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto">

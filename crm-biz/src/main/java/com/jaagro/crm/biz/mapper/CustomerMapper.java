@@ -55,7 +55,7 @@ public interface CustomerMapper {
      * @param dto
      * @return
      */
-    List<ListCustomerDto> getByCriteriaDto(ListCustomerCriteriaDto dto);
+    List<ListCustomerDto> listByCriteriaDto(ListCustomerCriteriaDto dto);
 
     /**
      * 新增时判断名称是否重复

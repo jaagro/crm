@@ -8,6 +8,7 @@ import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ public class ContractSectionPriceServiceImpl implements ContractSectionPriceServ
     @Autowired
     private CustomerContractSectionPriceMapper sectionPriceMapper;
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> disableByPriceId(Integer priceId) {
         List<ReturnContractSectionPriceDto> contractSectionPriceReturnDto = this.sectionPriceMapper.listByPriceId(priceId);
@@ -28,7 +30,6 @@ public class ContractSectionPriceServiceImpl implements ContractSectionPriceServ
         ) {
             CustomerContractSectionPrice sectionPrice = new CustomerContractSectionPrice();
             BeanUtils.copyProperties(returnDto, sectionPrice);
-            sectionPrice.setSelectionStatus(0);
             this.sectionPriceMapper.updateByPrimaryKeySelective(sectionPrice);
         }
         return ServiceResult.toResult("删除成功");

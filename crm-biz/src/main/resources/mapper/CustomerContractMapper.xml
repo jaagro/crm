@@ -53,7 +53,7 @@
         new_update_user, version
     </sql>
     <sql id="Show_Column">
-        id, contract_number
+        id, contract_number, type
     </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -66,8 +66,7 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
     <insert id="insert" parameterType="com.jaagro.crm.biz.entity.CustomerContract" useGeneratedKeys="true"
-            keyProperty="id"
-            keyColumn="id">
+            keyProperty="id" keyColumn="id">
     insert into customer_contract (id, customer_id, contract_status,
       start_date, end_date, contract_date,
       type, theme, product,
@@ -276,7 +275,12 @@
         <include refid="Base_Column_List"/>
         from customer_contract
         where 1 = 1
-        and contract_status = 1
+        <if test="contractStatus != null">
+            and contract_status = #{contractStatus}
+        </if>
+        <if test="customerId != null">
+            and customer_id = #{customerId}
+        </if>
         order by create_time desc
     </select>
     <select id="getById" parameterType="java.lang.Integer" resultMap="DetailInfo">
@@ -300,7 +304,7 @@
         <if test="id != null">
             and id != #{id}
         </if>
-        and contract_status = 1
+        and contract_status != 3
     </select>
     <select id="countByCustomerId" parameterType="java.lang.Integer" resultType="int">
         select
@@ -324,5 +328,14 @@
         <include refid="Show_Column"/>
         from customer_contract
         where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="listShowCustomerContractByCustomerId"
+            resultType="com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto">
+        select
+        <include refid="Show_Column"/>
+        from customer_contract
+        where customer_id = #{customerId,jdbcType=INTEGER}
+        and contract_status = 1
+        and (select now() between start_date and end_date)
     </select>
 </mapper>

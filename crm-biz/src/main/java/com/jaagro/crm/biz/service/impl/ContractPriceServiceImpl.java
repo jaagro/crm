@@ -9,6 +9,7 @@ import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -24,13 +25,13 @@ public class ContractPriceServiceImpl implements ContractPriceService {
     @Autowired
     private ContractSectionPriceService sectionPriceService;
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> disableByContractId(Integer id) {
         List<ReturnContractPriceDto> priceReturnDto = this.priceMapper.getByContractId(id);
         for (ReturnContractPriceDto dto : priceReturnDto) {
             CustomerContractPrice price = new CustomerContractPrice();
             BeanUtils.copyProperties(dto, price);
-            price.setPriceStatus(0);
             this.priceMapper.updateByPrimaryKeySelective(price);
             if (dto.getSectionPrice() != null && dto.getSectionPrice().size() > 0) {
                 sectionPriceService.disableByPriceId(price.getId());

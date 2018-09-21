@@ -2,7 +2,9 @@ package com.jaagro.crm.api.service;
 
 import com.jaagro.crm.api.dto.request.truck.CreateTruckDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto;
+import com.jaagro.crm.api.dto.response.truck.GetTruckDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
+import com.jaagro.crm.api.dto.response.truck.ListTruckWithDriversDto;
 
 import java.util.List;
 import java.util.Map;
@@ -13,14 +15,21 @@ import java.util.Map;
 public interface TruckService {
     /**
      * 获取单条车辆
-     *
-     * @param id
+     * @param truckId
      * @return
      */
-    Map<String, Object> getTruckById(Integer id);
+    Map<String, Object> getTruckById(Integer truckId);
+
+    /**
+     * 获取单条车辆 返回对象
+     * @param truckId
+     * @return
+     */
+    GetTruckDto getTruckByIdReturnObject(Integer truckId);
 
     /**
      * 创建车辆
+     *
      * @param truckDto
      * @return
      */
@@ -28,6 +37,7 @@ public interface TruckService {
 
     /**
      * 修改车辆
+     *
      * @param truckDto
      * @return
      */
@@ -35,6 +45,7 @@ public interface TruckService {
 
     /**
      * 删除车辆
+     *
      * @param id
      * @return
      */
@@ -42,14 +53,45 @@ public interface TruckService {
 
     /**
      * 获取list
+     *
      * @param criteriaDto
      * @return
      */
     Map<String, Object> listTruck(ListTruckCriteriaDto criteriaDto);
 
     /**
+     * 运力管理
+     *
+     * @param criteriaDto
+     * @return
+     */
+    Map<String, Object> listTruckByCriteria(ListTruckCriteriaDto criteriaDto);
+
+    /**
      * 获取车辆类型列表
+     *
      * @return
      */
     List<ListTruckTypeDto> listTruckType();
+
+    /**
+     * 获取单条车辆类型
+     * @param id
+     * @return
+     */
+    ListTruckTypeDto  getTruckTypeById(Integer id);
+
+    /**
+     *  指派车辆列表
+     *  Author gavin
+     * @param criteriaDto
+     * @return
+     */
+    List<ListTruckWithDriversDto> listTrucksWithDrivers(ListTruckCriteriaDto criteriaDto);
+
+    /**
+     * 通过token获取truck
+     * @return
+     */
+    GetTruckDto getTruckByToken();
 }

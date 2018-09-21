@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author baiyiran
@@ -24,17 +23,13 @@ public class ListContractCriteriaDto implements Serializable {
     private int pageSize;
 
     /**
+     * 客户Id
+     */
+    private Integer customerId;
+
+    /**
      * 合同状态: 1-正常 2-终止
      */
     private Integer contractStatus;
 
-    /**
-     * 合同类型
-     */
-    private Integer type;
-
-    /**
-     * 关键字
-     */
-    private String keywords;
 }

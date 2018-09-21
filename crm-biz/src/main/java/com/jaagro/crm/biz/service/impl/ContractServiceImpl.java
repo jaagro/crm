@@ -2,17 +2,20 @@ package com.jaagro.crm.biz.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.dto.request.contract.*;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractPriceDto;
 import com.jaagro.crm.api.service.ContractPriceService;
+import com.jaagro.crm.api.service.ContractQualificationService;
 import com.jaagro.crm.api.service.ContractService;
-import com.jaagro.crm.biz.entity.ContractQualification;
+import com.jaagro.crm.biz.entity.Customer;
 import com.jaagro.crm.biz.entity.CustomerContract;
 import com.jaagro.crm.biz.entity.CustomerContractPrice;
 import com.jaagro.crm.biz.entity.CustomerContractSectionPrice;
 import com.jaagro.crm.biz.mapper.*;
+import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
@@ -28,6 +31,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 客户合同service
+ *
  * @author tony
  */
 @Service
@@ -53,6 +58,8 @@ public class ContractServiceImpl implements ContractService {
     private ContractQualificationMapper contractQualificationMapper;
     @Autowired
     private CustomerMapper customerMapper;
+    @Autowired
+    private ContractQualificationService contractQualificationService;
 
     /**
      * 创建合同
@@ -66,27 +73,29 @@ public class ContractServiceImpl implements ContractService {
         //创建contract对象
         CustomerContract customerContract = new CustomerContract();
         BeanUtils.copyProperties(dto, customerContract);
+        UpdateContractDto updateContractDto = new UpdateContractDto();
+        updateContractDto.setContractNumber(customerContract.getContractNumber());
+        if (this.customerContractMapper.getByUpdateDto(updateContractDto) != null) {
+            throw new RuntimeException("合同编号[contractumber]已存在");
+        }
         customerContract
+                .setContractStatus(AuditStatus.UNCHECKED)
                 .setCreateUser(userService.getCurrentUser().getId());
         customerContractMapper.insertSelective(customerContract);
 
         //创建资质证
         if (dto.getQualificationDtos() != null && dto.getQualificationDtos().size() > 0) {
             for (CreateContractQualificationDto qualificationDto : dto.getQualificationDtos()) {
-                ContractQualification qualification = new ContractQualification();
-                BeanUtils.copyProperties(qualificationDto, qualification);
-                qualification
-                        .setRelevanceId(customerContract.getId())
-                        .setCreateUserId(this.userService.getCurrentUser().getId());
-                this.contractQualificationMapper.insertSelective(qualification);
+                qualificationDto.setRelevanceId(customerContract.getId());
+                this.contractQualificationService.createQuation(qualificationDto);
             }
         }
-
         //创建合同报价及阶梯报价
         createPrice(dto, customerContract);
         return ServiceResult.toResult("合同创建成功");
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> createContract(List<CreateContractDto> dtos, Integer CustomerId) {
         if (dtos != null && dtos.size() > 0) {
@@ -117,6 +126,10 @@ public class ContractServiceImpl implements ContractService {
         // 创建contract对象
         CustomerContract customerContract = new CustomerContract();
         BeanUtils.copyProperties(dto, customerContract);
+
+        if (this.customerContractMapper.getByUpdateDto(dto) != null) {
+            throw new RuntimeException("合同编号[contractumber]已存在");
+        }
         customerContract
                 .setNewUpdateTime(new Date())
                 .setNewUpdateUser(userService.getCurrentUser().getId());
@@ -135,6 +148,7 @@ public class ContractServiceImpl implements ContractService {
         return ServiceResult.toResult("合同修改成功");
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> updateContract(List<UpdateContractDto> dtos) {
         if (dtos != null && dtos.size() > 0) {
@@ -240,6 +254,7 @@ public class ContractServiceImpl implements ContractService {
         return ServiceResult.toResult(customerContractMapper.getById(contractId));
     }
 
+
     /**
      * 分页查询
      *
@@ -251,7 +266,10 @@ public class ContractServiceImpl implements ContractService {
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
         List<ReturnContractDto> contracts = customerContractMapper.listByPage(dto);
         for (ReturnContractDto contractDto : contracts) {
-            contractDto.setCustomerName(this.customerMapper.selectByPrimaryKey(contractDto.getCustomerId()).getCustomerName());
+            Customer customer = this.customerMapper.selectByPrimaryKey(contractDto.getCustomerId());
+            if (customer != null) {
+                contractDto.setCustomerName(customer.getCustomerName());
+            }
         }
         return ServiceResult.toResult(new PageInfo<>(contracts));
     }
@@ -295,6 +313,17 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public ShowCustomerContractDto getShowCustomerContractById(Integer id) {
         return customerContractMapper.getShowCustomerContractById(id);
+    }
+
+    /**
+     * 通过客户id获取当前客户所有合同（显示对象）
+     *
+     * @param customerId
+     * @return
+     */
+    @Override
+    public List<ShowCustomerContractDto> listShowCustomerContractByCustomerId(Integer customerId) {
+        return customerContractMapper.listShowCustomerContractByCustomerId(customerId);
     }
 
 }

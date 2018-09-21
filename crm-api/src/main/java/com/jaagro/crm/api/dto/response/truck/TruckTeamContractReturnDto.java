@@ -1,10 +1,13 @@
 package com.jaagro.crm.api.dto.response.truck;
 
+import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContractPriceDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnCheckContractQualificationDto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author liqiangping
@@ -56,4 +59,14 @@ public class TruckTeamContractReturnDto implements Serializable {
      * 备注信息
      */
     private String notes;
+
+    /**
+     * 合同报价
+     */
+    private List<CreateTruckTeamContractPriceDto> contractPriceDtoList;
+
+    /**
+     * 资质证件照
+     */
+    private List<ReturnCheckContractQualificationDto> qualificationDtoList;
 }

@@ -6,6 +6,7 @@ import com.jaagro.crm.api.dto.request.customer.UpdateCustomerSiteDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto;
 import com.jaagro.crm.api.dto.response.selectValue.ReturnSelectSiteDto;
 import com.jaagro.crm.biz.entity.CustomerSite;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -73,8 +74,9 @@ public interface CustomerSiteMapper {
 
     /**
      * 获取显示地址对象
+     *
      * @param id
      * @return
      */
-    ShowSiteDto getShowSiteById(Integer id);
+    ShowSiteDto getShowSiteById(@Param("id") Integer id);
 }
