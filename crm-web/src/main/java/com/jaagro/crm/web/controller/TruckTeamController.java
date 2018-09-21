@@ -38,13 +38,13 @@ public class TruckTeamController {
     @PostMapping("/truckTeam")
     public BaseResponse insertTruckTeam(@RequestBody CreateTruckTeamDto truckTeam) {
         if (StringUtils.isEmpty(truckTeam.getTeamType())) {
-            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队类型不能为空"));
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队类型不能为空");
         }
         if (StringUtils.isEmpty(truckTeam.getTeamName())) {
-            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队名称不能为空"));
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队名称不能为空");
         }
         if (StringUtils.isEmpty(truckTeam.getCreditCode())) {
-            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "creditCode不能为空"));
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "creditCode不能为空");
         }
         return BaseResponse.service(truckTeamService.createTruckTeam(truckTeam));
     }
@@ -99,7 +99,7 @@ public class TruckTeamController {
     @PostMapping("/listTruckTeamByCriteria")
     public BaseResponse listTruckTeamByCriteria(@RequestBody ListTruckTeamCriteriaDto truckCriteria) {
         if (StringUtils.isEmpty(truckCriteria.getPageNum()) || StringUtils.isEmpty(truckCriteria.getPageSize())) {
-            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "分页查询条件必传"));
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "分页查询条件必传");
         }
         return BaseResponse.service(truckTeamService.listTruckTeamByCerteria(truckCriteria));
     }
