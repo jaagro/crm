@@ -40,23 +40,19 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
         CustomerSite site = new CustomerSite();
         BeanUtils.copyProperties(customerSiteDto, site);
         site
-                .setCreateTime(new Date())
-                .setSiteStatus(1)
                 .setCreateUserId(userService.getCurrentUser().getId());
         siteMapper.insertSelective(site);
         return ServiceResult.toResult("地址创建成功");
     }
 
     @Override
-    public Map<String, Object> createSite(List<CreateCustomerSiteDto> customerSiteDtos, Integer CustomerId) {
+    public Map<String, Object> createSite(List<CreateCustomerSiteDto> customerSiteDtos, Integer customerId) {
         if (customerSiteDtos != null && customerSiteDtos.size() > 0) {
             for (CreateCustomerSiteDto customerSiteDto : customerSiteDtos) {
                 CustomerSite site = new CustomerSite();
                 BeanUtils.copyProperties(customerSiteDto, site);
                 site
-                        .setCustomerId(CustomerId)
-                        .setCreateTime(new Date())
-                        .setSiteStatus(1)
+                        .setCustomerId(customerId)
                         .setCreateUserId(userService.getCurrentUser().getId());
                 siteMapper.insertSelective(site);
             }
