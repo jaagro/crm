@@ -57,7 +57,7 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
     public Map<String, Object> createVerifyLog(CreateQualificationVerifyLogDto dto) {
         QualificationVerifyLog verifyLog = new QualificationVerifyLog();
         BeanUtils.copyProperties(dto, verifyLog);
-        if (verifyLog.getVertifyResult() != 1) {
+        if (!StringUtils.isEmpty(verifyLog.getVertifyResult())) {
             if (StringUtils.isEmpty(verifyLog.getDescription())) {
                 throw new RuntimeException("审核不通过时描述信息必填");
             }
@@ -204,7 +204,7 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                 if (contractQualification.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
                     if (contractQualification.getCertificateType().equals(CertificateType.CONTTRACT_INDEX) || contractQualification.getCertificateType().equals(CertificateType.CONTTRACT_SCEAU) || contractQualification.getCertificateType().equals(CertificateType.CONTTRACT_PRICE)) {
                         List<ContractQualification> contractQualifications = contractQualificationMapper.listCheckedByContract(contractQualification.getRelevanceId(), 2);
-                        if (contractQualifications.size() >= 3) {
+                        if (contractQualifications.size() == 3) {
                             //合同资质均已审核通过，则修改合同状态为审核通过
                             truckContract
                                     .setContractStatus(AuditStatus.NORMAL_COOPERATION)

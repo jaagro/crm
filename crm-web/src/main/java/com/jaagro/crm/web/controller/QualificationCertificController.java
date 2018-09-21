@@ -1,5 +1,6 @@
 package com.jaagro.crm.web.controller;
 
+import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerQualificationDto;
 import com.jaagro.crm.api.dto.request.customer.CreateQualificationVerifyLogDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerQualificationCriteriaDto;
@@ -226,7 +227,7 @@ public class QualificationCertificController {
         }
         //审核记录
         CreateQualificationVerifyLogDto logDto = new CreateQualificationVerifyLogDto();
-        if (dto.getCertificateStatus() != 1) {
+        if (!dto.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
             if (dto.getDescription() == null) {
                 return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "审核不通过时描述信息不能为空");
             }
@@ -234,8 +235,8 @@ public class QualificationCertificController {
         }
         this.certificService.updateQualificationCertific(dto);
         logDto
-                .setVertifyResult(dto.getCertificateStatus())
                 .setReferencesId(dto.getId())
+                .setVertifyResult(dto.getVertifyResult())
                 .setCertificateType(1);
         // 1-客户资质 2-运力资质 3-客户合同 4-运力合同
         return BaseResponse.service(this.logService.createVerifyLog(logDto));

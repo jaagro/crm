@@ -20,6 +20,11 @@ public class UpdateCustomerQualificationDto implements Serializable {
     private Integer id;
 
     /**
+     * 不通过原因
+     */
+    private Integer vertifyResult;
+
+    /**
      * 证件状态(-1；审核未通过 0；未审核 1；已审核)
      */
     private Integer certificateStatus;

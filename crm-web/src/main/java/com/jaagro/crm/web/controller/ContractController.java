@@ -2,6 +2,7 @@ package com.jaagro.crm.web.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.dto.request.contract.*;
 import com.jaagro.crm.api.dto.request.customer.CreateQualificationVerifyLogDto;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto;
@@ -379,7 +380,7 @@ public class ContractController {
         }
         //审核记录
         CreateQualificationVerifyLogDto logDto = new CreateQualificationVerifyLogDto();
-        if (dto.getCertificateStatus() != 1) {
+        if (!dto.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
             if (dto.getDescription() == null) {
                 return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "审核不通过时描述信息不能为空");
             }
@@ -387,7 +388,7 @@ public class ContractController {
         }
         this.contractQualificationService.updateContractQuaion(dto);
         logDto
-                .setVertifyResult(dto.getCertificateStatus())
+                .setVertifyResult(dto.getVertifyResult())
                 .setReferencesId(dto.getId());
         // 1-客户资质 2-运力资质 3-客户合同 4-运力合同
         if (dto.getRelevanceType() == 1) {

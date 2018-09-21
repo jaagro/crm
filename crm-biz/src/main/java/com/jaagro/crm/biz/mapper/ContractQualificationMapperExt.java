@@ -4,6 +4,7 @@ import com.jaagro.crm.api.dto.request.contract.ListContractQualificationCriteria
 import com.jaagro.crm.api.dto.response.contract.ReturnCheckContractQualificationDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractQualificationDto;
 import com.jaagro.crm.biz.entity.ContractQualification;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -59,5 +60,5 @@ public interface ContractQualificationMapperExt extends ContractQualificationMap
      * @param relevanceId
      * @return
      */
-    List<ContractQualification> listCheckedByContract(Integer relevanceId,Integer type);
+    List<ContractQualification> listCheckedByContract(@Param("relevanceId") Integer relevanceId,@Param("type") Integer type);
 }

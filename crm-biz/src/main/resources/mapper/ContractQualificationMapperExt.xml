@@ -81,8 +81,8 @@
         from contract_qualification
         where
         relevance_id = #{relevanceId,jdbcType=INTEGER}
-        and relevance_type in (16,17,18)
+        and certificate_type in (16,17,18)
         and certificate_status = 1
-        and certificate_type = #{type,jdbcType=INTEGER}
+        and relevance_type = #{type,jdbcType=INTEGER}
     </select>
 </mapper>
