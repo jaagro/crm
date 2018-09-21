@@ -38,22 +38,22 @@ public class CustomerSiteController {
     @PostMapping("/site")
     public BaseResponse insertCustomer(@RequestBody CreateCustomerSiteDto siteDto) {
         if (siteDto.getCustomerId() == null) {
-            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户id:[customerId]不能为空"));
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户id:[customerId]不能为空");
         }
         if (this.customerMapper.selectByPrimaryKey(siteDto.getCustomerId()) == null) {
-            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户id:[customerId]不存在"));
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户id:[customerId]不存在");
         }
         if (siteDto.getSiteType() == null) {
-            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "地址类型:[siteType]不能为空"));
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "地址类型:[siteType]不能为空");
         }
         if (siteDto.getSiteName() == null) {
-            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "地址名称:[siteName]不能为空"));
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "地址名称:[siteName]不能为空");
         }
         UpdateCustomerSiteDto customerSiteDto = new UpdateCustomerSiteDto();
         customerSiteDto.setSiteName(siteDto.getSiteName());
         /*CustomerSiteReturnDto site = this.siteMapper.getSiteDto(customerSiteDto);
         if (site != null) {
-            return BaseResponse.errorInstance("地址名称:[siteName]已存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "地址名称:[siteName]已存在");
         }*/
         return BaseResponse.service(siteService.createSite(siteDto));
     }
@@ -62,7 +62,7 @@ public class CustomerSiteController {
     @DeleteMapping("/deleteSiteById/{id}")
     public BaseResponse deleteById(@PathVariable Integer id) {
         if (this.siteMapper.selectByPrimaryKey(id) == null) {
-            return BaseResponse.errorInstance("查询不到相应数据");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到相应数据");
         }
         return BaseResponse.service(this.siteService.disableSite(id));
     }
@@ -74,17 +74,17 @@ public class CustomerSiteController {
             return BaseResponse.idNull("地址id:[id]不能为空");
         }
         if (siteDto.getSiteType() == null) {
-            return BaseResponse.errorInstance("地址类型:[siteType]不能为空");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "地址类型:[siteType]不能为空");
         }
         if (siteDto.getSiteName() == null) {
-            return BaseResponse.errorInstance("地址名称:[siteName]不能为空");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "地址名称:[siteName]不能为空");
         }
         if (this.siteMapper.getSiteDto(siteDto) != null) {
-            return BaseResponse.errorInstance("地址名称:[siteName]已存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "地址名称:[siteName]已存在");
         }
         if (siteDto.getCustomerId() != null) {
             if (this.customerMapper.selectByPrimaryKey(siteDto.getCustomerId()) == null) {
-                return BaseResponse.errorInstance("客户id:[customerId]不存在");
+                return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户id:[customerId]不存在");
             }
         }
         return BaseResponse.service(siteService.updateSite(siteDto));
@@ -109,7 +109,7 @@ public class CustomerSiteController {
     @GetMapping("/listSiteForSelect/{customerId}/{siteType}")
     public BaseResponse getById(@PathVariable Integer customerId, @PathVariable Integer siteType) {
         if (this.customerMapper.selectByPrimaryKey(customerId) == null) {
-            return BaseResponse.errorInstance("客户不存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户不存在");
         }
         ListSiteCriteriaDto criteriaDto = new ListSiteCriteriaDto();
         criteriaDto

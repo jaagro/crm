@@ -43,7 +43,7 @@ public class TruckController {
     @GetMapping("/truck/{truckId}")
     public BaseResponse getTruckById(@PathVariable("truckId") Integer truckId) {
         if (this.truckMapper.selectByPrimaryKey(truckId) == null) {
-            return BaseResponse.errorInstance("查询不到车辆信息");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到车辆信息");
         }
         Map<String, Object> result = truckService.getTruckById(truckId);
         return BaseResponse.service(result);
@@ -58,23 +58,23 @@ public class TruckController {
     @PostMapping("/truck")
     public BaseResponse insert(@RequestBody CreateTruckDto truck) {
         if (truckMapper.getByTruckNumber(truck.getTruckNumber()) != null) {
-            return BaseResponse.errorInstance(truck.getTruckNumber() + " :当前车牌号已经存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), truck.getTruckNumber() + " :当前车牌号已经存在");
         }
         if (truckTeamMapper.selectByPrimaryKey(truck.getTruckTeamId()) == null) {
-            return BaseResponse.errorInstance("当前车队不存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "当前车队不存在");
         }
         if (StringUtils.isEmpty(truck.getTruckNumber())) {
-            return BaseResponse.errorInstance("车牌号码不能为空");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车牌号码不能为空");
         }
         if (truckTypeMapper.selectByPrimaryKey(truck.getTruckTypeId()) == null) {
-            return BaseResponse.errorInstance("请选择正确的车辆类型");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "请选择正确的车辆类型");
         }
         BaseResponse response;
         try {
             response = BaseResponse.service(truckService.createTruck(truck));
         } catch (FeignException e) {
             e.printStackTrace();
-            response = BaseResponse.errorInstance("司机创建失败");
+            response = BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "司机创建失败");
         }
         return response;
     }
@@ -83,7 +83,7 @@ public class TruckController {
     @PutMapping("/truck")
     public BaseResponse updateTruckTeam(@RequestBody CreateTruckDto truck) {
         if (StringUtils.isEmpty(truck.getTruckNumber())) {
-            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车牌号码不能为空"));
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车牌号码不能为空");
         }
         return BaseResponse.service(truckService.updateTruck(truck));
     }
@@ -149,7 +149,7 @@ public class TruckController {
             return BaseResponse.successInstance(result);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("查询指派车辆失败:"+e.getMessage());
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询指派车辆失败"+e.getMessage());
         }
     }
 

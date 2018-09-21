@@ -53,10 +53,10 @@ public class TruckQualificationController {
     @PostMapping("/truckQualification")
     public BaseResponse insert(@RequestBody CreateListTruckQualificationDto dto) {
         if (StringUtils.isEmpty(truckTeamMapper.selectByPrimaryKey(dto.getTruckTeamId()))) {
-            return BaseResponse.errorInstance(dto.getTruckTeamId() + " :车队不存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队不存在");
         }
         if (StringUtils.isEmpty(dto.getQualification())) {
-            return BaseResponse.errorInstance("请上传资质");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "请上传资质");
         }
         return BaseResponse.service(truckQualificationService.createTruckQualification(dto));
     }
@@ -97,7 +97,7 @@ public class TruckQualificationController {
     @GetMapping("/getQualificationAuto/{truckTeamId}")
     public BaseResponse getQualificationAuto(@PathVariable Integer truckTeamId) {
         if (this.truckTeamMapper.selectByPrimaryKey(truckTeamId) == null) {
-            BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "当前车队不存在"));
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "当前车队不存在");
         }
         //返回待审核资质下一条
         ListTruckQualificationCriteriaDto criteriaDto = new ListTruckQualificationCriteriaDto();
@@ -119,14 +119,14 @@ public class TruckQualificationController {
             qualificationDto.setCertificateImageUrl(urlList.get(0).toString());
             return BaseResponse.successInstance(qualificationDto);
         }
-        return BaseResponse.queryDataEmpty();
+        return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "无数据");
     }
 
     @ApiOperation("待审核资质详情")
     @GetMapping("/getQualificationById/{id}")
     public BaseResponse getQualificationById(@PathVariable Integer id) {
         if (this.truckQualificationMapper.selectByPrimaryKey(id) == null) {
-            BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质证不存在"));
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质证不存在");
         }
         ReturnTruckQualificationDto qualificationDto = this.truckQualificationMapper.getById(id);
         if (qualificationDto != null) {
@@ -144,23 +144,23 @@ public class TruckQualificationController {
             qualificationDto.setCertificateImageUrl(urlList.get(0).toString());
             return BaseResponse.successInstance(qualificationDto);
         }
-        return BaseResponse.queryDataEmpty();
+        return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "无数据");
     }
 
     @ApiOperation("审核资质")
     @PostMapping("/checkTruckQualification")
     public BaseResponse checkTruckQualification(@RequestBody UpdateTruckQualificationDto criteriaDto) {
         if (StringUtils.isEmpty(criteriaDto.getId())) {
-            BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质id不能为空"));
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质id不能为空");
         }
         if (this.truckQualificationMapper.selectByPrimaryKey(criteriaDto.getId()) == null) {
-            BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "当前资质不存在"));
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "当前资质不存在");
         }
         if (StringUtils.isEmpty(criteriaDto.getCertificateType())) {
-            BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质证件照类型不能为空"));
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质证件照类型不能为空");
         }
         if (StringUtils.isEmpty(criteriaDto.getCertificateStatus())) {
-            BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "审核结果不能为空"));
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "审核结果不能为空");
         }
         //审核记录
         CreateQualificationVerifyLogDto logDto = new CreateQualificationVerifyLogDto();
@@ -169,7 +169,7 @@ public class TruckQualificationController {
         this.truckQualificationService.updateQualificationCertific(dto);
         if (!criteriaDto.getCertificateStatus().equals(AuditStatus.AUDIT_FAILED)) {
             if (StringUtils.isEmpty(criteriaDto.getDescription())) {
-                BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "审核不通过时需填写描述信息"));
+                return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "审核不通过时需填写描述信息");
             }
             logDto.setDescription(dto.getDescription());
         }

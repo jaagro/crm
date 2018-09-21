@@ -74,19 +74,19 @@ public class ContractController {
             return BaseResponse.idNull("客户id:[customerId]不能为空");
         }
         if (this.customerMapper.selectByPrimaryKey(dto.getCustomerId()) == null) {
-            return BaseResponse.errorInstance("客户id:[customerId]不存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户id:[customerId]不存在");
         }
         UpdateContractDto updateContractDto = new UpdateContractDto();
         updateContractDto.setContractNumber(dto.getContractNumber());
         if (this.customerContractMapper.getByUpdateDto(updateContractDto) != null) {
-            return BaseResponse.errorInstance("合同编号[contractumber]已存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同编号[contractumber]已存在");
         }
         Map<String, Object> result;
         try {
             result = contractService.createContract(dto);
         } catch (Exception e) {
             e.printStackTrace();
-            return BaseResponse.errorInstance(e.getMessage());
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), e.getMessage());
         }
         return BaseResponse.service(result);
     }
@@ -108,14 +108,14 @@ public class ContractController {
             return BaseResponse.idError("合同客户不能为空");
         }
         if (this.customerContractMapper.getByUpdateDto(dto) != null) {
-            return BaseResponse.errorInstance("合同编号[contractumber]已存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同编号[contractumber]已存在");
         }
         Map<String, Object> result;
         try {
             result = contractService.updateContract(dto);
         } catch (Exception e) {
             e.printStackTrace();
-            return BaseResponse.errorInstance(e.getMessage());
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), e.getMessage());
         }
         return BaseResponse.service(result);
     }
@@ -130,7 +130,7 @@ public class ContractController {
     @GetMapping("/contract/{id}")
     public BaseResponse getById(@PathVariable Integer id) {
         if (this.customerContractMapper.selectByPrimaryKey(id) == null) {
-            return BaseResponse.queryDataEmpty();
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同不存在");
         }
         Map<String, Object> result = contractService.getById(id);
         return BaseResponse.service(result);
@@ -153,7 +153,7 @@ public class ContractController {
     public BaseResponse listByCustomerId(@PathVariable("customerId") Integer customerId) {
         List<ShowCustomerContractDto> result = contractService.listShowCustomerContractByCustomerId(customerId);
         if (StringUtils.isEmpty(result)) {
-            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查无数据"));
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查无数据");
         }
         return BaseResponse.successInstance(result);
     }
@@ -180,7 +180,7 @@ public class ContractController {
             result = contractQualificationService.updateContractQuaion(dto);
         } catch (Exception e) {
             e.printStackTrace();
-            return BaseResponse.errorInstance(e.getMessage());
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), e.getMessage());
         }
         return BaseResponse.service(result);
     }
@@ -195,7 +195,7 @@ public class ContractController {
     @GetMapping("/disableContractQualification/{id}")
     public BaseResponse disContractQualificationById(@PathVariable Integer id) {
         if (this.qualificationMapper.selectByPrimaryKey(id) == null) {
-            return BaseResponse.errorInstance("查询不到相应信息");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到相应信息");
         }
         return BaseResponse.service(contractQualificationService.disableContractQuaion(id));
     }
@@ -210,7 +210,7 @@ public class ContractController {
     @GetMapping("/deleteContractQualification/{id}")
     public BaseResponse deleteContractQualificationById(@PathVariable Integer id) {
         if (this.qualificationMapper.selectByPrimaryKey(id) == null) {
-            return BaseResponse.errorInstance("查询不到相应信息");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到相应信息");
         }
         int result = qualificationMapper.deleteByPrimaryKey(id);
         if (result > 0) {
@@ -222,16 +222,16 @@ public class ContractController {
     }
 
     /**
-     * 查询单个合同
+     * 查询单个合同资质
      *
      * @param id
      * @return
      */
-    @ApiOperation("查询单个合同")
+    @ApiOperation("查询单个合同资质")
     @GetMapping("/ContractQualification/{id}")
     public BaseResponse getContractQualificationById(@PathVariable Integer id) {
         if (this.customerContractMapper.selectByPrimaryKey(id) == null) {
-            return BaseResponse.errorInstance("查询不到相应信息");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到相应信息");
         }
         ContractQualification qualification = qualificationMapper.selectByPrimaryKey(id);
         return BaseResponse.successInstance(qualification);
@@ -291,12 +291,12 @@ public class ContractController {
          */
         if (relevanceType == 1) {
             if (this.customerMapper.selectByPrimaryKey(relevanceId) == null) {
-                return BaseResponse.errorInstance("客户不存在");
+                return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户不存在");
             }
             //查询此客户是否有合同
             List<ReturnContractDto> contractDtoList = this.customerContractMapper.getByCustomerId(relevanceId);
             if (contractDtoList.size() < 1) {
-                return BaseResponse.errorInstance("客户未上传合同");
+                return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户未上传合同");
             }
         } else {
             /**
@@ -304,11 +304,11 @@ public class ContractController {
              */
             TruckTeamContract teamContract = this.truckTeamContractMapper.selectByPrimaryKey(relevanceId);
             if (teamContract == null) {
-                return BaseResponse.errorInstance("车队合同不存在");
+                return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队合同不存在");
             }
             List<TruckTeamContractReturnDto> teamContractReturnDtos = this.truckTeamContractMapper.listByTruckTeamId(teamContract.getTruckTeamId());
             if (teamContractReturnDtos.size() < 1) {
-                return BaseResponse.errorInstance("车队没有相关合同");
+                return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队没有相关合同");
             }
         }
         ListContractQualificationCriteriaDto dto = new ListContractQualificationCriteriaDto();
@@ -328,7 +328,7 @@ public class ContractController {
             checkContractQualificationDto.setTruckTeamContractReturnDto(this.truckTeamContractMapper.getById(checkContractQualificationDto.getRelevanceId()));
             return BaseResponse.successInstance(checkContractQualificationDto);
         }
-        return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "没有查询到需要审核的资质"));
+        return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "没有查询到需要审核的资质");
     }
 
     /**
@@ -342,7 +342,7 @@ public class ContractController {
     public BaseResponse getContractById(@PathVariable Integer id) {
         ContractQualification qualification = qualificationMapper.selectByPrimaryKey(id);
         if (qualification == null) {
-            return BaseResponse.errorInstance("合同资质查询无此相关数据");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同资质查询无此相关数据");
         }
         //返回要审核的合同
         ReturnCheckContractQualificationDto checkContractQualificationDto = this.qualificationMapper.getById(id);
@@ -355,7 +355,7 @@ public class ContractController {
             checkContractQualificationDto.setTruckTeamContractReturnDto(this.truckTeamContractMapper.getById(checkContractQualificationDto.getRelevanceId()));
             return BaseResponse.successInstance(checkContractQualificationDto);
         }
-        return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "没有查询到需要审核的资质"));
+        return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "没有查询到需要审核的资质");
     }
 
     /**
@@ -368,20 +368,20 @@ public class ContractController {
     @PostMapping("/checkContractQualification")
     public BaseResponse listConQualfctnByContractId(@RequestBody UpdateContractQualificationDto dto) {
         if (dto.getId() == null) {
-            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质id[id]不能为空"));
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质id[id]不能为空");
         }
         if (this.qualificationMapper.selectByPrimaryKey(dto.getId()) == null) {
-            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质不存在"));
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质不存在");
         }
         //1-客户合同 2-司机合同
         if (dto.getRelevanceType() == null) {
-            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质关联类型[RelevanceType]不能为空"));
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质关联类型[RelevanceType]不能为空");
         }
         //审核记录
         CreateQualificationVerifyLogDto logDto = new CreateQualificationVerifyLogDto();
         if (dto.getCertificateStatus() != 1) {
             if (dto.getDescription() == null) {
-                return BaseResponse.errorInstance("审核不通过时描述信息不能为空");
+                return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "审核不通过时描述信息不能为空");
             }
             logDto.setDescription(dto.getDescription());
         }

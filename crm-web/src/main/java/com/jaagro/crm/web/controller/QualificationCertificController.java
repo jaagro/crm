@@ -64,13 +64,13 @@ public class QualificationCertificController {
                     return BaseResponse.idNull("客户id:[customerId]不能为空");
                 }
                 if (this.customerMapper.selectByPrimaryKey(certificDto.getCustomerId()) == null) {
-                    return BaseResponse.errorInstance("客户id:[customerId]不存在");
+                    return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户id:[customerId]不存在");
                 }
                 if (certificDto.getCertificateType() == null) {
-                    return BaseResponse.idNull("证件类型:[certificateType]不能为空");
+                    return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "证件类型:[certificateType]不能为空");
                 }
                 if (certificDto.getCertificateImageUrl() == null) {
-                    return BaseResponse.idNull("证件图片地址:[certificateImageUrl]不能为空");
+                    return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "证件图片地址:[certificateImageUrl]不能为空");
                 }
                 certificService.createQualificationCertific(certificDto);
             }
@@ -88,7 +88,7 @@ public class QualificationCertificController {
     @DeleteMapping("/deleteQualificationCertificById/{id}")
     public BaseResponse deleteById(@PathVariable Integer id) {
         if (this.certificMapper.selectByPrimaryKey(id) == null) {
-            return BaseResponse.errorInstance("查询不到相应数据");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到相应数据");
         }
         return BaseResponse.service(this.certificService.disableQualificationCertific(id));
     }
@@ -175,12 +175,12 @@ public class QualificationCertificController {
     @ApiImplicitParam(name = "customerId", value = "客户id", required = true, dataType = "Integer", paramType = "path")
     public BaseResponse getQalfcationByCustmIdAuto(@PathVariable Integer customerId) {
         if (this.customerMapper.selectByPrimaryKey(customerId) == null) {
-            return BaseResponse.errorInstance("客户不存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户不存在");
         }
         //判断客户是否有资质证
         List<CustomerQualificationReturnDto> returnDtos = this.certificMapper.getByCustomerQualificationId(customerId);
         if (returnDtos.size() < 1) {
-            return BaseResponse.errorInstance("客户未上传资质证");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户未上传资质证");
         }
         ListCustomerQualificationCriteriaDto dto = new ListCustomerQualificationCriteriaDto();
         dto.setCustomerId(customerId);
@@ -207,7 +207,7 @@ public class QualificationCertificController {
     public BaseResponse getQalfcationById(@PathVariable Integer id) {
         CustomerQualification qualification = this.certificMapper.selectByPrimaryKey(id);
         if (qualification == null) {
-            return BaseResponse.errorInstance("资质不存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质不存在");
         }
         return BaseResponse.service(certificService.getDetailById(id));
     }
@@ -222,13 +222,13 @@ public class QualificationCertificController {
     @PostMapping("/checkQualification")
     public BaseResponse checkQualification(@RequestBody UpdateCustomerQualificationDto dto) {
         if (this.certificMapper.selectByPrimaryKey(dto.getId()) == null) {
-            return BaseResponse.errorInstance("资质证件照不存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质证件照不存在");
         }
         //审核记录
         CreateQualificationVerifyLogDto logDto = new CreateQualificationVerifyLogDto();
         if (dto.getCertificateStatus() != 1) {
             if (dto.getDescription() == null) {
-                return BaseResponse.errorInstance("审核不通过时描述信息不能为空");
+                return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "审核不通过时描述信息不能为空");
             }
             logDto.setDescription(dto.getDescription());
         }

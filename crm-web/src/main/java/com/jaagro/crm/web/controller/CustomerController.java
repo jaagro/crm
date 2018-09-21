@@ -1,10 +1,15 @@
 package com.jaagro.crm.web.controller;
 
 import com.jaagro.crm.api.dto.request.customer.*;
-import com.jaagro.crm.api.service.*;
+import com.jaagro.crm.api.service.CustomerContactsService;
+import com.jaagro.crm.api.service.CustomerService;
 import com.jaagro.crm.biz.entity.Customer;
-import com.jaagro.crm.biz.mapper.*;
+import com.jaagro.crm.biz.mapper.CustomerContactsMapperExt;
+import com.jaagro.crm.biz.mapper.CustomerContractMapperExt;
+import com.jaagro.crm.biz.mapper.CustomerMapperExt;
+import com.jaagro.crm.biz.mapper.CustomerQualificationMapperExt;
 import com.jaagro.utils.BaseResponse;
+import com.jaagro.utils.ResponseStatusCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import jdk.nashorn.internal.ir.annotations.Ignore;
@@ -48,10 +53,10 @@ public class CustomerController {
     @PostMapping("/customer")
     public BaseResponse insertCustomer(@RequestBody CreateCustomerDto customer) {
         if (customer.getCustomerType() == null) {
-            return BaseResponse.errorInstance("客户类型:[customerType]不能为空");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户类型:[customerType]不能为空");
         }
         if (customer.getCustomerName() == null) {
-            return BaseResponse.errorInstance("客户名称:[customerName]不能为空");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户名称:[customerName]不能为空");
         }
         //先注释，最后商议
        /* if (customer.getLatitude() == null) {
@@ -75,7 +80,7 @@ public class CustomerController {
     @DeleteMapping("/deleteCustomerById/{id}")
     public BaseResponse deleteById(@PathVariable Integer id) {
         if (this.customerMapper.selectByPrimaryKey(id) == null) {
-            return BaseResponse.errorInstance("查询不到相应数据");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到相应数据");
         }
         return BaseResponse.service(this.customerService.disableCustomer(id));
     }
@@ -90,7 +95,7 @@ public class CustomerController {
     @PutMapping("/customer")
     public BaseResponse updateCustomer(@RequestBody UpdateCustomerDto customer) {
         if (this.customerMapper.selectByPrimaryKey(customer.getId()) == null) {
-            return BaseResponse.errorInstance("客户不存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户不存在");
         }
         return BaseResponse.service(customerService.updateById(customer));
     }
@@ -105,7 +110,7 @@ public class CustomerController {
     @GetMapping("/customer/{id}")
     public BaseResponse getById(@PathVariable Integer id) {
         if (this.customerMapper.selectByPrimaryKey(id) == null) {
-            return BaseResponse.errorInstance("客户不存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户不存在");
         }
         Map<String, Object> result = customerService.getById(id);
         return BaseResponse.service(result);
@@ -149,17 +154,17 @@ public class CustomerController {
         if (contractDtos != null && contractDtos.size() > 0) {
             for (CreateCustomerContactsDto contractDto : contractDtos) {
                 if (StringUtils.isEmpty(contractDto.getCustomerId())) {
-                    return BaseResponse.errorInstance("联系人客户id不能为空");
+                    return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "联系人客户id不能为空");
                 }
                 Customer customer = this.customerMapper.selectByPrimaryKey(contractDto.getCustomerId());
                 if (customer == null) {
-                    return BaseResponse.errorInstance("客户不存在");
+                    return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户不存在");
                 }
                 if (StringUtils.isEmpty(contractDto.getPhone())) {
-                    return BaseResponse.errorInstance("联系人电话不能为空");
+                    return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "联系人电话不能为空");
                 }
                 if (StringUtils.isEmpty(contractDto.getContact())) {
-                    return BaseResponse.errorInstance("联系人姓名不能为空");
+                    return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "联系人姓名不能为空");
                 }
             }
         }
@@ -194,7 +199,7 @@ public class CustomerController {
     @GetMapping("/deleteCustomerContactsById/{id}")
     public BaseResponse disableCustomerContacts(@PathVariable Integer id) {
         if (this.customerContactsMapper.selectByPrimaryKey(id) == null) {
-            return BaseResponse.errorInstance("查询不到相应数据");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到相应数据");
         }
         return BaseResponse.service(this.customerContactsService.disableCustomerContacts(id));
     }
@@ -209,7 +214,7 @@ public class CustomerController {
     @GetMapping("/listContactsByCustomerId/{customerId}")
     public BaseResponse listCustomerContactsByCustomerId(@PathVariable Integer customerId) {
         if (this.customerMapper.selectByPrimaryKey(customerId) == null) {
-            return BaseResponse.errorInstance("客户不存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户不存在");
         }
         return BaseResponse.successInstance(this.customerContactsMapper.listByCustomerId(customerId));
     }
@@ -224,7 +229,7 @@ public class CustomerController {
     @GetMapping("/getContactsById/{id}")
     public BaseResponse getContactsById(@PathVariable Integer id) {
         if (this.customerContactsMapper.selectByPrimaryKey(id) == null) {
-            return BaseResponse.errorInstance("客户联系人不存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户联系人不存在");
         }
         return BaseResponse.successInstance(this.customerContactsMapper.selectByPrimaryKey(id));
     }
