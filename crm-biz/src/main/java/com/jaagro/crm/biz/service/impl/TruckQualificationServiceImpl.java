@@ -49,7 +49,7 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> createTruckQualification(CreateListTruckQualificationDto dto) {
-        if (dto.getQualification().size() < 1) {
+        if (dto.getQualification() == null) {
             throw new NullPointerException("资质列表为空");
         }
         for (UpdateTruckQualificationDto qualification : dto.getQualification()) {
@@ -69,8 +69,7 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
     @Override
     public Map<String, Object> updateQualification(List<UpdateTruckQualificationDto> dto) {
         if (dto != null && dto.size() > 0) {
-            for (UpdateTruckQualificationDto truckQualificationDto : dto
-            ) {
+            for (UpdateTruckQualificationDto truckQualificationDto : dto) {
                 if (StringUtils.isEmpty(truckQualificationDto.getId())) {
                     return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "id不能为空");
                 }

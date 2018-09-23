@@ -41,4 +41,9 @@ public class UpdateTruckQualificationDto implements Serializable {
      */
     private String description;
 
+    /**
+     * 描述信息
+     */
+    private String notes;
+
 }

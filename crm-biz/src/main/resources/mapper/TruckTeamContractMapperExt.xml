@@ -42,7 +42,7 @@
         select
         <include refid="Base_Column_List"/>
         from truck_team_contract
-        where 1=1
+        where contract_status != 3
         <if test="truckTeamId != null">
             and truck_team_id = #{truckTeamId}
         </if>

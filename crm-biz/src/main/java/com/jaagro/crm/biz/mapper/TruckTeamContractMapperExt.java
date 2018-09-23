@@ -4,6 +4,7 @@ package com.jaagro.crm.biz.mapper;
 import com.jaagro.crm.api.dto.request.truck.ListTruckTeamContractCriteriaDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTeamContractDto;
 import com.jaagro.crm.api.dto.response.truck.TruckTeamContractReturnDto;
+import com.jaagro.crm.biz.entity.TruckTeamContract;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -40,5 +41,5 @@ public interface TruckTeamContractMapperExt extends TruckTeamContractMapper{
      * @param contractNumber
      * @return
      */
-    TruckTeamContractReturnDto getByContractNumber(@Param("contractNumber") String contractNumber);
+    TruckTeamContract getByContractNumber(@Param("contractNumber") String contractNumber);
 }
