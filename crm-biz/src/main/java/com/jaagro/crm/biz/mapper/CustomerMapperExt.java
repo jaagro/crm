@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * @author gavin
  */
-public interface CustomerMapperExt extends CustomerMapper{
+public interface CustomerMapperExt extends CustomerMapper {
 
     /**
      * 查询单个客户Dto
@@ -49,8 +49,16 @@ public interface CustomerMapperExt extends CustomerMapper{
 
     /**
      * 客户显示对象
+     *
      * @param id
      * @return
      */
     ShowCustomerDto getShowCustomerById(Integer id);
+
+    /**
+     * 获得全部的客户
+     *
+     * @return
+     */
+    List<ShowCustomerDto> getAllCustomer();
 }
