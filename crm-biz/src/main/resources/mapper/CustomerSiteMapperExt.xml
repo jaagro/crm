@@ -5,6 +5,10 @@
     <resultMap id="ReturnMap" type="com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="dept_id" property="deptId" jdbcType="INTEGER"/>
+        <result column="farms_type" jdbcType="INTEGER" property="farmsType"/>
+        <result column="operation_time" jdbcType="INTEGER" property="operationTime"/>
+        <result column="kill_chain" jdbcType="INTEGER" property="killChain"/>
+        <result column="kill_time" jdbcType="TIMESTAMP" property="killTime"/>
         <result column="site_type" property="siteType" jdbcType="INTEGER"/>
         <result column="customer_id" property="customerId" jdbcType="INTEGER"/>
         <result column="site_name" property="siteName" jdbcType="VARCHAR"/>

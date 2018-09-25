@@ -5,6 +5,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @author baiyiran
@@ -29,6 +30,26 @@ public class CreateCustomerSiteDto implements Serializable {
      * 归属网点
      */
     private Integer deptId;
+
+    /**
+     * 养殖场类型（装货地属性）：1-平养场 2-网养场 3-笼养场
+     */
+    private Integer farmsType;
+
+    /**
+     * 作业时间（装货地属性）
+     */
+    private Integer operationTime;
+
+    /**
+     * 屠宰链数(卸货地属性)
+     */
+    private Integer killChain;
+
+    /**
+     * 开始屠宰时间（卸货地属性）
+     */
+    private Date killTime;
 
     /**
      * 装货地名称
