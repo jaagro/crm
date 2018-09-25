@@ -1,10 +1,6 @@
 package com.jaagro.crm.biz.mapper;
 
-import com.jaagro.crm.api.dto.request.contract.ListContractQualificationCriteriaDto;
-import com.jaagro.crm.api.dto.response.contract.ReturnCheckContractQualificationDto;
 import com.jaagro.crm.biz.entity.ContractQualification;
-
-import java.util.List;
 
 /**
  * @author baiyiran
