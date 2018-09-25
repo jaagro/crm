@@ -320,7 +320,7 @@ public class TruckServiceImpl implements TruckService {
      * @Author gavin
      */
     @Override
-    public List<ListTruckWithDriversDto> listTrucksWithDrivers(ListTruckCriteriaDto criteriaDto) {
+    public Map<String, Object> listTrucksWithDrivers(ListTruckCriteriaDto criteriaDto) {
         List<ListTruckWithDriversDto> result = new ArrayList<>();
         PageHelper.startPage(criteriaDto.getPageNum(), criteriaDto.getPageSize());
         List<ListTruckDto> truckList = truckMapper.listTruckByCriteria(criteriaDto);
@@ -333,7 +333,7 @@ public class TruckServiceImpl implements TruckService {
                 result.add(truckWithDriversDto);
             }
         }
-        return result;
+        return ServiceResult.toResult(new PageInfo<>(result));
     }
 
     /**
