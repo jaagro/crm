@@ -98,6 +98,11 @@ public final class CertificateType {
     public static final Integer CONTTRACT_PRICE = 18;
 
     /**
+     * 道路运输许可证
+     */
+    public static final Integer TRANSPORT_ROUTIER = 19;
+
+    /**
      * 其他
      */
     public static final Integer ELSE = 80;
