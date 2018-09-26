@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author tony
@@ -55,5 +56,9 @@ public class ListTruckDto implements Serializable {
      * 备注信息
      */
     private Integer truckStatus;
+    /**
+     * 司机列表
+     */
+    private List<DriverReturnDto> drivers;
 
 }

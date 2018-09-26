@@ -321,19 +321,19 @@ public class TruckServiceImpl implements TruckService {
      */
     @Override
     public Map<String, Object> listTrucksWithDrivers(ListTruckCriteriaDto criteriaDto) {
-        List<ListTruckWithDriversDto> result = new ArrayList<>();
         PageHelper.startPage(criteriaDto.getPageNum(), criteriaDto.getPageSize());
         List<ListTruckDto> truckList = truckMapper.listTruckByCriteria(criteriaDto);
+
+        if (truckList == null || truckList.size() == 0) {
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查无数据");
+        }
         if (!CollectionUtils.isEmpty(truckList)) {
             for (ListTruckDto listTruckDto : truckList) {
-                ListTruckWithDriversDto truckWithDriversDto = new ListTruckWithDriversDto();
                 List<DriverReturnDto> drivers = driverClientService.listByTruckId(listTruckDto.getTruckId());
-                truckWithDriversDto.setListTruckDto(listTruckDto);
-                truckWithDriversDto.setDrivers(drivers);
-                result.add(truckWithDriversDto);
+                listTruckDto.setDrivers(drivers);
             }
         }
-        return ServiceResult.toResult(new PageInfo<>(result));
+        return ServiceResult.toResult(new PageInfo<>(truckList));
     }
 
     /**
