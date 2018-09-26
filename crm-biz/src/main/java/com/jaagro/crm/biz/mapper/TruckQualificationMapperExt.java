@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author gavin
  */
-public interface TruckQualificationMapperExt extends TruckQualificationMapper{
+public interface TruckQualificationMapperExt extends TruckQualificationMapper {
 
     /**
      * 查询待审核的运力资质列表
@@ -45,4 +45,11 @@ public interface TruckQualificationMapperExt extends TruckQualificationMapper{
      * @return
      */
     ReturnTruckQualificationDto getById(Integer id);
+
+    /**
+     * @param revalanceId
+     * @param type        -- 1:个体车队 2:公司车队 3:车辆 4:司机
+     * @return
+     */
+    Integer listCheckedByIdAndType(@Param("revalanceId") Integer revalanceId, @Param("type") Integer type);
 }
