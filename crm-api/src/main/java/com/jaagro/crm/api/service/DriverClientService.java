@@ -59,4 +59,14 @@ public interface DriverClientService {
      */
     @PostMapping("/updateDriverFeign")
     BaseResponse updateDriverFeign(@RequestBody UpdateDriverDto driver);
+
+    /**
+     * 通过司机id修改为审核通过
+     *
+     * @param driverId
+     * @return
+     */
+    @PostMapping("/updateDriverStatusFeign/{driverId}")
+    BaseResponse updateDriverStatusFeign(@PathVariable("driverId") Integer driverId);
+
 }

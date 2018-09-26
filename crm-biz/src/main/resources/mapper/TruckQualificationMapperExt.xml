@@ -25,7 +25,8 @@
         <result column="certificate_status" property="certificateStatus" jdbcType="INTEGER"/>
         <result column="notes" property="notes" jdbcType="VARCHAR"/>
     </resultMap>
-    <select id="listByCriteria" resultMap="ReturnCheckMap" parameterType="com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto">
+    <select id="listByCriteria" resultMap="ReturnCheckMap"
+            parameterType="com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto">
         select
         <include refid="Base_Column_List"/>
         from truck_qualification
@@ -85,5 +86,29 @@
         where enabled = 1
         and id = #{id}
         and certificate_status in (0,2)
+    </select>
+    <select id="listCheckedByIdAndType" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select
+        count(1)
+        from truck_qualification
+        where enabled = 1
+        and id = #{revalanceId}
+        <!--个人车队-->
+        <if test="type == 1">
+            and certificate_type in (7,8,12)
+        </if>
+        <!--公司车队-->
+        <if test="type == 2">
+            and certificate_type in (1,19)
+        </if>
+        <!--车辆-->
+        <if test="type == 3">
+            and certificate_type in (2,3,4,5,6)
+        </if>
+        <!--司机-->
+        <if test="type == 4">
+            and certificate_type in (7,8,9,11)
+        </if>
+        and certificate_status = 1
     </select>
 </mapper>
