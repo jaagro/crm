@@ -107,7 +107,7 @@
         </if>
         <!--司机-->
         <if test="type == 4">
-            and certificate_type in (7,8,9,11)
+            and certificate_type in (7,8,9,10,11)
         </if>
         and certificate_status = 1
     </select>
