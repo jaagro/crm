@@ -127,12 +127,17 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                     if (driverReturnDto == null) {
                         return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "司机不存在");
                     }
-                    if (truckQualification.getCertificateType().equals(CertificateType.FRONT_ID_CARD) || truckQualification.getCertificateType().equals(CertificateType.BACK_ID_CARD) || truckQualification.getCertificateType().equals(CertificateType.DRIVER_ORIGINAL) || truckQualification.getCertificateType().equals(CertificateType.TRANSPORT_QUALIFICATION)) {
+                    if (truckQualification.getCertificateType().equals(CertificateType.FRONT_ID_CARD) ||
+                            truckQualification.getCertificateType().equals(CertificateType.BACK_ID_CARD) ||
+                            truckQualification.getCertificateType().equals(CertificateType.DRIVER_ORIGINAL) ||
+                            truckQualification.getCertificateType().equals(CertificateType.TRANSPORT_QUALIFICATION) ||
+                            truckQualification.getCertificateType().equals(CertificateType.DRIVER_ORIGINAL)) {
+
                         if (truckQualification.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
                             // type为： 1:个体车队 2:公司车队 3:车辆 4:司机
                             int result = truckQualificationMapper.listCheckedByIdAndType(truckQualification.getDriverId(), 4);
-                            if (result == 4) {
-                                //若司机7、8、9、11身份证正面、身份证反面、驾驶证正面、道路运输从业资格证 审核均通过，则修改司机为审核通过
+                            if (result == 5) {
+                                //若司机7、8、9、10、11身份证正面、身份证反面、驾驶证正面、驾驶证反面、道路运输从业资格证 审核均通过，则修改司机为审核通过
                                 driverClientService.updateDriverStatusFeign(driverReturnDto.getId());
                                 break;
                             }
