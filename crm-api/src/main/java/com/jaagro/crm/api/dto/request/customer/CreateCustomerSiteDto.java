@@ -27,6 +27,11 @@ public class CreateCustomerSiteDto implements Serializable {
     private Integer customerId;
 
     /**
+     * 货物类型
+     */
+    private Integer productType;
+
+    /**
      * 归属网点
      */
     private Integer deptId;
