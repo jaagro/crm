@@ -2,13 +2,14 @@ package com.jaagro.crm.biz.mapper;
 
 
 import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 /**
  * @author gavin
  */
-public interface TruckTypeMapperExt extends TruckTypeMapper{
+public interface TruckTypeMapperExt extends TruckTypeMapper {
     /**
      * 查询单个合同类型
      *
@@ -22,5 +23,5 @@ public interface TruckTypeMapperExt extends TruckTypeMapper{
      *
      * @return
      */
-    List<ListTruckTypeDto> listAll();
+    List<ListTruckTypeDto> listAll(@Param("productName") String productName);
 }
