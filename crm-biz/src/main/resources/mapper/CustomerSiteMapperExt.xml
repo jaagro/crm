@@ -31,7 +31,7 @@
     </resultMap>
 
     <sql id="Show_Column">
-        id, site_type, site_name, contact, phone, province, city, county, address, latitude, longitude,operation_time, kill_chain, kill_time
+        id, site_type, site_name, contact, phone, province, city, county, address, latitude, longitude,operation_time, kill_chain, kill_time,product_Type
     </sql>
 
     <select id="getByCustomerSiteId" resultMap="ReturnMap" parameterType="java.lang.Integer">
