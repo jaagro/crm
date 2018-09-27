@@ -19,6 +19,11 @@ public class ReturnSelectSiteDto implements Serializable {
     private Integer id;
 
     /**
+     * 货物类型
+     */
+    private Integer productType;
+
+    /**
      * 装货地名称
      */
     private String siteName;
