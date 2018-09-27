@@ -299,8 +299,13 @@ public class TruckServiceImpl implements TruckService {
     }
 
     @Override
+    public List<ListTruckTypeDto> listTruckType(String productName) {
+        return truckTypeMapper.listAll(productName);
+    }
+
+    @Override
     public List<ListTruckTypeDto> listTruckType() {
-        return truckTypeMapper.listAll();
+        return truckTypeMapper.listAll(null);
     }
 
     /**

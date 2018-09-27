@@ -12,6 +12,7 @@ import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import feign.FeignException;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,7 +117,13 @@ public class TruckController {
         return BaseResponse.service(truckService.listTruckByCriteria(truckCriteria));
     }
 
-    @ApiOperation("获取全部车型")
+    @ApiOperation("根据拉货类型查询车型列表")
+    @GetMapping("/listTruckType/{productName}")
+    public BaseResponse listTruckTypeByProductName(@PathVariable(value = "productName") String productName) {
+        return BaseResponse.successInstance(truckService.listTruckType(productName));
+    }
+
+    @ApiOperation("查询全部车型列表")
     @GetMapping("/listTruckType")
     public BaseResponse listTruckType() {
         return BaseResponse.successInstance(truckService.listTruckType());
@@ -135,9 +142,9 @@ public class TruckController {
     }
 
     /**
-     * @Author gavin
      * @param criteriaDto
      * @return
+     * @Author gavin
      */
     @ApiOperation("派单指派车辆列表")
     @PostMapping("/listTrucksWithDrivers")
@@ -146,12 +153,12 @@ public class TruckController {
             return BaseResponse.service(truckService.listTrucksWithDrivers(criteriaDto));
         } catch (Exception e) {
             e.printStackTrace();
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询指派车辆失败"+e.getMessage());
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询指派车辆失败" + e.getMessage());
         }
     }
 
     @GetMapping("/getTruckByToken")
-    public GetTruckDto getTruckByToken(){
+    public GetTruckDto getTruckByToken() {
         return truckService.getTruckByToken();
     }
 }
