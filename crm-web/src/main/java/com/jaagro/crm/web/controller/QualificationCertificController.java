@@ -95,7 +95,7 @@ public class QualificationCertificController {
     }
 
     /**
-     * 修改单个资质
+     * 修改资质
      *
      * @param certificDto
      * @return

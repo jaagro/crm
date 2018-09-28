@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author liqiangping
@@ -58,13 +59,23 @@ public class TruckQualificationController {
         if (StringUtils.isEmpty(dto.getQualification())) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "请上传资质");
         }
-        return BaseResponse.service(truckQualificationService.createTruckQualification(dto));
+        try {
+            truckQualificationService.createTruckQualification(dto);
+        } catch (Exception ex) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), ex.getMessage());
+        }
+        return BaseResponse.successInstance("操作成功");
     }
 
     @ApiOperation("修改资质")
     @PutMapping("/truckQualification")
     public BaseResponse update(@RequestBody List<UpdateTruckQualificationDto> dto) {
-        return BaseResponse.service(truckQualificationService.updateQualification(dto));
+        try {
+            truckQualificationService.updateQualification(dto);
+        } catch (Exception ex) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), ex.getMessage());
+        }
+        return BaseResponse.successInstance("操作成功");
     }
 
     @ApiOperation("删除资质")
