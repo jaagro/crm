@@ -111,4 +111,22 @@
         </if>
         and certificate_status = 1
     </select>
+    <select id="listByIdAndType" resultType="java.lang.Integer"
+            parameterType="com.jaagro.crm.biz.entity.TruckQualification">
+        select
+        count(1)
+        from truck_qualification
+        where enabled = 1
+        <if test="truckTeamId != null">
+            and truck_team_id = #{truckTeamId}
+        </if>
+        <if test="truckId != null">
+            and truck_id = #{truckId}
+        </if>
+        <if test="driverId != null">
+            and driver_id = #{driverId}
+        </if>
+        and certificate_type = #{certificateType}
+        and certificate_status != 3
+    </select>
 </mapper>
