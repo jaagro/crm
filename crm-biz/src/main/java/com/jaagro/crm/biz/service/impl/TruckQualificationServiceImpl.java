@@ -60,7 +60,8 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
                 return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "运力资质缺少参数");
             }
             if (truckQualificationMapper.listByIdAndType(truckQualification) > 0) {
-                return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "此运力资质已上传，不允许再上传");
+                log.debug(qualification.getCertificateType() + "此类型的资质已上传，不允许再上传");
+//                return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "此运力资质已上传，不允许再上传");
             }
             truckQualification
                     .setId(null)
