@@ -55,6 +55,9 @@
         <if test="truckStatus != null">
             and truck_status = #{truckStatus}
         </if>
+        <if test="keywords != null">
+            <![CDATA[and (team_name like concat('%',#{keywords},'%') )]]>
+        </if>
         order by create_time desc
     </select>
 </mapper>

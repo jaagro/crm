@@ -13,6 +13,7 @@ import java.io.Serializable;
 public class ListTruckTeamCriteriaDto implements Serializable {
     private Integer pageNum;
     private Integer pageSize;
+    private String keywords;
     private Integer teamType;
     private Integer truckStatus;
 }
