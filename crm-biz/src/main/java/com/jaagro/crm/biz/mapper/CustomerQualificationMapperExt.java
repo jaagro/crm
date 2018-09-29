@@ -3,13 +3,14 @@ package com.jaagro.crm.biz.mapper;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerQualificationCriteriaDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerQualificationReturnDto;
 import com.jaagro.crm.api.dto.response.customer.ReturnQualificationDto;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 /**
  * @author gavin
  */
-public interface CustomerQualificationMapperExt extends CustomerQualificationMapper{
+public interface CustomerQualificationMapperExt extends CustomerQualificationMapper {
 
     /**
      * 查询客户Id查询资质证明
@@ -29,6 +30,7 @@ public interface CustomerQualificationMapperExt extends CustomerQualificationMap
 
     /**
      * 根据客户查询待审核的
+     *
      * @param certificDto
      * @return
      */
@@ -50,5 +52,14 @@ public interface CustomerQualificationMapperExt extends CustomerQualificationMap
      * @return
      */
     ReturnQualificationDto getDetailById(Integer id);
+
+    /**
+     * 查询某客户的某资质是否已存在 (除审核不通过外)
+     *
+     * @param customerId
+     * @param qualificationId
+     * @return
+     */
+    List<CustomerQualificationReturnDto> getByCustomerIdAndId(@Param("customerId") Integer customerId,@Param("certificateType") Integer certificateType);
 
 }

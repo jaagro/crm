@@ -2,6 +2,7 @@ package com.jaagro.crm.biz.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerQualificationDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerQualificationCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerQualificationDto;
@@ -47,6 +48,14 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
     public Map<String, Object> createQualificationCertific(CreateCustomerQualificationDto certificDto) {
         CustomerQualification qc = new CustomerQualification();
         BeanUtils.copyProperties(certificDto, qc);
+        if (StringUtils.isEmpty(qc.getCustomerId()) || StringUtils.isEmpty(qc.getCertificateType())) {
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户id和资质证件照类型不能为空");
+        }
+        //新增前判断是否此资质已新增过
+        List<CustomerQualificationReturnDto> returnDtos = certificMapper.getByCustomerIdAndId(qc.getCustomerId(), qc.getCertificateType());
+        if (returnDtos.size() > 0) {
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "此客户的资质已上传，不允许再上传");
+        }
         qc
                 .setCreateUserId(userService.getCurrentUser().getId());
         this.certificMapper.insertSelective(qc);
@@ -89,23 +98,50 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
                 if (certificDto.getId() == null) {
                     return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "证件id不能为空");
                 }
-                if (this.certificMapper.selectByPrimaryKey(certificDto.getId()) == null) {
+                CustomerQualification qualification = this.certificMapper.selectByPrimaryKey(certificDto.getId());
+                if (qualification == null) {
                     return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "证件[id=" + certificDto.getId() + "]不存在");
-                }
-                //若url为空，则先删除
-                if (StringUtils.isEmpty(certificDto.getCertificateImageUrl())) {
-                    this.certificMapper.deleteByPrimaryKey(certificDto.getId());
-                    CustomerQualification qc = new CustomerQualification();
-                    BeanUtils.copyProperties(certificDto, qc);
-                    qc.setCreateUserId(userService.getCurrentUser().getId());
-                    this.certificMapper.insertSelective(qc);
                 }
                 CustomerQualification qc = new CustomerQualification();
                 BeanUtils.copyProperties(certificDto, qc);
                 qc
                         .setModifyUserId(userService.getCurrentUser().getId())
                         .setModifyTime(new Date());
-                this.certificMapper.updateByPrimaryKeySelective(qc);
+                /**
+                 * 修改前判断是否已审核过
+                 */
+                // 已审核通过
+                if (qualification.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
+                    return ServiceResult.toResult("已审核通过的证件照不允许再修改");
+                }
+                // 待审核
+                if (qualification.getCertificateStatus().equals(AuditStatus.UNCHECKED)) {
+                    this.certificMapper.updateByPrimaryKeySelective(qc);
+                    return ServiceResult.toResult("证件照列表修改成功");
+                }
+                // 审核未通过的
+                if (qualification.getCertificateStatus().equals(AuditStatus.AUDIT_FAILED)) {
+                    // 先将审核未通过的资质逻辑删除
+                    qualification
+                            .setEnabled(false)
+                            .setCertificateStatus(AuditStatus.STOP_COOPERATION);
+                    this.certificMapper.updateByPrimaryKeySelective(qualification);
+                    // 把新资质证件照新增
+                    this.certificMapper.insertSelective(qc);
+                    return ServiceResult.toResult("证件照列表修改成功");
+                }
+                // 已删除的
+                if (qualification.getCertificateStatus().equals(AuditStatus.STOP_COOPERATION) || qualification.getEnabled().equals(0)) {
+                    return ServiceResult.toResult("证件照已被删除");
+                }
+               /* //若url为空，则先删除
+                if (StringUtils.isEmpty(certificDto.getCertificateImageUrl())) {
+                    this.certificMapper.deleteByPrimaryKey(certificDto.getId());
+                    CustomerQualification qc = new CustomerQualification();
+                    BeanUtils.copyProperties(certificDto, qc);
+                    qc.setCreateUserId(userService.getCurrentUser().getId());
+                    this.certificMapper.insertSelective(qc);
+                }*/
             }
         }
         return ServiceResult.toResult("证件照列表修改成功");

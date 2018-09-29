@@ -85,4 +85,14 @@
         and certificate_status = 1
         and relevance_type = #{type,jdbcType=INTEGER}
     </select>
+    <select id="getByContractIdAndType" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from contract_qualification
+        where
+        relevance_id = #{relevanceId,jdbcType=INTEGER}
+        and relevance_type =#{relevanceType}
+        and certificate_type =#{certificateType}
+        and certificate_status != 3
+    </select>
 </mapper>
