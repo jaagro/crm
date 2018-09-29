@@ -12,7 +12,6 @@ import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import feign.FeignException;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +24,7 @@ import java.util.Map;
 
 /**
  * @author liqiangping
+ *
  */
 @RestController
 @Api(description = "车辆管理", produces = MediaType.APPLICATION_JSON_VALUE)
