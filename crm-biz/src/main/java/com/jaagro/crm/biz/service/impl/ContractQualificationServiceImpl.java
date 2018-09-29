@@ -14,7 +14,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,6 +43,13 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
     public Map<String, Object> createQuation(CreateContractQualificationDto qualificationDto) {
         ContractQualification qualification = new ContractQualification();
         BeanUtils.copyProperties(qualificationDto, qualification);
+        if (StringUtils.isEmpty(qualification.getRelevanceId()) || StringUtils.isEmpty(qualification.getRelevanceType()) || StringUtils.isEmpty(qualification.getCertificateType())) {
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同资质缺少参数");
+        }
+        List<ContractQualification> qualificationList = qualificationMapper.getByContractIdAndType(qualification.getRelevanceId(), qualification.getRelevanceType(), qualification.getCertificateType());
+        if (qualificationList.size() > 0) {
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "此合同已上传资质，不允许再上传");
+        }
         qualification.setCreateUserId(this.userService.getCurrentUser().getId());
         this.qualificationMapper.insertSelective(qualification);
         return ServiceResult.toResult("新增成功");

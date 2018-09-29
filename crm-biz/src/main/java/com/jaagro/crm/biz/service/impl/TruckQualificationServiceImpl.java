@@ -56,6 +56,12 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
         for (UpdateTruckQualificationDto qualification : dto.getQualification()) {
             TruckQualification truckQualification = new TruckQualification();
             BeanUtils.copyProperties(qualification, truckQualification);
+            if (StringUtils.isEmpty(truckQualification.getCertificateType()) || StringUtils.isEmpty(truckQualification.getCertificateImageUrl()) || StringUtils.isEmpty(truckQualification.getTruckTeamId())) {
+                return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "运力资质缺少参数");
+            }
+            if (truckQualificationMapper.listByIdAndType(truckQualification) > 0) {
+                return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "此运力资质已上传，不允许再上传");
+            }
             truckQualification
                     .setId(null)
                     .setTruckTeamId(dto.getTruckTeamId())
