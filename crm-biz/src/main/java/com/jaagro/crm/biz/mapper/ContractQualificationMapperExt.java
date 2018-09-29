@@ -60,5 +60,13 @@ public interface ContractQualificationMapperExt extends ContractQualificationMap
      * @param relevanceId
      * @return
      */
-    List<ContractQualification> listCheckedByContract(@Param("relevanceId") Integer relevanceId,@Param("type") Integer type);
+    List<ContractQualification> listCheckedByContract(@Param("relevanceId") Integer relevanceId, @Param("type") Integer type);
+
+    /**
+     * 查询某合同的某资质
+     *
+     * @param relevanceId
+     * @return
+     */
+    List<ContractQualification> getByContractIdAndType(@Param("relevanceId") Integer relevanceId, @Param("relevanceType") Integer relevanceType, @Param("certificateType") Integer certificateType);
 }

@@ -3,6 +3,7 @@ package com.jaagro.crm.biz.mapper;
 import com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckQualificationDto;
 import com.jaagro.crm.api.dto.response.truck.ReturnTruckQualificationDto;
+import com.jaagro.crm.biz.entity.TruckQualification;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -52,4 +53,13 @@ public interface TruckQualificationMapperExt extends TruckQualificationMapper {
      * @return
      */
     Integer listCheckedByIdAndType(@Param("revalanceId") Integer revalanceId, @Param("type") Integer type);
+
+    /**
+     * @param revalanceId
+     * @param type        -- 1:个体车队 2:公司车队 3:车辆 4:司机
+     * @return
+     */
+    Integer listByIdAndType(TruckQualification truckQualification);
+
+
 }

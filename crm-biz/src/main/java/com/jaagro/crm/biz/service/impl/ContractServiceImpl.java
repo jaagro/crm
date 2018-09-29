@@ -7,9 +7,11 @@ import com.jaagro.crm.api.dto.request.contract.*;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractPriceDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnContractQualificationDto;
 import com.jaagro.crm.api.service.ContractPriceService;
 import com.jaagro.crm.api.service.ContractQualificationService;
 import com.jaagro.crm.api.service.ContractService;
+import com.jaagro.crm.api.service.OssSignUrlClientService;
 import com.jaagro.crm.biz.entity.Customer;
 import com.jaagro.crm.biz.entity.CustomerContract;
 import com.jaagro.crm.biz.entity.CustomerContractPrice;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +62,8 @@ public class ContractServiceImpl implements ContractService {
     private CustomerMapperExt customerMapper;
     @Autowired
     private ContractQualificationService contractQualificationService;
+    @Autowired
+    private OssSignUrlClientService ossSignUrlClientService;
 
     /**
      * 创建合同
@@ -248,7 +253,17 @@ public class ContractServiceImpl implements ContractService {
         if (customerContractMapper.selectByPrimaryKey(contractId) == null) {
             return ServiceResult.error(ResponseStatusCode.ID_VALUE_ERROR.getCode(), "id: " + contractId + "不存在");
         }
-        return ServiceResult.toResult(customerContractMapper.getById(contractId));
+        ReturnContractDto contractDto = customerContractMapper.getById(contractId);
+        if (contractDto.getQualifications().size() > 0) {
+            for (ReturnContractQualificationDto contractQualificationDto : contractDto.getQualifications()
+            ) {
+                //替换资质证照地址
+                String[] strArray = {contractQualificationDto.getCertificateImageUrl()};
+                List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+                contractQualificationDto.setCertificateImageUrl(urlList.get(0).toString());
+            }
+        }
+        return ServiceResult.toResult(contractDto);
     }
 
     /**
