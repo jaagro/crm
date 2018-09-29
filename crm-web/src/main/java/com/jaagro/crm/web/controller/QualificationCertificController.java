@@ -73,8 +73,9 @@ public class QualificationCertificController {
                 if (certificDto.getCertificateImageUrl() == null) {
                     return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "证件图片地址:[certificateImageUrl]不能为空");
                 }
-                return BaseResponse.service(certificService.createQualificationCertific(certificDto));
+                certificService.createQualificationCertific(certificDto);
             }
+            return BaseResponse.successInstance("上传成功");
         }
         return BaseResponse.errorInstance("创建失败");
     }
