@@ -320,9 +320,8 @@ public class TruckServiceImpl implements TruckService {
     public Map<String, Object> listTrucksWithDrivers(ListTruckCriteriaDto criteriaDto) {
         PageHelper.startPage(criteriaDto.getPageNum(), criteriaDto.getPageSize());
         List<ListTruckDto> truckList = truckMapper.listTruckByCriteria(criteriaDto);
-
         if (truckList == null || truckList.size() == 0) {
-            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查无数据");
+            return ServiceResult.error(ResponseStatusCode.OPERATION_SUCCESS.getCode(), "查无数据");
         }
         if (!CollectionUtils.isEmpty(truckList)) {
             for (ListTruckDto listTruckDto : truckList) {

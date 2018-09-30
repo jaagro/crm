@@ -90,9 +90,4 @@ public class ShowSiteDto implements Serializable {
      * 经度
      */
     private BigDecimal longitude;
-
-    /**
-     * 货物类型:毛鸡、饲料、母猪、公猪、仔猪、生猪
-     */
-    private int productType;
 }
