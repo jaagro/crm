@@ -56,6 +56,12 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
         for (UpdateTruckQualificationDto qualification : dto.getQualification()) {
             TruckQualification truckQualification = new TruckQualification();
             BeanUtils.copyProperties(qualification, truckQualification);
+            truckQualification
+                    .setId(null)
+                    .setTruckTeamId(dto.getTruckTeamId())
+                    .setTruckId(dto.getTruckId())
+                    .setDriverId(dto.getDriverId())
+                    .setCreateUserId(currentUserService.getCurrentUser().getId());
             if (StringUtils.isEmpty(truckQualification.getCertificateType()) || StringUtils.isEmpty(truckQualification.getCertificateImageUrl()) || StringUtils.isEmpty(truckQualification.getTruckTeamId())) {
                 return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "运力资质缺少参数");
             }
@@ -63,12 +69,6 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
                 log.debug(qualification.getCertificateType() + "此类型的资质已上传，不允许再上传");
 //                return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "此运力资质已上传，不允许再上传");
             }
-            truckQualification
-                    .setId(null)
-                    .setTruckTeamId(dto.getTruckTeamId())
-                    .setTruckId(dto.getTruckId())
-                    .setDriverId(dto.getDriverId())
-                    .setCreateUserId(currentUserService.getCurrentUser().getId());
             truckQualificationMapper.insertSelective(truckQualification);
         }
         return ServiceResult.toResult("资质保存成功");
