@@ -129,8 +129,22 @@ public class CustomerController {
     }
 
     /**
+     * 查询全部客户
+     *
+     * @param
+     * @return
+     */
+    @ApiOperation("查询全部客户")
+    @GetMapping("/listAllCustomer")
+    public BaseResponse listAllCustomer() {
+        return BaseResponse.successInstance(this.customerService.listAllCustomer());
+    }
+
+    /**
      * 获取客户显示对象，提供给feign
+     *
      * @param id
+     *
      * @return
      */
     @Ignore

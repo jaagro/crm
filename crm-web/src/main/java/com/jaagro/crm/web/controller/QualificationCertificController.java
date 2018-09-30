@@ -75,8 +75,9 @@ public class QualificationCertificController {
                 }
                 certificService.createQualificationCertific(certificDto);
             }
+            return BaseResponse.successInstance("上传成功");
         }
-        return BaseResponse.successInstance("创建成功");
+        return BaseResponse.errorInstance("创建失败");
     }
 
     /**
@@ -95,7 +96,7 @@ public class QualificationCertificController {
     }
 
     /**
-     * 修改单个资质
+     * 修改资质
      *
      * @param certificDto
      * @return

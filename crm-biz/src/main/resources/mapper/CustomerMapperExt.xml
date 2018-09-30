@@ -109,4 +109,10 @@
         from customer
         where id = #{id,jdbcType=INTEGER}
     </select>
+    <select id="getAllCustomer" resultType="com.jaagro.crm.api.dto.request.customer.ShowCustomerDto">
+        select
+        <include refid="show_column"></include>
+        from customer
+        where customer_status != 3
+    </select>
 </mapper>

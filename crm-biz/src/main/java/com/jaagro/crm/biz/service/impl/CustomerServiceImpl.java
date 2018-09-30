@@ -195,4 +195,9 @@ public class CustomerServiceImpl implements CustomerService {
     public ShowCustomerDto getShowCustomerById(Integer id) {
         return customerMapper.getShowCustomerById(id);
     }
+
+    @Override
+    public List<ShowCustomerDto> listAllCustomer() {
+        return customerMapper.getAllCustomer();
+    }
 }

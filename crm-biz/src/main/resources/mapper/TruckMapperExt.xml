@@ -115,7 +115,7 @@
             and m.truck_team_id = #{truckTeamId}
         </if>
         <if test="truckNumber != null">
-            and t.truck_number = #{truckNumber}
+            <![CDATA[and (t.truck_number like concat('%',#{truckNumber},'%') )]]>
         </if>
         <if test="teamType != null">
             and m.team_type = #{teamType}

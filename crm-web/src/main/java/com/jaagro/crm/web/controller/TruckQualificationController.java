@@ -3,7 +3,6 @@ package com.jaagro.crm.web.controller;
 import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.dto.request.customer.CreateQualificationVerifyLogDto;
 import com.jaagro.crm.api.dto.request.truck.CreateListTruckQualificationDto;
-import com.jaagro.crm.api.dto.request.truck.CreateTruckVerifyLogDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckQualificationDto;
 import com.jaagro.crm.api.dto.response.truck.ReturnTruckQualificationDto;
@@ -13,7 +12,6 @@ import com.jaagro.crm.biz.mapper.TruckQualificationMapperExt;
 import com.jaagro.crm.biz.mapper.TruckTeamMapperExt;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
-import com.jaagro.utils.ServiceResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -58,13 +56,23 @@ public class TruckQualificationController {
         if (StringUtils.isEmpty(dto.getQualification())) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "请上传资质");
         }
-        return BaseResponse.service(truckQualificationService.createTruckQualification(dto));
+        try {
+            truckQualificationService.createTruckQualification(dto);
+        } catch (Exception ex) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), ex.getMessage());
+        }
+        return BaseResponse.successInstance("操作成功");
     }
 
     @ApiOperation("修改资质")
     @PutMapping("/truckQualification")
     public BaseResponse update(@RequestBody List<UpdateTruckQualificationDto> dto) {
-        return BaseResponse.service(truckQualificationService.updateQualification(dto));
+        try {
+            truckQualificationService.updateQualification(dto);
+        } catch (Exception ex) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), ex.getMessage());
+        }
+        return BaseResponse.successInstance("操作成功");
     }
 
     @ApiOperation("删除资质")

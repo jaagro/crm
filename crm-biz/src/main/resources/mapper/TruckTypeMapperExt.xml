@@ -17,10 +17,13 @@
         from truck_type
         where id = #{id,jdbcType=INTEGER}
     </select>
-    <select id="listAll" resultMap="DetailInfo" >
+    <select id="listAll" resultMap="DetailInfo" parameterType="java.lang.String">
         select
         <include refid="Base_Column_List"/>
         from truck_type
         where enabled = 1
+        <if test="productName != null">
+            and product_name = #{productName}
+        </if>
     </select>
 </mapper>

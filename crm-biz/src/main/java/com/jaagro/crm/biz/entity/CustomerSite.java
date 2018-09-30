@@ -3,13 +3,15 @@ package com.jaagro.crm.biz.entity;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+/**
+ * @author baiyiran
+ */
 @Data
 @Accessors(chain = true)
-public class CustomerSite implements Serializable {
+public class CustomerSite {
     /**
      * 客户发货ID
      */
@@ -25,6 +27,11 @@ public class CustomerSite implements Serializable {
      * 1-装货点，2-卸货点
      */
     private Integer siteType;
+
+    /**
+     * 货物类型
+     */
+    private Integer productType;
 
     /**
      * 外键关联客户ID
@@ -63,7 +70,7 @@ public class CustomerSite implements Serializable {
     private Integer operationTime;
 
     /**
-     * 屠宰链数(卸货地属性)
+     * 屠宰链速(卸货地属性)
      */
     private Integer killChain;
 
