@@ -55,6 +55,9 @@
         <if test="siteType != null">
             and site_type = #{siteType,jdbcType=INTEGER}
         </if>
+        <if test="productType != null">
+            and product_type = #{productType,jdbcType=INTEGER}
+        </if>
         and site_status = 1
         order by create_time desc
     </select>

@@ -9,7 +9,6 @@ import com.jaagro.crm.biz.mapper.CustomerMapperExt;
 import com.jaagro.crm.biz.mapper.CustomerSiteMapperExt;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
-import com.jaagro.utils.ServiceResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import jdk.nashorn.internal.ir.annotations.Ignore;
@@ -106,13 +105,14 @@ public class CustomerSiteController {
     }
 
     @ApiOperation("根据客户查询收发货地址")
-    @GetMapping("/listSiteForSelect/{customerId}/{siteType}")
-    public BaseResponse getById(@PathVariable Integer customerId, @PathVariable Integer siteType) {
+    @GetMapping("/listSiteForSelect/{customerId}/{siteType}/{productType}")
+    public BaseResponse getById(@PathVariable Integer customerId, @PathVariable Integer siteType, @PathVariable Integer productType) {
         if (this.customerMapper.selectByPrimaryKey(customerId) == null) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户不存在");
         }
         ListSiteCriteriaDto criteriaDto = new ListSiteCriteriaDto();
         criteriaDto
+                .setProductType(productType)
                 .setCustomerId(customerId)
                 .setSiteType(siteType);
         return BaseResponse.successInstance(this.siteMapper.listAllSite(criteriaDto));
