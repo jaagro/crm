@@ -106,7 +106,7 @@ public class CustomerSiteController {
 
     @ApiOperation("根据客户查询收发货地址")
     @GetMapping("/listSiteForSelect/{customerId}/{siteType}/{productType}")
-    public BaseResponse getById(@PathVariable Integer customerId, @PathVariable Integer siteType, @PathVariable Integer productType) {
+    public BaseResponse getById(@PathVariable Integer customerId, @PathVariable Integer siteType, @PathVariable(required = false) Integer productType) {
         if (this.customerMapper.selectByPrimaryKey(customerId) == null) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户不存在");
         }
