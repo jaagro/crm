@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jaagro.crm.biz.mapper.TruckQualificationMapperExt">
+
+    <resultMap id="ReturnCheckMap" type="com.jaagro.crm.api.dto.response.truck.ReturnTruckQualificationDto">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER"/>
+        <result column="truck_id" property="truckId" jdbcType="INTEGER"/>
+        <result column="driver_id" property="driverId" jdbcType="INTEGER"/>
+        <result column="certificate_type" property="certificateType" jdbcType="INTEGER"/>
+        <result column="certificate_image_url" property="certificateImageUrl" jdbcType="VARCHAR"/>
+        <result column="certificate_status" property="certificateStatus" jdbcType="INTEGER"/>
+        <result column="notes" property="notes" jdbcType="VARCHAR"/>
+
+        <association property="teamDto" column="truck_team_id"
+                     select="com.jaagro.crm.biz.mapper.TruckTeamMapperExt.getTeamById"/>
+    </resultMap>
+    <resultMap id="ReturnMap" type="com.jaagro.crm.api.dto.response.truck.ListTruckQualificationDto">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="truck_team_id" property="truckTeamId" jdbcType="INTEGER"/>
+        <result column="truck_id" property="truckId" jdbcType="INTEGER"/>
+        <result column="driver_id" property="driverId" jdbcType="INTEGER"/>
+        <result column="certificate_type" property="certificateType" jdbcType="INTEGER"/>
+        <result column="certificate_image_url" property="certificateImageUrl" jdbcType="VARCHAR"/>
+        <result column="certificate_status" property="certificateStatus" jdbcType="INTEGER"/>
+        <result column="notes" property="notes" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="listByCriteria" resultMap="ReturnCheckMap"
+            parameterType="com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto">
+        select
+        <include refid="Base_Column_List"/>
+        from truck_qualification
+        where enabled = 1
+        <if test="truckTeamId != null">
+            and truck_team_id = #{truckTeamId}
+        </if>
+        <if test="certificateStatus != null">
+            and certificate_status = #{certificateStatus}
+        </if>
+        order by create_time desc
+    </select>
+    <select id="listByIds" resultMap="ReturnCheckMap"
+            parameterType="com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto">
+        select
+        <include refid="Base_Column_List"/>
+        from truck_qualification
+        where enabled = 1
+        <if test="truckTeamId != null">
+            and truck_team_id = #{truckTeamId} and truck_id is null and driver_id is null
+        </if>
+        <if test="truckId != null">
+            and truck_id = #{truckId} and driver_id is null
+        </if>
+        <if test="driverId != null">
+            and driver_id = #{driverId}
+        </if>
+        <if test="certificateStatus != null">
+            and certificate_status = #{certificateStatus}
+        </if>
+        <if test="certificateStatus == null">
+            and certificate_status in (0,2)
+        </if>
+        ORDER BY certificate_status
+    </select>
+    <select id="listByTruckId" resultMap="ReturnMap">
+        select
+        <include refid="Base_Column_List"/>
+        from truck_qualification
+        where enabled = 1
+        and truck_id = #{truckId}
+        and driver_id is null
+        order by create_time desc
+    </select>
+    <select id="listByDriverId" resultMap="ReturnMap">
+        select
+        <include refid="Base_Column_List"/>
+        from truck_qualification
+        where enabled = 1
+        and driver_id = #{driverId}
+        order by create_time desc
+    </select>
+    <select id="getById" resultMap="ReturnCheckMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from truck_qualification
+        where enabled = 1
+        and id = #{id}
+        and certificate_status in (0,2)
+    </select>
+    <select id="listCheckedByIdAndType" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select
+        count(1)
+        from truck_qualification
+        where enabled = 1
+        <!--个人车队-->
+        <if test="type == 1">
+            and truck_team_id = #{revalanceId}
+            and certificate_type in (7,8,12)
+        </if>
+        <!--公司车队-->
+        <if test="type == 2">
+            and certificate_type in (1,19)
+            and truck_team_id = #{revalanceId}
+        </if>
+        <!--车辆-->
+        <if test="type == 3">
+            and certificate_type in (2,3,4,5,6)
+            and truck_id = #{revalanceId}
+        </if>
+        <!--司机-->
+        <if test="type == 4">
+            and certificate_type in (7,8,9,10,11)
+            and driver_id = #{revalanceId}
+        </if>
+        and certificate_status = 1
+    </select>
+    <select id="listByIdAndType" resultType="java.lang.Integer"
+            parameterType="com.jaagro.crm.biz.entity.TruckQualification">
+        select
+        count(1)
+        from truck_qualification
+        where enabled = 1
+        <if test="truckTeamId != null">
+            and truck_team_id = #{truckTeamId}
+        </if>
+        <if test="truckId != null">
+            and truck_id = #{truckId}
+        </if>
+        <if test="driverId != null">
+            and driver_id = #{driverId}
+        </if>
+        and certificate_type = #{certificateType}
+        and certificate_status != 3
+    </select>
+</mapper>

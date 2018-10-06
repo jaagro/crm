@@ -38,13 +38,13 @@ public class TruckTeamController {
     @PostMapping("/truckTeam")
     public BaseResponse insertTruckTeam(@RequestBody CreateTruckTeamDto truckTeam) {
         if (StringUtils.isEmpty(truckTeam.getTeamType())) {
-            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队类型不能为空"));
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队类型不能为空");
         }
         if (StringUtils.isEmpty(truckTeam.getTeamName())) {
-            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队名称不能为空"));
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队名称不能为空");
         }
         if (StringUtils.isEmpty(truckTeam.getCreditCode())) {
-            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "creditCode不能为空"));
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "creditCode不能为空");
         }
         return BaseResponse.service(truckTeamService.createTruckTeam(truckTeam));
     }
@@ -90,15 +90,18 @@ public class TruckTeamController {
     }
 
     /**
-     * 分页运力管理列表
+     * 分页车队管理列表
      *
      * @param truckCriteria
      * @return
      */
-    @ApiOperation("分页运力管理列表")
+    @ApiOperation("分页车队管理列表")
     @PostMapping("/listTruckTeamByCriteria")
-    public BaseResponse listTruckTeamByCriteria(@RequestBody ListTruckCriteriaDto truckCriteria) {
-        return BaseResponse.service(truckService.listTruckByCriteria(truckCriteria));
+    public BaseResponse listTruckTeamByCriteria(@RequestBody ListTruckTeamCriteriaDto truckCriteria) {
+        if (StringUtils.isEmpty(truckCriteria.getPageNum()) || StringUtils.isEmpty(truckCriteria.getPageSize())) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "分页查询条件必传");
+        }
+        return BaseResponse.service(truckTeamService.listTruckTeamByCerteria(truckCriteria));
     }
 
 }

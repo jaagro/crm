@@ -20,7 +20,7 @@ public class ListTruckTeamContractDto implements Serializable {
     private Integer id;
 
     /**
-     * 客户名称
+     * 车队名称
      */
     private String truckTeamName;
 

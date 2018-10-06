@@ -63,4 +63,5 @@ public class CreateTruckTeamContractPriceDto implements Serializable {
      * 报价列表
      */
     private List<CreateTruckTeamContractSectionPriceDto> contractSectionPriceDtoList;
+
 }

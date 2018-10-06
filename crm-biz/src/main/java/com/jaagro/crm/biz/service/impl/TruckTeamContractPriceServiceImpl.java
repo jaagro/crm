@@ -6,8 +6,8 @@ import com.jaagro.crm.api.dto.response.truck.TruckTeamContractPriceReturnDto;
 import com.jaagro.crm.api.service.TruckTeamContractPriceService;
 import com.jaagro.crm.api.service.TruckTeamContractSectionPriceService;
 import com.jaagro.crm.biz.entity.TruckTeamContractPrice;
-import com.jaagro.crm.biz.mapper.TruckTeamContractMapper;
-import com.jaagro.crm.biz.mapper.TruckTeamContractPriceMapper;
+import com.jaagro.crm.biz.mapper.TruckTeamContractMapperExt;
+import com.jaagro.crm.biz.mapper.TruckTeamContractPriceMapperExt;
 import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +23,9 @@ import java.util.Map;
 public class TruckTeamContractPriceServiceImpl implements TruckTeamContractPriceService {
 
     @Autowired
-    private TruckTeamContractPriceMapper contractPriceMapper;
+    private TruckTeamContractPriceMapperExt contractPriceMapper;
     @Autowired
-    private TruckTeamContractMapper contractMapper;
+    private TruckTeamContractMapperExt contractMapper;
     @Autowired
     private TruckTeamContractSectionPriceService sectionPriceService;
 

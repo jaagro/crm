@@ -8,12 +8,15 @@ import com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerContactsDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerContactsReturnDto;
 import com.jaagro.crm.api.service.CustomerContactsService;
+import com.jaagro.crm.biz.entity.Customer;
 import com.jaagro.crm.biz.entity.CustomerContacts;
-import com.jaagro.crm.biz.mapper.CustomerContactsMapper;
+import com.jaagro.crm.biz.mapper.CustomerContactsMapperExt;
+import com.jaagro.crm.biz.mapper.CustomerMapperExt;
 import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -25,14 +28,19 @@ import java.util.Map;
 public class CustomerContactsServiceImpl implements CustomerContactsService {
 
     @Autowired
-    private CustomerContactsMapper customerContactsMapper;
+    private CustomerContactsMapperExt customerContactsMapper;
+    @Autowired
+    private CurrentUserService userService;
+    @Autowired
+    private CustomerMapperExt customerMapper;
 
     @Override
     public Map<String, Object> createCustomerContacts(CreateCustomerContactsDto dto) {
         CustomerContacts customerContacts = new CustomerContacts();
         BeanUtils.copyProperties(dto, customerContacts);
         customerContacts
-                .setEnabled(true);
+                .setEnabled(true)
+                .setCreateUserId(this.userService.getCurrentUser().getId());
         customerContactsMapper.insertSelective(customerContacts);
         return ServiceResult.toResult("客户联系人创建成功");
     }
@@ -44,7 +52,8 @@ public class CustomerContactsServiceImpl implements CustomerContactsService {
                 CustomerContacts customerContacts = new CustomerContacts();
                 BeanUtils.copyProperties(dto, customerContacts);
                 customerContacts
-                        .setEnabled(true);
+                        .setEnabled(true)
+                        .setCreateUserId(this.userService.getCurrentUser().getId());
                 customerContactsMapper.insertSelective(customerContacts);
             }
         }
@@ -60,12 +69,29 @@ public class CustomerContactsServiceImpl implements CustomerContactsService {
     }
 
     @Override
-    public Map<String, Object> updateCustomerContacts(List<UpdateCustomerContactsDto> dtos) {
-        if (dtos != null && dtos.size() > 0) {
-            for (UpdateCustomerContactsDto dto : dtos) {
+    public Map<String, Object> updateCustomerContacts(List<UpdateCustomerContactsDto> contractDtos) {
+        if (contractDtos != null && contractDtos.size() > 0) {
+            //删除联系人
+            this.customerContactsMapper.deleteByCustomerId(contractDtos.get(0).getCustomerId());
+            for (UpdateCustomerContactsDto contractDto : contractDtos) {
+                if (StringUtils.isEmpty(contractDto.getCustomerId())) {
+                    return ServiceResult.error("联系人客户id不能为空");
+                }
+                Customer customer = this.customerMapper.selectByPrimaryKey(contractDto.getCustomerId());
+                if (customer == null) {
+                    return ServiceResult.error("客户不存在");
+                }
+                if (StringUtils.isEmpty(contractDto.getPhone())) {
+                    return ServiceResult.error("联系人电话不能为空");
+                }
+                if (StringUtils.isEmpty(contractDto.getContact())) {
+                    return ServiceResult.error("联系人姓名不能为空");
+                }
                 CustomerContacts customerContacts = new CustomerContacts();
-                BeanUtils.copyProperties(dto, customerContacts);
-                customerContactsMapper.updateByPrimaryKeySelective(customerContacts);
+                BeanUtils.copyProperties(contractDto, customerContacts);
+                customerContacts
+                        .setCreateUserId(userService.getCurrentUser().getId());
+                customerContactsMapper.insertSelective(customerContacts);
             }
         }
         return ServiceResult.toResult("客户联系人修改成功");

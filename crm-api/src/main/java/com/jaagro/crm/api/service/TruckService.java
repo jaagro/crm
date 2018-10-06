@@ -14,6 +14,7 @@ import java.util.Map;
 public interface TruckService {
     /**
      * 获取单条车辆
+     *
      * @param truckId
      * @return
      */
@@ -21,6 +22,7 @@ public interface TruckService {
 
     /**
      * 获取单条车辆 返回对象
+     *
      * @param truckId
      * @return
      */
@@ -67,6 +69,13 @@ public interface TruckService {
     Map<String, Object> listTruckByCriteria(ListTruckCriteriaDto criteriaDto);
 
     /**
+     * 根据拉货类型获取车辆类型列表
+     *
+     * @return
+     */
+    List<ListTruckTypeDto> listTruckType(String productName);
+
+    /**
      * 获取车辆类型列表
      *
      * @return
@@ -75,8 +84,25 @@ public interface TruckService {
 
     /**
      * 获取单条车辆类型
+     *
      * @param id
      * @return
      */
-    ListTruckTypeDto  getTruckTypeById(Integer id);
+    ListTruckTypeDto getTruckTypeById(Integer id);
+
+    /**
+     * 指派车辆列表
+     * Author gavin
+     *
+     * @param criteriaDto
+     * @return
+     */
+    Map<String, Object> listTrucksWithDrivers(ListTruckCriteriaDto criteriaDto);
+
+    /**
+     * 通过token获取truck
+     *
+     * @return
+     */
+    GetTruckDto getTruckByToken();
 }

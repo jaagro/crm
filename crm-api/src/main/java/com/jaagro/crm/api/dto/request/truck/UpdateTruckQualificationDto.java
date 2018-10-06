@@ -32,10 +32,18 @@ public class UpdateTruckQualificationDto implements Serializable {
     private Integer certificateStatus;
 
     /**
+     * 不通过原因
+     */
+    private Integer vertifyResult;
+
+    /**
      * 描述信息
      */
     private String description;
 
+    /**
+     * 描述信息
+     */
     private String notes;
 
 }

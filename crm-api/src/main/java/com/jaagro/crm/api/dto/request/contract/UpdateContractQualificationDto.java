@@ -20,12 +20,17 @@ public class UpdateContractQualificationDto implements Serializable {
     /**
      * 关联类型：1-客户合同 2-司机合同
      */
-    private Integer relevance_type;
+    private Integer relevanceType;
 
     /**
      * 证件状态(0-未审核。1-正常 2-审核未通过审核 4-不可用)
      */
     private Integer certificateStatus;
+
+    /**
+     * 不通过原因
+     */
+    private Integer vertifyResult;
 
     /**
      * 描述信息

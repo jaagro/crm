@@ -2,14 +2,17 @@ package com.jaagro.crm.biz.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.dto.request.contract.*;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractPriceDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnContractQualificationDto;
 import com.jaagro.crm.api.service.ContractPriceService;
 import com.jaagro.crm.api.service.ContractQualificationService;
 import com.jaagro.crm.api.service.ContractService;
-import com.jaagro.crm.biz.entity.ContractQualification;
+import com.jaagro.crm.api.service.OssSignUrlClientService;
+import com.jaagro.crm.biz.entity.Customer;
 import com.jaagro.crm.biz.entity.CustomerContract;
 import com.jaagro.crm.biz.entity.CustomerContractPrice;
 import com.jaagro.crm.biz.entity.CustomerContractSectionPrice;
@@ -24,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -39,25 +43,27 @@ public class ContractServiceImpl implements ContractService {
     private static final Logger log = LoggerFactory.getLogger(ContractServiceImpl.class);
 
     @Autowired
-    private CustomerContractMapper customerContractMapper;
+    private CustomerContractMapperExt customerContractMapper;
     @Autowired
-    private CustomerContractPriceMapper customerContractPriceMapper;
+    private CustomerContractPriceMapperExt customerContractPriceMapper;
     @Autowired
-    private CustomerContractSectionPriceMapper customerContractSectionPriceMapper;
+    private CustomerContractSectionPriceMapperExt customerContractSectionPriceMapper;
     @Autowired
-    private CustomerContractLogMapper customerContractLogMapper;
+    private CustomerContractLogMapperExt customerContractLogMapper;
     @Autowired
     private CurrentUserService userService;
     @Autowired
     private ContractPriceService priceService;
     @Autowired
-    private CustomerSiteMapper siteMapper;
+    private CustomerSiteMapperExt siteMapper;
     @Autowired
-    private ContractQualificationMapper contractQualificationMapper;
+    private ContractQualificationMapperExt contractQualificationMapper;
     @Autowired
-    private CustomerMapper customerMapper;
+    private CustomerMapperExt customerMapper;
     @Autowired
     private ContractQualificationService contractQualificationService;
+    @Autowired
+    private OssSignUrlClientService ossSignUrlClientService;
 
     /**
      * 创建合同
@@ -71,7 +77,13 @@ public class ContractServiceImpl implements ContractService {
         //创建contract对象
         CustomerContract customerContract = new CustomerContract();
         BeanUtils.copyProperties(dto, customerContract);
+        UpdateContractDto updateContractDto = new UpdateContractDto();
+        updateContractDto.setContractNumber(customerContract.getContractNumber());
+        if (this.customerContractMapper.getByUpdateDto(updateContractDto) != null) {
+            throw new RuntimeException("合同编号[contractumber]已存在");
+        }
         customerContract
+                .setContractStatus(AuditStatus.UNCHECKED)
                 .setCreateUser(userService.getCurrentUser().getId());
         customerContractMapper.insertSelective(customerContract);
 
@@ -87,6 +99,7 @@ public class ContractServiceImpl implements ContractService {
         return ServiceResult.toResult("合同创建成功");
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> createContract(List<CreateContractDto> dtos, Integer CustomerId) {
         if (dtos != null && dtos.size() > 0) {
@@ -117,6 +130,10 @@ public class ContractServiceImpl implements ContractService {
         // 创建contract对象
         CustomerContract customerContract = new CustomerContract();
         BeanUtils.copyProperties(dto, customerContract);
+
+        if (this.customerContractMapper.getByUpdateDto(dto) != null) {
+            throw new RuntimeException("合同编号[contractumber]已存在");
+        }
         customerContract
                 .setNewUpdateTime(new Date())
                 .setNewUpdateUser(userService.getCurrentUser().getId());
@@ -135,6 +152,7 @@ public class ContractServiceImpl implements ContractService {
         return ServiceResult.toResult("合同修改成功");
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> updateContract(List<UpdateContractDto> dtos) {
         if (dtos != null && dtos.size() > 0) {
@@ -209,7 +227,6 @@ public class ContractServiceImpl implements ContractService {
                     throw new RuntimeException("收货地址:[" + customerContractPrice.getUnloadSiteId() + "]不存在");
                 }
                 customerContractPriceMapper.insertSelective(customerContractPrice);
-                log.info("【客户合同报价新增】------成功\nCustomerContractPrice:" + customerContractPrice.toString());
                 //创建contractSectionPrice对象
                 if (cp.getSectionPrice() != null && cp.getSectionPrice().size() > 0) {
                     for (CreateContractSectionPriceDto cspDto : cp.getSectionPrice()) {
@@ -219,7 +236,6 @@ public class ContractServiceImpl implements ContractService {
                                 .setContractPriceId(customerContractPrice.getId())
                                 .setSelectionStatus(1);
                         customerContractSectionPriceMapper.insertSelective(csp);
-                        log.info("【客户合同阶梯报价新增】------成功\nCustomerContractSectionPrice:" + csp.toString());
                     }
                 }
             }
@@ -237,9 +253,18 @@ public class ContractServiceImpl implements ContractService {
         if (customerContractMapper.selectByPrimaryKey(contractId) == null) {
             return ServiceResult.error(ResponseStatusCode.ID_VALUE_ERROR.getCode(), "id: " + contractId + "不存在");
         }
-        return ServiceResult.toResult(customerContractMapper.getById(contractId));
+        ReturnContractDto contractDto = customerContractMapper.getById(contractId);
+        if (contractDto.getQualifications().size() > 0) {
+            for (ReturnContractQualificationDto contractQualificationDto : contractDto.getQualifications()
+            ) {
+                //替换资质证照地址
+                String[] strArray = {contractQualificationDto.getCertificateImageUrl()};
+                List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+                contractQualificationDto.setCertificateImageUrl(urlList.get(0).toString());
+            }
+        }
+        return ServiceResult.toResult(contractDto);
     }
-
 
     /**
      * 分页查询
@@ -252,7 +277,10 @@ public class ContractServiceImpl implements ContractService {
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
         List<ReturnContractDto> contracts = customerContractMapper.listByPage(dto);
         for (ReturnContractDto contractDto : contracts) {
-            contractDto.setCustomerName(this.customerMapper.selectByPrimaryKey(contractDto.getCustomerId()).getCustomerName());
+            Customer customer = this.customerMapper.selectByPrimaryKey(contractDto.getCustomerId());
+            if (customer != null) {
+                contractDto.setCustomerName(customer.getCustomerName());
+            }
         }
         return ServiceResult.toResult(new PageInfo<>(contracts));
     }
@@ -267,7 +295,6 @@ public class ContractServiceImpl implements ContractService {
         if (contractDto.getPrices() != null && contractDto.getPrices().size() > 0) {
             this.priceService.disableByContractId(customerContract.getId());
         }
-        log.info("【客户合同删除】------成功\nCustomerContract:" + id);
         return ServiceResult.toResult("合同删除成功");
     }
 

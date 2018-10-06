@@ -89,8 +89,18 @@ public interface CustomerSiteService {
 
     /**
      * 获取显示地址对象
+     *
      * @param id
      * @return
      */
     ShowSiteDto getShowSiteById(Integer id);
+
+    /**
+     * 根据地址名称查询
+     *
+     * @param siteName
+     * @param customerId
+     * @return
+     */
+    ShowSiteDto getBySiteName(String siteName, Integer customerId);
 }

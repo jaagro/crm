@@ -27,9 +27,6 @@ public class ListTruckTeamDto implements Serializable {
      */
     private Integer teamType;
 
-    /**
-     * 法人姓名
-     */
     private String legalName;
 
     /**
@@ -71,21 +68,6 @@ public class ListTruckTeamDto implements Serializable {
      * 创建日期
      */
     private Date createTime;
-
-    /**
-     * 修改日期
-     */
-    private Date modifyTime;
-
-    /**
-     * 创建人(关联用户ID)
-     */
-    private Integer createUserId;
-
-    /**
-     * 修改人(关联用户ID)
-     */
-    private Integer modifyUserId;
 
     /**
      * 备注信息

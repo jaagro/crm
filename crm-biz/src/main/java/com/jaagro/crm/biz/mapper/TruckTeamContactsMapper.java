@@ -2,8 +2,6 @@ package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.biz.entity.TruckTeamContacts;
 
-import java.util.List;
-
 public interface TruckTeamContactsMapper {
     /**
      * @mbggenerated 2018-08-23
@@ -35,18 +33,4 @@ public interface TruckTeamContactsMapper {
      */
     int updateByPrimaryKey(TruckTeamContacts record);
 
-    /**
-     * 通过车队id获取联系人
-     *
-     * @param teamId
-     * @return
-     */
-    List<TruckTeamContacts> listTruckTeamContacts(Integer teamId);
-
-    /**
-     * 根据车队id删除
-     *
-     * @param truckTeamId
-     */
-    void deleteByTruckTeamId(Integer truckTeamId);
 }

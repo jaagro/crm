@@ -6,16 +6,18 @@ import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.constant.ContractStatus;
 import com.jaagro.crm.api.dto.request.contract.CreateContractQualificationDto;
 import com.jaagro.crm.api.dto.request.truck.*;
+import com.jaagro.crm.api.dto.response.contract.ReturnContractQualificationDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTeamContractDto;
 import com.jaagro.crm.api.dto.response.truck.TruckTeamContractReturnDto;
 import com.jaagro.crm.api.service.ContractQualificationService;
+import com.jaagro.crm.api.service.OssSignUrlClientService;
 import com.jaagro.crm.api.service.TruckTeamContractPriceService;
 import com.jaagro.crm.api.service.TruckTeamContractService;
 import com.jaagro.crm.biz.entity.TruckTeam;
 import com.jaagro.crm.biz.entity.TruckTeamContract;
-import com.jaagro.crm.biz.mapper.ContractQualificationMapper;
-import com.jaagro.crm.biz.mapper.TruckTeamContractMapper;
-import com.jaagro.crm.biz.mapper.TruckTeamMapper;
+import com.jaagro.crm.biz.mapper.ContractQualificationMapperExt;
+import com.jaagro.crm.biz.mapper.TruckTeamContractMapperExt;
+import com.jaagro.crm.biz.mapper.TruckTeamMapperExt;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
@@ -25,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -38,17 +41,19 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     private static final Logger log = LoggerFactory.getLogger(TruckTeamContractServiceImpl.class);
 
     @Autowired
-    private TruckTeamContractMapper truckTeamContractMapper;
+    private TruckTeamContractMapperExt truckTeamContractMapper;
     @Autowired
     private TruckTeamContractPriceService contractPriceService;
     @Autowired
-    private TruckTeamMapper truckTeamMapper;
+    private TruckTeamMapperExt truckTeamMapper;
     @Autowired
-    private ContractQualificationMapper contractQualificationMapper;
+    private ContractQualificationMapperExt contractQualificationMapper;
     @Autowired
     private CurrentUserService userService;
     @Autowired
     private ContractQualificationService contractQualificationService;
+    @Autowired
+    private OssSignUrlClientService ossSignUrlClientService;
 
     /**
      * 创建车队合同
@@ -77,7 +82,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                 this.contractPriceService.createPrice(truckTeamContractPriceDto);
             }
         }
-        //创建资质证
+        //创建合同资质证
         if (dto.getQualificationDtoList() != null && dto.getQualificationDtoList().size() > 0) {
             for (CreateContractQualificationDto qualificationDto : dto.getQualificationDtoList()) {
                 qualificationDto.setRelevanceId(truckTeamContract.getId());
@@ -95,7 +100,17 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
      */
     @Override
     public Map<String, Object> getById(Integer id) {
-        return ServiceResult.toResult(truckTeamContractMapper.getById(id));
+        TruckTeamContractReturnDto contractReturnDto = truckTeamContractMapper.getById(id);
+        if (contractReturnDto.getQualificationDtoList().size() > 0) {
+            for (ReturnContractQualificationDto qualificationDto : contractReturnDto.getQualificationDtoList()
+            ) {
+                //替换资质证照地址
+                String[] strArray = {qualificationDto.getCertificateImageUrl()};
+                List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+                qualificationDto.setCertificateImageUrl(urlList.get(0).toString());
+            }
+        }
+        return ServiceResult.toResult(contractReturnDto);
     }
 
     /**
@@ -185,10 +200,11 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
         return ServiceResult.toResult(new PageInfo<>(returnDtoList));
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> disableContract(Integer id) {
         if (truckTeamContractMapper.selectByPrimaryKey(id) == null) {
-            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到合同ID");
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到合同");
         }
         TruckTeamContractReturnDto contractReturnDto = truckTeamContractMapper.getById(id);
         if (contractReturnDto != null) {

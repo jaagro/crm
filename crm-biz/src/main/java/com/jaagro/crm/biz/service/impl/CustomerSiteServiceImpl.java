@@ -9,7 +9,7 @@ import com.jaagro.crm.api.dto.request.customer.UpdateCustomerSiteDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto;
 import com.jaagro.crm.api.service.CustomerSiteService;
 import com.jaagro.crm.biz.entity.CustomerSite;
-import com.jaagro.crm.biz.mapper.CustomerSiteMapper;
+import com.jaagro.crm.biz.mapper.CustomerSiteMapperExt;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,7 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
     private static final Logger log = LoggerFactory.getLogger(CustomerSiteServiceImpl.class);
 
     @Autowired
-    private CustomerSiteMapper siteMapper;
+    private CustomerSiteMapperExt siteMapper;
     @Autowired
     private CurrentUserService userService;
 
@@ -40,23 +40,19 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
         CustomerSite site = new CustomerSite();
         BeanUtils.copyProperties(customerSiteDto, site);
         site
-                .setCreateTime(new Date())
-                .setSiteStatus(1)
                 .setCreateUserId(userService.getCurrentUser().getId());
         siteMapper.insertSelective(site);
         return ServiceResult.toResult("地址创建成功");
     }
 
     @Override
-    public Map<String, Object> createSite(List<CreateCustomerSiteDto> customerSiteDtos, Integer CustomerId) {
+    public Map<String, Object> createSite(List<CreateCustomerSiteDto> customerSiteDtos, Integer customerId) {
         if (customerSiteDtos != null && customerSiteDtos.size() > 0) {
             for (CreateCustomerSiteDto customerSiteDto : customerSiteDtos) {
                 CustomerSite site = new CustomerSite();
                 BeanUtils.copyProperties(customerSiteDto, site);
                 site
-                        .setCustomerId(CustomerId)
-                        .setCreateTime(new Date())
-                        .setSiteStatus(1)
+                        .setCustomerId(customerId)
                         .setCreateUserId(userService.getCurrentUser().getId());
                 siteMapper.insertSelective(site);
             }
@@ -140,6 +136,18 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
     @Override
     public ShowSiteDto getShowSiteById(Integer id) {
         return siteMapper.getShowSiteById(id);
+    }
+
+    /**
+     * 根据地址名称查询
+     *
+     * @param siteName
+     * @param customerId
+     * @return
+     */
+    @Override
+    public ShowSiteDto getBySiteName(String siteName, Integer customerId) {
+        return this.siteMapper.getBySiteName(siteName, customerId);
     }
 
 }

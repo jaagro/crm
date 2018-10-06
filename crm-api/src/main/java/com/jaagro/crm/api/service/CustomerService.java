@@ -5,6 +5,7 @@ import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -70,4 +71,9 @@ public interface CustomerService {
      */
     ShowCustomerDto getShowCustomerById(Integer id);
 
+    /**
+     * 获得全部的客户
+     * @return
+     */
+    List<ShowCustomerDto> listAllCustomer();
 }

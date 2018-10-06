@@ -70,7 +70,7 @@ public class CreateContractDto implements Serializable {
     private List<CreateContractPriceDto> price;
 
     /**
-     * 资质证件照
+     * 合同资质证件照
      */
     private List<CreateContractQualificationDto> qualificationDtos;
 }

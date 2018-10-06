@@ -2,14 +2,18 @@ package com.jaagro.crm.web.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.dto.request.contract.*;
 import com.jaagro.crm.api.dto.request.customer.CreateQualificationVerifyLogDto;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnCheckContractQualificationDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
+import com.jaagro.crm.api.dto.response.truck.ListTruckTeamContractDto;
 import com.jaagro.crm.api.dto.response.truck.TruckTeamContractReturnDto;
 import com.jaagro.crm.api.service.*;
 import com.jaagro.crm.biz.entity.ContractQualification;
+import com.jaagro.crm.biz.entity.TruckTeam;
+import com.jaagro.crm.biz.entity.TruckTeamContract;
 import com.jaagro.crm.biz.mapper.*;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
@@ -36,11 +40,11 @@ public class ContractController {
     @Autowired
     private ContractService contractService;
     @Autowired
-    private CustomerContractMapper customerContractMapper;
+    private CustomerContractMapperExt customerContractMapper;
     @Autowired
-    private CustomerMapper customerMapper;
+    private CustomerMapperExt customerMapper;
     @Autowired
-    private ContractQualificationMapper qualificationMapper;
+    private ContractQualificationMapperExt qualificationMapper;
     @Autowired
     private ContractQualificationService contractQualificationService;
     @Autowired
@@ -50,11 +54,13 @@ public class ContractController {
     @Autowired
     private DriverClientService driverClientService;
     @Autowired
-    private TruckTeamMapper teamMapper;
+    private TruckTeamMapperExt teamMapper;
     @Autowired
-    private TruckTeamContractMapper truckTeamContractMapper;
+    private TruckTeamContractMapperExt truckTeamContractMapper;
     @Autowired
     private OssSignUrlClientService ossSignUrlClientService;
+    @Autowired
+    private TruckTeamMapperExt truckTeamMapper;
 
     /**
      * 合同新增
@@ -69,19 +75,19 @@ public class ContractController {
             return BaseResponse.idNull("客户id:[customerId]不能为空");
         }
         if (this.customerMapper.selectByPrimaryKey(dto.getCustomerId()) == null) {
-            return BaseResponse.errorInstance("客户id:[customerId]不存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户id:[customerId]不存在");
         }
         UpdateContractDto updateContractDto = new UpdateContractDto();
         updateContractDto.setContractNumber(dto.getContractNumber());
         if (this.customerContractMapper.getByUpdateDto(updateContractDto) != null) {
-            return BaseResponse.errorInstance("合同编号[contractumber]已存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同编号[contractumber]已存在");
         }
         Map<String, Object> result;
         try {
             result = contractService.createContract(dto);
         } catch (Exception e) {
             e.printStackTrace();
-            return BaseResponse.errorInstance(e.getMessage());
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), e.getMessage());
         }
         return BaseResponse.service(result);
     }
@@ -103,14 +109,14 @@ public class ContractController {
             return BaseResponse.idError("合同客户不能为空");
         }
         if (this.customerContractMapper.getByUpdateDto(dto) != null) {
-            return BaseResponse.errorInstance("合同编号[contractumber]已存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同编号[contractumber]已存在");
         }
         Map<String, Object> result;
         try {
             result = contractService.updateContract(dto);
         } catch (Exception e) {
             e.printStackTrace();
-            return BaseResponse.errorInstance(e.getMessage());
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), e.getMessage());
         }
         return BaseResponse.service(result);
     }
@@ -125,7 +131,7 @@ public class ContractController {
     @GetMapping("/contract/{id}")
     public BaseResponse getById(@PathVariable Integer id) {
         if (this.customerContractMapper.selectByPrimaryKey(id) == null) {
-            return BaseResponse.queryDataEmpty();
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同不存在");
         }
         Map<String, Object> result = contractService.getById(id);
         return BaseResponse.service(result);
@@ -140,9 +146,6 @@ public class ContractController {
     @ApiOperation("分页查询合同")
     @PostMapping("/listContractByCriteria")
     public BaseResponse listByCriteria(@RequestBody ListContractCriteriaDto dto) {
-        if (dto.getCustomerId() == null) {
-            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户id不能为空"));
-        }
         return BaseResponse.service(contractService.listByCriteria(dto));
     }
 
@@ -151,7 +154,7 @@ public class ContractController {
     public BaseResponse listByCustomerId(@PathVariable("customerId") Integer customerId) {
         List<ShowCustomerContractDto> result = contractService.listShowCustomerContractByCustomerId(customerId);
         if (StringUtils.isEmpty(result)) {
-            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查无数据"));
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查无数据");
         }
         return BaseResponse.successInstance(result);
     }
@@ -178,7 +181,7 @@ public class ContractController {
             result = contractQualificationService.updateContractQuaion(dto);
         } catch (Exception e) {
             e.printStackTrace();
-            return BaseResponse.errorInstance(e.getMessage());
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), e.getMessage());
         }
         return BaseResponse.service(result);
     }
@@ -193,7 +196,7 @@ public class ContractController {
     @GetMapping("/disableContractQualification/{id}")
     public BaseResponse disContractQualificationById(@PathVariable Integer id) {
         if (this.qualificationMapper.selectByPrimaryKey(id) == null) {
-            return BaseResponse.errorInstance("查询不到相应信息");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到相应信息");
         }
         return BaseResponse.service(contractQualificationService.disableContractQuaion(id));
     }
@@ -208,7 +211,7 @@ public class ContractController {
     @GetMapping("/deleteContractQualification/{id}")
     public BaseResponse deleteContractQualificationById(@PathVariable Integer id) {
         if (this.qualificationMapper.selectByPrimaryKey(id) == null) {
-            return BaseResponse.errorInstance("查询不到相应信息");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到相应信息");
         }
         int result = qualificationMapper.deleteByPrimaryKey(id);
         if (result > 0) {
@@ -220,16 +223,16 @@ public class ContractController {
     }
 
     /**
-     * 查询单个合同
+     * 查询单个合同资质
      *
      * @param id
      * @return
      */
-    @ApiOperation("查询单个合同")
+    @ApiOperation("查询单个合同资质")
     @GetMapping("/ContractQualification/{id}")
     public BaseResponse getContractQualificationById(@PathVariable Integer id) {
         if (this.customerContractMapper.selectByPrimaryKey(id) == null) {
-            return BaseResponse.errorInstance("查询不到相应信息");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到相应信息");
         }
         ContractQualification qualification = qualificationMapper.selectByPrimaryKey(id);
         return BaseResponse.successInstance(qualification);
@@ -259,7 +262,20 @@ public class ContractController {
     @PostMapping("/listContractQuaByCriteria")
     public BaseResponse listContractQuaByCriteria(@RequestBody ListContractQualificationCriteriaDto dto) {
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
-        return BaseResponse.successInstance(new PageInfo<>(qualificationMapper.listByCriteria(dto)));
+        List<ReturnCheckContractQualificationDto> qualificationDtos = qualificationMapper.listByCriteria(dto);
+        if (qualificationDtos.size() > 0) {
+            for (ReturnCheckContractQualificationDto checkContractQualificationDto : qualificationDtos
+            ) {
+                TruckTeamContractReturnDto contractReturnDto = checkContractQualificationDto.getTruckTeamContractReturnDto();
+                if (contractReturnDto != null) {
+                    TruckTeam truckTeam = this.truckTeamMapper.selectByPrimaryKey(contractReturnDto.getTruckTeamId());
+                    if (truckTeam != null) {
+                        contractReturnDto.setTruckTeamName(truckTeam.getTeamName());
+                    }
+                }
+            }
+        }
+        return BaseResponse.successInstance(new PageInfo<>(qualificationDtos));
     }
 
     /**
@@ -276,23 +292,24 @@ public class ContractController {
          */
         if (relevanceType == 1) {
             if (this.customerMapper.selectByPrimaryKey(relevanceId) == null) {
-                return BaseResponse.errorInstance("客户不存在");
+                return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户不存在");
             }
             //查询此客户是否有合同
             List<ReturnContractDto> contractDtoList = this.customerContractMapper.getByCustomerId(relevanceId);
             if (contractDtoList.size() < 1) {
-                return BaseResponse.errorInstance("客户未上传合同");
+                return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户未上传合同");
             }
         } else {
             /**
              * 车队合同
              */
-            if (this.teamMapper.selectByPrimaryKey(relevanceId) == null) {
-                return BaseResponse.errorInstance("车队不存在");
+            TruckTeamContract teamContract = this.truckTeamContractMapper.selectByPrimaryKey(relevanceId);
+            if (teamContract == null) {
+                return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队合同不存在");
             }
-            List<TruckTeamContractReturnDto> teamContractReturnDtos = this.truckTeamContractMapper.listByTruckTeamId(relevanceId);
+            List<TruckTeamContractReturnDto> teamContractReturnDtos = this.truckTeamContractMapper.listByTruckTeamId(teamContract.getTruckTeamId());
             if (teamContractReturnDtos.size() < 1) {
-                return BaseResponse.errorInstance("车队没有相关合同");
+                return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队没有相关合同");
             }
         }
         ListContractQualificationCriteriaDto dto = new ListContractQualificationCriteriaDto();
@@ -308,9 +325,38 @@ public class ContractController {
             String[] strArray = {checkContractQualificationDto.getCertificateImageUrl()};
             List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
             checkContractQualificationDto.setCertificateImageUrl(urlList.get(0).toString());
+            //填充运力合同信息
+            checkContractQualificationDto.setTruckTeamContractReturnDto(this.truckTeamContractMapper.getById(checkContractQualificationDto.getRelevanceId()));
             return BaseResponse.successInstance(checkContractQualificationDto);
         }
-        return BaseResponse.queryDataEmpty();
+        return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "没有查询到需要审核的资质");
+    }
+
+    /**
+     * 获取待审核合同资质详情[客户&司机]
+     *
+     * @param
+     * @return
+     */
+    @ApiOperation("获取待审核合同资质详情[客户&司机]")
+    @GetMapping("/getContractById/{id}")
+    public BaseResponse getContractById(@PathVariable Integer id) {
+        ContractQualification qualification = qualificationMapper.selectByPrimaryKey(id);
+        if (qualification == null) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同资质查询无此相关数据");
+        }
+        //返回要审核的合同
+        ReturnCheckContractQualificationDto checkContractQualificationDto = this.qualificationMapper.getById(id);
+        if (checkContractQualificationDto != null) {
+            //替换资质证照地址
+            String[] strArray = {checkContractQualificationDto.getCertificateImageUrl()};
+            List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+            checkContractQualificationDto.setCertificateImageUrl(urlList.get(0).toString());
+            //填充运力合同信息
+            checkContractQualificationDto.setTruckTeamContractReturnDto(this.truckTeamContractMapper.getById(checkContractQualificationDto.getRelevanceId()));
+            return BaseResponse.successInstance(checkContractQualificationDto);
+        }
+        return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "没有查询到需要审核的资质");
     }
 
     /**
@@ -323,28 +369,33 @@ public class ContractController {
     @PostMapping("/checkContractQualification")
     public BaseResponse listConQualfctnByContractId(@RequestBody UpdateContractQualificationDto dto) {
         if (dto.getId() == null) {
-            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质id[id]不能为空"));
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质id[id]不能为空");
         }
         if (this.qualificationMapper.selectByPrimaryKey(dto.getId()) == null) {
-            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质不存在"));
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质不存在");
         }
-        if (dto.getRelevance_type() == null) {
-            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质关联类型[RelevanceType]不能为空"));
+        //1-客户合同 2-司机合同
+        if (dto.getRelevanceType() == null) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质关联类型[RelevanceType]不能为空");
         }
         //审核记录
         CreateQualificationVerifyLogDto logDto = new CreateQualificationVerifyLogDto();
-        if (dto.getCertificateStatus() != 1) {
+        if (!dto.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
             if (dto.getDescription() == null) {
-                return BaseResponse.errorInstance("审核不通过时描述信息不能为空");
+                return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "审核不通过时描述信息不能为空");
             }
             logDto.setDescription(dto.getDescription());
         }
         this.contractQualificationService.updateContractQuaion(dto);
         logDto
-                .setVertifyResult(dto.getCertificateStatus())
-                .setReferencesId(dto.getId())
-                // 审核类型（1-客户资质 2- 客户合同 3-运力资质 4-运力合同）
-                .setCertificateType(2);
+                .setVertifyResult(dto.getVertifyResult())
+                .setReferencesId(dto.getId());
+        // 1-客户资质 2-运力资质 3-客户合同 4-运力合同
+        if (dto.getRelevanceType() == 1) {
+            logDto.setCertificateType(3);
+        } else {
+            logDto.setCertificateType(4);
+        }
         return BaseResponse.service(this.logService.createVerifyLog(logDto));
     }
 

@@ -83,6 +83,26 @@ public final class CertificateType {
     public static final Integer FARMHOUSE_OUTSIDE = 15;
 
     /**
+     * 合同首页
+     */
+    public static final Integer CONTTRACT_INDEX = 16;
+
+    /**
+     * 合同盖章页
+     */
+    public static final Integer CONTTRACT_SCEAU = 17;
+
+    /**
+     * 合同价格页
+     */
+    public static final Integer CONTTRACT_PRICE = 18;
+
+    /**
+     * 道路运输许可证
+     */
+    public static final Integer TRANSPORT_ROUTIER = 19;
+
+    /**
      * 其他
      */
     public static final Integer ELSE = 80;

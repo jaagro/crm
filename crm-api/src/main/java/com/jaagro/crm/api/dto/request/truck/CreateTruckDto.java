@@ -102,7 +102,7 @@ public class CreateTruckDto implements Serializable {
     /**
      * 车辆资质列表
      */
-    private List<CreateTruckQualificationDto> truckQualifications;
+    private List<UpdateTruckQualificationDto> truckQualifications;
 
     /**
      * 司机列表

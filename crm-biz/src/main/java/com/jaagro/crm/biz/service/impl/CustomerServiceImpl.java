@@ -6,16 +6,15 @@ import com.jaagro.crm.api.dto.request.customer.CreateCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
-import com.jaagro.crm.api.dto.response.contract.ReturnCheckContractDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerContactsReturnDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerReturnDto;
 import com.jaagro.crm.api.dto.response.customer.ListCustomerDto;
 import com.jaagro.crm.api.service.*;
 import com.jaagro.crm.biz.entity.Customer;
-import com.jaagro.crm.biz.mapper.CustomerContactsMapper;
-import com.jaagro.crm.biz.mapper.CustomerContractMapper;
-import com.jaagro.crm.biz.mapper.CustomerMapper;
-import com.jaagro.crm.biz.mapper.CustomerQualificationMapper;
+import com.jaagro.crm.biz.mapper.CustomerContactsMapperExt;
+import com.jaagro.crm.biz.mapper.CustomerContractMapperExt;
+import com.jaagro.crm.biz.mapper.CustomerMapperExt;
+import com.jaagro.crm.biz.mapper.CustomerQualificationMapperExt;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
@@ -39,7 +38,7 @@ public class CustomerServiceImpl implements CustomerService {
     private static final Logger log = LoggerFactory.getLogger(CustomerServiceImpl.class);
 
     @Autowired
-    private CustomerMapper customerMapper;
+    private CustomerMapperExt customerMapper;
     @Autowired
     private CurrentUserService userService;
     @Autowired
@@ -51,11 +50,11 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private CustomerContactsService customerContactsService;
     @Autowired
-    private CustomerContractMapper contractMapper;
+    private CustomerContractMapperExt contractMapper;
     @Autowired
-    private CustomerQualificationMapper qualificationMapper;
+    private CustomerQualificationMapperExt qualificationMapper;
     @Autowired
-    private CustomerContactsMapper customerContactsMapper;
+    private CustomerContactsMapperExt customerContactsMapper;
 
     /**
      * 创建客户
@@ -195,5 +194,10 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public ShowCustomerDto getShowCustomerById(Integer id) {
         return customerMapper.getShowCustomerById(id);
+    }
+
+    @Override
+    public List<ShowCustomerDto> listAllCustomer() {
+        return customerMapper.getAllCustomer();
     }
 }

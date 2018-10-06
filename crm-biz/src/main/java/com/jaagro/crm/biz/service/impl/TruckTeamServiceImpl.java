@@ -1,12 +1,15 @@
 package com.jaagro.crm.biz.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamDto;
+import com.jaagro.crm.api.dto.request.truck.ListTruckTeamCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTeamDto;
 import com.jaagro.crm.api.service.TruckTeamService;
 import com.jaagro.crm.biz.entity.TruckTeam;
-import com.jaagro.crm.biz.mapper.TruckTeamMapper;
+import com.jaagro.crm.biz.mapper.TruckTeamMapperExt;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
@@ -16,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,7 +31,7 @@ public class TruckTeamServiceImpl implements TruckTeamService {
     private static final Logger log = LoggerFactory.getLogger(TruckTeamServiceImpl.class);
 
     @Autowired
-    private TruckTeamMapper truckTeamMapper;
+    private TruckTeamMapperExt truckTeamMapper;
     @Autowired
     private CurrentUserService currentUserService;
 
@@ -101,6 +105,13 @@ public class TruckTeamServiceImpl implements TruckTeamService {
         }
         truckTeamMapper.deleteByLogic(id);
         return ServiceResult.toResult("删除成功");
+    }
+
+    @Override
+    public Map<String, Object> listTruckTeamByCerteria(ListTruckTeamCriteriaDto truckCriteria) {
+        PageHelper.startPage(truckCriteria.getPageNum(), truckCriteria.getPageSize());
+        List<ListTruckTeamDto> listTruckTeamDtoList = this.truckTeamMapper.listByCeriteria(truckCriteria);
+        return ServiceResult.toResult(new PageInfo<>(listTruckTeamDtoList));
     }
 
 }

@@ -2,20 +2,16 @@ package com.jaagro.crm.biz.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.constant.AuditStatus;
-import com.jaagro.crm.api.dto.request.truck.CreateDriverDto;
-import com.jaagro.crm.api.dto.request.truck.CreateListTruckQualificationDto;
-import com.jaagro.crm.api.dto.request.truck.CreateTruckDto;
-import com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto;
+import com.jaagro.crm.api.dto.request.truck.*;
 import com.jaagro.crm.api.dto.response.truck.*;
-import com.jaagro.crm.api.service.DriverClientService;
-import com.jaagro.crm.api.service.OssSignUrlClientService;
-import com.jaagro.crm.api.service.TruckQualificationService;
-import com.jaagro.crm.api.service.TruckService;
+import com.jaagro.crm.api.service.*;
 import com.jaagro.crm.biz.entity.Truck;
-import com.jaagro.crm.biz.mapper.TruckMapper;
-import com.jaagro.crm.biz.mapper.TruckQualificationMapper;
-import com.jaagro.crm.biz.mapper.TruckTypeMapper;
+import com.jaagro.crm.biz.entity.TruckQualification;
+import com.jaagro.crm.biz.mapper.TruckMapperExt;
+import com.jaagro.crm.biz.mapper.TruckQualificationMapperExt;
+import com.jaagro.crm.biz.mapper.TruckTypeMapperExt;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
@@ -24,9 +20,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +39,7 @@ public class TruckServiceImpl implements TruckService {
     private static final Logger log = LoggerFactory.getLogger(TruckServiceImpl.class);
 
     @Autowired
-    private TruckMapper truckMapper;
+    private TruckMapperExt truckMapper;
     @Autowired
     private DriverClientService driverClientService;
     @Autowired
@@ -48,13 +47,17 @@ public class TruckServiceImpl implements TruckService {
     @Autowired
     private CurrentUserService currentUserService;
     @Autowired
-    private TruckTypeMapper truckTypeMapper;
+    private TruckTypeMapperExt truckTypeMapper;
     @Autowired
-    private TruckQualificationMapper truckQualificationMapper;
+    private TruckQualificationMapperExt truckQualificationMapper;
     @Autowired
     private OssSignUrlClientService ossSignUrlClientService;
+    @Autowired
+    private HttpServletRequest request;
+    @Autowired
+    private UserClientService userClientService;
 
-    private void changeUrl(List<ListTruckQualificationDto> driverQualificationList){
+    private void changeUrl(List<ListTruckQualificationDto> driverQualificationList) {
         for (ListTruckQualificationDto dto : driverQualificationList
         ) {
             //替换资质证照地址
@@ -66,6 +69,7 @@ public class TruckServiceImpl implements TruckService {
 
     /**
      * 获取单条
+     *
      * @param truckId
      * @return
      */
@@ -83,6 +87,7 @@ public class TruckServiceImpl implements TruckService {
         if (result.getQualificationDtoList().size() > 0) {
             changeUrl(result.getQualificationDtoList());
         }
+        //司机列表
         List<DriverReturnDto> drivers = driverClientService.listByTruckId(truckId);
         if (drivers.size() > 0) {
             //填充司机资质证照列表
@@ -119,6 +124,7 @@ public class TruckServiceImpl implements TruckService {
 
     /**
      * 创建车辆对象
+     *
      * @return
      */
     @Override
@@ -152,16 +158,21 @@ public class TruckServiceImpl implements TruckService {
                     log.error("司机新建失败：" + e.getMessage());
                     throw e;
                 }
-
+                if (driverId == 0) {
+                    throw new NullPointerException("新增司机失败，司机id为空");
+                }
                 //司机资质列表
                 if (driverDto.getDriverQualifications() != null && driverDto.getDriverQualifications().size() > 0) {
-                    CreateListTruckQualificationDto listTruckQualification = new CreateListTruckQualificationDto();
-                    listTruckQualification
-                            .setTruckTeamId(truck.getTruckTeamId())
-                            .setTruckId(truck.getId())
-                            .setDriverId(driverId);
-                    listTruckQualification.setQualification(driverDto.getDriverQualifications());
-                    truckQualificationService.createTruckQualification(listTruckQualification);
+                    for (UpdateTruckQualificationDto qualificationDto : driverDto.getDriverQualifications()) {
+                        TruckQualification driverQualification = new TruckQualification();
+                        BeanUtils.copyProperties(qualificationDto, driverQualification);
+                        driverQualification
+                                .setTruckTeamId(truck.getTruckTeamId())
+                                .setTruckId(truck.getId())
+                                .setDriverId(driverId)
+                                .setCreateUserId(currentUserService.getCurrentUser().getId());
+                        truckQualificationMapper.insertSelective(driverQualification);
+                    }
                 }
             }
         }
@@ -176,20 +187,81 @@ public class TruckServiceImpl implements TruckService {
      */
     @Override
     public Map<String, Object> updateTruck(CreateTruckDto truckDto) {
-        if (truckMapper.selectByPrimaryKey(truckDto.getTruckTeamId()) == null) {
+        if (truckMapper.selectByPrimaryKey(truckDto.getId()) == null) {
             return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), truckDto.getId() + " ：id不正确");
         }
+        //车辆
         Truck truck = new Truck();
         BeanUtils.copyProperties(truckDto, truck);
         truck
                 .setModifyUserId(currentUserService.getCurrentUser().getId())
                 .setModifyTime(new Date());
         truckMapper.updateByPrimaryKeySelective(truck);
+        //司机
+        if (truckDto.getDriver() != null && truckDto.getDriver().size() > 0) {
+            for (CreateDriverDto createDriverDto : truckDto.getDriver()
+            ) {
+                Integer driverId = 0;
+                //新增司机
+                if (createDriverDto.getId() == null) {
+                    CreateDriverDto driverDto = new CreateDriverDto();
+                    BeanUtils.copyProperties(createDriverDto, driverDto);
+                    driverDto
+                            .setTruckId(truck.getId())
+                            .setTruckTeamId(truck.getTruckTeamId());
+                    driverId = this.driverClientService.createDriverReturnId(driverDto);
+                    if (driverId < 1) {
+                        throw new RuntimeException("司机创建失败");
+                    }
+                } else {
+                    //修改
+                    UpdateDriverDto updateDriverDto = new UpdateDriverDto();
+                    BeanUtils.copyProperties(createDriverDto, updateDriverDto);
+                    this.driverClientService.updateDriverFeign(updateDriverDto);
+                    driverId = updateDriverDto.getId();
+                }
+                //司机资质
+                if (createDriverDto.getDriverQualifications() != null && createDriverDto.getDriverQualifications().size() > 0) {
+                    for (UpdateTruckQualificationDto truckQualificationDto : createDriverDto.getDriverQualifications()
+                    ) {
+                        // id为null - 新增
+                        if (truckQualificationDto.getId() == null) {
+                            CreateListTruckQualificationDto createListTruckQualificationDto = new CreateListTruckQualificationDto();
+                            createListTruckQualificationDto
+                                    .setTruckId(truck.getId())
+                                    .setTruckTeamId(truck.getTruckTeamId())
+                                    .setDriverId(driverId)
+                                    .setQualification(createDriverDto.getDriverQualifications());
+                            this.truckQualificationService.createTruckQualification(createListTruckQualificationDto);
+                        } else {
+                            //修改
+                            this.truckQualificationService.updateQualificationCertific(truckQualificationDto);
+                        }
+                    }
+                }
+            }
+        }
+        //车辆资质
+        if (truckDto.getTruckQualifications() != null && truckDto.getTruckQualifications().size() > 0) {
+            for (UpdateTruckQualificationDto truckQualificationDto : truckDto.getTruckQualifications()
+            ) {
+                // id为null - 新增
+                if (truckQualificationDto.getId() == null) {
+                    CreateListTruckQualificationDto createListTruckQualificationDto = new CreateListTruckQualificationDto();
+                    BeanUtils.copyProperties(truckQualificationDto, createListTruckQualificationDto);
+                    this.truckQualificationService.createTruckQualification(createListTruckQualificationDto);
+                } else {
+                    //修改
+                    this.truckQualificationService.updateQualificationCertific(truckQualificationDto);
+                }
+            }
+        }
         return ServiceResult.toResult(truckMapper.getTruckById(truckDto.getId()));
     }
 
     /**
      * 删除车辆
+     *
      * @param id
      * @return
      */
@@ -209,35 +281,79 @@ public class TruckServiceImpl implements TruckService {
     @Override
     public Map<String, Object> listTruck(ListTruckCriteriaDto criteria) {
         PageHelper.startPage(criteria.getPageNum(), criteria.getPageSize());
-        List<GetTruckDto> result = truckMapper.listTruckByTeamId(criteria.getTruckTeamId(), criteria.getTruckNumber());
-        if (result == null || result.size() == 0) {
-            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查无数据");
-        }
-        return ServiceResult.toResult(new PageInfo<>(result));
+        return ServiceResult.toResult(new PageInfo<>(truckMapper.listTruckByTeamId(criteria.getTruckTeamId(), criteria.getTruckNumber())));
     }
 
     @Override
     public Map<String, Object> listTruckByCriteria(ListTruckCriteriaDto criteria) {
         PageHelper.startPage(criteria.getPageNum(), criteria.getPageSize());
-        List<ListTruckDto> result = truckMapper.listTruckByCriteria(criteria);
-        if (result == null || result.size() == 0) {
-            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查无数据");
-        }
-        return ServiceResult.toResult(new PageInfo<>(result));
+        return ServiceResult.toResult(new PageInfo<>(truckMapper.listTruckByCriteria(criteria)));
+    }
+
+    @Override
+    public List<ListTruckTypeDto> listTruckType(String productName) {
+        return truckTypeMapper.listAll(productName);
     }
 
     @Override
     public List<ListTruckTypeDto> listTruckType() {
-        return truckTypeMapper.listAll();
+        return truckTypeMapper.listAll(null);
     }
 
     /**
      * 获取单条车辆类型
+     *
      * @param id
      * @return
      */
     @Override
     public ListTruckTypeDto getTruckTypeById(Integer id) {
         return truckTypeMapper.getById(id);
+    }
+
+    /**
+     * @param criteriaDto
+     * @return
+     * @Author gavin
+     */
+    @Override
+    public Map<String, Object> listTrucksWithDrivers(ListTruckCriteriaDto criteriaDto) {
+        PageHelper.startPage(criteriaDto.getPageNum(), criteriaDto.getPageSize());
+        List<ListTruckDto> truckList = truckMapper.listTruckByCriteria(criteriaDto);
+        if (truckList == null || truckList.size() == 0) {
+            return ServiceResult.error(ResponseStatusCode.OPERATION_SUCCESS.getCode(), "查无数据");
+        }
+        if (!CollectionUtils.isEmpty(truckList)) {
+            for (ListTruckDto listTruckDto : truckList) {
+                List<DriverReturnDto> drivers = driverClientService.listByTruckId(listTruckDto.getTruckId());
+                listTruckDto.setDrivers(drivers);
+            }
+        }
+        return ServiceResult.toResult(new PageInfo<>(truckList));
+    }
+
+    /**
+     * 通过token获取truck
+     *
+     * @return
+     * @author tony
+     */
+    @Override
+    public GetTruckDto getTruckByToken() {
+        String token = request.getHeader("token");
+        UserInfo userInfo = userClientService.getUserByToken(token);
+        DriverReturnDto driver;
+        GetTruckDto truck = null;
+        log.info("当前user: " + userInfo.toString());
+        if (null != userInfo) {
+            driver = driverClientService.getDriverReturnObject(userInfo.getId());
+            if (null == driver) {
+                throw new NullPointerException("当前司机不存在");
+            }
+            log.info("当前司机: " + driver.toString());
+            truck = truckMapper.getTruckById(driver.getTruckId());
+            log.info("当前车辆: " + truck.toString());
+        }
+        return truck;
     }
 }

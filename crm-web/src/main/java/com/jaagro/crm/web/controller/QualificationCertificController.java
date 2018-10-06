@@ -1,5 +1,6 @@
 package com.jaagro.crm.web.controller;
 
+import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerQualificationDto;
 import com.jaagro.crm.api.dto.request.customer.CreateQualificationVerifyLogDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerQualificationCriteriaDto;
@@ -11,9 +12,11 @@ import com.jaagro.crm.api.service.OssSignUrlClientService;
 import com.jaagro.crm.api.service.QualificationCertificService;
 import com.jaagro.crm.api.service.QualificationVerifyLogService;
 import com.jaagro.crm.biz.entity.CustomerQualification;
-import com.jaagro.crm.biz.mapper.CustomerMapper;
-import com.jaagro.crm.biz.mapper.CustomerQualificationMapper;
+import com.jaagro.crm.biz.mapper.CustomerMapperExt;
+import com.jaagro.crm.biz.mapper.CustomerQualificationMapperExt;
 import com.jaagro.utils.BaseResponse;
+import com.jaagro.utils.ResponseStatusCode;
+import com.jaagro.utils.ServiceResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -37,11 +40,11 @@ public class QualificationCertificController {
     @Autowired
     private CustomerService customerService;
     @Autowired
-    private CustomerMapper customerMapper;
+    private CustomerMapperExt customerMapper;
     @Autowired
     private QualificationCertificService certificService;
     @Autowired
-    private CustomerQualificationMapper certificMapper;
+    private CustomerQualificationMapperExt certificMapper;
     @Autowired
     private QualificationVerifyLogService logService;
     @Autowired
@@ -62,18 +65,19 @@ public class QualificationCertificController {
                     return BaseResponse.idNull("客户id:[customerId]不能为空");
                 }
                 if (this.customerMapper.selectByPrimaryKey(certificDto.getCustomerId()) == null) {
-                    return BaseResponse.errorInstance("客户id:[customerId]不存在");
+                    return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户id:[customerId]不存在");
                 }
                 if (certificDto.getCertificateType() == null) {
-                    return BaseResponse.idNull("证件类型:[certificateType]不能为空");
+                    return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "证件类型:[certificateType]不能为空");
                 }
                 if (certificDto.getCertificateImageUrl() == null) {
-                    return BaseResponse.idNull("证件图片地址:[certificateImageUrl]不能为空");
+                    return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "证件图片地址:[certificateImageUrl]不能为空");
                 }
                 certificService.createQualificationCertific(certificDto);
             }
+            return BaseResponse.successInstance("上传成功");
         }
-        return BaseResponse.successInstance("创建成功");
+        return BaseResponse.errorInstance("创建失败");
     }
 
     /**
@@ -86,27 +90,33 @@ public class QualificationCertificController {
     @DeleteMapping("/deleteQualificationCertificById/{id}")
     public BaseResponse deleteById(@PathVariable Integer id) {
         if (this.certificMapper.selectByPrimaryKey(id) == null) {
-            return BaseResponse.errorInstance("查询不到相应数据");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到相应数据");
         }
         return BaseResponse.service(this.certificService.disableQualificationCertific(id));
     }
 
     /**
-     * 修改单个资质
+     * 修改资质
      *
      * @param certificDto
      * @return
      */
-    @ApiOperation("修改单个资质")
+    @ApiOperation("修改资质")
     @PutMapping("/qualificationCertific")
-    public BaseResponse updateSite(@RequestBody UpdateCustomerQualificationDto certificDto) {
-        if (certificDto.getId() == null) {
-            return BaseResponse.idNull("证件id:[id]不能为空");
-        }
-        if (this.certificMapper.selectByPrimaryKey(certificDto.getId()) == null) {
-            return BaseResponse.idNull("证件id:[id]不能为空");
-        }
+    public BaseResponse updateSite(@RequestBody List<UpdateCustomerQualificationDto> certificDto) {
         return BaseResponse.service(certificService.updateQualificationCertific(certificDto));
+    }
+
+    /**
+     * 删除资质
+     *
+     * @param ids
+     * @return
+     */
+    @ApiOperation("删除资质")
+    @PostMapping("/deleteQualificationCertific")
+    public BaseResponse deleteQualificationCertific(@RequestBody List<Integer> ids) {
+        return BaseResponse.service(certificService.deleteQualificationCertific(ids));
     }
 
     /**
@@ -142,6 +152,21 @@ public class QualificationCertificController {
     }
 
     /**
+     * 根据客户id查询资质列表
+     *
+     * @param criteriaDto
+     * @return
+     */
+    @ApiOperation("根据客户id查询资质列表")
+    @GetMapping("/listQualificationByCustomerId/{customerId}")
+    public BaseResponse listByCriteria(@PathVariable("customerId") Integer customerId) {
+        if (customerId == null) {
+            return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户id不能为空"));
+        }
+        return BaseResponse.service(this.certificService.listByCustomerId(customerId));
+    }
+
+    /**
      * 待审核资质下一个
      *
      * @param customerId
@@ -152,19 +177,41 @@ public class QualificationCertificController {
     @ApiImplicitParam(name = "customerId", value = "客户id", required = true, dataType = "Integer", paramType = "path")
     public BaseResponse getQalfcationByCustmIdAuto(@PathVariable Integer customerId) {
         if (this.customerMapper.selectByPrimaryKey(customerId) == null) {
-            return BaseResponse.errorInstance("客户不存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户不存在");
         }
         //判断客户是否有资质证
         List<CustomerQualificationReturnDto> returnDtos = this.certificMapper.getByCustomerQualificationId(customerId);
         if (returnDtos.size() < 1) {
-            return BaseResponse.errorInstance("客户未上传资质证");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户未上传资质证");
         }
+        ListCustomerQualificationCriteriaDto dto = new ListCustomerQualificationCriteriaDto();
+        dto.setCustomerId(customerId);
         //返回要审核的资质信息
-        List<ReturnQualificationDto> qualificationDtos = this.certificMapper.listByCustomerIdAndStatus(customerId);
+        List<ReturnQualificationDto> qualificationDtos = this.certificMapper.listByCustomerIdAndStatus(dto);
         if (qualificationDtos != null && qualificationDtos.size() > 0) {
+            String[] strArray = {qualificationDtos.get(0).getCertificateImageUrl()};
+            List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+            qualificationDtos.get(0).setCertificateImageUrl(urlList.get(0).toString());
             return BaseResponse.successInstance(qualificationDtos.get(0));
         }
         return BaseResponse.queryDataEmpty();
+    }
+
+    /**
+     * 待审核资质详情
+     *
+     * @param customerId
+     * @return
+     */
+    @ApiOperation("待审核资质详情")
+    @GetMapping("/getQalfcationById/{id}")
+    @ApiImplicitParam(name = "id", value = "资质证id", required = true, dataType = "Integer", paramType = "path")
+    public BaseResponse getQalfcationById(@PathVariable Integer id) {
+        CustomerQualification qualification = this.certificMapper.selectByPrimaryKey(id);
+        if (qualification == null) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质不存在");
+        }
+        return BaseResponse.service(certificService.getDetailById(id));
     }
 
     /**
@@ -177,21 +224,22 @@ public class QualificationCertificController {
     @PostMapping("/checkQualification")
     public BaseResponse checkQualification(@RequestBody UpdateCustomerQualificationDto dto) {
         if (this.certificMapper.selectByPrimaryKey(dto.getId()) == null) {
-            return BaseResponse.errorInstance("资质证件照不存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质证件照不存在");
         }
         //审核记录
         CreateQualificationVerifyLogDto logDto = new CreateQualificationVerifyLogDto();
-        if (dto.getCertificateStatus() != 1) {
+        if (!dto.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
             if (dto.getDescription() == null) {
-                return BaseResponse.errorInstance("审核不通过时描述信息不能为空");
+                return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "审核不通过时描述信息不能为空");
             }
             logDto.setDescription(dto.getDescription());
         }
         this.certificService.updateQualificationCertific(dto);
         logDto
-                .setVertifyResult(dto.getCertificateStatus())
                 .setReferencesId(dto.getId())
+                .setVertifyResult(dto.getVertifyResult())
                 .setCertificateType(1);
+        // 1-客户资质 2-运力资质 3-客户合同 4-运力合同
         return BaseResponse.service(this.logService.createVerifyLog(logDto));
     }
 }

@@ -14,14 +14,19 @@ import java.util.List;
 public class CreateDriverDto implements Serializable {
 
     /**
-     * 关联车队表ID
+     * 司机id
      */
-    private Integer truckTeamId;
+    private Integer id;
 
     /**
-     * 关联车辆ID
+     * 车辆id
      */
     private Integer truckId;
+
+    /**
+     * 车队
+     */
+    private Integer truckTeamId;
 
     /**
      * 司机姓名
@@ -46,5 +51,5 @@ public class CreateDriverDto implements Serializable {
     /**
      * 司机资质列表
      */
-    private List<CreateTruckQualificationDto> driverQualifications;
+    private List<UpdateTruckQualificationDto> driverQualifications;
 }

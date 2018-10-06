@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jaagro.crm.biz.mapper.TruckTypeMapper">
+<mapper namespace="com.jaagro.crm.biz.mapper.TruckTypeMapperExt">
     <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.TruckType">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="type_name" property="typeName" jdbcType="VARCHAR"/>
@@ -10,14 +10,7 @@
         <result column="truck_amount" property="truckAmount" jdbcType="VARCHAR"/>
         <result column="enabled" property="enabled" jdbcType="TINYINT"/>
     </resultMap>
-    <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto">
-        <id column="id" property="id" jdbcType="INTEGER"/>
-        <result column="type_name" property="typeName" jdbcType="VARCHAR"/>
-        <result column="product_name" property="productName" jdbcType="VARCHAR"/>
-        <result column="truck_length" property="truckLength" jdbcType="VARCHAR"/>
-        <result column="truck_weight" property="truckWeight" jdbcType="VARCHAR"/>
-        <result column="truck_amount" property="truckAmount" jdbcType="VARCHAR"/>
-    </resultMap>
+
     <sql id="Base_Column_List">
     id, type_name, product_name, truck_length, truck_weight, truck_amount, enabled
   </sql>
@@ -124,16 +117,5 @@
       enabled = #{enabled,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
-    <select id="getById" parameterType="java.lang.Integer" resultMap="DetailInfo">
-        select
-        <include refid="Base_Column_List"/>
-        from truck_type
-        where id = #{id,jdbcType=INTEGER}
-    </select>
-    <select id="listAll" resultMap="DetailInfo" >
-        select
-        <include refid="Base_Column_List"/>
-        from truck_type
-        where enabled = 1
-    </select>
+
 </mapper>
