@@ -105,16 +105,11 @@ public class CustomerSiteController {
     }
 
     @ApiOperation("根据客户查询收发货地址")
-    @GetMapping("/listSiteForSelect/{customerId}/{siteType}/{productType}")
-    public BaseResponse getById(@PathVariable Integer customerId, @PathVariable Integer siteType, @PathVariable(required = false) Integer productType) {
-        if (this.customerMapper.selectByPrimaryKey(customerId) == null) {
+    @PostMapping("/listSiteForSelect")
+    public BaseResponse getById(@RequestBody ListSiteCriteriaDto criteriaDto) {
+        if (this.customerMapper.selectByPrimaryKey(criteriaDto.getCustomerId()) == null) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户不存在");
         }
-        ListSiteCriteriaDto criteriaDto = new ListSiteCriteriaDto();
-        criteriaDto
-                .setProductType(productType)
-                .setCustomerId(customerId)
-                .setSiteType(siteType);
         return BaseResponse.successInstance(this.siteMapper.listAllSite(criteriaDto));
     }
 
