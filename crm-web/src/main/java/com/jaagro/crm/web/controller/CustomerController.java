@@ -1,6 +1,7 @@
 package com.jaagro.crm.web.controller;
 
 import com.jaagro.crm.api.dto.request.customer.*;
+import com.jaagro.crm.api.dto.response.customer.CustomerContactsReturnDto;
 import com.jaagro.crm.api.service.CustomerContactsService;
 import com.jaagro.crm.api.service.CustomerService;
 import com.jaagro.crm.biz.entity.Customer;
@@ -144,7 +145,6 @@ public class CustomerController {
      * 获取客户显示对象，提供给feign
      *
      * @param id
-     *
      * @return
      */
     @Ignore
@@ -231,6 +231,25 @@ public class CustomerController {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户不存在");
         }
         return BaseResponse.successInstance(this.customerContactsMapper.listByCustomerId(customerId));
+    }
+
+    /**
+     * 根据客户id查询主客户联系人
+     *
+     * @param customerId
+     * @return
+     */
+    @Ignore
+    @GetMapping("/getCustomerContactByCustomerId/{customerId}")
+    public BaseResponse getCustomerContactByCustomerId(@PathVariable Integer customerId) {
+        if (this.customerMapper.selectByPrimaryKey(customerId) == null) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户不存在");
+        }
+        List<CustomerContactsReturnDto> contactsReturnDtos = this.customerContactsMapper.listByCustomerId(customerId);
+        if (contactsReturnDtos.size() > 0) {
+            return BaseResponse.successInstance(contactsReturnDtos.get(0));
+        }
+        return BaseResponse.successInstance(null);
     }
 
     /**
