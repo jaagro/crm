@@ -58,7 +58,7 @@
             and certificate_status = #{certificateStatus}
         </if>
         <if test="certificateStatus == null">
-            and certificate_status in (0,2)
+            and certificate_status != 3
         </if>
         ORDER BY certificate_status
     </select>
