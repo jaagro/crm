@@ -57,7 +57,7 @@
         <if test="relevanceType != null">
             and relevance_type = #{relevanceType,jdbcType=INTEGER}
         </if>
-        <if test="certificateStatus == null">
+        <if test="certificateStatus == null and enableCheck == null">
             and certificate_status in (0,2)
         </if>
         and enabled = 1

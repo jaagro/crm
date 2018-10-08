@@ -60,7 +60,7 @@
         <if test="enableCheck != null">
             and certificate_status != 3
         </if>
-        <if test="certificateStatus == null">
+        <if test="certificateStatus == null and enableCheck == null">
             and certificate_status in (0,2)
         </if>
         ORDER BY certificate_status
