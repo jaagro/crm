@@ -12,4 +12,3 @@ gen
 /crm-biz/.mvn/
 /crm-biz/target/
 /crm-api/target/
-/crm-web/src/main/resources/bootstrap.yml
