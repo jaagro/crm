@@ -48,6 +48,9 @@
         <if test="certificateStatus != null">
             and certificate_status = #{certificateStatus,jdbcType=INTEGER}
         </if>
+        <if test="enableCheck != null">
+            and certificate_status != 3
+        </if>
         <if test="relevanceId != null">
             and relevance_id = #{relevanceId,jdbcType=INTEGER}
         </if>
@@ -55,7 +58,7 @@
             and relevance_type = #{relevanceType,jdbcType=INTEGER}
         </if>
         <if test="certificateStatus == null">
-            and certificate_status = 0
+            and certificate_status in (0,2)
         </if>
         and enabled = 1
         order by create_time desc

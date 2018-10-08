@@ -183,7 +183,9 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
             return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "此客户不存在");
         }
         ListCustomerQualificationCriteriaDto dto = new ListCustomerQualificationCriteriaDto();
-        dto.setCustomerId(customerId);
+        dto
+                .setCustomerId(customerId)
+                .setEnableCheck("查询详情");
         List<ReturnQualificationDto> certificReturnDtos = this.certificMapper.listByCustomerIdAndStatus(dto);
         if (certificReturnDtos != null && certificReturnDtos.size() > 0) {
             for (ReturnQualificationDto qualificationReturnDto : certificReturnDtos) {

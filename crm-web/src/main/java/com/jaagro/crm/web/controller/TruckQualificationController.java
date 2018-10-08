@@ -90,6 +90,7 @@ public class TruckQualificationController {
     @ApiOperation("根据三种id查询资质列表")
     @PostMapping("/listQualificationByTeamId")
     public BaseResponse listQualificationByTeamId(@RequestBody ListTruckQualificationCriteriaDto criteriaDto) {
+        criteriaDto.setEnableCheck("查询详情");
         return BaseResponse.service(truckQualificationService.listQualificationByTruckIds(criteriaDto));
     }
 

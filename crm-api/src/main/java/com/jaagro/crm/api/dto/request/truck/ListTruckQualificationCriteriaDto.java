@@ -17,5 +17,9 @@ public class ListTruckQualificationCriteriaDto implements Serializable {
     private Integer truckId;
     private Integer driverId;
     private Integer certificateStatus;
+    /**
+     * 用来区分查看详情还是获取待审核下一条
+     */
+    private String enableCheck;
 
 }
