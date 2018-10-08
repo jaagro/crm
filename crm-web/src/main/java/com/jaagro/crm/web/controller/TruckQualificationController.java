@@ -127,7 +127,7 @@ public class TruckQualificationController {
             qualificationDto.setCertificateImageUrl(urlList.get(0).toString());
             return BaseResponse.successInstance(qualificationDto);
         }
-        return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "无数据");
+        return BaseResponse.successInstance(null);
     }
 
     @ApiOperation("待审核资质详情")
