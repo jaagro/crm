@@ -241,15 +241,15 @@ public class CustomerController {
      */
     @Ignore
     @GetMapping("/getCustomerContactByCustomerId/{customerId}")
-    public BaseResponse getCustomerContactByCustomerId(@PathVariable Integer customerId) {
+    public CustomerContactsReturnDto getCustomerContactByCustomerId(@PathVariable Integer customerId) {
         if (this.customerMapper.selectByPrimaryKey(customerId) == null) {
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户不存在");
+            return null;
         }
         List<CustomerContactsReturnDto> contactsReturnDtos = this.customerContactsMapper.listByCustomerId(customerId);
         if (contactsReturnDtos.size() > 0) {
-            return BaseResponse.successInstance(contactsReturnDtos.get(0));
+            return contactsReturnDtos.get(0);
         }
-        return BaseResponse.successInstance(null);
+        return null;
     }
 
     /**
