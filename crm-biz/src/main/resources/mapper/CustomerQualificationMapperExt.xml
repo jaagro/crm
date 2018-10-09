@@ -60,8 +60,11 @@
         <if test="certificateStatus != null">
             and certificate_status = #{certificateStatus}
         </if>
-        <if test="certificateStatus == null">
-            and certificate_status in (0,2)
+        <if test="enableCheck != null">
+            and certificate_status != 3
+        </if>
+        <if test="certificateStatus == null and enableCheck == null">
+            and certificate_status = 0
         </if>
         order by create_time desc
     </select>

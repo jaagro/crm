@@ -71,7 +71,7 @@
         customer m
         LEFT JOIN customer_contacts c ON m.id = c.customer_id
         WHERE 1=1
-        <if test="customerType != null">
+        <if test="customerType != 0">
             and m.customer_type = #{customerType}
         </if>
         <if test="phone != null">

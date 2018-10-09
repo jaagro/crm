@@ -194,7 +194,7 @@ public class QualificationCertificController {
             qualificationDtos.get(0).setCertificateImageUrl(urlList.get(0).toString());
             return BaseResponse.successInstance(qualificationDtos.get(0));
         }
-        return BaseResponse.queryDataEmpty();
+        return BaseResponse.successInstance(null);
     }
 
     /**

@@ -120,6 +120,7 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
                             .setCertificateStatus(AuditStatus.STOP_COOPERATION);
                     this.truckQualificationMapper.updateByPrimaryKeySelective(truckQualification);
                     // 把新资质证件照新增
+                    qualification.setCertificateStatus(AuditStatus.UNCHECKED);
                     this.truckQualificationMapper.insertSelective(qualification);
                     return ServiceResult.toResult("操作成功");
                 }

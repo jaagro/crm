@@ -28,6 +28,12 @@
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="site_type" property="siteType" jdbcType="INTEGER"/>
         <result column="site_name" property="siteName" jdbcType="VARCHAR"/>
+        <result column="contact" property="contact" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="province" property="province" jdbcType="VARCHAR"/>
+        <result column="city" property="city" jdbcType="VARCHAR"/>
+        <result column="county" property="county" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Show_Column">
