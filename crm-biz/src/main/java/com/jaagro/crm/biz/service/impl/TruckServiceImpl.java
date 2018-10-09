@@ -235,7 +235,7 @@ public class TruckServiceImpl implements TruckService {
                             this.truckQualificationService.createTruckQualification(createListTruckQualificationDto);
                         } else {
                             //修改
-                            this.truckQualificationService.updateQualificationCertific(truckQualificationDto);
+                            this.truckQualificationService.updateQualification(createDriverDto.getDriverQualifications());
                         }
                     }
                 }
@@ -252,7 +252,7 @@ public class TruckServiceImpl implements TruckService {
                     this.truckQualificationService.createTruckQualification(createListTruckQualificationDto);
                 } else {
                     //修改
-                    this.truckQualificationService.updateQualificationCertific(truckQualificationDto);
+                    this.truckQualificationService.updateQualification(truckDto.getTruckQualifications());
                 }
             }
         }
