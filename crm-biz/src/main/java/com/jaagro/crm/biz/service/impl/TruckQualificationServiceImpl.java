@@ -98,7 +98,6 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
                 TruckQualification qualification = new TruckQualification();
                 BeanUtils.copyProperties(truckQualificationDto, qualification);
                 qualification
-                        .setCertificateStatus(AuditStatus.UNCHECKED)
                         .setModifyTime(new Date())
                         .setModifyUserId(this.currentUserService.getCurrentUser().getId());
                 /**
@@ -121,6 +120,7 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
                             .setCertificateStatus(AuditStatus.STOP_COOPERATION);
                     this.truckQualificationMapper.updateByPrimaryKeySelective(truckQualification);
                     // 把新资质证件照新增
+                    qualification.setCertificateStatus(AuditStatus.UNCHECKED);
                     this.truckQualificationMapper.insertSelective(qualification);
                     return ServiceResult.toResult("操作成功");
                 }
