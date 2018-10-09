@@ -121,6 +121,7 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
                     this.truckQualificationMapper.updateByPrimaryKeySelective(truckQualification);
                     // 把新资质证件照新增
                     qualification
+                            .setId(null)
                             .setCreateUserId(currentUserService.getCurrentUser().getId())
                             .setTruckTeamId(truckQualification.getTruckTeamId())
                             .setTruckId(truckQualification.getTruckId())
