@@ -141,6 +141,7 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                                 driverClientService.updateDriverStatusFeign(driverReturnDto.getId());
                                 break;
                             }
+                            break;
                         }
                     }
                 }
