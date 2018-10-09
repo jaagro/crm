@@ -110,14 +110,9 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
                 /**
                  * 修改前判断是否已审核过
                  */
-                // 已审核通过
-                if (qualification.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
-                    return ServiceResult.toResult("已审核通过的证件照不允许再修改");
-                }
                 // 待审核
                 if (qualification.getCertificateStatus().equals(AuditStatus.UNCHECKED)) {
                     this.certificMapper.updateByPrimaryKeySelective(qc);
-                    return ServiceResult.toResult("证件照列表修改成功");
                 }
                 // 审核未通过的
                 if (qualification.getCertificateStatus().equals(AuditStatus.AUDIT_FAILED)) {
@@ -133,20 +128,8 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
                             .setCreateUserId(userService.getCurrentUser().getId())
                             .setCustomerId(qualification.getCustomerId());
                     this.certificMapper.insertSelective(qc);
-                    return ServiceResult.toResult("证件照列表修改成功");
+//                    return ServiceResult.toResult("证件照列表修改成功");
                 }
-                // 已删除的
-                if (qualification.getCertificateStatus().equals(AuditStatus.STOP_COOPERATION) || qualification.getEnabled().equals(0)) {
-                    return ServiceResult.toResult("证件照已被删除");
-                }
-               /* //若url为空，则先删除
-                if (StringUtils.isEmpty(certificDto.getCertificateImageUrl())) {
-                    this.certificMapper.deleteByPrimaryKey(certificDto.getId());
-                    CustomerQualification qc = new CustomerQualification();
-                    BeanUtils.copyProperties(certificDto, qc);
-                    qc.setCreateUserId(userService.getCurrentUser().getId());
-                    this.certificMapper.insertSelective(qc);
-                }*/
             }
         }
         return ServiceResult.toResult("证件照列表修改成功");

@@ -103,14 +103,9 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
                 /**
                  * 修改前判断是否已审核过
                  */
-                // 已审核通过
-                if (truckQualification.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
-                    return ServiceResult.error("已审核通过的证件照不允许再修改");
-                }
                 // 待审核
                 if (truckQualification.getCertificateStatus().equals(AuditStatus.UNCHECKED)) {
                     this.truckQualificationMapper.updateByPrimaryKeySelective(qualification);
-                    return ServiceResult.toResult("操作成功");
                 }
                 // 审核未通过的
                 if (truckQualification.getCertificateStatus().equals(AuditStatus.AUDIT_FAILED)) {
@@ -128,11 +123,6 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
                             .setDriverId(truckQualification.getDriverId())
                             .setCertificateStatus(AuditStatus.UNCHECKED);
                     this.truckQualificationMapper.insertSelective(qualification);
-                    return ServiceResult.toResult("操作成功");
-                }
-                // 已删除的
-                if (truckQualification.getCertificateStatus().equals(AuditStatus.STOP_COOPERATION) || truckQualification.getEnabled().equals(0)) {
-                    return ServiceResult.error("证件照已被删除");
                 }
             }
         } else {
