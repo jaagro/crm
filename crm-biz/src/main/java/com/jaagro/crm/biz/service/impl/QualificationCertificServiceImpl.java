@@ -127,6 +127,11 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
                             .setCertificateStatus(AuditStatus.STOP_COOPERATION);
                     this.certificMapper.updateByPrimaryKeySelective(qualification);
                     // 把新资质证件照新增
+                    qc
+                            .setId(null)
+                            .setCertificateStatus(AuditStatus.UNCHECKED)
+                            .setCreateUserId(userService.getCurrentUser().getId())
+                            .setCustomerId(qualification.getCustomerId());
                     this.certificMapper.insertSelective(qc);
                     return ServiceResult.toResult("证件照列表修改成功");
                 }
