@@ -98,6 +98,7 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
                 TruckQualification qualification = new TruckQualification();
                 BeanUtils.copyProperties(truckQualificationDto, qualification);
                 qualification
+                        .setCertificateStatus(AuditStatus.UNCHECKED)
                         .setModifyTime(new Date())
                         .setModifyUserId(this.currentUserService.getCurrentUser().getId());
                 /**
