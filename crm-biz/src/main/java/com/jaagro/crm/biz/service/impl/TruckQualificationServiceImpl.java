@@ -126,7 +126,6 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
                             .setTruckTeamId(truckQualification.getTruckTeamId())
                             .setTruckId(truckQualification.getTruckId())
                             .setDriverId(truckQualification.getDriverId())
-                            .setNotes(truckQualification.getNotes())
                             .setCertificateStatus(AuditStatus.UNCHECKED);
                     this.truckQualificationMapper.insertSelective(qualification);
                     return ServiceResult.toResult("操作成功");
