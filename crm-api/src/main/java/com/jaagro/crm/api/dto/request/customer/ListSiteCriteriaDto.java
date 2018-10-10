@@ -26,6 +26,11 @@ public class ListSiteCriteriaDto implements Serializable {
     private Integer pageSize;
 
     /**
+     * 货物类型
+     */
+    private Integer productType;
+
+    /**
      * 关键字
      */
     private String keywords;

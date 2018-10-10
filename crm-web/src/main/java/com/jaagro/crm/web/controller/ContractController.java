@@ -329,7 +329,7 @@ public class ContractController {
             checkContractQualificationDto.setTruckTeamContractReturnDto(this.truckTeamContractMapper.getById(checkContractQualificationDto.getRelevanceId()));
             return BaseResponse.successInstance(checkContractQualificationDto);
         }
-        return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "没有查询到需要审核的资质");
+        return BaseResponse.successInstance(null);
     }
 
     /**

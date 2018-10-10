@@ -57,8 +57,11 @@
         <if test="certificateStatus != null">
             and certificate_status = #{certificateStatus}
         </if>
-        <if test="certificateStatus == null">
-            and certificate_status in (0,2)
+        <if test="enableCheck != null">
+            and certificate_status != 3
+        </if>
+        <if test="certificateStatus == null and enableCheck == null">
+            and certificate_status = 0
         </if>
         ORDER BY certificate_status
     </select>
@@ -92,22 +95,25 @@
         count(1)
         from truck_qualification
         where enabled = 1
-        and id = #{revalanceId}
         <!--个人车队-->
         <if test="type == 1">
+            and truck_team_id = #{revalanceId}
             and certificate_type in (7,8,12)
         </if>
         <!--公司车队-->
         <if test="type == 2">
             and certificate_type in (1,19)
+            and truck_team_id = #{revalanceId}
         </if>
         <!--车辆-->
         <if test="type == 3">
             and certificate_type in (2,3,4,5,6)
+            and truck_id = #{revalanceId}
         </if>
         <!--司机-->
         <if test="type == 4">
             and certificate_type in (7,8,9,10,11)
+            and driver_id = #{revalanceId}
         </if>
         and certificate_status = 1
     </select>

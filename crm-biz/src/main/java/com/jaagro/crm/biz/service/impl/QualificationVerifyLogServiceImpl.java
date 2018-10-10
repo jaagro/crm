@@ -48,7 +48,7 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
     @Autowired
     private DriverClientService driverClientService;
     @Autowired
-    private TruckMapper truckMapper;
+    private TruckMapperExt truckMapper;
 
     /**
      * 新增审核记录
@@ -121,7 +121,7 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                 if (truckQualification == null) {
                     return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队资质证不存在");
                 }
-                //司机资质审核 未完成待确定需求
+                //司机资质审核
                 if (!StringUtils.isEmpty(truckQualification.getDriverId())) {
                     DriverReturnDto driverReturnDto = driverClientService.getDriverReturnObject(truckQualification.getDriverId());
                     if (driverReturnDto == null) {
@@ -141,27 +141,30 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                                 driverClientService.updateDriverStatusFeign(driverReturnDto.getId());
                                 break;
                             }
+                            break;
                         }
                     }
                 }
-                //车辆资质审核 未完成待确定需求
-                if (!StringUtils.isEmpty(truckQualification.getTruckId()) && StringUtils.isEmpty(truckQualification.getDriverId())) {
-                    Truck truck = truckMapper.selectByPrimaryKey(truckQualification.getTruckId());
-                    if (truck == null) {
-                        return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车辆不存在");
-                    }
-                    if (truckQualification.getCertificateType().equals(CertificateType.DRIVING_LICENSE_ORIGINAL) || truckQualification.getCertificateType().equals(CertificateType.DRIVING_LICENSE_COPY) || truckQualification.getCertificateType().equals(CertificateType.OPERATION_LICENSE) || truckQualification.getCertificateType().equals(CertificateType.COMPULSORY_INSURANCE) || truckQualification.getCertificateType().equals(CertificateType.BUSINESS_INSURANCE)) {
-                        if (truckQualification.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
-                            // type为： 1:个体车队 2:公司车队 3:车辆 4:司机
-                            int result = truckQualificationMapper.listCheckedByIdAndType(truckQualification.getDriverId(), 3);
-                            if (result == 5) {
-                                //若车辆2、3、4、5、6行驶证正本、行驶证副本、营运证、保险单强险、保险单商业险 审核均通过，则修改司机为审核通过
-                                truck
-                                        .setTruckStatus(AuditStatus.NORMAL_COOPERATION)
-                                        .setModifyTime(new Date())
-                                        .setModifyUserId(userService.getCurrentUser().getId());
-                                truckMapper.updateByPrimaryKeySelective(truck);
-                                break;
+                //车辆资质审核
+                if (!StringUtils.isEmpty(truckQualification.getTruckId())) {
+                    if (StringUtils.isEmpty(truckQualification.getDriverId())) {
+                        Truck truck = truckMapper.selectByPrimaryKey(truckQualification.getTruckId());
+                        if (truck == null) {
+                            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车辆不存在");
+                        }
+                        if (truckQualification.getCertificateType().equals(CertificateType.DRIVING_LICENSE_ORIGINAL) || truckQualification.getCertificateType().equals(CertificateType.DRIVING_LICENSE_COPY) || truckQualification.getCertificateType().equals(CertificateType.OPERATION_LICENSE) || truckQualification.getCertificateType().equals(CertificateType.COMPULSORY_INSURANCE) || truckQualification.getCertificateType().equals(CertificateType.BUSINESS_INSURANCE)) {
+                            if (truckQualification.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
+                                // type为： 1:个体车队 2:公司车队 3:车辆 4:司机
+                                int result = truckQualificationMapper.listCheckedByIdAndType(truckQualification.getTruckId(), 3);
+                                if (result == 5) {
+                                    //若车辆2、3、4、5、6行驶证正本、行驶证副本、营运证、保险单强险、保险单商业险 审核均通过，则修改司机为审核通过
+                                    truck
+                                            .setTruckStatus(AuditStatus.NORMAL_COOPERATION)
+                                            .setModifyTime(new Date())
+                                            .setModifyUserId(userService.getCurrentUser().getId());
+                                    truckMapper.updateByPrimaryKeySelective(truck);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -178,7 +181,7 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                             if (truckQualification.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
                                 if (truckQualification.getCertificateType().equals(CertificateType.FRONT_ID_CARD) || truckQualification.getCertificateType().equals(CertificateType.BACK_ID_CARD) || truckQualification.getCertificateType().equals(CertificateType.GROUP_PHOTO)) {
                                     // type为： 1:个体车队 2:公司车队 3:车辆 4:司机
-                                    int result = truckQualificationMapper.listCheckedByIdAndType(truckQualification.getDriverId(), 1);
+                                    int result = truckQualificationMapper.listCheckedByIdAndType(truckQualification.getTruckTeamId(), 1);
                                     //若个体车队 7、8、12 身份证正面、身份证反面、人车合影图片审核通过，则修改车队状态为审核通过
                                     if (result == 3) {
                                         truckTeam
@@ -196,7 +199,7 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                             if (truckQualification.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
                                 if (truckQualification.getCertificateType().equals(CertificateType.BUSINESS_LICENSE) || truckQualification.getCertificateType().equals(CertificateType.TRANSPORT_ROUTIER)) {
                                     // type为： 1:个体车队 2:公司车队 3:车辆 4:司机
-                                    int result = truckQualificationMapper.listCheckedByIdAndType(truckQualification.getDriverId(), 2);
+                                    int result = truckQualificationMapper.listCheckedByIdAndType(truckQualification.getTruckTeamId(), 2);
                                     //若公司车队 1、19 营业执照、道路运输许可证审核通过，则修改车队状态为审核通过
                                     if (result == 2) {
                                         truckTeam

@@ -43,4 +43,9 @@ public class ListCustomerQualificationCriteriaDto implements Serializable {
      * 是否可用（0不可用 1可用）
      */
     private Boolean enabled;
+
+    /**
+     * 用来区分查看详情还是获取待审核下一条
+     */
+    private String enableCheck;
 }

@@ -37,4 +37,9 @@ public class ListContractQualificationCriteriaDto implements Serializable {
      */
     private Integer certificateStatus;
 
+    /**
+     * 用来区分查看详情还是获取待审核下一条
+     */
+    private String enableCheck;
+
 }

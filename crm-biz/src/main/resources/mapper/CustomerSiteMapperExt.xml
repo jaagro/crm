@@ -28,6 +28,12 @@
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="site_type" property="siteType" jdbcType="INTEGER"/>
         <result column="site_name" property="siteName" jdbcType="VARCHAR"/>
+        <result column="contact" property="contact" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="province" property="province" jdbcType="VARCHAR"/>
+        <result column="city" property="city" jdbcType="VARCHAR"/>
+        <result column="county" property="county" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Show_Column">
@@ -53,6 +59,9 @@
         </if>
         <if test="siteType != null">
             and site_type = #{siteType,jdbcType=INTEGER}
+        </if>
+        <if test="productType != null">
+            and product_type = #{productType,jdbcType=INTEGER}
         </if>
         and site_status = 1
         order by create_time desc

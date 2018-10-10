@@ -90,6 +90,7 @@ public class TruckQualificationController {
     @ApiOperation("根据三种id查询资质列表")
     @PostMapping("/listQualificationByTeamId")
     public BaseResponse listQualificationByTeamId(@RequestBody ListTruckQualificationCriteriaDto criteriaDto) {
+        criteriaDto.setEnableCheck("查询详情");
         return BaseResponse.service(truckQualificationService.listQualificationByTruckIds(criteriaDto));
     }
 
@@ -101,15 +102,36 @@ public class TruckQualificationController {
         return BaseResponse.service(truckQualificationService.listQualification(criteriaDto));
     }
 
+    /**
+     * 待审核资质下一条
+     *
+     * @param id
+     * @param type == driverId:1 truckId:2 truckTeamId:3
+     * @return
+     */
     @ApiOperation("待审核资质下一条")
-    @GetMapping("/getQualificationAuto/{truckTeamId}")
-    public BaseResponse getQualificationAuto(@PathVariable Integer truckTeamId) {
-        if (this.truckTeamMapper.selectByPrimaryKey(truckTeamId) == null) {
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "当前车队不存在");
-        }
+    @GetMapping("/getQualificationAuto/{id}/{type}")
+    public BaseResponse getQualificationAuto(@PathVariable Integer id, @PathVariable Integer type) {
         //返回待审核资质下一条
         ListTruckQualificationCriteriaDto criteriaDto = new ListTruckQualificationCriteriaDto();
-        criteriaDto.setTruckTeamId(truckTeamId);
+        if (type == 3) {
+            if (this.truckTeamMapper.selectByPrimaryKey(id) == null) {
+                return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "当前车队不存在");
+            }
+            criteriaDto.setTruckTeamId(id);
+        }
+        if (type == 2) {
+            if (this.truckMapper.selectByPrimaryKey(id) == null) {
+                return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "当前车辆不存在");
+            }
+            criteriaDto.setTruckId(id);
+        }
+        if (type == 1) {
+            if (this.driverClientService.getDriverReturnObject(id) == null) {
+                return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "当前司机不存在");
+            }
+            criteriaDto.setDriverId(id);
+        }
         List<ReturnTruckQualificationDto> qualificationDtos = this.truckQualificationMapper.listByIds(criteriaDto);
         if (qualificationDtos != null && qualificationDtos.size() > 0) {
             ReturnTruckQualificationDto qualificationDto = qualificationDtos.get(0);
@@ -127,7 +149,7 @@ public class TruckQualificationController {
             qualificationDto.setCertificateImageUrl(urlList.get(0).toString());
             return BaseResponse.successInstance(qualificationDto);
         }
-        return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "无数据");
+        return BaseResponse.successInstance(null);
     }
 
     @ApiOperation("待审核资质详情")
