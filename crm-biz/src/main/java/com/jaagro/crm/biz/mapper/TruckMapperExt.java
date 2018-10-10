@@ -60,4 +60,12 @@ public interface TruckMapperExt extends TruckMapper{
      * @return
      */
     ReturnCheckTruckDto getCheckById(Integer id);
+
+    /**
+     * 列出可派的车辆（车队审核通过 、车队合同审核通过、车辆审核通过） gavin
+     * @param criteria
+     * @return
+     */
+    List<ListTruckDto> listTruckForAssignWaybillByCriteria(ListTruckCriteriaDto criteria);
+
 }
