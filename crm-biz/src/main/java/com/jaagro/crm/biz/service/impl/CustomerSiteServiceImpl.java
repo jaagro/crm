@@ -107,7 +107,9 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
         List<CustomerSiteReturnDto> siteReturnDtos = siteMapper.getByCriteriDto(dto);
         for (CustomerSiteReturnDto siteReturnDto : siteReturnDtos
         ) {
-            siteReturnDto.setDeptName(deptClientService.getDeptNameById(siteReturnDto.getDeptId()));
+            if (siteReturnDto.getSiteType() < 2) {
+                siteReturnDto.setDeptName(deptClientService.getDeptNameById(siteReturnDto.getDeptId()));
+            }
         }
         return ServiceResult.toResult(new PageInfo<>(siteReturnDtos));
     }
