@@ -293,7 +293,8 @@ public class TruckServiceImpl implements TruckService {
 
     @Override
     public List<ListTruckTypeDto> listTruckType(String productName) {
-        if (productName.equals(ProductType.SOW) || productName.equals(ProductType.BOAR) || productName.equals(ProductType.LIVE_PIG)) {
+        System.err.println(ProductType.SOW);
+        if (productName.equals(ProductType.SOW.toString()) || productName.equals(ProductType.BOAR.toString()) || productName.equals(ProductType.LIVE_PIG.toString())) {
             productName = ProductType.BOAR.toString();
             return truckTypeMapper.listAll(productName);
         }
