@@ -17,6 +17,14 @@
         <relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
 
+    <repositories>
+        <!-- CAT client 仓库 -->
+        <repository>
+            <id>unidal-nexus-repo</id>
+            <url>http://unidal.org/nexus/content/repositories/releases</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <!-- ====================================data注解依赖===================================== -->
         <dependency>
@@ -87,11 +95,6 @@
             <artifactId>cat-client</artifactId>
             <version>3.0.0</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>com.dianping.cat</groupId>-->
-            <!--<artifactId>cat-core</artifactId>-->
-            <!--<version>3.0.0</version>-->
-        <!--</dependency>-->
 
     </dependencies>
 
