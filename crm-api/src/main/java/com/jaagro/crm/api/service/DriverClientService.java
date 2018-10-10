@@ -69,4 +69,12 @@ public interface DriverClientService {
     @PostMapping("/updateDriverStatusFeign/{driverId}")
     BaseResponse updateDriverStatusFeign(@PathVariable("driverId") Integer driverId);
 
+    /**
+     * 通过部门id获取部门名称
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/getDeptNameById/{id}")
+    String getDeptNameById(@PathVariable("id") Integer id);
 }

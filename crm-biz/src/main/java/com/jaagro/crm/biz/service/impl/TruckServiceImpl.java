@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.constant.AuditStatus;
+import com.jaagro.crm.api.constant.ProductType;
 import com.jaagro.crm.api.dto.request.truck.*;
 import com.jaagro.crm.api.dto.response.truck.*;
 import com.jaagro.crm.api.service.*;
@@ -292,6 +293,10 @@ public class TruckServiceImpl implements TruckService {
 
     @Override
     public List<ListTruckTypeDto> listTruckType(String productName) {
+        if (productName.equals(ProductType.SOW) || productName.equals(ProductType.BOAR) || productName.equals(ProductType.LIVE_PIG)) {
+            productName = ProductType.BOAR.toString();
+            return truckTypeMapper.listAll(productName);
+        }
         return truckTypeMapper.listAll(productName);
     }
 
@@ -319,7 +324,8 @@ public class TruckServiceImpl implements TruckService {
     @Override
     public Map<String, Object> listTrucksWithDrivers(ListTruckCriteriaDto criteriaDto) {
         PageHelper.startPage(criteriaDto.getPageNum(), criteriaDto.getPageSize());
-        List<ListTruckDto> truckList = truckMapper.listTruckByCriteria(criteriaDto);
+        //List<ListTruckDto> truckList = truckMapper.listTruckByCriteria(criteriaDto);
+        List<ListTruckDto> truckList = truckMapper.listTruckForAssignWaybillByCriteria(criteriaDto);
         if (truckList == null || truckList.size() == 0) {
             return ServiceResult.error(ResponseStatusCode.OPERATION_SUCCESS.getCode(), "查无数据");
         }
