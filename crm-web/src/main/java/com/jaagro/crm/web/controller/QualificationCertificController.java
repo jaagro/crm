@@ -104,7 +104,12 @@ public class QualificationCertificController {
     @ApiOperation("修改资质")
     @PutMapping("/qualificationCertific")
     public BaseResponse updateSite(@RequestBody List<UpdateCustomerQualificationDto> certificDto) {
-        return BaseResponse.service(certificService.updateQualificationCertific(certificDto));
+        try {
+            certificService.updateQualificationCertific(certificDto);
+        } catch (Exception ex) {
+            return BaseResponse.successInstance(ex.getMessage());
+        }
+        return BaseResponse.successInstance("证件照列表修改成功");
     }
 
     /**
@@ -232,8 +237,10 @@ public class QualificationCertificController {
             if (dto.getDescription() == null) {
                 return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "审核不通过时描述信息不能为空");
             }
+            //审核日志的不通过原因描述
             logDto.setDescription(dto.getDescription());
         }
+        dto.setDescription(null);
         this.certificService.updateQualificationCertific(dto);
         logDto
                 .setReferencesId(dto.getId())

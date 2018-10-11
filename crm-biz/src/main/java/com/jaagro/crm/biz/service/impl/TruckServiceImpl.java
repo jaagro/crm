@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.constant.AuditStatus;
+import com.jaagro.crm.api.constant.ProductType;
 import com.jaagro.crm.api.dto.request.truck.*;
 import com.jaagro.crm.api.dto.response.truck.*;
 import com.jaagro.crm.api.service.*;
@@ -289,6 +290,11 @@ public class TruckServiceImpl implements TruckService {
 
     @Override
     public List<ListTruckTypeDto> listTruckType(String productName) {
+        System.err.println(ProductType.SOW);
+        if (productName.equals(ProductType.SOW.toString()) || productName.equals(ProductType.BOAR.toString()) || productName.equals(ProductType.LIVE_PIG.toString())) {
+            productName = ProductType.BOAR.toString();
+            return truckTypeMapper.listAll(productName);
+        }
         return truckTypeMapper.listAll(productName);
     }
 

@@ -8,16 +8,15 @@ import com.jaagro.crm.api.dto.request.customer.CreateQualificationVerifyLogDto;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnCheckContractQualificationDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
-import com.jaagro.crm.api.dto.response.truck.ListTruckTeamContractDto;
 import com.jaagro.crm.api.dto.response.truck.TruckTeamContractReturnDto;
 import com.jaagro.crm.api.service.*;
 import com.jaagro.crm.biz.entity.ContractQualification;
+import com.jaagro.crm.biz.entity.CustomerContract;
 import com.jaagro.crm.biz.entity.TruckTeam;
 import com.jaagro.crm.biz.entity.TruckTeamContract;
 import com.jaagro.crm.biz.mapper.*;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
-import com.jaagro.utils.ServiceResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import jdk.nashorn.internal.ir.annotations.Ignore;
@@ -291,11 +290,12 @@ public class ContractController {
          * 客户合同
          */
         if (relevanceType == 1) {
-            if (this.customerMapper.selectByPrimaryKey(relevanceId) == null) {
-                return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户不存在");
+            CustomerContract customerContract = this.customerContractMapper.selectByPrimaryKey(relevanceId);
+            if (customerContract == null) {
+                return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户合同不存在");
             }
             //查询此客户是否有合同
-            List<ReturnContractDto> contractDtoList = this.customerContractMapper.getByCustomerId(relevanceId);
+            List<ReturnContractDto> contractDtoList = this.customerContractMapper.getByCustomerId(customerContract.getCustomerId());
             if (contractDtoList.size() < 1) {
                 return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户未上传合同");
             }
