@@ -319,7 +319,8 @@ public class TruckServiceImpl implements TruckService {
     @Override
     public Map<String, Object> listTrucksWithDrivers(ListTruckCriteriaDto criteriaDto) {
         PageHelper.startPage(criteriaDto.getPageNum(), criteriaDto.getPageSize());
-        List<ListTruckDto> truckList = truckMapper.listTruckByCriteria(criteriaDto);
+        //List<ListTruckDto> truckList = truckMapper.listTruckByCriteria(criteriaDto);
+        List<ListTruckDto> truckList = truckMapper.listTruckForAssignWaybillByCriteria(criteriaDto);
         if (truckList == null || truckList.size() == 0) {
             return ServiceResult.error(ResponseStatusCode.OPERATION_SUCCESS.getCode(), "查无数据");
         }
