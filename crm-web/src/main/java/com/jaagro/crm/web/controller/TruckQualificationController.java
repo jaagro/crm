@@ -205,7 +205,8 @@ public class TruckQualificationController {
         }
         logDto
                 .setReferencesId(dto.getId())
-                .setCertificateType(2);
+                .setCertificateType(2)
+                .setVertifyResult(dto.getCertificateStatus());
         // 1-客户资质 2-运力资质 3-客户合同 4-运力合同
         return BaseResponse.service(this.qualificationVerifyLogService.createVerifyLog(logDto));
     }
