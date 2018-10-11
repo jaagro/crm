@@ -244,7 +244,7 @@ public class QualificationCertificController {
         this.certificService.updateQualificationCertific(dto);
         logDto
                 .setReferencesId(dto.getId())
-                .setVertifyResult(dto.getVertifyResult())
+                .setVertifyResult(dto.getCertificateStatus())
                 .setCertificateType(1);
         // 1-客户资质 2-运力资质 3-客户合同 4-运力合同
         return BaseResponse.service(this.logService.createVerifyLog(logDto));
