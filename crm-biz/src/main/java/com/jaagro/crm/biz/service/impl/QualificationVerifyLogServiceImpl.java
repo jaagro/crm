@@ -61,7 +61,7 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
     public Map<String, Object> createVerifyLog(CreateQualificationVerifyLogDto dto) {
         QualificationVerifyLog verifyLog = new QualificationVerifyLog();
         BeanUtils.copyProperties(dto, verifyLog);
-        if (!StringUtils.isEmpty(verifyLog.getVertifyResult())) {
+        if (verifyLog.getVertifyResult().equals(AuditStatus.AUDIT_FAILED)) {
             if (StringUtils.isEmpty(verifyLog.getDescription())) {
                 throw new RuntimeException("审核不通过时描述信息必填");
             }

@@ -197,7 +197,7 @@ public class TruckQualificationController {
         UpdateTruckQualificationDto dto = new UpdateTruckQualificationDto();
         BeanUtils.copyProperties(criteriaDto, dto);
         this.truckQualificationService.updateQualificationCertific(dto);
-        if (!criteriaDto.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
+        if (criteriaDto.getCertificateStatus().equals(AuditStatus.AUDIT_FAILED)) {
             if (StringUtils.isEmpty(criteriaDto.getDescription())) {
                 return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "审核不通过时需填写描述信息");
             }
