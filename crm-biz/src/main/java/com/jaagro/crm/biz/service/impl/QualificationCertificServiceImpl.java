@@ -128,7 +128,6 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
                             .setCreateUserId(userService.getCurrentUser().getId())
                             .setCustomerId(qualification.getCustomerId());
                     this.certificMapper.insertSelective(qc);
-//                    return ServiceResult.toResult("证件照列表修改成功");
                 }
             }
         }

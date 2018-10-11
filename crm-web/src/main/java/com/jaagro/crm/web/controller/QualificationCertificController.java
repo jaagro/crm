@@ -104,7 +104,12 @@ public class QualificationCertificController {
     @ApiOperation("修改资质")
     @PutMapping("/qualificationCertific")
     public BaseResponse updateSite(@RequestBody List<UpdateCustomerQualificationDto> certificDto) {
-        return BaseResponse.service(certificService.updateQualificationCertific(certificDto));
+        try {
+            certificService.updateQualificationCertific(certificDto);
+        } catch (Exception ex) {
+            return BaseResponse.successInstance(ex.getMessage());
+        }
+        return BaseResponse.successInstance("证件照列表修改成功");
     }
 
     /**
