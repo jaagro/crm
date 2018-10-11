@@ -7,6 +7,7 @@ import com.jaagro.crm.api.dto.request.truck.CreateListTruckQualificationDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckQualificationDto;
 import com.jaagro.crm.api.dto.response.truck.ReturnTruckQualificationDto;
+import com.jaagro.crm.api.service.DriverClientService;
 import com.jaagro.crm.api.service.OssSignUrlClientService;
 import com.jaagro.crm.api.service.TruckQualificationService;
 import com.jaagro.crm.biz.entity.TruckQualification;
@@ -40,6 +41,8 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
     private CurrentUserService currentUserService;
     @Autowired
     private OssSignUrlClientService ossSignUrlClientService;
+    @Autowired
+    private DriverClientService driverClientService;
 
     /**
      * 创建车队资质
@@ -148,7 +151,16 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
     @Override
     public Map<String, Object> listQualification(ListTruckQualificationCriteriaDto criteriaDto) {
         PageHelper.startPage(criteriaDto.getPageNum(), criteriaDto.getPageSize());
-        return ServiceResult.toResult(new PageInfo<>(this.truckQualificationMapper.listByCriteria(criteriaDto)));
+        List<ReturnTruckQualificationDto> truckQualificationDtos = this.truckQualificationMapper.listByCriteria(criteriaDto);
+        if (truckQualificationDtos.size() > 0) {
+            for (ReturnTruckQualificationDto qualificationDto : truckQualificationDtos
+            ) {
+                if (qualificationDto.getDriverId() != null) {
+                    qualificationDto.setDriverReturnDto(driverClientService.getDriverReturnObject(qualificationDto.getDriverId()));
+                }
+            }
+        }
+        return ServiceResult.toResult(new PageInfo<>(truckQualificationDtos));
     }
 
     @Override
