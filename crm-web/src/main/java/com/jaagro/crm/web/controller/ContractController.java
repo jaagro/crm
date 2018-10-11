@@ -388,7 +388,7 @@ public class ContractController {
         }
         this.contractQualificationService.updateContractQuaion(dto);
         logDto
-                .setVertifyResult(dto.getVertifyResult())
+                .setVertifyResult(dto.getCertificateStatus())
                 .setReferencesId(dto.getId());
         // 1-客户资质 2-运力资质 3-客户合同 4-运力合同
         if (dto.getRelevanceType() == 1) {
