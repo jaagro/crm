@@ -76,7 +76,7 @@ public class DriverReturnDto implements Serializable {
     /**
      * 驾驶员帐号状态(0；未审核  1；审核未通过 2－停止合作，3－正常合作)
      */
-    private Integer driverStatus;
+    private Integer status;
 
     /**
      * 生日

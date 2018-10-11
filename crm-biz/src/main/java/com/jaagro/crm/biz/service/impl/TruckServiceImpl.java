@@ -25,10 +25,7 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author liqiangping
@@ -319,16 +316,31 @@ public class TruckServiceImpl implements TruckService {
     @Override
     public Map<String, Object> listTrucksWithDrivers(ListTruckCriteriaDto criteriaDto) {
         PageHelper.startPage(criteriaDto.getPageNum(), criteriaDto.getPageSize());
-        //List<ListTruckDto> truckList = truckMapper.listTruckByCriteria(criteriaDto);
         List<ListTruckDto> truckList = truckMapper.listTruckForAssignWaybillByCriteria(criteriaDto);
         if (truckList == null || truckList.size() == 0) {
             return ServiceResult.error(ResponseStatusCode.OPERATION_SUCCESS.getCode(), "查无数据");
         }
-        if (!CollectionUtils.isEmpty(truckList)) {
-            for (ListTruckDto listTruckDto : truckList) {
-                List<DriverReturnDto> drivers = driverClientService.listByTruckId(listTruckDto.getTruckId());
-                listTruckDto.setDrivers(drivers);
+        Iterator<ListTruckDto> truckIterator = truckList.iterator();
+        while (truckIterator.hasNext()) {
+            ListTruckDto listTruckDto = truckIterator.next();
+            List<DriverReturnDto> drivers = driverClientService.listByTruckId(listTruckDto.getTruckId());
+            if (CollectionUtils.isEmpty(drivers)) {
+                truckIterator.remove();
+                continue;
+            } else {
+                Iterator<DriverReturnDto> driverIterator = drivers.iterator();
+                while (driverIterator.hasNext()) {
+                    DriverReturnDto driverDto = driverIterator.next();
+                    if (0 == driverDto.getStatus()) {
+                        driverIterator.remove();
+                    }
+                }
+                if (CollectionUtils.isEmpty(drivers)) {
+                    truckIterator.remove();
+                    continue;
+                }
             }
+            listTruckDto.setDrivers(drivers);
         }
         return ServiceResult.toResult(new PageInfo<>(truckList));
     }
