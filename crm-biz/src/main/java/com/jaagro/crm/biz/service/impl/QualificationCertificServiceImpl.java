@@ -96,44 +96,46 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
         if (certificDtos != null && certificDtos.size() > 0) {
             for (UpdateCustomerQualificationDto certificDto : certificDtos) {
                 //如果id为空，则新增此条数据
-                if (certificDto.getId() != null) {
+                if (certificDto.getId() == null) {
                     CreateCustomerQualificationDto createCustomerQualificationDto = new CreateCustomerQualificationDto();
                     BeanUtils.copyProperties(certificDto, createCustomerQualificationDto);
                     this.createQualificationCertific(createCustomerQualificationDto);
-                }
-                //修改
-                CustomerQualification qualification = this.certificMapper.selectByPrimaryKey(certificDto.getId());
-                if (qualification == null) {
-                    return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "证件[id=" + certificDto.getId() + "]不存在");
-                }
-                CustomerQualification qc = new CustomerQualification();
-                BeanUtils.copyProperties(certificDto, qc);
-                qc
-                        .setModifyUserId(userService.getCurrentUser().getId())
-                        .setModifyTime(new Date());
-                /**
-                 * 修改前判断是否已审核过
-                 */
-                // 待审核
-                if (qualification.getCertificateStatus().equals(AuditStatus.UNCHECKED)) {
-                    this.certificMapper.updateByPrimaryKeySelective(qc);
-                }
-                // 审核未通过的
-                if (qualification.getCertificateStatus().equals(AuditStatus.AUDIT_FAILED)) {
-                    // 先将审核未通过的资质逻辑删除
-                    qualification
-                            .setEnabled(false)
-                            .setCertificateStatus(AuditStatus.STOP_COOPERATION);
-                    this.certificMapper.updateByPrimaryKeySelective(qualification);
-                    // 把新资质证件照新增
+                } else {
+                    //修改
+                    CustomerQualification qualification = this.certificMapper.selectByPrimaryKey(certificDto.getId());
+                    if (qualification == null) {
+                        return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "证件[id=" + certificDto.getId() + "]不存在");
+                    }
+                    CustomerQualification qc = new CustomerQualification();
+                    BeanUtils.copyProperties(certificDto, qc);
                     qc
-                            .setId(null)
-                            .setCertificateStatus(AuditStatus.UNCHECKED)
-                            .setCreateUserId(userService.getCurrentUser().getId())
-                            .setCustomerId(qualification.getCustomerId());
-                    this.certificMapper.insertSelective(qc);
+                            .setModifyUserId(userService.getCurrentUser().getId())
+                            .setModifyTime(new Date());
+                    /**
+                     * 修改前判断是否已审核过
+                     */
+                    // 待审核
+                    if (qualification.getCertificateStatus().equals(AuditStatus.UNCHECKED)) {
+                        this.certificMapper.updateByPrimaryKeySelective(qc);
+                    }
+                    // 审核未通过的
+                    if (qualification.getCertificateStatus().equals(AuditStatus.AUDIT_FAILED)) {
+                        // 先将审核未通过的资质逻辑删除
+                        qualification
+                                .setEnabled(false)
+                                .setCertificateStatus(AuditStatus.STOP_COOPERATION);
+                        this.certificMapper.updateByPrimaryKeySelective(qualification);
+                        // 把新资质证件照新增
+                        qc
+                                .setId(null)
+                                .setCertificateStatus(AuditStatus.UNCHECKED)
+                                .setCreateUserId(userService.getCurrentUser().getId())
+                                .setCustomerId(qualification.getCustomerId());
+                        this.certificMapper.insertSelective(qc);
+                    }
                 }
             }
+
         }
         return ServiceResult.toResult("证件照列表修改成功");
     }
