@@ -95,9 +95,13 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
     public Map<String, Object> updateQualificationCertific(List<UpdateCustomerQualificationDto> certificDtos) {
         if (certificDtos != null && certificDtos.size() > 0) {
             for (UpdateCustomerQualificationDto certificDto : certificDtos) {
-                if (certificDto.getId() == null) {
-                    return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "证件id不能为空");
+                //如果id为空，则新增此条数据
+                if (certificDto.getId() != null) {
+                    CreateCustomerQualificationDto createCustomerQualificationDto = new CreateCustomerQualificationDto();
+                    BeanUtils.copyProperties(certificDto, createCustomerQualificationDto);
+                    this.createQualificationCertific(createCustomerQualificationDto);
                 }
+                //修改
                 CustomerQualification qualification = this.certificMapper.selectByPrimaryKey(certificDto.getId());
                 if (qualification == null) {
                     return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "证件[id=" + certificDto.getId() + "]不存在");
