@@ -3,6 +3,7 @@ package com.jaagro.crm.biz.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.constant.AuditStatus;
+import com.jaagro.crm.api.constant.CertificateType;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerQualificationDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerQualificationCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerQualificationDto;
@@ -51,10 +52,12 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
         if (StringUtils.isEmpty(qc.getCustomerId()) || StringUtils.isEmpty(qc.getCertificateType())) {
             return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户id和资质证件照类型不能为空");
         }
-        //新增前判断是否此资质已新增过
-        List<CustomerQualificationReturnDto> returnDtos = certificMapper.getByCustomerIdAndId(qc.getCustomerId(), qc.getCertificateType());
-        if (returnDtos.size() > 0) {
-            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "此客户的资质已上传，不允许再上传");
+        if (!certificDto.getCertificateType().equals(CertificateType.ELSE)) {
+            //新增前判断是否此资质已新增过
+            List<CustomerQualificationReturnDto> returnDtos = certificMapper.getByCustomerIdAndId(qc.getCustomerId(), qc.getCertificateType());
+            if (returnDtos.size() > 0) {
+                return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "此客户的资质已上传，不允许再上传");
+            }
         }
         qc
                 .setCreateUserId(userService.getCurrentUser().getId());
