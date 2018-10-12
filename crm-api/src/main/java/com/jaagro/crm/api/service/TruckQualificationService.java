@@ -31,6 +31,14 @@ public interface TruckQualificationService {
     /**
      * 修改
      *
+     * @param dto
+     * @return
+     */
+    Map<String, Object> updateQualificationCertific(UpdateTruckQualificationDto dto);
+
+    /**
+     * 修改
+     *
      * @param ids
      * @return
      */
@@ -50,11 +58,4 @@ public interface TruckQualificationService {
      */
     Map<String, Object> listQualificationByTruckIds(ListTruckQualificationCriteriaDto criteriaDto);
 
-    /**
-     * 修改
-     *
-     * @param dto
-     * @return
-     */
-    Map<String, Object> updateQualificationCertific(UpdateTruckQualificationDto dto);
 }
