@@ -99,7 +99,11 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
                 if (certificDto.getId() == null) {
                     CreateCustomerQualificationDto createCustomerQualificationDto = new CreateCustomerQualificationDto();
                     BeanUtils.copyProperties(certificDto, createCustomerQualificationDto);
-                    this.createQualificationCertific(createCustomerQualificationDto);
+                    try {
+                        this.createQualificationCertific(createCustomerQualificationDto);
+                    } catch (Exception ex) {
+                        return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), ex.getMessage());
+                    }
                 } else {
                     //修改
                     CustomerQualification qualification = this.certificMapper.selectByPrimaryKey(certificDto.getId());
