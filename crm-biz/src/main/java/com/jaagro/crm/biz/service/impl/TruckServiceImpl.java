@@ -225,11 +225,13 @@ public class TruckServiceImpl implements TruckService {
                         // id为null - 新增
                         if (truckQualificationDto.getId() == null) {
                             CreateListTruckQualificationDto createListTruckQualificationDto = new CreateListTruckQualificationDto();
+                            List<UpdateTruckQualificationDto> updateTruckQualificationDtos = new ArrayList<>();
+                            updateTruckQualificationDtos.add(truckQualificationDto);
                             createListTruckQualificationDto
                                     .setTruckId(truck.getId())
                                     .setTruckTeamId(truck.getTruckTeamId())
                                     .setDriverId(driverId)
-                                    .setQualification(createDriverDto.getDriverQualifications());
+                                    .setQualification(updateTruckQualificationDtos);
                             this.truckQualificationService.createTruckQualification(createListTruckQualificationDto);
                         } else {
                             //修改
