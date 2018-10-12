@@ -8,6 +8,7 @@ import com.jaagro.crm.api.dto.request.customer.ShowSiteDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerSiteDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto;
 import com.jaagro.crm.api.service.CustomerSiteService;
+import com.jaagro.crm.api.service.DriverClientService;
 import com.jaagro.crm.biz.entity.CustomerSite;
 import com.jaagro.crm.biz.mapper.CustomerSiteMapperExt;
 import com.jaagro.utils.ServiceResult;
@@ -17,6 +18,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Date;
 import java.util.List;
@@ -34,6 +37,9 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
     private CustomerSiteMapperExt siteMapper;
     @Autowired
     private CurrentUserService userService;
+    @Autowired
+    private DriverClientService deptClientService;
+
 
     @Override
     public Map<String, Object> createSite(CreateCustomerSiteDto customerSiteDto) {
@@ -99,6 +105,12 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
     public Map<String, Object> listByCriteria(ListSiteCriteriaDto dto) {
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
         List<CustomerSiteReturnDto> siteReturnDtos = siteMapper.getByCriteriDto(dto);
+        for (CustomerSiteReturnDto siteReturnDto : siteReturnDtos
+        ) {
+            if (siteReturnDto.getSiteType() < 2) {
+                siteReturnDto.setDeptName(deptClientService.getDeptNameById(siteReturnDto.getDeptId()));
+            }
+        }
         return ServiceResult.toResult(new PageInfo<>(siteReturnDtos));
     }
 

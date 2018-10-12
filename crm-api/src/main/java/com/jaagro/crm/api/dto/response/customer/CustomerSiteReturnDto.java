@@ -22,7 +22,7 @@ public class CustomerSiteReturnDto implements Serializable {
 
     /**
      * 地址类型
-     1-装货点，2-卸货点
+     * 1-装货点，2-卸货点
      */
     private Integer siteType;
 
@@ -35,6 +35,11 @@ public class CustomerSiteReturnDto implements Serializable {
      * 归属网点
      */
     private Integer deptId;
+
+    /**
+     * 归属网点
+     */
+    private String deptName;
 
     /**
      * 养殖场类型（装货地属性）：1-平养场 2-网养场 3-笼养场
@@ -58,7 +63,7 @@ public class CustomerSiteReturnDto implements Serializable {
 
     /**
      * 外键关联客户ID
-     ( References customer)
+     * ( References customer)
      */
     private Integer customerId;
 

@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.constant.AuditStatus;
+import com.jaagro.crm.api.constant.ProductType;
 import com.jaagro.crm.api.dto.request.truck.*;
 import com.jaagro.crm.api.dto.response.truck.*;
 import com.jaagro.crm.api.service.*;
@@ -25,10 +26,7 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author liqiangping
@@ -292,6 +290,11 @@ public class TruckServiceImpl implements TruckService {
 
     @Override
     public List<ListTruckTypeDto> listTruckType(String productName) {
+        System.err.println(ProductType.SOW);
+        if (productName.equals(ProductType.SOW.toString()) || productName.equals(ProductType.BOAR.toString()) || productName.equals(ProductType.LIVE_PIG.toString())) {
+            productName = ProductType.BOAR.toString();
+            return truckTypeMapper.listAll(productName);
+        }
         return truckTypeMapper.listAll(productName);
     }
 
@@ -319,16 +322,31 @@ public class TruckServiceImpl implements TruckService {
     @Override
     public Map<String, Object> listTrucksWithDrivers(ListTruckCriteriaDto criteriaDto) {
         PageHelper.startPage(criteriaDto.getPageNum(), criteriaDto.getPageSize());
-        //List<ListTruckDto> truckList = truckMapper.listTruckByCriteria(criteriaDto);
         List<ListTruckDto> truckList = truckMapper.listTruckForAssignWaybillByCriteria(criteriaDto);
         if (truckList == null || truckList.size() == 0) {
             return ServiceResult.error(ResponseStatusCode.OPERATION_SUCCESS.getCode(), "查无数据");
         }
-        if (!CollectionUtils.isEmpty(truckList)) {
-            for (ListTruckDto listTruckDto : truckList) {
-                List<DriverReturnDto> drivers = driverClientService.listByTruckId(listTruckDto.getTruckId());
-                listTruckDto.setDrivers(drivers);
+        Iterator<ListTruckDto> truckIterator = truckList.iterator();
+        while (truckIterator.hasNext()) {
+            ListTruckDto listTruckDto = truckIterator.next();
+            List<DriverReturnDto> drivers = driverClientService.listByTruckId(listTruckDto.getTruckId());
+            if (CollectionUtils.isEmpty(drivers)) {
+                truckIterator.remove();
+                continue;
+            } else {
+                Iterator<DriverReturnDto> driverIterator = drivers.iterator();
+                while (driverIterator.hasNext()) {
+                    DriverReturnDto driverDto = driverIterator.next();
+                    if (0 == driverDto.getStatus()) {
+                        driverIterator.remove();
+                    }
+                }
+                if (CollectionUtils.isEmpty(drivers)) {
+                    truckIterator.remove();
+                    continue;
+                }
             }
+            listTruckDto.setDrivers(drivers);
         }
         return ServiceResult.toResult(new PageInfo<>(truckList));
     }
