@@ -183,9 +183,6 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
         if (StringUtils.isEmpty(truckQualificationDto.getId())) {
             return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "id不能为空");
         }
-        if (StringUtils.isEmpty(truckQualificationDto.getCertificateImageUrl())) {
-            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质照路径不能为空");
-        }
         TruckQualification truckQualification = this.truckQualificationMapper.selectByPrimaryKey(truckQualificationDto.getId());
         if (truckQualification == null) {
             return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "此资质照不存在");
