@@ -215,7 +215,11 @@ public class TruckServiceImpl implements TruckService {
                     //修改
                     UpdateDriverDto updateDriverDto = new UpdateDriverDto();
                     BeanUtils.copyProperties(createDriverDto, updateDriverDto);
-                    this.driverClientService.updateDriverFeign(updateDriverDto);
+                    try {
+                        this.driverClientService.updateDriverFeign(updateDriverDto);
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex.getMessage());
+                    }
                     driverId = updateDriverDto.getId();
                 }
                 //司机资质
