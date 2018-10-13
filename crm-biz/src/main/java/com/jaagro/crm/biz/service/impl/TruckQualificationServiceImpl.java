@@ -143,6 +143,12 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
         return ServiceResult.toResult("删除成功");
     }
 
+    @Override
+    public Map<String, Object> deleteQualificationByDriverId(Integer driverId) {
+        this.truckQualificationMapper.disbaleByDriverId(driverId);
+        return ServiceResult.toResult("删除成功");
+    }
+
     /**
      * 分页查询待审核的运力资质
      *

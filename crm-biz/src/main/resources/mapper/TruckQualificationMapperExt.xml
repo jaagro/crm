@@ -137,4 +137,9 @@
         and certificate_type = #{certificateType}
         and certificate_status != 3
     </select>
+    <update id="disbaleByDriverId" parameterType="java.lang.Integer">
+        update truck_qualification
+        set enabled = 0
+        where driver_id = #{driverId}
+    </update>
 </mapper>

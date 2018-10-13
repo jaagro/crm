@@ -14,6 +14,7 @@ import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -66,7 +67,7 @@ public class TruckQualificationController {
 
     @ApiOperation("修改资质")
     @PutMapping("/truckQualification")
-    public BaseResponse update(@RequestBody List<UpdateTruckQualificationDto> dto) {
+    public BaseResponse truckQualification(@RequestBody List<UpdateTruckQualificationDto> dto) {
         try {
             truckQualificationService.updateQualification(dto);
         } catch (Exception ex) {
@@ -77,8 +78,14 @@ public class TruckQualificationController {
 
     @ApiOperation("删除资质")
     @PostMapping("/deleteTruckQualification")
-    public BaseResponse update(@RequestBody Integer[] ids) {
+    public BaseResponse deleteTruckQualification(@RequestBody Integer[] ids) {
         return BaseResponse.service(truckQualificationService.deleteQualification(ids));
+    }
+
+    @Ignore
+    @GetMapping("/deleteTruckQualificationByDriverId/{driverId}")
+    public BaseResponse deleteTruckQualificationByDriverId(@PathVariable("driverId") Integer driverId) {
+        return BaseResponse.service(truckQualificationService.deleteQualificationByDriverId(driverId));
     }
 
     /**

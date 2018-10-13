@@ -37,12 +37,20 @@ public interface TruckQualificationService {
     Map<String, Object> updateQualificationCertific(UpdateTruckQualificationDto dto);
 
     /**
-     * 修改
+     * 逻辑删除 根据图片id数组
      *
      * @param ids
      * @return
      */
     Map<String, Object> deleteQualification(Integer[] ids);
+
+    /**
+     * 逻辑删除 根据司机id
+     *
+     * @param ids
+     * @return
+     */
+    Map<String, Object> deleteQualificationByDriverId(Integer driverId);
 
     /**
      * 分页查询待审核的运力资质
