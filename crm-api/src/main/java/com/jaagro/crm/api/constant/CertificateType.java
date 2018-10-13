@@ -103,6 +103,11 @@ public final class CertificateType {
     public static final Integer TRANSPORT_ROUTIER = 19;
 
     /**
+     * 近两年财务报告
+     */
+    public static final Integer FINANCIAL_REPORTS = 20;
+
+    /**
      * 其他
      */
     public static final Integer ELSE = 80;
