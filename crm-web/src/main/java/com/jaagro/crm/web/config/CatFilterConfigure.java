@@ -18,7 +18,7 @@ public class CatFilterConfigure {
         registration.setFilter(filter);
         registration.addUrlPatterns("/*");
         registration.setName("cat-filter");
-        registration.setOrder(2);
+        registration.setOrder(1);
         return registration;
     }
 }
