@@ -24,7 +24,6 @@ import java.util.Map;
 
 /**
  * @author liqiangping
- *
  */
 @RestController
 @Api(description = "车辆管理", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -84,7 +83,13 @@ public class TruckController {
         if (StringUtils.isEmpty(truck.getTruckNumber())) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车牌号码不能为空");
         }
-        return BaseResponse.service(truckService.updateTruck(truck));
+        Map<String, Object> result;
+        try {
+            result = truckService.updateTruck(truck);
+        } catch (Exception ex) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), ex.getMessage());
+        }
+        return BaseResponse.service(result);
     }
 
     @ApiOperation("车辆删除【逻辑】")

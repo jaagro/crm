@@ -20,6 +20,11 @@ public class UpdateCustomerQualificationDto implements Serializable {
     private Integer id;
 
     /**
+     * 客户id
+     */
+    private Integer customerId;
+
+    /**
      * 不通过原因
      */
     private Integer vertifyResult;

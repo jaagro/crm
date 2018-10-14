@@ -89,6 +89,30 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.11</version>
+        </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>com.dianping.cat</groupId>-->
+            <!--<artifactId>cat-core</artifactId>-->
+            <!--<version>3.0.0</version>-->
+        <!--</dependency>-->
+
+        <dependency>
+            <groupId>com.dianping.cat</groupId>
+            <artifactId>cat-client</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.unidal.framework</groupId>
+            <artifactId>foundation-service</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+
     </dependencies>
 
 </project>

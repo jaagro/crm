@@ -26,10 +26,7 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author liqiangping
@@ -218,7 +215,11 @@ public class TruckServiceImpl implements TruckService {
                     //修改
                     UpdateDriverDto updateDriverDto = new UpdateDriverDto();
                     BeanUtils.copyProperties(createDriverDto, updateDriverDto);
-                    this.driverClientService.updateDriverFeign(updateDriverDto);
+                    try {
+                        this.driverClientService.updateDriverFeign(updateDriverDto);
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex.getMessage());
+                    }
                     driverId = updateDriverDto.getId();
                 }
                 //司机资质
@@ -228,15 +229,17 @@ public class TruckServiceImpl implements TruckService {
                         // id为null - 新增
                         if (truckQualificationDto.getId() == null) {
                             CreateListTruckQualificationDto createListTruckQualificationDto = new CreateListTruckQualificationDto();
+                            List<UpdateTruckQualificationDto> updateTruckQualificationDtos = new ArrayList<>();
+                            updateTruckQualificationDtos.add(truckQualificationDto);
                             createListTruckQualificationDto
                                     .setTruckId(truck.getId())
                                     .setTruckTeamId(truck.getTruckTeamId())
                                     .setDriverId(driverId)
-                                    .setQualification(createDriverDto.getDriverQualifications());
+                                    .setQualification(updateTruckQualificationDtos);
                             this.truckQualificationService.createTruckQualification(createListTruckQualificationDto);
                         } else {
                             //修改
-                            this.truckQualificationService.updateQualification(createDriverDto.getDriverQualifications());
+                            this.truckQualificationService.updateQualificationCertific(truckQualificationDto);
                         }
                     }
                 }
@@ -253,7 +256,7 @@ public class TruckServiceImpl implements TruckService {
                     this.truckQualificationService.createTruckQualification(createListTruckQualificationDto);
                 } else {
                     //修改
-                    this.truckQualificationService.updateQualification(truckDto.getTruckQualifications());
+                    this.truckQualificationService.updateQualificationCertific(truckQualificationDto);
                 }
             }
         }
@@ -293,7 +296,8 @@ public class TruckServiceImpl implements TruckService {
 
     @Override
     public List<ListTruckTypeDto> listTruckType(String productName) {
-        if (productName.equals(ProductType.SOW) || productName.equals(ProductType.BOAR) || productName.equals(ProductType.LIVE_PIG)) {
+        System.err.println(ProductType.SOW);
+        if (productName.equals(ProductType.SOW.toString()) || productName.equals(ProductType.BOAR.toString()) || productName.equals(ProductType.LIVE_PIG.toString())) {
             productName = ProductType.BOAR.toString();
             return truckTypeMapper.listAll(productName);
         }
@@ -324,16 +328,31 @@ public class TruckServiceImpl implements TruckService {
     @Override
     public Map<String, Object> listTrucksWithDrivers(ListTruckCriteriaDto criteriaDto) {
         PageHelper.startPage(criteriaDto.getPageNum(), criteriaDto.getPageSize());
-        //List<ListTruckDto> truckList = truckMapper.listTruckByCriteria(criteriaDto);
         List<ListTruckDto> truckList = truckMapper.listTruckForAssignWaybillByCriteria(criteriaDto);
         if (truckList == null || truckList.size() == 0) {
             return ServiceResult.error(ResponseStatusCode.OPERATION_SUCCESS.getCode(), "查无数据");
         }
-        if (!CollectionUtils.isEmpty(truckList)) {
-            for (ListTruckDto listTruckDto : truckList) {
-                List<DriverReturnDto> drivers = driverClientService.listByTruckId(listTruckDto.getTruckId());
-                listTruckDto.setDrivers(drivers);
+        Iterator<ListTruckDto> truckIterator = truckList.iterator();
+        while (truckIterator.hasNext()) {
+            ListTruckDto listTruckDto = truckIterator.next();
+            List<DriverReturnDto> drivers = driverClientService.listByTruckId(listTruckDto.getTruckId());
+            if (CollectionUtils.isEmpty(drivers)) {
+                truckIterator.remove();
+                continue;
+            } else {
+                Iterator<DriverReturnDto> driverIterator = drivers.iterator();
+                while (driverIterator.hasNext()) {
+                    DriverReturnDto driverDto = driverIterator.next();
+                    if (0 == driverDto.getStatus()) {
+                        driverIterator.remove();
+                    }
+                }
+                if (CollectionUtils.isEmpty(drivers)) {
+                    truckIterator.remove();
+                    continue;
+                }
             }
+            listTruckDto.setDrivers(drivers);
         }
         return ServiceResult.toResult(new PageInfo<>(truckList));
     }

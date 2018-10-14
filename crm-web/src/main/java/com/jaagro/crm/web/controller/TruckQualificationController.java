@@ -14,6 +14,7 @@ import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -66,7 +67,7 @@ public class TruckQualificationController {
 
     @ApiOperation("修改资质")
     @PutMapping("/truckQualification")
-    public BaseResponse update(@RequestBody List<UpdateTruckQualificationDto> dto) {
+    public BaseResponse truckQualification(@RequestBody List<UpdateTruckQualificationDto> dto) {
         try {
             truckQualificationService.updateQualification(dto);
         } catch (Exception ex) {
@@ -77,8 +78,14 @@ public class TruckQualificationController {
 
     @ApiOperation("删除资质")
     @PostMapping("/deleteTruckQualification")
-    public BaseResponse update(@RequestBody Integer[] ids) {
+    public BaseResponse deleteTruckQualification(@RequestBody Integer[] ids) {
         return BaseResponse.service(truckQualificationService.deleteQualification(ids));
+    }
+
+    @Ignore
+    @GetMapping("/deleteTruckQualificationByDriverId/{driverId}")
+    public BaseResponse deleteTruckQualificationByDriverId(@PathVariable("driverId") Integer driverId) {
+        return BaseResponse.service(truckQualificationService.deleteQualificationByDriverId(driverId));
     }
 
     /**
@@ -197,7 +204,7 @@ public class TruckQualificationController {
         UpdateTruckQualificationDto dto = new UpdateTruckQualificationDto();
         BeanUtils.copyProperties(criteriaDto, dto);
         this.truckQualificationService.updateQualificationCertific(dto);
-        if (!criteriaDto.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
+        if (criteriaDto.getCertificateStatus().equals(AuditStatus.AUDIT_FAILED)) {
             if (StringUtils.isEmpty(criteriaDto.getDescription())) {
                 return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "审核不通过时需填写描述信息");
             }
@@ -205,7 +212,8 @@ public class TruckQualificationController {
         }
         logDto
                 .setReferencesId(dto.getId())
-                .setCertificateType(2);
+                .setCertificateType(2)
+                .setVertifyResult(dto.getCertificateStatus());
         // 1-客户资质 2-运力资质 3-客户合同 4-运力合同
         return BaseResponse.service(this.qualificationVerifyLogService.createVerifyLog(logDto));
     }
