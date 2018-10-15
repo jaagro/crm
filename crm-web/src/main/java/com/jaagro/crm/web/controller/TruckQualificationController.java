@@ -14,6 +14,7 @@ import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -66,7 +67,7 @@ public class TruckQualificationController {
 
     @ApiOperation("修改资质")
     @PutMapping("/truckQualification")
-    public BaseResponse update(@RequestBody List<UpdateTruckQualificationDto> dto) {
+    public BaseResponse truckQualification(@RequestBody List<UpdateTruckQualificationDto> dto) {
         try {
             truckQualificationService.updateQualification(dto);
         } catch (Exception ex) {
@@ -77,8 +78,14 @@ public class TruckQualificationController {
 
     @ApiOperation("删除资质")
     @PostMapping("/deleteTruckQualification")
-    public BaseResponse update(@RequestBody Integer[] ids) {
+    public BaseResponse deleteTruckQualification(@RequestBody Integer[] ids) {
         return BaseResponse.service(truckQualificationService.deleteQualification(ids));
+    }
+
+    @Ignore
+    @GetMapping("/deleteTruckQualificationByDriverId/{driverId}")
+    public BaseResponse deleteTruckQualificationByDriverId(@PathVariable("driverId") Integer driverId) {
+        return BaseResponse.service(truckQualificationService.deleteQualificationByDriverId(driverId));
     }
 
     /**
@@ -93,6 +100,29 @@ public class TruckQualificationController {
         criteriaDto.setEnableCheck("查询详情");
         return BaseResponse.service(truckQualificationService.listQualificationByTruckIds(criteriaDto));
     }
+
+    @ApiOperation("查询单个运力资质【包括详细信息】")
+    @GetMapping("/getQualificationById/{id}")
+    public BaseResponse getQualificationByd(@PathVariable Integer id) {
+        ReturnTruckQualificationDto qualificationDto = this.truckQualificationMapper.getById(id);
+        if (qualificationDto != null) {
+            //填充司机信息
+            if (qualificationDto.getDriverId() != null) {
+                qualificationDto.setDriverReturnDto(this.driverClientService.getDriverReturnObject(qualificationDto.getDriverId()));
+            }
+            //填充车辆信息
+            if (qualificationDto.getTruckId() != null) {
+                qualificationDto.setTruckDto(this.truckMapper.getCheckById(qualificationDto.getTruckId()));
+            }
+            //替换资质证照地址
+            String[] strArray = {qualificationDto.getCertificateImageUrl()};
+            List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+            qualificationDto.setCertificateImageUrl(urlList.get(0).toString());
+            return BaseResponse.successInstance(qualificationDto);
+        }
+        return BaseResponse.successInstance(qualificationDto);
+    }
+
 
     //-----------------------------------------------------审核-------------------------------------------------------
 

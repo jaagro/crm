@@ -143,6 +143,12 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
         return ServiceResult.toResult("删除成功");
     }
 
+    @Override
+    public Map<String, Object> deleteQualificationByDriverId(Integer driverId) {
+        this.truckQualificationMapper.disbaleByDriverId(driverId);
+        return ServiceResult.toResult("删除成功");
+    }
+
     /**
      * 分页查询待审核的运力资质
      *
@@ -179,16 +185,43 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
     }
 
     @Override
-    public Map<String, Object> updateQualificationCertific(UpdateTruckQualificationDto dto) {
-        if (dto.getId() == null) {
-            throw new NullPointerException("资质id不能为空");
+    public Map<String, Object> updateQualificationCertific(UpdateTruckQualificationDto truckQualificationDto) {
+        if (StringUtils.isEmpty(truckQualificationDto.getId())) {
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "id不能为空");
+        }
+        TruckQualification truckQualification = this.truckQualificationMapper.selectByPrimaryKey(truckQualificationDto.getId());
+        if (truckQualification == null) {
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "此资质照不存在");
         }
         TruckQualification qualification = new TruckQualification();
-        BeanUtils.copyProperties(dto, qualification);
+        BeanUtils.copyProperties(truckQualificationDto, qualification);
         qualification
                 .setModifyTime(new Date())
                 .setModifyUserId(this.currentUserService.getCurrentUser().getId());
-        truckQualificationMapper.updateByPrimaryKeySelective(qualification);
+        /**
+         * 修改前判断是否已审核过
+         */
+        // 待审核
+        if (truckQualification.getCertificateStatus().equals(AuditStatus.UNCHECKED)) {
+            this.truckQualificationMapper.updateByPrimaryKeySelective(qualification);
+        }
+        // 审核未通过的
+        if (truckQualification.getCertificateStatus().equals(AuditStatus.AUDIT_FAILED)) {
+            // 先将审核未通过的资质逻辑删除
+            truckQualification
+                    .setEnabled(false)
+                    .setCertificateStatus(AuditStatus.STOP_COOPERATION);
+            this.truckQualificationMapper.updateByPrimaryKeySelective(truckQualification);
+            // 把新资质证件照新增
+            qualification
+                    .setId(null)
+                    .setCreateUserId(currentUserService.getCurrentUser().getId())
+                    .setTruckTeamId(truckQualification.getTruckTeamId())
+                    .setTruckId(truckQualification.getTruckId())
+                    .setDriverId(truckQualification.getDriverId())
+                    .setCertificateStatus(AuditStatus.UNCHECKED);
+            this.truckQualificationMapper.insertSelective(qualification);
+        }
         return ServiceResult.toResult("修改成功");
     }
 

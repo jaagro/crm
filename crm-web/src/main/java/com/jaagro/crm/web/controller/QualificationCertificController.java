@@ -130,18 +130,20 @@ public class QualificationCertificController {
      * @param id
      * @return
      */
-    @ApiOperation("查询单个资质")
+    @ApiOperation("查询单个资质【包含详细客户信息】")
     @GetMapping("/qualificationCertific/{id}")
     public BaseResponse getById(@PathVariable Integer id) {
         if (this.certificMapper.selectByPrimaryKey(id) == null) {
             return BaseResponse.queryDataEmpty();
         }
-        CustomerQualification customerQualification = this.certificMapper.selectByPrimaryKey(id);
-        //替换资质证照地址
-        String[] strArray = {customerQualification.getCertificateImageUrl()};
-        List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
-        customerQualification.setCertificateImageUrl(urlList.get(0).toString());
-        return BaseResponse.successInstance(customerQualification);
+        ReturnQualificationDto qualificationDto = this.certificService.getQualificationById(id);
+        if (qualificationDto != null) {
+            //替换资质证照地址
+            String[] strArray = {qualificationDto.getCertificateImageUrl()};
+            List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+            qualificationDto.setCertificateImageUrl(urlList.get(0).toString());
+        }
+        return BaseResponse.successInstance(qualificationDto);
     }
 
     /**
