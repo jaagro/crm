@@ -70,6 +70,13 @@
         and certificate_status in (0,2)
         and id = #{id}
     </select>
+    <select id="getQualificationById" resultMap="ReturnCheckMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from contract_qualification
+        where enabled = 1
+        and id = #{id}
+    </select>
     <select id="listUnCheckByContractId" resultMap="ReturnCheckMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>

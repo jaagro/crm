@@ -230,11 +230,11 @@ public class ContractController {
     @ApiOperation("查询单个合同资质【包括合同详细信息】")
     @GetMapping("/ContractQualification/{id}")
     public BaseResponse getContractQualificationById(@PathVariable Integer id) {
-        if (this.customerContractMapper.selectByPrimaryKey(id) == null) {
+        if (this.qualificationMapper.selectByPrimaryKey(id) == null) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到相应信息");
         }
         //返回要审核的合同
-        ReturnCheckContractQualificationDto checkContractQualificationDto = this.qualificationMapper.getById(id);
+        ReturnCheckContractQualificationDto checkContractQualificationDto = this.qualificationMapper.getQualificationById(id);
         if (checkContractQualificationDto != null) {
             //替换资质证照地址
             String[] strArray = {checkContractQualificationDto.getCertificateImageUrl()};
