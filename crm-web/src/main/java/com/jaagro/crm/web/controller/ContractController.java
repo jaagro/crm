@@ -227,14 +227,24 @@ public class ContractController {
      * @param id
      * @return
      */
-    @ApiOperation("查询单个合同资质")
+    @ApiOperation("查询单个合同资质【包括合同详细信息】")
     @GetMapping("/ContractQualification/{id}")
     public BaseResponse getContractQualificationById(@PathVariable Integer id) {
         if (this.customerContractMapper.selectByPrimaryKey(id) == null) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到相应信息");
         }
-        ContractQualification qualification = qualificationMapper.selectByPrimaryKey(id);
-        return BaseResponse.successInstance(qualification);
+        //返回要审核的合同
+        ReturnCheckContractQualificationDto checkContractQualificationDto = this.qualificationMapper.getById(id);
+        if (checkContractQualificationDto != null) {
+            //替换资质证照地址
+            String[] strArray = {checkContractQualificationDto.getCertificateImageUrl()};
+            List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+            checkContractQualificationDto.setCertificateImageUrl(urlList.get(0).toString());
+            //填充运力合同信息
+            checkContractQualificationDto.setTruckTeamContractReturnDto(this.truckTeamContractMapper.getById(checkContractQualificationDto.getRelevanceId()));
+            return BaseResponse.successInstance(checkContractQualificationDto);
+        }
+        return BaseResponse.successInstance(checkContractQualificationDto);
     }
 
     /**

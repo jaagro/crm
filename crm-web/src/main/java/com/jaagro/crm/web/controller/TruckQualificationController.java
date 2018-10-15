@@ -101,6 +101,29 @@ public class TruckQualificationController {
         return BaseResponse.service(truckQualificationService.listQualificationByTruckIds(criteriaDto));
     }
 
+    @ApiOperation("查询单个运力资质【包括详细信息】")
+    @PostMapping("/getQualificationBy1d/{id}")
+    public BaseResponse getQualificationByd(@PathVariable("id") Integer id) {
+        ReturnTruckQualificationDto qualificationDto = this.truckQualificationMapper.getById(id);
+        if (qualificationDto != null) {
+            //填充司机信息
+            if (qualificationDto.getDriverId() != null) {
+                qualificationDto.setDriverReturnDto(this.driverClientService.getDriverReturnObject(qualificationDto.getDriverId()));
+            }
+            //填充车辆信息
+            if (qualificationDto.getTruckId() != null) {
+                qualificationDto.setTruckDto(this.truckMapper.getCheckById(qualificationDto.getTruckId()));
+            }
+            //替换资质证照地址
+            String[] strArray = {qualificationDto.getCertificateImageUrl()};
+            List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+            qualificationDto.setCertificateImageUrl(urlList.get(0).toString());
+            return BaseResponse.successInstance(qualificationDto);
+        }
+        return BaseResponse.successInstance(qualificationDto);
+    }
+
+
     //-----------------------------------------------------审核-------------------------------------------------------
 
     @ApiOperation("待审核资质分页")
