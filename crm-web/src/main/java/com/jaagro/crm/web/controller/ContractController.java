@@ -71,15 +71,15 @@ public class ContractController {
     @PostMapping("/contract")
     public BaseResponse createContract(@RequestBody CreateContractDto dto) {
         if (StringUtils.isEmpty(dto.getCustomerId())) {
-            return BaseResponse.idNull("客户id:[customerId]不能为空");
+            return BaseResponse.idNull("客户不能为空");
         }
         if (this.customerMapper.selectByPrimaryKey(dto.getCustomerId()) == null) {
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户id:[customerId]不存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户不存在");
         }
         UpdateContractDto updateContractDto = new UpdateContractDto();
         updateContractDto.setContractNumber(dto.getContractNumber());
         if (this.customerContractMapper.getByUpdateDto(updateContractDto) != null) {
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同编号[contractumber]已存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同编号已存在");
         }
         Map<String, Object> result;
         try {
@@ -108,7 +108,7 @@ public class ContractController {
             return BaseResponse.idError("合同客户不能为空");
         }
         if (this.customerContractMapper.getByUpdateDto(dto) != null) {
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同编号[contractumber]已存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同编号已存在");
         }
         Map<String, Object> result;
         try {
