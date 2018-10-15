@@ -131,7 +131,7 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                             truckQualification.getCertificateType().equals(CertificateType.BACK_ID_CARD) ||
                             truckQualification.getCertificateType().equals(CertificateType.DRIVER_ORIGINAL) ||
                             truckQualification.getCertificateType().equals(CertificateType.TRANSPORT_QUALIFICATION) ||
-                            truckQualification.getCertificateType().equals(CertificateType.DRIVER_ORIGINAL)) {
+                            truckQualification.getCertificateType().equals(CertificateType.DRIVER_COPY)) {
 
                         if (truckQualification.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
                             // type为： 1:个体车队 2:公司车队 3:车辆 4:司机
