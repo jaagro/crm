@@ -92,6 +92,13 @@
         and id = #{id}
         and certificate_status in (0,2)
     </select>
+    <select id="getQualificationById" resultMap="ReturnCheckMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from truck_qualification
+        where enabled = 1
+        and id = #{id}
+    </select>
     <select id="listCheckedByIdAndType" resultType="java.lang.Integer" parameterType="java.lang.Integer">
         select
         count(1)
