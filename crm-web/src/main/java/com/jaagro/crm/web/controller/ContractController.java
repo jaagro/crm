@@ -222,7 +222,7 @@ public class ContractController {
     }
 
     /**
-     * 查询单个合同资质
+     * 查询单个合同资质【包括合同详细信息】
      *
      * @param id
      * @return
@@ -233,7 +233,7 @@ public class ContractController {
         if (this.qualificationMapper.selectByPrimaryKey(id) == null) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到相应信息");
         }
-        //返回要审核的合同
+        //返回的合同资质
         ReturnCheckContractQualificationDto checkContractQualificationDto = this.qualificationMapper.getQualificationById(id);
         if (checkContractQualificationDto != null) {
             //替换资质证照地址

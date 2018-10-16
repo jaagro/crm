@@ -100,8 +100,7 @@
         select
         <include refid="Base_Column_List"/>
         from customer_qualification
-        where 1=1
+        where enabled = 1
         and id = #{id}
-        and enabled = 1
     </select>
 </mapper>
