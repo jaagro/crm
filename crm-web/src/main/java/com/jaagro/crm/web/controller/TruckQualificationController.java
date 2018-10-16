@@ -102,7 +102,7 @@ public class TruckQualificationController {
     }
 
     @ApiOperation("查询单个运力资质【包括详细信息】")
-    @GetMapping("/getQuaBy1d/{id}")
+    @GetMapping("/getQuaById/{id}")
     public BaseResponse getQualificationByd(@PathVariable Integer id) {
         ReturnTruckQualificationDto qualificationDto = this.truckQualificationMapper.getById(id);
         if (qualificationDto != null) {
