@@ -227,4 +227,10 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
         }
         return ServiceResult.toResult("资质证件照删除成功");
     }
+
+    @Override
+    public ReturnQualificationDto getQualificationById(Integer id) {
+        return this.certificMapper.getQualificationById(id);
+    }
+
 }

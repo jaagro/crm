@@ -60,6 +60,12 @@ public interface CustomerQualificationMapperExt extends CustomerQualificationMap
      * @param qualificationId
      * @return
      */
-    List<CustomerQualificationReturnDto> getByCustomerIdAndId(@Param("customerId") Integer customerId,@Param("certificateType") Integer certificateType);
+    List<CustomerQualificationReturnDto> getByCustomerIdAndId(@Param("customerId") Integer customerId, @Param("certificateType") Integer certificateType);
 
+    /**
+     * 查询单个资质（包括审核页面右侧信息）
+     *
+     * @return
+     */
+    ReturnQualificationDto getQualificationById(Integer id);
 }

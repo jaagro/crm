@@ -80,7 +80,7 @@ public class ContractServiceImpl implements ContractService {
         UpdateContractDto updateContractDto = new UpdateContractDto();
         updateContractDto.setContractNumber(customerContract.getContractNumber());
         if (this.customerContractMapper.getByUpdateDto(updateContractDto) != null) {
-            throw new RuntimeException("合同编号[contractumber]已存在");
+            throw new RuntimeException("合同编号已存在");
         }
         customerContract
                 .setContractStatus(AuditStatus.UNCHECKED)
@@ -132,7 +132,7 @@ public class ContractServiceImpl implements ContractService {
         BeanUtils.copyProperties(dto, customerContract);
 
         if (this.customerContractMapper.getByUpdateDto(dto) != null) {
-            throw new RuntimeException("合同编号[contractumber]已存在");
+            throw new RuntimeException("合同编号已存在");
         }
         customerContract
                 .setNewUpdateTime(new Date())
