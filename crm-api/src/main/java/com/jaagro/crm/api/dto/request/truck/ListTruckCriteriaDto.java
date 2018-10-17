@@ -14,6 +14,7 @@ public class ListTruckCriteriaDto implements Serializable {
     private Integer pageNum;
     private Integer pageSize;
     private String truckNumber;
+    private String keywords;
     private Integer truckTeamId;
     private Integer teamType;
     private Integer truckStatus;
