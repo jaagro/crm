@@ -139,12 +139,11 @@
     </select>
     <select id="listTruckForAssignWaybillByCriteria" resultType="com.jaagro.crm.api.dto.response.truck.ListTruckDto"
             parameterType="com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto">
-        SELECT
+        SELECT distinct
         m.team_name,
         m.team_type,
         t.city,
         t.truck_status,
-        t.truck_number,
         p.type_name,
         t.truck_number,
         m.id as truck_team_id,
