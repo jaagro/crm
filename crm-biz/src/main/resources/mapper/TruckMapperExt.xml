@@ -118,7 +118,7 @@
             <![CDATA[and (t.truck_number like concat('%',#{truckNumber},'%') )]]>
         </if>
         <if test="keywords != null">
-            <![CDATA[and (m.team_name like concat('%',#{keywords},'%') )]]>
+            <![CDATA[and (m.team_name like concat('%',#{keywords},'%') or (t.truck_number like concat('%',#{keywords},'%') )]]>
         </if>
         <if test="teamType != null">
             and m.team_type = #{teamType}
@@ -154,7 +154,7 @@
         left join truck_team m on t.truck_team_id = m.id
         left join truck_type p on t.truck_type_id = p.id
         left join truck_team_contract tc on tc.truck_team_id = m.id
-        where t.truck_status = 1  and m.team_status=1  and tc.contract_status=1
+        where t.truck_status = 1 and m.team_status=1 and tc.contract_status=1
         <if test="truckTeamId != null">
             and m.truck_team_id = #{truckTeamId}
         </if>
