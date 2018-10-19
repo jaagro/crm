@@ -140,8 +140,7 @@
     </select>
     <select id="listTruckForAssignWaybillByCriteria" resultType="com.jaagro.crm.api.dto.response.truck.ListTruckDto"
             parameterType="com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto">
-        SELECT distinct * from (
-        select
+        SELECT distinct
         m.team_name,
         m.team_type,
         t.city,
@@ -149,7 +148,8 @@
         p.type_name,
         t.truck_number,
         m.id as truck_team_id,
-        t.id as truck_id
+        t.id as truck_id,
+        t.create_time
         FROM
         truck t
         left join truck_team m on t.truck_team_id = m.id
@@ -165,7 +165,7 @@
         <if test="truckTypeId != null">
             and t.truck_type_id = #{truckTypeId}
         </if>
-        order by t.create_time desc) t
+        order by t.create_time desc
     </select>
 
 
