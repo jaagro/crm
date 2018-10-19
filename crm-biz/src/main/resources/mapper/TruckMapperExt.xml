@@ -139,31 +139,32 @@
     </select>
     <select id="listTruckForAssignWaybillByCriteria" resultType="com.jaagro.crm.api.dto.response.truck.ListTruckDto"
             parameterType="com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto">
-        SELECT distinct
-        m.team_name,
-        m.team_type,
-        t.city,
-        t.truck_status,
-        p.type_name,
-        t.truck_number,
-        m.id as truck_team_id,
-        t.id as truck_id
-        FROM
-        truck t
-        left join truck_team m on t.truck_team_id = m.id
-        left join truck_type p on t.truck_type_id = p.id
-        left join truck_team_contract tc on tc.truck_team_id = m.id
-        where t.truck_status = 1  and m.team_status=1  and tc.contract_status=1
-        <if test="truckTeamId != null">
-            and m.truck_team_id = #{truckTeamId}
-        </if>
-        <if test="truckNumber != null">
-            <![CDATA[and (t.truck_number like concat('%',#{truckNumber},'%') )]]>
-        </if>
-        <if test="truckTypeId != null">
-            and t.truck_type_id = #{truckTypeId}
-        </if>
-        order by t.create_time desc
+        SELECT distinct * from (
+            select
+            m.team_name,
+            m.team_type,
+            t.city,
+            t.truck_status,
+            p.type_name,
+            t.truck_number,
+            m.id as truck_team_id,
+            t.id as truck_id
+            FROM
+            truck t
+            left join truck_team m on t.truck_team_id = m.id
+            left join truck_type p on t.truck_type_id = p.id
+            left join truck_team_contract tc on tc.truck_team_id = m.id
+            where t.truck_status = 1 and m.team_status=1 and tc.contract_status=1
+            <if test="truckTeamId != null">
+                and m.truck_team_id = #{truckTeamId}
+            </if>
+            <if test="truckNumber != null">
+                <![CDATA[and (t.truck_number like concat('%',#{truckNumber},'%') )]]>
+            </if>
+            <if test="truckTypeId != null">
+                and t.truck_type_id = #{truckTypeId}
+            </if>
+            order by t.create_time desc) t
     </select>
 
 </mapper>
