@@ -71,15 +71,15 @@ public class ContractController {
     @PostMapping("/contract")
     public BaseResponse createContract(@RequestBody CreateContractDto dto) {
         if (StringUtils.isEmpty(dto.getCustomerId())) {
-            return BaseResponse.idNull("客户id:[customerId]不能为空");
+            return BaseResponse.idNull("客户不能为空");
         }
         if (this.customerMapper.selectByPrimaryKey(dto.getCustomerId()) == null) {
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户id:[customerId]不存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户不存在");
         }
         UpdateContractDto updateContractDto = new UpdateContractDto();
         updateContractDto.setContractNumber(dto.getContractNumber());
         if (this.customerContractMapper.getByUpdateDto(updateContractDto) != null) {
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同编号[contractumber]已存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同编号已存在");
         }
         Map<String, Object> result;
         try {
@@ -108,7 +108,7 @@ public class ContractController {
             return BaseResponse.idError("合同客户不能为空");
         }
         if (this.customerContractMapper.getByUpdateDto(dto) != null) {
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同编号[contractumber]已存在");
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同编号已存在");
         }
         Map<String, Object> result;
         try {
@@ -222,19 +222,29 @@ public class ContractController {
     }
 
     /**
-     * 查询单个合同资质
+     * 查询单个合同资质【包括合同详细信息】
      *
      * @param id
      * @return
      */
-    @ApiOperation("查询单个合同资质")
+    @ApiOperation("查询单个合同资质【包括合同详细信息】")
     @GetMapping("/ContractQualification/{id}")
     public BaseResponse getContractQualificationById(@PathVariable Integer id) {
-        if (this.customerContractMapper.selectByPrimaryKey(id) == null) {
+        if (this.qualificationMapper.selectByPrimaryKey(id) == null) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到相应信息");
         }
-        ContractQualification qualification = qualificationMapper.selectByPrimaryKey(id);
-        return BaseResponse.successInstance(qualification);
+        //返回的合同资质
+        ReturnCheckContractQualificationDto checkContractQualificationDto = this.qualificationMapper.getQualificationById(id);
+        if (checkContractQualificationDto != null) {
+            //替换资质证照地址
+            String[] strArray = {checkContractQualificationDto.getCertificateImageUrl()};
+            List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+            checkContractQualificationDto.setCertificateImageUrl(urlList.get(0).toString());
+            //填充运力合同信息
+            checkContractQualificationDto.setTruckTeamContractReturnDto(this.truckTeamContractMapper.getById(checkContractQualificationDto.getRelevanceId()));
+            return BaseResponse.successInstance(checkContractQualificationDto);
+        }
+        return BaseResponse.successInstance(checkContractQualificationDto);
     }
 
     /**

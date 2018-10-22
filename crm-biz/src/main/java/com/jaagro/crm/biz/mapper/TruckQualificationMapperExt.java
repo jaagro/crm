@@ -48,6 +48,14 @@ public interface TruckQualificationMapperExt extends TruckQualificationMapper {
     ReturnTruckQualificationDto getById(Integer id);
 
     /**
+     * 根据id获取运力资质详情
+     *
+     * @param id
+     * @return
+     */
+    ReturnTruckQualificationDto getQualificationById(Integer id);
+
+    /**
      * @param revalanceId
      * @param type        -- 1:个体车队 2:公司车队 3:车辆 4:司机
      * @return

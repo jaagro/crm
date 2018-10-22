@@ -46,6 +46,14 @@ public interface ContractQualificationMapperExt extends ContractQualificationMap
     ReturnCheckContractQualificationDto getById(Integer id);
 
     /**
+     * 根据id查询合同资质详情
+     *
+     * @param id
+     * @return
+     */
+    ReturnCheckContractQualificationDto getQualificationById(Integer id);
+
+    /**
      * 根据合同id查询未审核的资质
      *
      * @param contractId

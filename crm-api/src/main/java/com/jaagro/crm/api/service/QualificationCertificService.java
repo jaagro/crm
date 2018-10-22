@@ -4,6 +4,7 @@ import com.jaagro.crm.api.dto.request.customer.CreateCustomerQualificationDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerQualificationCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerQualificationDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerQualificationReturnDto;
+import com.jaagro.crm.api.dto.response.customer.ReturnQualificationDto;
 
 import java.util.List;
 import java.util.Map;
@@ -101,4 +102,12 @@ public interface QualificationCertificService {
      * @return
      */
     Map<String, Object> disableQualificationCertific(List<CustomerQualificationReturnDto> qualifications);
+
+    /**
+     * 查询单个资质（包括审核页面右侧信息）
+     *
+     * @param id
+     * @return
+     */
+    ReturnQualificationDto getQualificationById(Integer id);
 }
