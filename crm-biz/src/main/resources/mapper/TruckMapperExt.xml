@@ -120,6 +120,7 @@
         <if test="keywords != null">
             <![CDATA[and (m.team_name like concat('%',#{keywords},'%') or (t.truck_number like concat('%',#{keywords},'%') )]]>
         </if>
+
         <if test="teamType != null">
             and m.team_type = #{teamType}
         </if>
@@ -147,7 +148,8 @@
         p.type_name,
         t.truck_number,
         m.id as truck_team_id,
-        t.id as truck_id
+        t.id as truck_id,
+        t.create_time
         FROM
         truck t
         left join truck_team m on t.truck_team_id = m.id
@@ -165,5 +167,6 @@
         </if>
         order by t.create_time desc
     </select>
+
 
 </mapper>
