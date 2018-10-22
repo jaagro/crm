@@ -87,7 +87,8 @@ public class TruckController {
         try {
             result = truckService.updateTruck(truck);
         } catch (Exception ex) {
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), ex.getMessage());
+            ex.printStackTrace();
+            return BaseResponse.errorInstance(ex.getMessage());
         }
         return BaseResponse.service(result);
     }
