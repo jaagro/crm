@@ -167,8 +167,8 @@ public class ContractController {
      * @return
      */
     @ApiOperation("合同资质新增【单张】")
-    @PostMapping("/ContractQualification")
-    public BaseResponse createContractQualification(@RequestBody CreateContractQualificationDto dto) {
+    @PostMapping("/ContractQualificationByOne")
+    public BaseResponse createContractQualificationByOne(@RequestBody CreateContractQualificationDto dto) {
         if (StringUtils.isEmpty(dto.getRelevanceId())) {
             return BaseResponse.idError("资质关联id不能为空");
         }
@@ -198,8 +198,8 @@ public class ContractController {
      * @return
      */
     @ApiOperation("合同资质修改【单张】")
-    @PutMapping("/ContractQualification")
-    public BaseResponse updateContractQualification(@RequestBody UpdateContractQualificationDto dto) {
+    @PutMapping("/ContractQualificationByOne")
+    public BaseResponse updateContractQualificationByOne(@RequestBody UpdateContractQualificationDto dto) {
         if (StringUtils.isEmpty(dto.getId())) {
             return BaseResponse.idError("合同资质id不能为空");
         }

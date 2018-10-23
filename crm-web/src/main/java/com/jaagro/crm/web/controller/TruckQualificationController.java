@@ -58,8 +58,8 @@ public class TruckQualificationController {
      * @return
      */
     @ApiOperation("新增资质【单个】")
-    @PostMapping("/truckQualification")
-    public BaseResponse insert(@RequestBody CreateTruckQualificationByOneDto dto) {
+    @PostMapping("/truckQualificationByOne")
+    public BaseResponse insertByOne(@RequestBody CreateTruckQualificationByOneDto dto) {
         if (StringUtils.isEmpty(truckTeamMapper.selectByPrimaryKey(dto.getTruckTeamId()))) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队不存在");
         }
@@ -88,8 +88,8 @@ public class TruckQualificationController {
      * @return
      */
     @ApiOperation("修改资质【单个】")
-    @PutMapping("/truckQualification")
-    public BaseResponse truckQualification(@RequestBody UpdateTruckQualificationDto dto) {
+    @PutMapping("/truckQualificationByOne")
+    public BaseResponse truckQualificationByOne(@RequestBody UpdateTruckQualificationDto dto) {
         Map<String, Object> result;
         try {
             result = truckQualificationService.updateQualificationCertific(dto);

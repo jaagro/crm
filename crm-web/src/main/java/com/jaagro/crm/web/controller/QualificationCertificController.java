@@ -58,8 +58,8 @@ public class QualificationCertificController {
      * @return
      */
     @ApiOperation("新增资质【单张】")
-    @PostMapping("/qualificationCertific")
-    public BaseResponse insertQualificationCertific(@RequestBody CreateCustomerQualificationDto certificDto) {
+    @PostMapping("/qualificationCertificByOne")
+    public BaseResponse insertQualificationCertificByOne(@RequestBody CreateCustomerQualificationDto certificDto) {
         if (certificDto.getCustomerId() == null) {
             return BaseResponse.idNull("客户id:[customerId]不能为空");
         }
@@ -86,8 +86,8 @@ public class QualificationCertificController {
      * @return
      */
     @ApiOperation("修改资质【单个】")
-    @PutMapping("/qualificationCertific")
-    public BaseResponse updateQualificationCertific(@RequestBody UpdateCustomerQualificationDto certificDto) {
+    @PutMapping("/qualificationCertificByOne")
+    public BaseResponse updateQualificationCertificByOne(@RequestBody UpdateCustomerQualificationDto certificDto) {
         if (certificDto.getId() == null) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质id不能为空");
         }
