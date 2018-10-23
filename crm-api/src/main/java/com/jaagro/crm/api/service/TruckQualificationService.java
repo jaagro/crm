@@ -21,7 +21,7 @@ public interface TruckQualificationService {
     Map<String, Object> createTruckQualification(CreateListTruckQualificationDto dto);
 
     /**
-     * 修改
+     * 修改多张
      *
      * @param dto
      * @return
@@ -29,7 +29,7 @@ public interface TruckQualificationService {
     Map<String, Object> updateQualification(List<UpdateTruckQualificationDto> dto);
 
     /**
-     * 修改
+     * 修改单张
      *
      * @param dto
      * @return

@@ -69,16 +69,20 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
                 return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "运力资质缺少参数");
             }
             if (truckQualificationMapper.listByIdAndType(truckQualification) > 0) {
-                log.debug(qualification.getCertificateType() + "此类型的资质已上传，不允许再上传");
-//                return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "此运力资质已上传，不允许再上传");
+                throw new RuntimeException("此类型" + truckQualification.getCertificateType() + "的资质已上传，不允许再上传");
             }
             truckQualificationMapper.insertSelective(truckQualification);
+
+            //新增后的返回：替换资质证照地址
+            String[] strArray = {qualification.getCertificateImageUrl()};
+            List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+            qualification.setCertificateImageUrl(urlList.get(0).toString());
         }
-        return ServiceResult.toResult("资质保存成功");
+        return ServiceResult.toResult(dto);
     }
 
     /**
-     * 修改
+     * 修改多张
      *
      * @param dto
      * @return
@@ -134,6 +138,56 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
         return ServiceResult.toResult("修改成功");
     }
 
+    /**
+     * 修改单张
+     *
+     * @param truckQualificationDto
+     * @return
+     */
+    @Override
+    public Map<String, Object> updateQualificationCertific(UpdateTruckQualificationDto truckQualificationDto) {
+        if (StringUtils.isEmpty(truckQualificationDto.getId())) {
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "id不能为空");
+        }
+        TruckQualification truckQualification = this.truckQualificationMapper.selectByPrimaryKey(truckQualificationDto.getId());
+        if (truckQualification == null) {
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "此资质照不存在");
+        }
+        TruckQualification qualification = new TruckQualification();
+        BeanUtils.copyProperties(truckQualificationDto, qualification);
+        qualification
+                .setModifyTime(new Date())
+                .setModifyUserId(this.currentUserService.getCurrentUser().getId());
+        /**
+         * 修改前判断是否已审核过
+         */
+        // 待审核
+        if (truckQualification.getCertificateStatus().equals(AuditStatus.UNCHECKED)) {
+            this.truckQualificationMapper.updateByPrimaryKeySelective(qualification);
+        }
+        // 审核未通过的
+        if (truckQualification.getCertificateStatus().equals(AuditStatus.AUDIT_FAILED)) {
+            // 先将审核未通过的资质逻辑删除
+            truckQualification
+                    .setEnabled(false)
+                    .setCertificateStatus(AuditStatus.STOP_COOPERATION);
+            this.truckQualificationMapper.updateByPrimaryKeySelective(truckQualification);
+            // 把新资质证件照新增
+            qualification
+                    .setId(null)
+                    .setCreateUserId(currentUserService.getCurrentUser().getId())
+                    .setTruckTeamId(truckQualification.getTruckTeamId())
+                    .setTruckId(truckQualification.getTruckId())
+                    .setDriverId(truckQualification.getDriverId())
+                    .setCertificateStatus(AuditStatus.UNCHECKED);
+            this.truckQualificationMapper.insertSelective(qualification);
+        }
+        //修改后的返回：替换资质证照地址
+        String[] strArray = {qualification.getCertificateImageUrl()};
+        List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+        qualification.setCertificateImageUrl(urlList.get(0).toString());
+        return ServiceResult.toResult(qualification);
+    }
 
     @Override
     public Map<String, Object> deleteQualification(Integer[] ids) {
@@ -182,47 +236,6 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
             }
         }
         return ServiceResult.toResult(returnTruckQualificationDtoList);
-    }
-
-    @Override
-    public Map<String, Object> updateQualificationCertific(UpdateTruckQualificationDto truckQualificationDto) {
-        if (StringUtils.isEmpty(truckQualificationDto.getId())) {
-            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "id不能为空");
-        }
-        TruckQualification truckQualification = this.truckQualificationMapper.selectByPrimaryKey(truckQualificationDto.getId());
-        if (truckQualification == null) {
-            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "此资质照不存在");
-        }
-        TruckQualification qualification = new TruckQualification();
-        BeanUtils.copyProperties(truckQualificationDto, qualification);
-        qualification
-                .setModifyTime(new Date())
-                .setModifyUserId(this.currentUserService.getCurrentUser().getId());
-        /**
-         * 修改前判断是否已审核过
-         */
-        // 待审核
-        if (truckQualification.getCertificateStatus().equals(AuditStatus.UNCHECKED)) {
-            this.truckQualificationMapper.updateByPrimaryKeySelective(qualification);
-        }
-        // 审核未通过的
-        if (truckQualification.getCertificateStatus().equals(AuditStatus.AUDIT_FAILED)) {
-            // 先将审核未通过的资质逻辑删除
-            truckQualification
-                    .setEnabled(false)
-                    .setCertificateStatus(AuditStatus.STOP_COOPERATION);
-            this.truckQualificationMapper.updateByPrimaryKeySelective(truckQualification);
-            // 把新资质证件照新增
-            qualification
-                    .setId(null)
-                    .setCreateUserId(currentUserService.getCurrentUser().getId())
-                    .setTruckTeamId(truckQualification.getTruckTeamId())
-                    .setTruckId(truckQualification.getTruckId())
-                    .setDriverId(truckQualification.getDriverId())
-                    .setCertificateStatus(AuditStatus.UNCHECKED);
-            this.truckQualificationMapper.insertSelective(qualification);
-        }
-        return ServiceResult.toResult("修改成功");
     }
 
 }

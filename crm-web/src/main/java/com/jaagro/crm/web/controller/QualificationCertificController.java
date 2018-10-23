@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -51,6 +52,56 @@ public class QualificationCertificController {
     private OssSignUrlClientService ossSignUrlClientService;
 
     /**
+     * 新增资质【单张】
+     *
+     * @param certificDto
+     * @return
+     */
+    @ApiOperation("新增资质【单张】")
+    @PostMapping("/qualificationCertific")
+    public BaseResponse insertQualificationCertific(@RequestBody CreateCustomerQualificationDto certificDto) {
+        if (certificDto.getCustomerId() == null) {
+            return BaseResponse.idNull("客户id:[customerId]不能为空");
+        }
+        if (certificDto.getCertificateType() == null) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "证件类型不能为空");
+        }
+        if (certificDto.getCertificateImageUrl() == null) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "证件图片地址不能为空");
+        }
+        Map<String, Object> result;
+        try {
+            result = certificService.createQualificationCertific(certificDto);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return BaseResponse.errorInstance(ex.getMessage());
+        }
+        return BaseResponse.successInstance(result);
+    }
+
+    /**
+     * 修改资质【单个】
+     *
+     * @param certificDto
+     * @return
+     */
+    @ApiOperation("修改资质【单个】")
+    @PutMapping("/qualificationCertific")
+    public BaseResponse updateQualificationCertific(@RequestBody UpdateCustomerQualificationDto certificDto) {
+        if (certificDto.getId() == null) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质id不能为空");
+        }
+        Map<String, Object> result;
+        try {
+            result = certificService.updateQualificationCertific(certificDto);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return BaseResponse.errorInstance(ex.getMessage());
+        }
+        return BaseResponse.successInstance(result);
+    }
+
+    /**
      * 新增资质
      *
      * @param certificDtos
@@ -58,7 +109,7 @@ public class QualificationCertificController {
      */
     @ApiOperation("新增资质")
     @PostMapping("/qualificationCertific")
-    public BaseResponse insertCustomer(@RequestBody List<CreateCustomerQualificationDto> certificDtos) {
+    public BaseResponse insertQualificationCertific(@RequestBody List<CreateCustomerQualificationDto> certificDtos) {
         if (certificDtos != null && certificDtos.size() > 0) {
             for (CreateCustomerQualificationDto certificDto : certificDtos) {
                 if (certificDto.getCustomerId() == null) {
@@ -73,7 +124,12 @@ public class QualificationCertificController {
                 if (certificDto.getCertificateImageUrl() == null) {
                     return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "证件图片地址:[certificateImageUrl]不能为空");
                 }
-                certificService.createQualificationCertific(certificDto);
+                try {
+                    certificService.createQualificationCertific(certificDto);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    return BaseResponse.errorInstance(ex.getMessage());
+                }
             }
             return BaseResponse.successInstance("上传成功");
         }
@@ -103,7 +159,7 @@ public class QualificationCertificController {
      */
     @ApiOperation("修改资质")
     @PutMapping("/qualificationCertific")
-    public BaseResponse updateSite(@RequestBody List<UpdateCustomerQualificationDto> certificDto) {
+    public BaseResponse updateQualificationCertific(@RequestBody List<UpdateCustomerQualificationDto> certificDto) {
         try {
             certificService.updateQualificationCertific(certificDto);
         } catch (Exception ex) {

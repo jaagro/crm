@@ -14,6 +14,7 @@ import com.jaagro.crm.api.service.QualificationCertificService;
 import com.jaagro.crm.biz.entity.CustomerQualification;
 import com.jaagro.crm.biz.mapper.CustomerMapperExt;
 import com.jaagro.crm.biz.mapper.CustomerQualificationMapperExt;
+import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.net.URL;
@@ -45,24 +47,37 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
     @Autowired
     private CustomerMapperExt customerMapper;
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> createQualificationCertific(CreateCustomerQualificationDto certificDto) {
+        if (this.customerMapper.selectByPrimaryKey(certificDto.getCustomerId()) == null) {
+            throw new RuntimeException("客户不存在");
+        }
         CustomerQualification qc = new CustomerQualification();
         BeanUtils.copyProperties(certificDto, qc);
-        if (StringUtils.isEmpty(qc.getCustomerId()) || StringUtils.isEmpty(qc.getCertificateType())) {
-            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户id和资质证件照类型不能为空");
+        if (StringUtils.isEmpty(qc.getCertificateType())) {
+            throw new RuntimeException("资质证件照类型不能为空");
         }
         if (!certificDto.getCertificateType().equals(CertificateType.ELSE)) {
             //新增前判断是否此资质已新增过
             List<CustomerQualificationReturnDto> returnDtos = certificMapper.getByCustomerIdAndId(qc.getCustomerId(), qc.getCertificateType());
             if (returnDtos.size() > 0) {
-                return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "此客户的资质已上传，不允许再上传");
+                throw new RuntimeException("此客户的资质已上传，不允许再上传");
             }
         }
         qc
                 .setCreateUserId(userService.getCurrentUser().getId());
-        this.certificMapper.insertSelective(qc);
-        return ServiceResult.toResult("资质证件照创建成功");
+        try {
+            this.certificMapper.insertSelective(qc);
+            //新增后的返回：替换资质证照地址
+            String[] strArray = {qc.getCertificateImageUrl()};
+            List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+            qc.setCertificateImageUrl(urlList.get(0).toString());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new RuntimeException(ex.getMessage());
+        }
+        return ServiceResult.toResult(qc);
     }
 
     @Override
@@ -82,16 +97,57 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
     /**
      * 这里只能审核客户资质，车队资质审核在哪里？？？
      */
-
     @Override
     public Map<String, Object> updateQualificationCertific(UpdateCustomerQualificationDto certificDto) {
-        CustomerQualification qc = new CustomerQualification();
-        BeanUtils.copyProperties(certificDto, qc);
-        qc
-                .setModifyUserId(userService.getCurrentUser().getId())
-                .setModifyTime(new Date());
-        this.certificMapper.updateByPrimaryKeySelective(qc);
-        return ServiceResult.toResult("证件照修改成功");
+        //如果id为空，则新增此条数据
+        if (certificDto.getId() == null) {
+            CreateCustomerQualificationDto createCustomerQualificationDto = new CreateCustomerQualificationDto();
+            BeanUtils.copyProperties(certificDto, createCustomerQualificationDto);
+            try {
+                this.createQualificationCertific(createCustomerQualificationDto);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), ex.getMessage());
+            }
+        } else {
+            //修改
+            CustomerQualification qualification = this.certificMapper.selectByPrimaryKey(certificDto.getId());
+            if (qualification == null) {
+                return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "证件" + certificDto.getId() + "不存在");
+            }
+            CustomerQualification qc = new CustomerQualification();
+            BeanUtils.copyProperties(certificDto, qc);
+            qc
+                    .setModifyUserId(userService.getCurrentUser().getId())
+                    .setModifyTime(new Date());
+            /**
+             * 修改前判断是否已审核过
+             */
+            // 待审核
+            if (qualification.getCertificateStatus().equals(AuditStatus.UNCHECKED)) {
+                this.certificMapper.updateByPrimaryKeySelective(qc);
+            }
+            // 审核未通过的
+            if (qualification.getCertificateStatus().equals(AuditStatus.AUDIT_FAILED)) {
+                // 先将审核未通过的资质逻辑删除
+                qualification
+                        .setEnabled(false)
+                        .setCertificateStatus(AuditStatus.STOP_COOPERATION);
+                this.certificMapper.updateByPrimaryKeySelective(qualification);
+                // 把新资质证件照新增
+                qc
+                        .setId(null)
+                        .setCertificateStatus(AuditStatus.UNCHECKED)
+                        .setCreateUserId(userService.getCurrentUser().getId())
+                        .setCustomerId(qualification.getCustomerId());
+                this.certificMapper.insertSelective(qc);
+            }
+        }
+        //修改后的返回：替换资质证照地址
+        String[] strArray = {certificDto.getCertificateImageUrl()};
+        List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+        certificDto.setCertificateImageUrl(urlList.get(0).toString());
+        return ServiceResult.toResult(certificDto);
     }
 
     @Override
@@ -142,7 +198,6 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
                     }
                 }
             }
-
         }
         return ServiceResult.toResult("证件照列表修改成功");
     }
