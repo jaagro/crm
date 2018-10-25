@@ -182,7 +182,6 @@ public class TruckController {
     @Ignore
     @PostMapping("/getTruckIdsByTruckNum/{truckNumber}")
     public List<Integer> getTruckIdsByTruckNum(@PathVariable(value = "truckNumber") String truckNumber) {
-        List<Integer> truckIds = truckService.getTruckIdsByTruckNum(truckNumber);
-        return truckIds;
+        return truckService.getTruckIdsByTruckNum(truckNumber);
     }
 }
