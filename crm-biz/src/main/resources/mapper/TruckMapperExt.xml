@@ -167,6 +167,12 @@
         </if>
         order by t.create_time desc
     </select>
-
+    <select id="getTruckIdsByTruckNum" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select id from truck
+        where truck_status = 1
+        <if test="truckNumber != null">
+            [CDATA[and truck_number like concat('%',#{truckNumber},'%') ]]>
+        </if>
+    </select>
 
 </mapper>
