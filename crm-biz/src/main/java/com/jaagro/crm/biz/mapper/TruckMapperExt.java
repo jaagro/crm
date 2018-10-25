@@ -75,5 +75,5 @@ public interface TruckMapperExt extends TruckMapper {
      * @param truckNumber
      * @return
      */
-    List<Integer> getTruckIdsByTruckNum(String truckNumber);
+    List<Integer> getTruckIdsByTruckNum(@Param("truckNumber") String truckNumber);
 }

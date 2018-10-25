@@ -171,7 +171,7 @@
         select id from truck
         where truck_status = 1
         <if test="truckNumber != null">
-            [CDATA[and truck_number like concat('%',#{truckNumber},'%') ]]>
+            <![CDATA[and truck_number like concat('%',#{truckNumber},'%') ]]>
         </if>
     </select>
 
