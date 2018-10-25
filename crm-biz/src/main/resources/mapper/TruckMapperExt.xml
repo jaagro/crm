@@ -120,11 +120,10 @@
         <if test="keywords != null">
             <![CDATA[and (m.team_name like concat('%',#{keywords},'%') or (t.truck_number like concat('%',#{keywords},'%') )]]>
         </if>
-
         <if test="teamType != null">
             and m.team_type = #{teamType}
         </if>
-        <if test="truckStatus != null">
+        <if test="truckStatus != null and truckStatus != ''">
             and t.truck_status = #{truckStatus}
         </if>
         <if test="truckTypeId != null">

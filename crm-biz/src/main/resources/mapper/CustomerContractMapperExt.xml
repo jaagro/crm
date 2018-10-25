@@ -39,7 +39,7 @@
         <include refid="Base_Column_List"/>
         from customer_contract
         where 1 = 1
-        <if test="contractStatus != null">
+        <if test="contractStatus != null and contractStatus != ''">
             and contract_status = #{contractStatus}
         </if>
         <if test="customerId != null">
