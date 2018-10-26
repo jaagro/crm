@@ -381,4 +381,19 @@ public class TruckServiceImpl implements TruckService {
         }
         return truck;
     }
+
+    /**
+     * 根据车牌号模糊查询车辆id列表
+     *
+     * @param truckNumber
+     * @return
+     */
+    @Override
+    public List<Integer> getTruckIdsByTruckNum(String truckNumber) {
+        if (truckNumber != null) {
+            List<Integer> truckIds = this.truckMapper.getTruckIdsByTruckNum(truckNumber);
+            return truckIds;
+        }
+        return null;
+    }
 }

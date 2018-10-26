@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author gavin
  */
-public interface TruckMapperExt extends TruckMapper{
+public interface TruckMapperExt extends TruckMapper {
 
     /**
      * 查询车辆dto
@@ -63,9 +63,17 @@ public interface TruckMapperExt extends TruckMapper{
 
     /**
      * 列出可派的车辆（车队审核通过 、车队合同审核通过、车辆审核通过） gavin
+     *
      * @param criteria
      * @return
      */
     List<ListTruckDto> listTruckForAssignWaybillByCriteria(ListTruckCriteriaDto criteria);
 
+    /**
+     * 根据车牌号模糊查询车辆id列表
+     *
+     * @param truckNumber
+     * @return
+     */
+    List<Integer> getTruckIdsByTruckNum(@Param("truckNumber") String truckNumber);
 }

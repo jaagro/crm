@@ -172,4 +172,16 @@ public class TruckController {
     public GetTruckDto getTruckByToken() {
         return truckService.getTruckByToken();
     }
+
+    /**
+     * 根据车牌号模糊查询车辆id列表
+     *
+     * @param truckNumber
+     * @return
+     */
+    @Ignore
+    @PostMapping("/getTruckIdsByTruckNum/{truckNumber}")
+    public List<Integer> getTruckIdsByTruckNum(@PathVariable(value = "truckNumber") String truckNumber) {
+        return truckService.getTruckIdsByTruckNum(truckNumber);
+    }
 }
