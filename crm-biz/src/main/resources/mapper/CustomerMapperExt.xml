@@ -74,10 +74,10 @@
         <if test="customerType != null">
             and m.customer_type = #{customerType}
         </if>
-        <if test="phone != null">
+        <if test="phone != null and phone != ''">
             and c.phone = #{phone}
         </if>
-        <if test="customerStatus != null and customerStatus != ''">
+        <if test="customerStatus != null'">
             and m.customer_status = #{customerStatus}
         </if>
         <if test="customerName != null">
