@@ -77,7 +77,7 @@
         <if test="phone != null and phone != ''">
             and c.phone = #{phone}
         </if>
-        <if test="customerStatus != null'">
+        <if test="customerStatus != null">
             and m.customer_status = #{customerStatus}
         </if>
         <if test="customerName != null">
