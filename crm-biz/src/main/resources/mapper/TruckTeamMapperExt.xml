@@ -52,7 +52,7 @@
         <if test="teamType != null">
             and team_type = #{teamType}
         </if>
-        <if test="teamStatus != null and teamStatus != ''">
+        <if test="teamStatus != null">
             and team_status = #{teamStatus}
         </if>
         <if test="keywords != null">
