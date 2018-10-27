@@ -140,6 +140,7 @@
     </select>
     <select id="listTruckForAssignWaybillByCriteria" resultType="com.jaagro.crm.api.dto.response.truck.ListTruckDto"
             parameterType="com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto">
+
         SELECT distinct
         m.team_name,
         m.team_type,
@@ -167,6 +168,5 @@
         </if>
         order by t.create_time desc
     </select>
-
 
 </mapper>
