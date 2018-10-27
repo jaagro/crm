@@ -70,9 +70,14 @@ public class TruckController {
         BaseResponse response;
         try {
             response = BaseResponse.service(truckService.createTruck(truck));
-        } catch (FeignException e) {
+        } catch (RuntimeException e) {
             e.printStackTrace();
-            response = BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "司机创建失败");
+            String str = e.getCause().getMessage();
+            if (str.contains("司机手机号重复")) {
+                response = BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "司机创建失败,手机号重复");
+            } else {
+                response = BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "司机创建失败");
+            }
         }
         return response;
     }
@@ -87,7 +92,8 @@ public class TruckController {
         try {
             result = truckService.updateTruck(truck);
         } catch (Exception ex) {
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), ex.getMessage());
+            ex.printStackTrace();
+            return BaseResponse.errorInstance(ex.getMessage());
         }
         return BaseResponse.service(result);
     }
@@ -165,5 +171,17 @@ public class TruckController {
     @GetMapping("/getTruckByToken")
     public GetTruckDto getTruckByToken() {
         return truckService.getTruckByToken();
+    }
+
+    /**
+     * 根据车牌号模糊查询车辆id列表
+     *
+     * @param truckNumber
+     * @return
+     */
+    @Ignore
+    @PostMapping("/getTruckIdsByTruckNum/{truckNumber}")
+    public List<Integer> getTruckIdsByTruckNum(@PathVariable(value = "truckNumber") String truckNumber) {
+        return truckService.getTruckIdsByTruckNum(truckNumber);
     }
 }

@@ -3,6 +3,7 @@ package com.jaagro.crm.web.controller;
 import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.dto.request.customer.CreateQualificationVerifyLogDto;
 import com.jaagro.crm.api.dto.request.truck.CreateListTruckQualificationDto;
+import com.jaagro.crm.api.dto.request.truck.CreateTruckQualificationByOneDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckQualificationDto;
 import com.jaagro.crm.api.dto.response.truck.ReturnTruckQualificationDto;
@@ -22,7 +23,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author liqiangping
@@ -47,6 +50,55 @@ public class TruckQualificationController {
     private DriverClientService driverClientService;
     @Autowired
     private OssSignUrlClientService ossSignUrlClientService;
+
+    /**
+     * 新增资质【单个】
+     *
+     * @param dto
+     * @return
+     */
+    @ApiOperation("新增资质【单个】")
+    @PostMapping("/truckQualificationByOne")
+    public BaseResponse insertByOne(@RequestBody CreateTruckQualificationByOneDto dto) {
+        if (StringUtils.isEmpty(truckTeamMapper.selectByPrimaryKey(dto.getTruckTeamId()))) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队不存在");
+        }
+        if (StringUtils.isEmpty(dto.getQualification())) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "请上传资质");
+        }
+        CreateListTruckQualificationDto qualificationDto = new CreateListTruckQualificationDto();
+        BeanUtils.copyProperties(dto, qualificationDto);
+        List<UpdateTruckQualificationDto> truckQualificationDtos = new ArrayList<>();
+        truckQualificationDtos.add(dto.getQualification());
+        qualificationDto.setQualification(truckQualificationDtos);
+        Map<String, Object> result;
+        try {
+            result = truckQualificationService.createTruckQualification(qualificationDto);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), ex.getMessage());
+        }
+        return BaseResponse.successInstance(result);
+    }
+
+    /**
+     * 修改资质【单个】
+     *
+     * @param dto
+     * @return
+     */
+    @ApiOperation("修改资质【单个】")
+    @PutMapping("/truckQualificationByOne")
+    public BaseResponse truckQualificationByOne(@RequestBody UpdateTruckQualificationDto dto) {
+        Map<String, Object> result;
+        try {
+            result = truckQualificationService.updateQualificationCertific(dto);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), ex.getMessage());
+        }
+        return BaseResponse.successInstance(result);
+    }
 
     @ApiOperation("新增资质")
     @PostMapping("/truckQualification")

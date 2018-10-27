@@ -153,8 +153,8 @@ public class TruckServiceImpl implements TruckService {
                 try {
                     driverId = driverClientService.createDriverReturnId(driverDto);
                 } catch (RuntimeException e) {
-                    log.error("司机新建失败：" + e.getMessage());
-                    throw e;
+                    log.error("司机新建失败：" + e.getCause().getMessage());
+                    throw new RuntimeException(e.getCause());
                 }
                 if (driverId == 0) {
                     throw new NullPointerException("新增司机失败，司机id为空");
@@ -379,5 +379,20 @@ public class TruckServiceImpl implements TruckService {
             log.info("当前车辆: " + truck.toString());
         }
         return truck;
+    }
+
+    /**
+     * 根据车牌号模糊查询车辆id列表
+     *
+     * @param truckNumber
+     * @return
+     */
+    @Override
+    public List<Integer> getTruckIdsByTruckNum(String truckNumber) {
+        if (truckNumber != null) {
+            List<Integer> truckIds = this.truckMapper.getTruckIdsByTruckNum(truckNumber);
+            return truckIds;
+        }
+        return null;
     }
 }

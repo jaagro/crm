@@ -161,14 +161,46 @@ public class ContractController {
     //----------------------------------------------合同资质-------------------------------------------------
 
     /**
-     * 合同资质修改
+     * 合同资质新增【单张】
+     *
+     * @param dto
+     * @return
+     *
+     */
+    @ApiOperation("合同资质新增【单张】")
+    @PostMapping("/ContractQualificationByOne")
+    public BaseResponse createContractQualificationByOne(@RequestBody CreateContractQualificationDto dto) {
+        if (StringUtils.isEmpty(dto.getRelevanceId())) {
+            return BaseResponse.idError("资质关联id不能为空");
+        }
+        if (StringUtils.isEmpty(dto.getRelevanceType())) {
+            return BaseResponse.idError("资质关联类型不能为空");
+        }
+        if (StringUtils.isEmpty(dto.getCertificateType())) {
+            return BaseResponse.idError("资质类型不能为空");
+        }
+        if (StringUtils.isEmpty(dto.getCertificateImageUrl())) {
+            return BaseResponse.idError("资质路径不能为空");
+        }
+        Map<String, Object> result;
+        try {
+            result = contractQualificationService.createQuation(dto);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), e.getMessage());
+        }
+        return BaseResponse.service(result);
+    }
+
+    /**
+     * 合同资质修改【单张】
      *
      * @param dto
      * @return
      */
-    @ApiOperation("合同资质修改")
-    @PutMapping("/ContractQualification")
-    public BaseResponse updateContractQualification(@RequestBody UpdateContractQualificationDto dto) {
+    @ApiOperation("合同资质修改【单张】")
+    @PutMapping("/ContractQualificationByOne")
+    public BaseResponse updateContractQualificationByOne(@RequestBody UpdateContractQualificationDto dto) {
         if (StringUtils.isEmpty(dto.getId())) {
             return BaseResponse.idError("合同资质id不能为空");
         }

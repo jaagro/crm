@@ -4,6 +4,7 @@ import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.dto.request.contract.CreateContractQualificationDto;
 import com.jaagro.crm.api.dto.request.contract.UpdateContractQualificationDto;
 import com.jaagro.crm.api.service.ContractQualificationService;
+import com.jaagro.crm.api.service.OssSignUrlClientService;
 import com.jaagro.crm.biz.entity.ContractQualification;
 import com.jaagro.crm.biz.mapper.ContractQualificationMapperExt;
 import com.jaagro.utils.ResponseStatusCode;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +33,8 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
     private ContractQualificationMapperExt qualificationMapper;
     @Autowired
     private CurrentUserService userService;
+    @Autowired
+    private OssSignUrlClientService ossSignUrlClientService;
 
     /**
      * 新增
@@ -44,15 +48,20 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
         ContractQualification qualification = new ContractQualification();
         BeanUtils.copyProperties(qualificationDto, qualification);
         if (StringUtils.isEmpty(qualification.getRelevanceId()) || StringUtils.isEmpty(qualification.getRelevanceType()) || StringUtils.isEmpty(qualification.getCertificateType())) {
-            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同资质缺少参数");
+            throw new RuntimeException("合同资质缺少参数");
         }
         List<ContractQualification> qualificationList = qualificationMapper.getByContractIdAndType(qualification.getRelevanceId(), qualification.getRelevanceType(), qualification.getCertificateType());
         if (qualificationList.size() > 0) {
-            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "此合同已上传资质，不允许再上传");
+            throw new RuntimeException("此合同已上传资质，不允许再上传");
         }
         qualification.setCreateUserId(this.userService.getCurrentUser().getId());
         this.qualificationMapper.insertSelective(qualification);
-        return ServiceResult.toResult("新增成功");
+
+        //新增后的返回：替换资质证照地址
+        String[] strArray = {qualification.getCertificateImageUrl()};
+        List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+        qualification.setCertificateImageUrl(urlList.get(0).toString());
+        return ServiceResult.toResult(qualification);
     }
 
     /**
@@ -69,11 +78,10 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
         }
         ContractQualification qualification = this.qualificationMapper.selectByPrimaryKey(qualificationDto.getId());
         if (qualification == null) {
-            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "证件[id=" + qualification.getId() + "]不存在");
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "证件" + qualification.getId() + "不存在");
         }
         ContractQualification contractQualification = new ContractQualification();
         BeanUtils.copyProperties(qualificationDto, contractQualification);
-        contractQualification.setModifyUserId(this.userService.getCurrentUser().getId());
         /**
          * 修改前判断是否已审核过
          */
@@ -83,8 +91,8 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
         }
         // 待审核
         if (qualification.getCertificateStatus().equals(AuditStatus.UNCHECKED)) {
+            contractQualification.setModifyUserId(this.userService.getCurrentUser().getId());
             this.qualificationMapper.updateByPrimaryKeySelective(contractQualification);
-            return ServiceResult.toResult("操作成功");
         }
         // 审核未通过的
         if (qualificationDto.getCertificateStatus().equals(AuditStatus.AUDIT_FAILED)) {
@@ -95,13 +103,16 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
             this.qualificationMapper.updateByPrimaryKeySelective(qualification);
             // 把新资质证件照新增
             this.qualificationMapper.insertSelective(contractQualification);
-            return ServiceResult.toResult("操作成功");
         }
         // 已删除的
         if (qualification.getCertificateStatus().equals(AuditStatus.STOP_COOPERATION) || qualification.getEnabled().equals(0)) {
             return ServiceResult.error("证件照已被删除");
         }
-        return ServiceResult.error("操作失败");
+        //新增后的返回：替换资质证照地址
+        String[] strArray = {contractQualification.getCertificateImageUrl()};
+        List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+        contractQualification.setCertificateImageUrl(urlList.get(0).toString());
+        return ServiceResult.toResult(contractQualification);
     }
 
     /**

@@ -114,17 +114,16 @@
         <if test="truckTeamId != null">
             and m.id = #{truckTeamId}
         </if>
-        <if test="truckNumber != null">
+        <if test="truckNumber != null and truckNumber !=''">
             <![CDATA[and (t.truck_number like concat('%',#{truckNumber},'%') )]]>
         </if>
-        <if test="keywords != null">
-            <![CDATA[and (m.team_name like concat('%',#{keywords},'%') or (t.truck_number like concat('%',#{keywords},'%') )]]>
+        <if test="keywords != null and keywords != ''">
+            <![CDATA[and m.team_name like concat('%',#{keywords},'%')]]>
         </if>
-
         <if test="teamType != null">
             and m.team_type = #{teamType}
         </if>
-        <if test="truckStatus != null">
+        <if test="truckStatus != null and truckStatus != ''">
             and t.truck_status = #{truckStatus}
         </if>
         <if test="truckTypeId != null">
@@ -140,7 +139,6 @@
     </select>
     <select id="listTruckForAssignWaybillByCriteria" resultType="com.jaagro.crm.api.dto.response.truck.ListTruckDto"
             parameterType="com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto">
-
         SELECT distinct
         m.team_name,
         m.team_type,
@@ -167,6 +165,13 @@
             and t.truck_type_id = #{truckTypeId}
         </if>
         order by t.create_time desc
+    </select>
+    <select id="getTruckIdsByTruckNum" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select id from truck
+        where truck_status = 1
+        <if test="truckNumber != null">
+            <![CDATA[and truck_number like concat('%',#{truckNumber},'%') ]]>
+        </if>
     </select>
 
 </mapper>

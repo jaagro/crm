@@ -105,4 +105,12 @@ public interface TruckService {
      * @return
      */
     GetTruckDto getTruckByToken();
+
+    /**
+     * 根据车牌号模糊查询车辆id列表
+     *
+     * @param truckNumber
+     * @return
+     */
+    List<Integer> getTruckIdsByTruckNum(String truckNumber);
 }
