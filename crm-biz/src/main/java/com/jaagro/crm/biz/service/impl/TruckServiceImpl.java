@@ -57,7 +57,7 @@ public class TruckServiceImpl implements TruckService {
 
     private void changeUrl(List<ListTruckQualificationDto> driverQualificationList) {
         for (ListTruckQualificationDto dto : driverQualificationList
-        ) {
+                ) {
             //替换资质证照地址
             String[] strArray = {dto.getCertificateImageUrl()};
             List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
@@ -198,7 +198,7 @@ public class TruckServiceImpl implements TruckService {
         //司机
         if (truckDto.getDriver() != null && truckDto.getDriver().size() > 0) {
             for (CreateDriverDto createDriverDto : truckDto.getDriver()
-            ) {
+                    ) {
                 Integer driverId = 0;
                 //新增司机
                 if (createDriverDto.getId() == null) {
@@ -225,7 +225,7 @@ public class TruckServiceImpl implements TruckService {
                 //司机资质
                 if (createDriverDto.getDriverQualifications() != null && createDriverDto.getDriverQualifications().size() > 0) {
                     for (UpdateTruckQualificationDto truckQualificationDto : createDriverDto.getDriverQualifications()
-                    ) {
+                            ) {
                         // id为null - 新增
                         if (truckQualificationDto.getId() == null) {
                             CreateListTruckQualificationDto createListTruckQualificationDto = new CreateListTruckQualificationDto();
@@ -248,7 +248,7 @@ public class TruckServiceImpl implements TruckService {
         //车辆资质
         if (truckDto.getTruckQualifications() != null && truckDto.getTruckQualifications().size() > 0) {
             for (UpdateTruckQualificationDto truckQualificationDto : truckDto.getTruckQualifications()
-            ) {
+                    ) {
                 // id为null - 新增
                 if (truckQualificationDto.getId() == null) {
                     CreateListTruckQualificationDto createListTruckQualificationDto = new CreateListTruckQualificationDto();
@@ -329,30 +329,29 @@ public class TruckServiceImpl implements TruckService {
     public Map<String, Object> listTrucksWithDrivers(ListTruckCriteriaDto criteriaDto) {
         PageHelper.startPage(criteriaDto.getPageNum(), criteriaDto.getPageSize());
         List<ListTruckDto> truckList = truckMapper.listTruckForAssignWaybillByCriteria(criteriaDto);
-        if (truckList == null || truckList.size() == 0) {
-            return ServiceResult.error(ResponseStatusCode.OPERATION_SUCCESS.getCode(), "查无数据");
-        }
-        Iterator<ListTruckDto> truckIterator = truckList.iterator();
-        while (truckIterator.hasNext()) {
-            ListTruckDto listTruckDto = truckIterator.next();
-            List<DriverReturnDto> drivers = driverClientService.listByTruckId(listTruckDto.getTruckId());
-            if (CollectionUtils.isEmpty(drivers)) {
-                truckIterator.remove();
-                continue;
-            } else {
-                Iterator<DriverReturnDto> driverIterator = drivers.iterator();
-                while (driverIterator.hasNext()) {
-                    DriverReturnDto driverDto = driverIterator.next();
-                    if (0 == driverDto.getStatus()) {
-                        driverIterator.remove();
-                    }
-                }
+        if (!CollectionUtils.isEmpty(truckList)) {
+            Iterator<ListTruckDto> truckIterator = truckList.iterator();
+            while (truckIterator.hasNext()) {
+                ListTruckDto listTruckDto = truckIterator.next();
+                List<DriverReturnDto> drivers = driverClientService.listByTruckId(listTruckDto.getTruckId());
                 if (CollectionUtils.isEmpty(drivers)) {
                     truckIterator.remove();
                     continue;
+                } else {
+                    Iterator<DriverReturnDto> driverIterator = drivers.iterator();
+                    while (driverIterator.hasNext()) {
+                        DriverReturnDto driverDto = driverIterator.next();
+                        if (0 == driverDto.getStatus()) {
+                            driverIterator.remove();
+                        }
+                    }
+                    if (CollectionUtils.isEmpty(drivers)) {
+                        truckIterator.remove();
+                        continue;
+                    }
                 }
+                listTruckDto.setDrivers(drivers);
             }
-            listTruckDto.setDrivers(drivers);
         }
         return ServiceResult.toResult(new PageInfo<>(truckList));
     }
