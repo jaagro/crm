@@ -158,10 +158,10 @@
         <if test="truckTeamId != null">
             and m.truck_team_id = #{truckTeamId}
         </if>
-        <if test="truckNumber != null">
+        <if test="truckNumber != null and truckNumber !=''">
             <![CDATA[and (t.truck_number like concat('%',#{truckNumber},'%') )]]>
         </if>
-        <if test="truckTypeId != null">
+        <if test="truckTypeId != null and truckTypeId !=''">
             and t.truck_type_id = #{truckTypeId}
         </if>
         order by t.create_time desc
