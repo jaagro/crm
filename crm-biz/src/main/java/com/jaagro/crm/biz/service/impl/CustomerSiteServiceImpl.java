@@ -11,6 +11,7 @@ import com.jaagro.crm.api.service.CustomerSiteService;
 import com.jaagro.crm.api.service.DriverClientService;
 import com.jaagro.crm.biz.entity.CustomerSite;
 import com.jaagro.crm.biz.mapper.CustomerSiteMapperExt;
+import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +19,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Date;
 import java.util.List;
@@ -147,7 +146,11 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
      */
     @Override
     public ShowSiteDto getShowSiteById(Integer id) {
-        return siteMapper.getShowSiteById(id);
+        ShowSiteDto showSiteDto = siteMapper.getShowSiteById(id);
+        if (showSiteDto != null) {
+            showSiteDto.setDeptName(deptClientService.getDeptNameById(showSiteDto.getDeptId()));
+        }
+        return showSiteDto;
     }
 
     /**
