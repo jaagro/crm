@@ -198,6 +198,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<ShowCustomerDto> listAllCustomer() {
+        System.out.println(customerMapper.getAllCustomer());
         return customerMapper.getAllCustomer();
     }
 }
