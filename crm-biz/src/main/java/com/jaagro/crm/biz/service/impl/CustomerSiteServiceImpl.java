@@ -147,7 +147,7 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
     @Override
     public ShowSiteDto getShowSiteById(Integer id) {
         ShowSiteDto showSiteDto = siteMapper.getShowSiteById(id);
-        if (showSiteDto != null) {
+        if (showSiteDto != null && showSiteDto.getDeptId() != null) {
             showSiteDto.setDeptName(deptClientService.getDeptNameById(showSiteDto.getDeptId()));
         }
         return showSiteDto;
