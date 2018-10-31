@@ -100,4 +100,9 @@ public class ShowSiteDto implements Serializable {
      * 经度
      */
     private BigDecimal longitude;
+
+    /**
+     * 客户ID
+     */
+    private Integer customerId;
 }
