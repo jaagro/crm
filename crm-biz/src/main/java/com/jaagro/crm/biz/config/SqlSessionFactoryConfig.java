@@ -1,5 +1,6 @@
 package com.jaagro.crm.biz.config;
 
+import org.apache.ibatis.plugin.Interceptor;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +21,7 @@ public class SqlSessionFactoryConfig {
         //dataSource
         sqlSessionFactoryBean.setDataSource(dataSource);
         //mybatisPlugin
-//        sqlSessionFactoryBean.setPlugins(new Interceptor[]{new CatMybatisPlugin()});
+        sqlSessionFactoryBean.setPlugins(new Interceptor[]{new CatMybatisPlugin()});
         //mapperLocation
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath*:/mapper/*.xml"));
