@@ -17,6 +17,7 @@ public class SqlSessionFactoryConfig {
 
     @Bean
     public SqlSessionFactoryBean sqlSessionFactoryBean(DataSource dataSource) throws IOException {
+        System.out.println("~~~~~~~~~~~~~~~~~~~" + dataSource);
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         //dataSource
         sqlSessionFactoryBean.setDataSource(dataSource);
