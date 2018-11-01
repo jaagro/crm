@@ -55,7 +55,8 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerQualificationMapperExt qualificationMapper;
     @Autowired
     private CustomerContactsMapperExt customerContactsMapper;
-
+    @Autowired
+    private AccountService accountService;
     /**
      * 创建客户
      * 该api有图片上传的功能，图片删除用的是oss
@@ -181,6 +182,8 @@ public class CustomerServiceImpl implements CustomerService {
             if (customerDto.getReturnContractDtos() != null && customerDto.getReturnContractDtos().size() > 0) {
                 this.contractService.disableByID(customerDto.getReturnContractDtos());
             }
+            //逻辑删除 账户 add by yj 20181028
+            accountService.deleteAccount(id,1,1);
         }
         return ServiceResult.toResult("客户删除成功");
     }

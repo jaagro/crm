@@ -1,14 +1,15 @@
 package com.jaagro.crm.biz.service.impl;
 
+import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.constant.CertificateType;
 import com.jaagro.crm.api.dto.request.customer.CreateQualificationVerifyLogDto;
 import com.jaagro.crm.api.dto.response.truck.DriverReturnDto;
+import com.jaagro.crm.api.service.AccountService;
 import com.jaagro.crm.api.service.DriverClientService;
 import com.jaagro.crm.api.service.QualificationVerifyLogService;
 import com.jaagro.crm.biz.entity.*;
 import com.jaagro.crm.biz.mapper.*;
-import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.BeanUtils;
@@ -49,7 +50,8 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
     private DriverClientService driverClientService;
     @Autowired
     private TruckMapperExt truckMapper;
-
+    @Autowired
+    private AccountService accountService;
     /**
      * 新增审核记录
      *
@@ -87,11 +89,15 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                     case 1:
                         if (customerQualification.getCertificateType() == 7) {
                             if (customerQualification.getCertificateStatus() == 1) {
+                                UserInfo currentUser = this.userService.getCurrentUser();
+                                Integer currentUserId = currentUser == null ? null : currentUser.getId();
                                 customer
                                         .setCustomerStatus(AuditStatus.NORMAL_COOPERATION)
                                         .setModifyTime(new Date())
-                                        .setModifyUserId(this.userService.getCurrentUser().getId());
+                                        .setModifyUserId(currentUserId);
                                 this.customerMapper.updateByPrimaryKeySelective(customer);
+                                // 创建账户 add by yj 20181025
+                                accountService.createAccount(customer.getId(),1,1);
                                 break;
                             }
                         }
@@ -101,11 +107,15 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                     default:
                         if (customerQualification.getCertificateType() == 1) {
                             if (customerQualification.getCertificateStatus() == 1) {
+                                UserInfo currentUser = this.userService.getCurrentUser();
+                                Integer currentUserId = currentUser == null ? null : currentUser.getId();
                                 customer
                                         .setCustomerStatus(AuditStatus.NORMAL_COOPERATION)
                                         .setModifyTime(new Date())
                                         .setModifyUserId(this.userService.getCurrentUser().getId());
                                 this.customerMapper.updateByPrimaryKeySelective(customer);
+                                // 创建账户 add by yj 20181025
+                                accountService.createAccount(customer.getId(),1,1);
                                 break;
                             }
                         }
@@ -139,6 +149,8 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                             if (result == 5) {
                                 //若司机7、8、9、10、11身份证正面、身份证反面、驾驶证正面、驾驶证反面、道路运输从业资格证 审核均通过，则修改司机为审核通过
                                 driverClientService.updateDriverStatusFeign(driverReturnDto.getId());
+                                // 创建账户 add by yj 20181025
+                                accountService.createAccount(driverReturnDto.getId(),2,1);
                                 break;
                             }
                             break;
