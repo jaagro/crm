@@ -37,9 +37,6 @@ import java.util.regex.Matcher;
         @Signature(method = "query", type = Executor.class, args = {
                 MappedStatement.class, Object.class, RowBounds.class,
                 ResultHandler.class}),
-        @Signature(method = "select", type = Executor.class, args = {
-                MappedStatement.class, Object.class, RowBounds.class,
-                ResultHandler.class}),
         @Signature(method = "update", type = Executor.class, args = {MappedStatement.class, Object.class})
 })
 public class CatMybatisPlugin implements Interceptor {
