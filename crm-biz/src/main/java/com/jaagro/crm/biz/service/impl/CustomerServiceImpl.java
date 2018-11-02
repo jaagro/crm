@@ -21,6 +21,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -33,6 +36,7 @@ import java.util.Map;
  * @author baiyiran
  */
 @Service
+@CacheConfig(keyGenerator = "wiselyKeyGenerator", cacheNames = "customer")
 public class CustomerServiceImpl implements CustomerService {
 
     private static final Logger log = LoggerFactory.getLogger(CustomerServiceImpl.class);
@@ -86,6 +90,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @return
      */
     @Override
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     public Map<String, Object> updateById(UpdateCustomerDto dto) {
         //修改客户表
         Customer customer = new Customer();
@@ -106,6 +111,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @return
      */
     @Override
+    @Cacheable
     public Map<String, Object> getById(Integer id) {
         if (customerMapper.selectByPrimaryKey(id) == null) {
             return ServiceResult.error(ResponseStatusCode.ID_VALUE_ERROR.getCode(), "id: " + id + "不存在");
@@ -120,6 +126,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @return
      */
     @Override
+    @Cacheable
     public Map<String, Object> listByCriteria(ListCustomerCriteriaDto dto) {
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
         List<ListCustomerDto> customerReturnDtos = this.customerMapper.listByCriteriaDto(dto);
@@ -192,13 +199,14 @@ public class CustomerServiceImpl implements CustomerService {
      * @return
      */
     @Override
+    @Cacheable
     public ShowCustomerDto getShowCustomerById(Integer id) {
         return customerMapper.getShowCustomerById(id);
     }
 
+    @Cacheable
     @Override
     public List<ShowCustomerDto> listAllCustomer() {
-        System.out.println(customerMapper.getAllCustomer());
         return customerMapper.getAllCustomer();
     }
 }

@@ -3,6 +3,7 @@ package com.jaagro.crm.biz.entity;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -10,7 +11,7 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-public class ContractQualification {
+public class ContractQualification implements Serializable {
     /**
      * 合同资质证照主键id
      */
