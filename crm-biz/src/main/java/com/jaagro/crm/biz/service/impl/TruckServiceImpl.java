@@ -76,7 +76,6 @@ public class TruckServiceImpl implements TruckService {
      * @return
      */
     @Override
-    @Cacheable
     public Map<String, Object> getTruckById(Integer truckId) {
         Truck truck = truckMapper.selectByPrimaryKey(truckId);
         GetTruckDto result = truckMapper.getTruckById(truckId);
@@ -101,7 +100,7 @@ public class TruckServiceImpl implements TruckService {
         }
         result
                 .setDrivers(drivers)
-                .setTruckTypeId(this.truckTypeMapper.getById(truck.getId()));
+                .setTruckTypeId(this.truckTypeMapper.getById(truck.getTruckTypeId()));
         return ServiceResult.toResult(result);
     }
 
