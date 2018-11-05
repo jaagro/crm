@@ -11,6 +11,7 @@ import com.jaagro.crm.biz.mapper.CustomerContractSectionPriceMapperExt;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -21,6 +22,7 @@ import java.util.Map;
  * @author tony
  */
 @Service
+@CacheConfig(keyGenerator = "wiselyKeyGenerator", cacheNames = "CalculatePrice")
 public class CalculatePriceServiceImpl implements CalculatePriceService {
 
     @Autowired

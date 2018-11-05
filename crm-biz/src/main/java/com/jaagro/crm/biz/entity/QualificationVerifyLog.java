@@ -3,11 +3,12 @@ package com.jaagro.crm.biz.entity;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
 @Accessors(chain = true)
-public class QualificationVerifyLog {
+public class QualificationVerifyLog implements Serializable {
     /**
      * 审核表主键id
      */
