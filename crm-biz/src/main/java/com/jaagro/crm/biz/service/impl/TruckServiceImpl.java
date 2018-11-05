@@ -78,6 +78,7 @@ public class TruckServiceImpl implements TruckService {
     @Override
     @Cacheable
     public Map<String, Object> getTruckById(Integer truckId) {
+        Truck truck = truckMapper.selectByPrimaryKey(truckId);
         GetTruckDto result = truckMapper.getTruckById(truckId);
         if (StringUtils.isEmpty(result)) {
             return ServiceResult.error(ResponseStatusCode.QUERY_DATA_EMPTY.getCode(), "车辆不存在");
@@ -100,7 +101,7 @@ public class TruckServiceImpl implements TruckService {
         }
         result
                 .setDrivers(drivers)
-                .setTruckTypeId(this.truckTypeMapper.getById(result.getTruckTypeId().getId()));
+                .setTruckTypeId(this.truckTypeMapper.getById(truck.getId()));
         return ServiceResult.toResult(result);
     }
 
