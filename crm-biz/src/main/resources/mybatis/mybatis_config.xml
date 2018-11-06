@@ -10,7 +10,7 @@
         <!--<setting name="aggressiveLazyLoading" value="false"/>-->
     </settings>
 
-    <plugins>
-        <plugin interceptor="com.jaagro.crm.biz.config.CatMybatisPlugin"></plugin>
-    </plugins>
+    <!--<plugins>-->
+        <!--<plugin interceptor="com.jaagro.crm.biz.cat.CatMybatisPlugin"></plugin>-->
+    <!--</plugins>-->
 </configuration>

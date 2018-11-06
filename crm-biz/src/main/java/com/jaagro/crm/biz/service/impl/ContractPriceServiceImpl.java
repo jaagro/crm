@@ -8,6 +8,8 @@ import com.jaagro.crm.biz.mapper.CustomerContractPriceMapperExt;
 import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +19,7 @@ import java.util.Map;
 /**
  * @author baiyiran
  */
+@CacheConfig(keyGenerator = "wiselyKeyGenerator")
 @Service
 public class ContractPriceServiceImpl implements ContractPriceService {
 
@@ -25,6 +28,7 @@ public class ContractPriceServiceImpl implements ContractPriceService {
     @Autowired
     private ContractSectionPriceService sectionPriceService;
 
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> disableByContractId(Integer id) {

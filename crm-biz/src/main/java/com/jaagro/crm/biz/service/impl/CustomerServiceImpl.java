@@ -68,6 +68,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @param dto 注意customer对象的子对象的插入
      * @return
      */
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> createCustomer(CreateCustomerDto dto) {
@@ -111,8 +112,8 @@ public class CustomerServiceImpl implements CustomerService {
      * @param id
      * @return
      */
-    @Override
     @Cacheable
+    @Override
     public Map<String, Object> getById(Integer id) {
         if (customerMapper.selectByPrimaryKey(id) == null) {
             return ServiceResult.error(ResponseStatusCode.ID_VALUE_ERROR.getCode(), "id: " + id + "不存在");
@@ -153,6 +154,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @param auditResult
      * @return
      */
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> auditCustomer(Integer id, String auditResult) {
         return null;
@@ -164,6 +166,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @param id
      * @return
      */
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> disableCustomer(Integer id) {
         CustomerReturnDto customerDto = customerMapper.getById(id);

@@ -18,14 +18,14 @@ import java.util.Map;
 /**
  * @author baiyiran
  */
+@CacheConfig(keyGenerator = "wiselyKeyGenerator")
 @Service
-@CacheConfig(keyGenerator = "wiselyKeyGenerator", cacheNames = "contractSectionPrice")
 public class ContractSectionPriceServiceImpl implements ContractSectionPriceService {
 
     @Autowired
     private CustomerContractSectionPriceMapperExt sectionPriceMapper;
 
-    @CacheEvict(cacheNames = "contractSectionPrice", allEntries = true)
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> disableByPriceId(Integer priceId) {

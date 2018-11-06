@@ -14,13 +14,13 @@ import com.jaagro.crm.api.service.QualificationCertificService;
 import com.jaagro.crm.biz.entity.CustomerQualification;
 import com.jaagro.crm.biz.mapper.CustomerMapperExt;
 import com.jaagro.crm.biz.mapper.CustomerQualificationMapperExt;
-import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -47,6 +47,7 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
     @Autowired
     private CustomerMapperExt customerMapper;
 
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> createQualificationCertific(CreateCustomerQualificationDto certificDto) {
@@ -80,6 +81,7 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
         return ServiceResult.toResult(qc);
     }
 
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> createQualificationCertific(List<CreateCustomerQualificationDto> certificDtos, Integer CustomerId) {
         if (certificDtos != null && certificDtos.size() > 0) {
@@ -97,6 +99,7 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
     /**
      * 这里只能审核客户资质，车队资质审核在哪里？？？
      */
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> updateQualificationCertific(UpdateCustomerQualificationDto certificDto) {
         //如果id为空，则新增此条数据
@@ -150,6 +153,7 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
         return ServiceResult.toResult(certificDto);
     }
 
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> updateQualificationCertific(List<UpdateCustomerQualificationDto> certificDtos) {
         if (certificDtos != null && certificDtos.size() > 0) {
@@ -253,6 +257,7 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
         return ServiceResult.toResult(certificReturnDtos);
     }
 
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> deleteQualificationCertific(List<Integer> ids) {
         if (ids != null && ids.size() > 0) {
@@ -263,6 +268,7 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
         return ServiceResult.toResult("删除成功");
     }
 
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> disableQualificationCertific(Integer id) {
         CustomerQualification certific = this.certificMapper.selectByPrimaryKey(id);
@@ -271,6 +277,7 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
         return ServiceResult.toResult("资质证件照删除成功");
     }
 
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> disableQualificationCertific(List<CustomerQualificationReturnDto> qualifications) {
         if (qualifications != null && qualifications.size() > 0) {

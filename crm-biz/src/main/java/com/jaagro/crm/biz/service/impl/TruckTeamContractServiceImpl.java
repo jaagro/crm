@@ -24,6 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +37,7 @@ import java.util.Map;
 /**
  * @author liqiangping
  */
+@CacheConfig(keyGenerator = "wiselyKeyGenerator")
 @Service
 public class TruckTeamContractServiceImpl implements TruckTeamContractService {
 
@@ -61,6 +64,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
      * @param dto
      * @return
      */
+    @CacheEvict(cacheNames = "truck", allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> createTruckTeamContract(CreateTruckTeamContractDto dto) {
@@ -130,6 +134,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
      * @param dto
      * @return
      */
+    @CacheEvict(cacheNames = "truck", allEntries = true)
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> updateTruckTeamContract(UpdateTruckTeamContractDto dto) {
@@ -167,6 +172,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
      * @param truckTeamId
      * @return
      */
+    @CacheEvict(cacheNames = "truck", allEntries = true)
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> createTruckTeamContracts(List<CreateTruckTeamContractDto> dto, Integer truckTeamId) {
@@ -200,6 +206,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
         return ServiceResult.toResult(new PageInfo<>(returnDtoList));
     }
 
+    @CacheEvict(cacheNames = "truck", allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> disableContract(Integer id) {
