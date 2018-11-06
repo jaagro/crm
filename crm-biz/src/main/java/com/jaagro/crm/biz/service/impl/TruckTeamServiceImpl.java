@@ -29,7 +29,7 @@ import java.util.Map;
  * @author tony
  */
 @Service
-@CacheConfig(keyGenerator = "wiselyKeyGenerator")
+@CacheConfig(keyGenerator = "wiselyKeyGenerator", cacheNames = "truck")
 public class TruckTeamServiceImpl implements TruckTeamService {
 
     private static final Logger log = LoggerFactory.getLogger(TruckTeamServiceImpl.class);
