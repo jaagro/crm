@@ -13,6 +13,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.util.StringUtils;
 
 /**
  * @author tony
@@ -30,6 +31,7 @@ public class RedisConfig extends CachingConfigurerSupport {
             sb.append(target.getClass().getName());
             sb.append(method.getName());
             for (Object obj : params) {
+                obj = StringUtils.isEmpty(obj) ? "null" : obj;
                 sb.append(obj.toString());
             }
             return sb.toString();
