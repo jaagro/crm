@@ -1,5 +1,6 @@
 package com.jaagro.crm.biz.config;
 
+import com.jaagro.crm.biz.cat.CatMybatisPlugin;
 import org.apache.ibatis.plugin.Interceptor;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.context.annotation.Bean;

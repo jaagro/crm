@@ -11,6 +11,6 @@
     </settings>
 
     <!--<plugins>-->
-        <!--<plugin interceptor="com.jaagro.crm.biz.config.CatMybatisPlugin"></plugin>-->
+        <!--<plugin interceptor="com.jaagro.crm.biz.cat.CatMybatisPlugin"></plugin>-->
     <!--</plugins>-->
 </configuration>

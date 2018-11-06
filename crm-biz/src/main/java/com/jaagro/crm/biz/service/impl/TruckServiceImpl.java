@@ -111,7 +111,7 @@ public class TruckServiceImpl implements TruckService {
      * @return
      */
     @Override
-    @Cacheable
+//    @Cacheable
     public GetTruckDto getTruckByIdReturnObject(Integer truckId) {
         Truck truck = this.truckMapper.selectByPrimaryKey(truckId);
         GetTruckDto result = truckMapper.getTruckById(truckId);
