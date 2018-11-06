@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,7 @@ import java.util.Map;
  * @author liqiangping
  */
 @Service
+@CacheConfig(keyGenerator = "wiselyKeyGenerator")
 public class TruckTeamBankcardServiceImpl implements TruckTeamBankcardService {
 
     private static final Logger log = LoggerFactory.getLogger(TruckTeamBankcardService.class);
@@ -32,6 +35,7 @@ public class TruckTeamBankcardServiceImpl implements TruckTeamBankcardService {
      * @param truckTeamId
      * @return
      */
+    @CacheEvict(cacheNames = "truck", allEntries = true)
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> createTruckTeamBankcard(List<CreateTruckTeamBankcardDto> dto, Integer truckTeamId) {

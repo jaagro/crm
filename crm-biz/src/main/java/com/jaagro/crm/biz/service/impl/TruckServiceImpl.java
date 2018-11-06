@@ -75,6 +75,7 @@ public class TruckServiceImpl implements TruckService {
      * @param truckId
      * @return
      */
+    @CacheEvict(cacheNames = "truck", allEntries = true)
     @Override
     public Map<String, Object> getTruckById(Integer truckId) {
         Truck truck = truckMapper.selectByPrimaryKey(truckId);
@@ -111,7 +112,6 @@ public class TruckServiceImpl implements TruckService {
      * @return
      */
     @Override
-//    @Cacheable
     public GetTruckDto getTruckByIdReturnObject(Integer truckId) {
         Truck truck = this.truckMapper.selectByPrimaryKey(truckId);
         GetTruckDto result = truckMapper.getTruckById(truckId);
@@ -302,7 +302,6 @@ public class TruckServiceImpl implements TruckService {
     }
 
     @Override
-    @Cacheable
     public List<ListTruckTypeDto> listTruckType(String productName) {
         System.err.println(ProductType.SOW);
         if (productName.equals(ProductType.SOW.toString()) || productName.equals(ProductType.BOAR.toString()) || productName.equals(ProductType.LIVE_PIG.toString())) {
@@ -313,7 +312,6 @@ public class TruckServiceImpl implements TruckService {
     }
 
     @Override
-    @Cacheable
     public List<ListTruckTypeDto> listTruckType() {
         return truckTypeMapper.listAll(null);
     }
@@ -325,7 +323,6 @@ public class TruckServiceImpl implements TruckService {
      * @return
      */
     @Override
-    @Cacheable
     public ListTruckTypeDto getTruckTypeById(Integer id) {
         return truckTypeMapper.getById(id);
     }
@@ -374,7 +371,6 @@ public class TruckServiceImpl implements TruckService {
      * @author tony
      */
     @Override
-    @Cacheable
     public GetTruckDto getTruckByToken() {
         String token = request.getHeader("token");
         UserInfo userInfo = userClientService.getUserByToken(token);

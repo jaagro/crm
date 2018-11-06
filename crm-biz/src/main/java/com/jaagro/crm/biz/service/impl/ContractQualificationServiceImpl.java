@@ -26,8 +26,8 @@ import java.util.Map;
 /**
  * @author baiyiran
  */
+@CacheConfig(keyGenerator = "wiselyKeyGenerator")
 @Service
-@CacheConfig(keyGenerator = "wiselyKeyGenerator", cacheNames = "contractQualification")
 public class ContractQualificationServiceImpl implements ContractQualificationService {
 
     private static final Logger log = LoggerFactory.getLogger(ContractQualificationServiceImpl.class);
@@ -45,7 +45,7 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
      * @param qualificationDto
      * @return
      */
-    @CacheEvict(cacheNames = "contractQualification", allEntries = true)
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> createQuation(CreateContractQualificationDto qualificationDto) {
@@ -74,7 +74,7 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
      * @param qualificationDto
      * @return
      */
-    @CacheEvict(cacheNames = "contractQualification", allEntries = true)
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> updateContractQuaion(UpdateContractQualificationDto qualificationDto) {
@@ -126,7 +126,7 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
      * @param id
      * @return
      */
-    @CacheEvict(cacheNames = "contractQualification", allEntries = true)
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> disableContractQuaion(Integer id) {
