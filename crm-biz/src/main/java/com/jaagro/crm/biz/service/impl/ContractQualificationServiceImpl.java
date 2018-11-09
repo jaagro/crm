@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -24,6 +26,7 @@ import java.util.Map;
 /**
  * @author baiyiran
  */
+@CacheConfig(keyGenerator = "wiselyKeyGenerator")
 @Service
 public class ContractQualificationServiceImpl implements ContractQualificationService {
 
@@ -42,6 +45,7 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
      * @param qualificationDto
      * @return
      */
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> createQuation(CreateContractQualificationDto qualificationDto) {
@@ -70,6 +74,7 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
      * @param qualificationDto
      * @return
      */
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> updateContractQuaion(UpdateContractQualificationDto qualificationDto) {
@@ -121,6 +126,7 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
      * @param id
      * @return
      */
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> disableContractQuaion(Integer id) {

@@ -1,4 +1,4 @@
-package com.jaagro.crm.web.config;
+package com.jaagro.crm.biz.cat;
 
 import com.dianping.cat.servlet.CatFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;

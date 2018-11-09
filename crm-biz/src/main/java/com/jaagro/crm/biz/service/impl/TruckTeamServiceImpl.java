@@ -16,6 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -26,6 +29,7 @@ import java.util.Map;
  * @author tony
  */
 @Service
+@CacheConfig(keyGenerator = "wiselyKeyGenerator", cacheNames = "truck")
 public class TruckTeamServiceImpl implements TruckTeamService {
 
     private static final Logger log = LoggerFactory.getLogger(TruckTeamServiceImpl.class);
@@ -42,6 +46,7 @@ public class TruckTeamServiceImpl implements TruckTeamService {
      * @return
      */
     @Override
+    @CacheEvict(cacheNames = "truck", allEntries = true)
     public Map<String, Object> createTruckTeam(CreateTruckTeamDto truckTeamDto) {
         TruckTeam truckTeam = new TruckTeam();
         BeanUtils.copyProperties(truckTeamDto, truckTeam);
@@ -59,6 +64,7 @@ public class TruckTeamServiceImpl implements TruckTeamService {
      * @return
      */
     @Override
+    @CacheEvict(cacheNames = "truck", allEntries = true)
     public Map<String, Object> updateTruckTeam(UpdateTruckTeamDto truckTeamDto) {
         if (truckTeamMapper.selectByPrimaryKey(truckTeamDto.getId()) == null) {
             ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), truckTeamDto.getId() + " ：该车队不存在");
@@ -98,6 +104,7 @@ public class TruckTeamServiceImpl implements TruckTeamService {
      * @param id
      * @return
      */
+    @CacheEvict(cacheNames = "truck", allEntries = true)
     @Override
     public Map<String, Object> deleteTruckTeam(Integer id) {
         if (truckTeamMapper.selectByPrimaryKey(id) == null) {
@@ -107,6 +114,7 @@ public class TruckTeamServiceImpl implements TruckTeamService {
         return ServiceResult.toResult("删除成功");
     }
 
+    @Cacheable
     @Override
     public Map<String, Object> listTruckTeamByCerteria(ListTruckTeamCriteriaDto truckCriteria) {
         PageHelper.startPage(truckCriteria.getPageNum(), truckCriteria.getPageSize());

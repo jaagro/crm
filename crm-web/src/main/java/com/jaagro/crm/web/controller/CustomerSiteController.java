@@ -72,18 +72,9 @@ public class CustomerSiteController {
         if (this.siteMapper.selectByPrimaryKey(siteDto.getId()) == null) {
             return BaseResponse.idNull("地址id:[id]不能为空");
         }
-        if (siteDto.getSiteType() == null) {
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "地址类型:[siteType]不能为空");
-        }
         if (siteDto.getSiteName() == null) {
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "地址名称:[siteName]不能为空");
-        }
-        if (this.siteMapper.getSiteDto(siteDto) != null) {
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "地址名称:[siteName]已存在");
-        }
-        if (siteDto.getCustomerId() != null) {
-            if (this.customerMapper.selectByPrimaryKey(siteDto.getCustomerId()) == null) {
-                return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户id:[customerId]不存在");
+            if (this.siteMapper.getSiteDto(siteDto) != null) {
+                return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "地址名称:[siteName]已存在");
             }
         }
         return BaseResponse.service(siteService.updateSite(siteDto));

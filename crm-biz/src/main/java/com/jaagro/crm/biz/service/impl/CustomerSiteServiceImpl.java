@@ -16,10 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Date;
 import java.util.List;
@@ -29,6 +29,7 @@ import java.util.Map;
  * @author baiyiran
  */
 @Service
+@CacheConfig(keyGenerator = "wiselyKeyGenerator")
 public class CustomerSiteServiceImpl implements CustomerSiteService {
 
     private static final Logger log = LoggerFactory.getLogger(CustomerSiteServiceImpl.class);
@@ -40,7 +41,7 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
     @Autowired
     private DriverClientService deptClientService;
 
-
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> createSite(CreateCustomerSiteDto customerSiteDto) {
         CustomerSite site = new CustomerSite();
@@ -51,6 +52,7 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
         return ServiceResult.toResult("地址创建成功");
     }
 
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> createSite(List<CreateCustomerSiteDto> customerSiteDtos, Integer customerId) {
         if (customerSiteDtos != null && customerSiteDtos.size() > 0) {
@@ -66,6 +68,7 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
         return ServiceResult.toResult("地址创建成功");
     }
 
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> updateSite(UpdateCustomerSiteDto customerSiteDto) {
         CustomerSite site = new CustomerSite();
@@ -77,6 +80,7 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
         return ServiceResult.toResult("地址修改成功");
     }
 
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Transactional
     @Override
     public Map<String, Object> updateSite(List<UpdateCustomerSiteDto> customerSiteDtos) {
@@ -114,6 +118,7 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
         return ServiceResult.toResult(new PageInfo<>(siteReturnDtos));
     }
 
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> disableSite(Integer id) {
         CustomerSite site = this.siteMapper.selectByPrimaryKey(id);
@@ -122,6 +127,7 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
         return ServiceResult.toResult("地址删除成功");
     }
 
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> disableSite(List<CustomerSiteReturnDto> siteReturnDtos) {
         if (siteReturnDtos != null && siteReturnDtos.size() > 0) {
@@ -147,7 +153,11 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
      */
     @Override
     public ShowSiteDto getShowSiteById(Integer id) {
-        return siteMapper.getShowSiteById(id);
+        ShowSiteDto showSiteDto = siteMapper.getShowSiteById(id);
+        if (showSiteDto != null && showSiteDto.getDeptId() != null) {
+            showSiteDto.setDeptName(deptClientService.getDeptNameById(showSiteDto.getDeptId()));
+        }
+        return showSiteDto;
     }
 
     /**

@@ -18,6 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -31,6 +33,7 @@ import java.util.Map;
  * @author liqiangping
  */
 @Service
+@CacheConfig(keyGenerator = "wiselyKeyGenerator")
 public class TruckQualificationServiceImpl implements TruckQualificationService {
 
     private static final Logger log = LoggerFactory.getLogger(TruckQualificationServiceImpl.class);
@@ -50,6 +53,7 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
      * @param dto
      * @return
      */
+    @CacheEvict(cacheNames = "truck", allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> createTruckQualification(CreateListTruckQualificationDto dto) {
@@ -87,6 +91,7 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
      * @param dto
      * @return
      */
+    @CacheEvict(cacheNames = "truck", allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> updateQualification(List<UpdateTruckQualificationDto> dto) {
@@ -144,6 +149,7 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
      * @param truckQualificationDto
      * @return
      */
+    @CacheEvict(cacheNames = "truck", allEntries = true)
     @Override
     public Map<String, Object> updateQualificationCertific(UpdateTruckQualificationDto truckQualificationDto) {
         if (StringUtils.isEmpty(truckQualificationDto.getId())) {
@@ -189,6 +195,7 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
         return ServiceResult.toResult(qualification);
     }
 
+    @CacheEvict(cacheNames = "truck", allEntries = true)
     @Override
     public Map<String, Object> deleteQualification(Integer[] ids) {
         for (int i = 0; i < ids.length; i++) {
@@ -197,6 +204,7 @@ public class TruckQualificationServiceImpl implements TruckQualificationService 
         return ServiceResult.toResult("删除成功");
     }
 
+    @CacheEvict(cacheNames = "truck", allEntries = true)
     @Override
     public Map<String, Object> deleteQualificationByDriverId(Integer driverId) {
         this.truckQualificationMapper.disbaleByDriverId(driverId);
