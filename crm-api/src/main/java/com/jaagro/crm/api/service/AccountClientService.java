@@ -24,14 +24,6 @@ public interface AccountClientService {
     public BaseResponse insertAccount(@RequestBody  CreateAccountDto createAccountDto);
 
     /**
-     * 修改账户
-     * @param updateAccountDto
-     * @return
-     */
-    @PutMapping("/account")
-    public BaseResponse updateAccount(@RequestBody UpdateAccountDto updateAccountDto);
-
-    /**
      * 删除账户
      * @param id
      * @return
@@ -44,6 +36,6 @@ public interface AccountClientService {
      *@param queryAccountDto
      * @return
      */
-    @PostMapping("/getAccountDto")
-    public AccountReturnDto getAccountDto(@RequestBody QueryAccountDto queryAccountDto);
+    @PostMapping("/getByQueryAccountDto")
+    public AccountReturnDto getByQueryAccountDto(@RequestBody QueryAccountDto queryAccountDto);
 }

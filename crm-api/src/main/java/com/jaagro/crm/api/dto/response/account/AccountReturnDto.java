@@ -73,7 +73,7 @@ public class AccountReturnDto implements Serializable{
     /**
      * 创建人
      */
-    private Integer createdUserId;
+    private Integer createUserId;
 
     /**
      * 修改人

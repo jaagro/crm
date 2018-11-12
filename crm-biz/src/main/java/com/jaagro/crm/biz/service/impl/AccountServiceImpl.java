@@ -35,7 +35,7 @@ public class AccountServiceImpl implements AccountService {
                 .setAccountType(accountType)
                 .setUserId(userId)
                 .setUserType(userType);
-        AccountReturnDto accountDto = accountClientService.getAccountDto(queryAccountDto);
+        AccountReturnDto accountDto = accountClientService.getByQueryAccountDto(queryAccountDto);
         if (accountDto != null && accountDto.getId() != null){
             BaseResponse baseResponse = accountClientService.deleteAccount(accountDto.getId());
             if (ResponseStatusCode.OPERATION_SUCCESS.getCode() != baseResponse.getStatusCode()){
@@ -55,12 +55,13 @@ public class AccountServiceImpl implements AccountService {
      * @param accountType
      */
     @Override
-    public void createAccount(Integer userId, Integer userType, Integer accountType) {
+    public void createAccount(Integer userId, Integer userType, Integer accountType,Integer createUserId) {
         CreateAccountDto createAccountDto = new CreateAccountDto();
         createAccountDto
                 .setUserType(userType)
                 .setUserId(userId)
-                .setAccountType(accountType);
+                .setAccountType(accountType)
+                .setCreateUserId(createUserId);
         BaseResponse baseResponse = accountClientService.insertAccount(createAccountDto);
         if(ResponseStatusCode.OPERATION_SUCCESS.getCode() != baseResponse.getStatusCode()){
             log.warn("createAccount fail createAccountDto={},baseResponse={}",createAccountDto,baseResponse);

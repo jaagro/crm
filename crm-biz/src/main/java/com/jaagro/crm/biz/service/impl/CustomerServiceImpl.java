@@ -2,6 +2,8 @@ package com.jaagro.crm.biz.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.jaagro.crm.api.constant.AccountType;
+import com.jaagro.crm.api.constant.AccountUserType;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerDto;
@@ -200,7 +202,7 @@ public class CustomerServiceImpl implements CustomerService {
                 this.contractService.disableByID(customerDto.getReturnContractDtos());
             }
             //逻辑删除 账户 add by yj 20181028
-            accountService.deleteAccount(id,1,1);
+            accountService.deleteAccount(id, AccountUserType.CUSTOMER, AccountType.CASH);
         }
         return ServiceResult.toResult("客户删除成功");
     }
