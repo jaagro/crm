@@ -1,6 +1,8 @@
 package com.jaagro.crm.biz.service.impl;
 
 import com.jaagro.constant.UserInfo;
+import com.jaagro.crm.api.constant.AccountType;
+import com.jaagro.crm.api.constant.AccountUserType;
 import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.constant.CertificateType;
 import com.jaagro.crm.api.dto.request.customer.CreateQualificationVerifyLogDto;
@@ -97,7 +99,7 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                                         .setModifyUserId(currentUserId);
                                 this.customerMapper.updateByPrimaryKeySelective(customer);
                                 // 创建账户 add by yj 20181025
-                                accountService.createAccount(customer.getId(),1,1);
+                                accountService.createAccount(customer.getId(), AccountUserType.CUSTOMER, AccountType.CASH,currentUserId);
                                 break;
                             }
                         }
@@ -115,7 +117,7 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                                         .setModifyUserId(this.userService.getCurrentUser().getId());
                                 this.customerMapper.updateByPrimaryKeySelective(customer);
                                 // 创建账户 add by yj 20181025
-                                accountService.createAccount(customer.getId(),1,1);
+                                accountService.createAccount(customer.getId(),AccountUserType.CUSTOMER,AccountType.CASH,currentUserId);
                                 break;
                             }
                         }
@@ -131,6 +133,8 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                 if (truckQualification == null) {
                     return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队资质证不存在");
                 }
+                UserInfo currentUser = userService.getCurrentUser();
+                Integer currentUserId = currentUser == null ? null : currentUser.getId();
                 //司机资质审核
                 if (!StringUtils.isEmpty(truckQualification.getDriverId())) {
                     DriverReturnDto driverReturnDto = driverClientService.getDriverReturnObject(truckQualification.getDriverId());
@@ -150,7 +154,7 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                                 //若司机7、8、9、10、11身份证正面、身份证反面、驾驶证正面、驾驶证反面、道路运输从业资格证 审核均通过，则修改司机为审核通过
                                 driverClientService.updateDriverStatusFeign(driverReturnDto.getId());
                                 // 创建账户 add by yj 20181025
-                                accountService.createAccount(driverReturnDto.getId(),2,1);
+                                accountService.createAccount(driverReturnDto.getId(),AccountUserType.DRIVER,AccountType.CASH,currentUserId);
                                 break;
                             }
                             break;

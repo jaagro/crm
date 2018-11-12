@@ -28,4 +28,8 @@ public class CreateAccountDto implements Serializable{
      * 账户类型1-现金账户 2-保证金账户
      */
     private Integer accountType;
+    /**
+     * 创建人用户id
+     */
+    private Integer createUserId;
 }
