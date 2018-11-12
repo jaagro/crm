@@ -19,6 +19,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -32,6 +35,7 @@ import java.util.*;
  * @author liqiangping
  */
 @Service
+@CacheConfig(keyGenerator = "wiselyKeyGenerator", cacheNames = "truck")
 public class TruckServiceImpl implements TruckService {
 
     private static final Logger log = LoggerFactory.getLogger(TruckServiceImpl.class);
@@ -71,15 +75,13 @@ public class TruckServiceImpl implements TruckService {
      * @param truckId
      * @return
      */
+    @CacheEvict(cacheNames = "truck", allEntries = true)
     @Override
     public Map<String, Object> getTruckById(Integer truckId) {
-        Truck truck = this.truckMapper.selectByPrimaryKey(truckId);
-        if (truck == null) {
-            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_EMPTY.getCode(), "车辆不存在");
-        }
+        Truck truck = truckMapper.selectByPrimaryKey(truckId);
         GetTruckDto result = truckMapper.getTruckById(truckId);
         if (StringUtils.isEmpty(result)) {
-            return ServiceResult.error(ResponseStatusCode.FORBIDDEN_ERROR.getCode(), truckId + ": 无效");
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_EMPTY.getCode(), "车辆不存在");
         }
         //替换车辆资质证地址
         if (result.getQualificationDtoList().size() > 0) {
@@ -126,6 +128,7 @@ public class TruckServiceImpl implements TruckService {
      * @return
      */
     @Override
+    @CacheEvict(cacheNames = "truck", allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> createTruck(CreateTruckDto truckDto) {
         Truck truck = new Truck();
@@ -184,6 +187,7 @@ public class TruckServiceImpl implements TruckService {
      * @return
      */
     @Override
+    @CacheEvict(cacheNames = "truck", allEntries = true)
     public Map<String, Object> updateTruck(CreateTruckDto truckDto) {
         if (truckMapper.selectByPrimaryKey(truckDto.getId()) == null) {
             return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), truckDto.getId() + " ：id不正确");
@@ -271,6 +275,7 @@ public class TruckServiceImpl implements TruckService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(cacheNames = "truck", allEntries = true)
     public Map<String, Object> deleteTruck(Integer id) {
         if (truckMapper.selectByPrimaryKey(id) == null) {
             return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), id + " ：id不正确");
@@ -283,12 +288,14 @@ public class TruckServiceImpl implements TruckService {
     }
 
     @Override
+    @Cacheable
     public Map<String, Object> listTruck(ListTruckCriteriaDto criteria) {
         PageHelper.startPage(criteria.getPageNum(), criteria.getPageSize());
         return ServiceResult.toResult(new PageInfo<>(truckMapper.listTruckByTeamId(criteria.getTruckTeamId(), criteria.getTruckNumber())));
     }
 
     @Override
+    @Cacheable
     public Map<String, Object> listTruckByCriteria(ListTruckCriteriaDto criteria) {
         PageHelper.startPage(criteria.getPageNum(), criteria.getPageSize());
         return ServiceResult.toResult(new PageInfo<>(truckMapper.listTruckByCriteria(criteria)));
@@ -326,6 +333,7 @@ public class TruckServiceImpl implements TruckService {
      * @Author gavin
      */
     @Override
+    @Cacheable
     public Map<String, Object> listTrucksWithDrivers(ListTruckCriteriaDto criteriaDto) {
         PageHelper.startPage(criteriaDto.getPageNum(), criteriaDto.getPageSize());
         List<ListTruckDto> truckList = truckMapper.listTruckForAssignWaybillByCriteria(criteriaDto);
@@ -388,6 +396,7 @@ public class TruckServiceImpl implements TruckService {
      * @return
      */
     @Override
+    @Cacheable
     public List<Integer> getTruckIdsByTruckNum(String truckNumber) {
         if (truckNumber != null) {
             List<Integer> truckIds = this.truckMapper.getTruckIdsByTruckNum(truckNumber);

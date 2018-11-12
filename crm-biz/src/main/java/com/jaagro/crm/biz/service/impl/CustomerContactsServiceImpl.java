@@ -12,9 +12,12 @@ import com.jaagro.crm.biz.entity.Customer;
 import com.jaagro.crm.biz.entity.CustomerContacts;
 import com.jaagro.crm.biz.mapper.CustomerContactsMapperExt;
 import com.jaagro.crm.biz.mapper.CustomerMapperExt;
+import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -24,6 +27,7 @@ import java.util.Map;
 /**
  * @author baiyiran
  */
+@CacheConfig(keyGenerator = "wiselyKeyGenerator")
 @Service
 public class CustomerContactsServiceImpl implements CustomerContactsService {
 
@@ -34,6 +38,7 @@ public class CustomerContactsServiceImpl implements CustomerContactsService {
     @Autowired
     private CustomerMapperExt customerMapper;
 
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> createCustomerContacts(CreateCustomerContactsDto dto) {
         CustomerContacts customerContacts = new CustomerContacts();
@@ -45,6 +50,7 @@ public class CustomerContactsServiceImpl implements CustomerContactsService {
         return ServiceResult.toResult("客户联系人创建成功");
     }
 
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> createCustomerContacts(List<CreateCustomerContactsDto> dtos, Integer CustomerId) {
         if (dtos != null && dtos.size() > 0) {
@@ -60,6 +66,7 @@ public class CustomerContactsServiceImpl implements CustomerContactsService {
         return ServiceResult.toResult("客户联系人创建成功");
     }
 
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> updateCustomerContacts(UpdateCustomerContactsDto dto) {
         CustomerContacts customerContacts = new CustomerContacts();
@@ -68,6 +75,7 @@ public class CustomerContactsServiceImpl implements CustomerContactsService {
         return ServiceResult.toResult("客户联系人修改成功");
     }
 
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> updateCustomerContacts(List<UpdateCustomerContactsDto> contractDtos) {
         if (contractDtos != null && contractDtos.size() > 0) {
@@ -109,13 +117,18 @@ public class CustomerContactsServiceImpl implements CustomerContactsService {
         return ServiceResult.toResult(new PageInfo<>(contractReturnDtos));
     }
 
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> disableCustomerContacts(Integer id) {
+        if (this.customerContactsMapper.selectByPrimaryKey(id) == null) {
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到相应数据");
+        }
         CustomerContacts customerContacts = this.customerContactsMapper.selectByPrimaryKey(id);
         customerContacts.setEnabled(false);
         return ServiceResult.toResult("客户联系人停用成功");
     }
 
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> disableCustomerContacts(List<CustomerContactsReturnDto> customerContactsReturnDtos) {
         if (customerContactsReturnDtos != null && customerContactsReturnDtos.size() > 0) {

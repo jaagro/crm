@@ -12,3 +12,4 @@ gen
 /crm-biz/.mvn/
 /crm-biz/target/
 /crm-api/target/
+/.mvn

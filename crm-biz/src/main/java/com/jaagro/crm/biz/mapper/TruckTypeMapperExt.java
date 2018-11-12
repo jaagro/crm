@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface TruckTypeMapperExt extends TruckTypeMapper {
     /**
-     * 查询单个合同类型
+     * 查询单个车辆类型
      *
      * @param id
      * @return

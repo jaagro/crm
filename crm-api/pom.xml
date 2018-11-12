@@ -17,14 +17,6 @@
         <relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
 
-    <repositories>
-        <!-- CAT client 仓库 -->
-        <repository>
-            <id>unidal-nexus-repo</id>
-            <url>http://unidal.org/nexus/content/repositories/releases</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <!-- ====================================data注解依赖===================================== -->
         <dependency>
@@ -69,10 +61,10 @@
         </dependency>
 
         <!--rabbitMq-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-amqp</artifactId>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-starter-amqp</artifactId>-->
+        <!--</dependency>-->
         <!-- ===================================ribbon相关==================================== -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -88,6 +80,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+
 
     </dependencies>
 

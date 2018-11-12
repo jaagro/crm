@@ -21,6 +21,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -33,6 +36,7 @@ import java.util.Map;
  * @author baiyiran
  */
 @Service
+@CacheConfig(keyGenerator = "wiselyKeyGenerator", cacheNames = "customer")
 public class CustomerServiceImpl implements CustomerService {
 
     private static final Logger log = LoggerFactory.getLogger(CustomerServiceImpl.class);
@@ -64,6 +68,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @param dto 注意customer对象的子对象的插入
      * @return
      */
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> createCustomer(CreateCustomerDto dto) {
@@ -87,7 +92,11 @@ public class CustomerServiceImpl implements CustomerService {
      * @return
      */
     @Override
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     public Map<String, Object> updateById(UpdateCustomerDto dto) {
+        if (this.customerMapper.selectByPrimaryKey(dto.getId()) == null) {
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户不存在");
+        }
         //修改客户表
         Customer customer = new Customer();
         BeanUtils.copyProperties(dto, customer);
@@ -106,6 +115,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @param id
      * @return
      */
+    @Cacheable
     @Override
     public Map<String, Object> getById(Integer id) {
         if (customerMapper.selectByPrimaryKey(id) == null) {
@@ -121,12 +131,13 @@ public class CustomerServiceImpl implements CustomerService {
      * @return
      */
     @Override
+    @Cacheable
     public Map<String, Object> listByCriteria(ListCustomerCriteriaDto dto) {
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
         List<ListCustomerDto> customerReturnDtos = this.customerMapper.listByCriteriaDto(dto);
         if (customerReturnDtos != null && customerReturnDtos.size() > 0) {
             for (ListCustomerDto customerDto : customerReturnDtos
-            ) {
+                    ) {
                 List<CustomerContactsReturnDto> contractDtoList = this.customerContactsMapper.listByCustomerId(customerDto.getId());
                 if (contractDtoList.size() > 0) {
                     CustomerContactsReturnDto contactsReturnDto = contractDtoList.get(0);
@@ -146,6 +157,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @param auditResult
      * @return
      */
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> auditCustomer(Integer id, String auditResult) {
         return null;
@@ -157,8 +169,13 @@ public class CustomerServiceImpl implements CustomerService {
      * @param id
      * @return
      */
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> disableCustomer(Integer id) {
+        if (this.customerMapper.selectByPrimaryKey(id) == null) {
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到相应数据");
+        }
+
         CustomerReturnDto customerDto = customerMapper.getById(id);
         Customer customer = new Customer();
         BeanUtils.copyProperties(customerDto, customer);
@@ -195,10 +212,12 @@ public class CustomerServiceImpl implements CustomerService {
      * @return
      */
     @Override
+    @Cacheable
     public ShowCustomerDto getShowCustomerById(Integer id) {
         return customerMapper.getShowCustomerById(id);
     }
 
+    @Cacheable
     @Override
     public List<ShowCustomerDto> listAllCustomer() {
         return customerMapper.getAllCustomer();

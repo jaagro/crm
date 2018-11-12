@@ -23,6 +23,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -37,6 +39,7 @@ import java.util.Map;
  *
  * @author tony
  */
+@CacheConfig(keyGenerator = "wiselyKeyGenerator")
 @Service
 public class ContractServiceImpl implements ContractService {
 
@@ -71,6 +74,7 @@ public class ContractServiceImpl implements ContractService {
      * @param dto
      * @return
      */
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> createContract(CreateContractDto dto) {
@@ -99,9 +103,10 @@ public class ContractServiceImpl implements ContractService {
         return ServiceResult.toResult("合同创建成功");
     }
 
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Map<String, Object> createContract(List<CreateContractDto> dtos, Integer CustomerId) {
+    public Map<String, Object> createContract(List<CreateContractDto> dtos, Integer customerId) {
         if (dtos != null && dtos.size() > 0) {
             for (CreateContractDto contractDto : dtos) {
                 //创建contract对象
@@ -124,6 +129,7 @@ public class ContractServiceImpl implements ContractService {
      * @param dto
      * @return
      */
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> updateContract(UpdateContractDto dto) {
@@ -152,6 +158,7 @@ public class ContractServiceImpl implements ContractService {
         return ServiceResult.toResult("合同修改成功");
     }
 
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> updateContract(List<UpdateContractDto> dtos) {
@@ -180,7 +187,7 @@ public class ContractServiceImpl implements ContractService {
         return ServiceResult.toResult("合同修改成功");
     }
 
-    public void createPrice(UpdateContractDto dto, CustomerContract customerContract) {
+    private void createPrice(UpdateContractDto dto, CustomerContract customerContract) {
         //创建contractPrice对象
         if (dto.getPrice() != null && dto.getPrice().size() > 0) {
             for (UpdateContractPriceDto cp : dto.getPrice()) {
@@ -208,7 +215,7 @@ public class ContractServiceImpl implements ContractService {
         }
     }
 
-    public void createPrice(CreateContractDto dto, CustomerContract customerContract) {
+    private void createPrice(CreateContractDto dto, CustomerContract customerContract) {
         //创建contractPrice对象
         if (dto.getPrice() != null && dto.getPrice().size() > 0) {
             for (CreateContractPriceDto cp : dto.getPrice()) {
@@ -256,7 +263,7 @@ public class ContractServiceImpl implements ContractService {
         ReturnContractDto contractDto = customerContractMapper.getById(contractId);
         if (contractDto.getQualifications().size() > 0) {
             for (ReturnContractQualificationDto contractQualificationDto : contractDto.getQualifications()
-            ) {
+                    ) {
                 //替换资质证照地址
                 String[] strArray = {contractQualificationDto.getCertificateImageUrl()};
                 List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
@@ -285,6 +292,7 @@ public class ContractServiceImpl implements ContractService {
         return ServiceResult.toResult(new PageInfo<>(contracts));
     }
 
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> disableById(Integer id) {
         ReturnContractDto contractDto = this.customerContractMapper.getById(id);
@@ -298,10 +306,11 @@ public class ContractServiceImpl implements ContractService {
         return ServiceResult.toResult("合同删除成功");
     }
 
+    @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> disableByID(List<ReturnContractDto> dtos) {
         for (ReturnContractDto returnContractDto : dtos
-        ) {
+                ) {
             ReturnContractDto contractDto = this.customerContractMapper.getById(returnContractDto.getId());
             CustomerContract customerContract = new CustomerContract();
             BeanUtils.copyProperties(contractDto, customerContract);

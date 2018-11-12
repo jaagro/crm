@@ -11,6 +11,8 @@ import com.jaagro.crm.biz.mapper.TruckTeamContractPriceMapperExt;
 import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.Map;
 /**
  * @author baiyiran
  */
+@CacheConfig(keyGenerator = "wiselyKeyGenerator")
 @Service
 public class TruckTeamContractPriceServiceImpl implements TruckTeamContractPriceService {
 
@@ -29,6 +32,7 @@ public class TruckTeamContractPriceServiceImpl implements TruckTeamContractPrice
     @Autowired
     private TruckTeamContractSectionPriceService sectionPriceService;
 
+    @CacheEvict(cacheNames = "truck", allEntries = true)
     @Override
     public Map<String, Object> createPrice(CreateTruckTeamContractPriceDto createContractPriceDto) {
         TruckTeamContractPrice contractPrice = new TruckTeamContractPrice();
@@ -44,6 +48,7 @@ public class TruckTeamContractPriceServiceImpl implements TruckTeamContractPrice
         return ServiceResult.toResult("新增成功");
     }
 
+    @CacheEvict(cacheNames = "truck", allEntries = true)
     @Override
     public Map<String, Object> disableByContractId(Integer id) {
         List<TruckTeamContractPriceReturnDto> priceReturnDtoList = this.contractPriceMapper.listByContractId(id);
@@ -57,6 +62,7 @@ public class TruckTeamContractPriceServiceImpl implements TruckTeamContractPrice
         return ServiceResult.toResult("删除成功");
     }
 
+    @CacheEvict(cacheNames = "truck", allEntries = true)
     @Override
     public Map<String, Object> deleteByContractId(Integer id) {
         this.contractPriceMapper.deleteByContractId(id);
