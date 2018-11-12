@@ -94,6 +94,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @CacheEvict(cacheNames = "customer", allEntries = true)
     public Map<String, Object> updateById(UpdateCustomerDto dto) {
+        if (this.customerMapper.selectByPrimaryKey(dto.getId()) == null) {
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户不存在");
+        }
         //修改客户表
         Customer customer = new Customer();
         BeanUtils.copyProperties(dto, customer);
@@ -134,7 +137,7 @@ public class CustomerServiceImpl implements CustomerService {
         List<ListCustomerDto> customerReturnDtos = this.customerMapper.listByCriteriaDto(dto);
         if (customerReturnDtos != null && customerReturnDtos.size() > 0) {
             for (ListCustomerDto customerDto : customerReturnDtos
-            ) {
+                    ) {
                 List<CustomerContactsReturnDto> contractDtoList = this.customerContactsMapper.listByCustomerId(customerDto.getId());
                 if (contractDtoList.size() > 0) {
                     CustomerContactsReturnDto contactsReturnDto = contractDtoList.get(0);
@@ -169,6 +172,10 @@ public class CustomerServiceImpl implements CustomerService {
     @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> disableCustomer(Integer id) {
+        if (this.customerMapper.selectByPrimaryKey(id) == null) {
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到相应数据");
+        }
+
         CustomerReturnDto customerDto = customerMapper.getById(id);
         Customer customer = new Customer();
         BeanUtils.copyProperties(customerDto, customer);

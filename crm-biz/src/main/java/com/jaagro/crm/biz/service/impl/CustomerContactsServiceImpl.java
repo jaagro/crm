@@ -12,6 +12,7 @@ import com.jaagro.crm.biz.entity.Customer;
 import com.jaagro.crm.biz.entity.CustomerContacts;
 import com.jaagro.crm.biz.mapper.CustomerContactsMapperExt;
 import com.jaagro.crm.biz.mapper.CustomerMapperExt;
+import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,6 +120,9 @@ public class CustomerContactsServiceImpl implements CustomerContactsService {
     @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> disableCustomerContacts(Integer id) {
+        if (this.customerContactsMapper.selectByPrimaryKey(id) == null) {
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到相应数据");
+        }
         CustomerContacts customerContacts = this.customerContactsMapper.selectByPrimaryKey(id);
         customerContacts.setEnabled(false);
         return ServiceResult.toResult("客户联系人停用成功");

@@ -263,7 +263,7 @@ public class ContractServiceImpl implements ContractService {
         ReturnContractDto contractDto = customerContractMapper.getById(contractId);
         if (contractDto.getQualifications().size() > 0) {
             for (ReturnContractQualificationDto contractQualificationDto : contractDto.getQualifications()
-            ) {
+                    ) {
                 //替换资质证照地址
                 String[] strArray = {contractQualificationDto.getCertificateImageUrl()};
                 List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
@@ -310,7 +310,7 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public Map<String, Object> disableByID(List<ReturnContractDto> dtos) {
         for (ReturnContractDto returnContractDto : dtos
-        ) {
+                ) {
             ReturnContractDto contractDto = this.customerContractMapper.getById(returnContractDto.getId());
             CustomerContract customerContract = new CustomerContract();
             BeanUtils.copyProperties(contractDto, customerContract);
