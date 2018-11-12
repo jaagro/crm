@@ -280,10 +280,10 @@ public class TruckServiceImpl implements TruckService {
         if (truckMapper.selectByPrimaryKey(id) == null) {
             return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), id + " ：id不正确");
         }
-        //删除车辆所属的司机
-        driverClientService.deleteDriverByTruckId(id);
         //删除车辆
         truckMapper.deleteTruckLogic(AuditStatus.STOP_COOPERATION, id);
+        //删除车辆所属的司机
+        driverClientService.deleteDriverByTruckId(id);
         return ServiceResult.toResult("删除成功");
     }
 
