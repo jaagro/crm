@@ -116,6 +116,9 @@ public class TruckServiceImpl implements TruckService {
         Truck truck = this.truckMapper.selectByPrimaryKey(truckId);
         GetTruckDto result = truckMapper.getTruckById(truckId);
         List<DriverReturnDto> drivers = driverClientService.listByTruckId(truckId);
+        if(null == result){
+            return null;
+        }
         result
                 .setDrivers(drivers)
                 .setTruckTypeId(this.truckTypeMapper.getById(truck.getTruckTypeId()));
