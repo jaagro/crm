@@ -1,5 +1,6 @@
 package com.jaagro.crm.biz.service.impl;
 
+import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractPriceDto;
 import com.jaagro.crm.api.service.ContractPriceService;
 import com.jaagro.crm.api.service.ContractSectionPriceService;
@@ -36,6 +37,7 @@ public class ContractPriceServiceImpl implements ContractPriceService {
         for (ReturnContractPriceDto dto : priceReturnDto) {
             CustomerContractPrice price = new CustomerContractPrice();
             BeanUtils.copyProperties(dto, price);
+            price.setPriceStatus(AuditStatus.STOP_COOPERATION);
             this.priceMapper.updateByPrimaryKeySelective(price);
             if (dto.getSectionPrice() != null && dto.getSectionPrice().size() > 0) {
                 sectionPriceService.disableByPriceId(price.getId());

@@ -17,6 +17,7 @@ import com.jaagro.crm.biz.entity.CustomerContract;
 import com.jaagro.crm.biz.entity.CustomerContractPrice;
 import com.jaagro.crm.biz.entity.CustomerContractSectionPrice;
 import com.jaagro.crm.biz.mapper.*;
+import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
@@ -263,7 +264,7 @@ public class ContractServiceImpl implements ContractService {
         ReturnContractDto contractDto = customerContractMapper.getById(contractId);
         if (contractDto.getQualifications().size() > 0) {
             for (ReturnContractQualificationDto contractQualificationDto : contractDto.getQualifications()
-                    ) {
+            ) {
                 //替换资质证照地址
                 String[] strArray = {contractQualificationDto.getCertificateImageUrl()};
                 List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
@@ -295,10 +296,13 @@ public class ContractServiceImpl implements ContractService {
     @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> disableById(Integer id) {
+        if (this.customerContractMapper.selectByPrimaryKey(id) == null) {
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同不存在");
+        }
         ReturnContractDto contractDto = this.customerContractMapper.getById(id);
         CustomerContract customerContract = new CustomerContract();
         BeanUtils.copyProperties(contractDto, customerContract);
-        customerContract.setContractStatus(0);
+        customerContract.setContractStatus(AuditStatus.STOP_COOPERATION);
         this.customerContractMapper.updateByPrimaryKeySelective(customerContract);
         if (contractDto.getPrices() != null && contractDto.getPrices().size() > 0) {
             this.priceService.disableByContractId(customerContract.getId());
@@ -310,7 +314,7 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public Map<String, Object> disableByID(List<ReturnContractDto> dtos) {
         for (ReturnContractDto returnContractDto : dtos
-                ) {
+        ) {
             ReturnContractDto contractDto = this.customerContractMapper.getById(returnContractDto.getId());
             CustomerContract customerContract = new CustomerContract();
             BeanUtils.copyProperties(contractDto, customerContract);

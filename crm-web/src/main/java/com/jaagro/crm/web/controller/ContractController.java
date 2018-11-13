@@ -158,6 +158,18 @@ public class ContractController {
         return BaseResponse.successInstance(result);
     }
 
+    /**
+     * 逻辑删除合同
+     *
+     * @param id
+     * @return
+     */
+    @ApiOperation("删除合同【逻辑】")
+    @GetMapping("/deleteContract/{id}")
+    public BaseResponse deleteContract(@PathVariable Integer id) {
+        return BaseResponse.service(contractService.disableById(id));
+    }
+
     //----------------------------------------------合同资质-------------------------------------------------
 
     /**
@@ -165,7 +177,6 @@ public class ContractController {
      *
      * @param dto
      * @return
-     *
      */
     @ApiOperation("合同资质新增【单张】")
     @PostMapping("/ContractQualificationByOne")
