@@ -296,11 +296,11 @@ public class ContractServiceImpl implements ContractService {
     @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> disableById(Integer id) {
-        CustomerContract customerContract = this.customerContractMapper.selectByPrimaryKey(id);
-        if (customerContract == null) {
+        CustomerContract contract = this.customerContractMapper.selectByPrimaryKey(id);
+        if (contract == null) {
             return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同不存在");
         }
-        if (!customerContract.getContractStatus().equals(AuditStatus.UNCHECKED)) {
+        if (!contract.getContractStatus().equals(AuditStatus.UNCHECKED)) {
             return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "除待审核状态,其他状态合同不允许删除");
         }
         ReturnContractDto contractDto = this.customerContractMapper.getById(id);
