@@ -55,6 +55,7 @@ public class LeagueServiceImpl implements LeagueService {
     @Override
     public PageInfo listLeagueByCriteria(ListLeagueCerteriaDto certeriaDto) {
         PageHelper.startPage(certeriaDto.getPageNum(), certeriaDto.getPageSize());
-        return new PageInfo<>(leagueMapper.listByCriteria(certeriaDto));
+        List<ListLeagueDto> leagueDtoList = leagueMapper.listByCriteria(certeriaDto);
+        return new PageInfo(leagueDtoList);
     }
 }
