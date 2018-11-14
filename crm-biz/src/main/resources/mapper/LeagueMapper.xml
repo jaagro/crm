@@ -23,7 +23,8 @@
     delete from league
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.League" >
+  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.League" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id" >
     insert into league (id, league_type, league_name,
       phone, company, content,
       create_time)
@@ -31,7 +32,8 @@
       #{phone,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.League" >
+  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.League" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id" >
     insert into league
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
