@@ -16,6 +16,10 @@ public class ListTruckDto implements Serializable {
      * 主键车辆表ID
      */
     private Integer truckId;
+    /**
+     * 关联车辆类型ID
+     */
+    private Integer truckTypeId;
 
     /**
      * 关联车队表ID

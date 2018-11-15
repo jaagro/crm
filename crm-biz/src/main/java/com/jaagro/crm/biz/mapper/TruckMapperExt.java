@@ -1,6 +1,7 @@
 package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto;
+import com.jaagro.crm.api.dto.request.truck.QueryTruckDto;
 import com.jaagro.crm.api.dto.response.truck.GetTruckDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckDto;
 import com.jaagro.crm.api.dto.response.truck.ReturnCheckTruckDto;
@@ -67,7 +68,7 @@ public interface TruckMapperExt extends TruckMapper {
      * @param criteria
      * @return
      */
-    List<ListTruckDto> listTruckForAssignWaybillByCriteria(ListTruckCriteriaDto criteria);
+    List<ListTruckDto> listTruckForAssignWaybillByCriteria(QueryTruckDto criteria);
 
     /**
      * 根据车牌号模糊查询车辆id列表
@@ -76,4 +77,10 @@ public interface TruckMapperExt extends TruckMapper {
      * @return
      */
     List<Integer> getTruckIdsByTruckNum(@Param("truckNumber") String truckNumber);
+
+    /**
+     * 列出所有可派的车辆（车队审核通过 、车队合同审核通过、车辆审核通过） gavin
+     * @return
+     */
+    List<ListTruckDto> listTruckForAssignWaybill();
 }
