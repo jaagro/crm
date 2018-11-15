@@ -1,5 +1,6 @@
 package com.jaagro.crm.biz.service.fallback;
 
+import com.jaagro.crm.api.dto.base.GetCustomerUserDto;
 import com.jaagro.crm.api.dto.request.truck.CreateDriverDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateDriverDto;
 import com.jaagro.crm.api.dto.response.truck.DriverReturnDto;
@@ -22,7 +23,7 @@ public class DriverClientServiceFallback implements FallbackFactory<DriverClient
         return new DriverClientService() {
             @Override
             public String createDriverReturnId(CreateDriverDto driver) {
-                return  null;
+                return null;
             }
 
             @Override
@@ -52,6 +53,17 @@ public class DriverClientServiceFallback implements FallbackFactory<DriverClient
 
             @Override
             public String getDeptNameById(Integer id) {
+                return null;
+            }
+
+            /**
+             * id获取customerUser
+             *
+             * @param id
+             * @return
+             */
+            @Override
+            public GetCustomerUserDto getCustomerUserById(Integer id) {
                 return null;
             }
         };

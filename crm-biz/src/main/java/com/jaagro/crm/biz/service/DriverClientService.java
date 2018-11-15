@@ -1,5 +1,6 @@
 package com.jaagro.crm.biz.service;
 
+import com.jaagro.crm.api.dto.base.GetCustomerUserDto;
 import com.jaagro.crm.api.dto.request.truck.CreateDriverDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateDriverDto;
 import com.jaagro.crm.api.dto.response.truck.DriverReturnDto;
@@ -78,4 +79,13 @@ public interface DriverClientService {
      */
     @GetMapping("/getDeptNameById/{id}")
     String getDeptNameById(@PathVariable("id") Integer id);
+
+    /**
+     * id获取customerUser
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/customerUser/{id}")
+    GetCustomerUserDto getCustomerUserById(@PathVariable("id") Integer id);
 }

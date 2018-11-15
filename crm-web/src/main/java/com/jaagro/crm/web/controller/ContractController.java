@@ -3,9 +3,14 @@ package com.jaagro.crm.web.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.constant.AuditStatus;
+import com.jaagro.crm.api.constant.CustomerType;
+import com.jaagro.crm.api.constant.WeChatCustomerType;
+import com.jaagro.crm.api.dto.base.GetCustomerUserDto;
 import com.jaagro.crm.api.dto.request.contract.*;
 import com.jaagro.crm.api.dto.request.customer.CreateQualificationVerifyLogDto;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto;
+import com.jaagro.crm.api.dto.request.customer.ShowCustomerDto;
+import com.jaagro.crm.api.dto.request.customer.ShowSiteDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnCheckContractQualificationDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
 import com.jaagro.crm.api.dto.response.truck.TruckTeamContractReturnDto;
@@ -17,6 +22,7 @@ import com.jaagro.crm.biz.entity.TruckTeamContract;
 import com.jaagro.crm.biz.mapper.*;
 import com.jaagro.crm.biz.service.DriverClientService;
 import com.jaagro.crm.biz.service.OssSignUrlClientService;
+import com.jaagro.crm.biz.service.impl.CurrentUserService;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import io.swagger.annotations.Api;
@@ -62,6 +68,10 @@ public class ContractController {
     private OssSignUrlClientService ossSignUrlClientService;
     @Autowired
     private TruckTeamMapperExt truckTeamMapper;
+    @Autowired
+    private CurrentUserService currentUserService;
+    @Autowired
+    private CustomerSiteService siteService;
 
     /**
      * 合同新增
@@ -150,7 +160,7 @@ public class ContractController {
         return BaseResponse.service(contractService.listByCriteria(dto));
     }
 
-    @ApiOperation(("查询客户有效合同"))
+    @ApiOperation("查询客户有效合同")
     @GetMapping("/listContractByCustomerId/{customerId}")
     public BaseResponse listByCustomerId(@PathVariable("customerId") Integer customerId) {
         List<ShowCustomerContractDto> result = contractService.listShowCustomerContractByCustomerId(customerId);
@@ -170,6 +180,36 @@ public class ContractController {
     @GetMapping("/deleteContract/{id}")
     public BaseResponse deleteContract(@PathVariable Integer id) {
         return BaseResponse.service(contractService.disableById(id));
+    }
+
+    /**
+     * 小程序下单页面，根据当前客户获取货物类型
+     *
+     * @return
+     */
+    @ApiOperation("提供给小程序开单：查询客户有效合同")
+    @GetMapping("/listContractByToken")
+    public BaseResponse listContractByToken() {
+        GetCustomerUserDto customerUserDto = currentUserService.getCustomerUserById();
+        if (customerUserDto != null) {
+            Integer customerId;
+            if (customerUserDto.getCustomerType().equals(WeChatCustomerType.CUSTOER)) {
+                customerId = customerUserDto.getRelevanceId();
+            } else {
+                ShowSiteDto showSiteDto = siteService.getShowSiteById(customerUserDto.getRelevanceId());
+                customerId = showSiteDto.getCustomerId();
+            }
+            if (customerId != null) {
+                List<ShowCustomerContractDto> result = contractService.listShowCustomerContractByCustomerId(customerId);
+                if (StringUtils.isEmpty(result)) {
+                    return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查无数据");
+                }
+                return BaseResponse.successInstance(result);
+            }
+        }else{
+            return BaseResponse.errorInstance("获取当前用户失败");
+        }
+        return BaseResponse.errorInstance("获取当前用户失败");
     }
 
     //----------------------------------------------合同资质-------------------------------------------------
