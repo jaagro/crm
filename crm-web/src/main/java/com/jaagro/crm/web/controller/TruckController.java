@@ -2,6 +2,7 @@ package com.jaagro.crm.web.controller;
 
 import com.jaagro.crm.api.dto.request.truck.CreateTruckDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto;
+import com.jaagro.crm.api.dto.request.truck.QueryTruckDto;
 import com.jaagro.crm.api.dto.response.truck.GetTruckDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
 import com.jaagro.crm.api.service.TruckService;
@@ -10,7 +11,6 @@ import com.jaagro.crm.biz.mapper.TruckTeamMapperExt;
 import com.jaagro.crm.biz.mapper.TruckTypeMapperExt;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
-import feign.FeignException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import jdk.nashorn.internal.ir.annotations.Ignore;
@@ -159,7 +159,7 @@ public class TruckController {
      */
     @ApiOperation("派单指派车辆列表")
     @PostMapping("/listTrucksWithDrivers")
-    public BaseResponse listTrucksWithDrivers(@RequestBody ListTruckCriteriaDto criteriaDto) {
+    public BaseResponse listTrucksWithDrivers(@RequestBody QueryTruckDto criteriaDto) {
         try {
             return BaseResponse.service(truckService.listTrucksWithDrivers(criteriaDto));
         } catch (Exception e) {

@@ -6,6 +6,7 @@ import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.constant.ProductType;
 import com.jaagro.crm.api.dto.request.truck.*;
+import com.jaagro.crm.api.dto.response.department.DepartmentReturnDto;
 import com.jaagro.crm.api.dto.response.truck.*;
 import com.jaagro.crm.api.service.*;
 import com.jaagro.crm.biz.entity.Truck;
@@ -58,6 +59,8 @@ public class TruckServiceImpl implements TruckService {
     private HttpServletRequest request;
     @Autowired
     private UserClientService userClientService;
+    @Autowired
+    private DriverClientService deptClientService;
 
     private void changeUrl(List<ListTruckQualificationDto> driverQualificationList) {
         for (ListTruckQualificationDto dto : driverQualificationList
@@ -116,7 +119,7 @@ public class TruckServiceImpl implements TruckService {
         Truck truck = this.truckMapper.selectByPrimaryKey(truckId);
         GetTruckDto result = truckMapper.getTruckById(truckId);
         List<DriverReturnDto> drivers = driverClientService.listByTruckId(truckId);
-        if(null == result){
+        if (null == result) {
             return null;
         }
         result
@@ -306,12 +309,23 @@ public class TruckServiceImpl implements TruckService {
 
     @Override
     public List<ListTruckTypeDto> listTruckType(String productName) {
-        System.err.println(ProductType.SOW);
+        List<ListTruckTypeDto> resultList = new ArrayList<>();
         if (productName.equals(ProductType.SOW.toString()) || productName.equals(ProductType.BOAR.toString()) || productName.equals(ProductType.LIVE_PIG.toString())) {
             productName = ProductType.BOAR.toString();
-            return truckTypeMapper.listAll(productName);
+            resultList = truckTypeMapper.listAll(productName);
+        } else {
+            resultList = truckTypeMapper.listAll(productName);
         }
-        return truckTypeMapper.listAll(productName);
+
+        if (!CollectionUtils.isEmpty(resultList)) {
+            List<ListTruckDto> truckList = truckMapper.listTruckForAssignWaybill();
+            for (ListTruckTypeDto truckTypeDto : resultList) {
+                Long amount = truckList.stream().filter(c -> c.getTruckTypeId().equals(truckTypeDto.getId())).count();
+                truckTypeDto.setAmount(amount);
+            }
+        }
+
+        return resultList;
     }
 
     @Override
@@ -337,8 +351,30 @@ public class TruckServiceImpl implements TruckService {
      */
     @Override
     @Cacheable
-    public Map<String, Object> listTrucksWithDrivers(ListTruckCriteriaDto criteriaDto) {
+    public Map<String, Object> listTrucksWithDrivers(QueryTruckDto criteriaDto) {
         PageHelper.startPage(criteriaDto.getPageNum(), criteriaDto.getPageSize());
+        Integer depID = currentUserService.getCurrentUser().getDepartmentId();
+        String province = null;
+        String city = null;
+        String county = null;
+        if (null != depID) {
+            DepartmentReturnDto dept = deptClientService.getDepartmentById(depID);
+            if (null != dept) {
+                if (!StringUtils.isEmpty(dept.getProvince())) {
+                    province = dept.getProvince();
+                }
+                if (!StringUtils.isEmpty(dept.getCity())) {
+                    city = dept.getCity();
+                }
+                if (!StringUtils.isEmpty(dept.getCounty())) {
+                    county = dept.getCounty();
+                }
+            }
+        }
+        criteriaDto.setProvince(province);
+        criteriaDto.setCity(city);
+        criteriaDto.setCounty(county);
+
         List<ListTruckDto> truckList = truckMapper.listTruckForAssignWaybillByCriteria(criteriaDto);
         if (!CollectionUtils.isEmpty(truckList)) {
             Iterator<ListTruckDto> truckIterator = truckList.iterator();
@@ -364,6 +400,7 @@ public class TruckServiceImpl implements TruckService {
                 listTruckDto.setDrivers(drivers);
             }
         }
+
         return ServiceResult.toResult(new PageInfo<>(truckList));
     }
 

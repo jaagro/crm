@@ -2,6 +2,7 @@ package com.jaagro.crm.api.service;
 
 import com.jaagro.crm.api.dto.request.truck.CreateDriverDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateDriverDto;
+import com.jaagro.crm.api.dto.response.department.DepartmentReturnDto;
 import com.jaagro.crm.api.dto.response.truck.DriverReturnDto;
 import com.jaagro.utils.BaseResponse;
 import org.springframework.cloud.netflix.feign.FeignClient;
@@ -77,4 +78,14 @@ public interface DriverClientService {
      */
     @GetMapping("/getDeptNameById/{id}")
     String getDeptNameById(@PathVariable("id") Integer id);
+
+    /**
+     * 根据id获取部门(项目部)信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/getDepartmentById/{id}")
+    DepartmentReturnDto getDepartmentById(@PathVariable("id") Integer id);
+
+
 }
