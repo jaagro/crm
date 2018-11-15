@@ -8,7 +8,7 @@ import com.jaagro.crm.api.dto.request.customer.UpdateCustomerQualificationDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerQualificationReturnDto;
 import com.jaagro.crm.api.dto.response.customer.ReturnQualificationDto;
 import com.jaagro.crm.api.service.CustomerService;
-import com.jaagro.crm.api.service.OssSignUrlClientService;
+import com.jaagro.crm.biz.service.OssSignUrlClientService;
 import com.jaagro.crm.api.service.QualificationCertificService;
 import com.jaagro.crm.api.service.QualificationVerifyLogService;
 import com.jaagro.crm.biz.entity.CustomerQualification;

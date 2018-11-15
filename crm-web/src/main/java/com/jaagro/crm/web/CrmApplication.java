@@ -16,7 +16,7 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableCircuitBreaker
 @MapperScan("com.jaagro.crm.biz.mapper")
 @ComponentScan("com.jaagro.crm")
-@EnableFeignClients(basePackages = {"com.jaagro.crm.api"})
+@EnableFeignClients(basePackages = {"com.jaagro.crm"})
 @EnableCaching
 @SpringBootApplication
 public class CrmApplication {

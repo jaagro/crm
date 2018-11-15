@@ -11,6 +11,8 @@ import com.jaagro.crm.api.service.*;
 import com.jaagro.crm.biz.mapper.TruckMapperExt;
 import com.jaagro.crm.biz.mapper.TruckQualificationMapperExt;
 import com.jaagro.crm.biz.mapper.TruckTeamMapperExt;
+import com.jaagro.crm.biz.service.DriverClientService;
+import com.jaagro.crm.biz.service.OssSignUrlClientService;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import io.swagger.annotations.Api;

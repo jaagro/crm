@@ -67,19 +67,7 @@ public class TruckController {
         if (truckTypeMapper.selectByPrimaryKey(truck.getTruckTypeId()) == null) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "请选择正确的车辆类型");
         }
-        BaseResponse response;
-        try {
-            response = BaseResponse.service(truckService.createTruck(truck));
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-            String str = e.getCause().getMessage();
-            if (str.contains("司机手机号重复")) {
-                response = BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "司机创建失败,手机号重复");
-            } else {
-                response = BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "司机创建失败");
-            }
-        }
-        return response;
+        return BaseResponse.service(truckService.createTruck(truck));
     }
 
     @ApiOperation("车辆修改")
