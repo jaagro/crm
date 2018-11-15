@@ -1,20 +1,27 @@
 package com.jaagro.crm.web.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.dto.request.league.CreateLeagueDto;
 import com.jaagro.crm.api.dto.request.league.ListLeagueCerteriaDto;
+import com.jaagro.crm.api.dto.response.league.ListLeagueDto;
 import com.jaagro.crm.api.service.LeagueService;
+import com.jaagro.crm.web.vo.league.ListLeagueVo;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -54,15 +61,26 @@ public class LeagueController {
     }
 
     @ApiOperation(value = "分页查询销售机会")
-    @PostMapping("/listLeague")
-    public BaseResponse listLeague(@RequestBody ListLeagueCerteriaDto certeriaDto) {
+    @PostMapping("/listLeagueByCriteria")
+    public BaseResponse listLeagueByCriteria(@RequestBody ListLeagueCerteriaDto certeriaDto) {
         if (StringUtils.isEmpty(certeriaDto.getPageNum())) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "pageNum不能为空");
         }
         if (StringUtils.isEmpty(certeriaDto.getPageSize())) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "pageSize不能为空");
         }
-        return BaseResponse.successInstance(leagueService.listLeagueByCriteria(certeriaDto));
+        PageInfo pageInfo = leagueService.listLeagueByCriteria(certeriaDto);
+        List<ListLeagueDto> leagueDtoList = pageInfo.getList();
+        if (!CollectionUtils.isEmpty(leagueDtoList)) {
+            List<ListLeagueVo> leagueVoList = new ArrayList<>();
+            for (ListLeagueDto leagueDto : leagueDtoList) {
+                ListLeagueVo leagueVo = new ListLeagueVo();
+                BeanUtils.copyProperties(leagueDto, leagueVo);
+                leagueVoList.add(leagueVo);
+            }
+            pageInfo.setList(leagueVoList);
+        }
+        return BaseResponse.successInstance(pageInfo);
     }
 
 }
