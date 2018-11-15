@@ -1,5 +1,6 @@
 package com.jaagro.crm.biz.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.constant.UserInfo;
@@ -7,14 +8,20 @@ import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.constant.ProductType;
 import com.jaagro.crm.api.dto.request.truck.*;
 import com.jaagro.crm.api.dto.response.truck.*;
-import com.jaagro.crm.api.service.*;
+import com.jaagro.crm.api.service.TruckQualificationService;
+import com.jaagro.crm.api.service.TruckService;
 import com.jaagro.crm.biz.entity.Truck;
 import com.jaagro.crm.biz.entity.TruckQualification;
 import com.jaagro.crm.biz.mapper.TruckMapperExt;
 import com.jaagro.crm.biz.mapper.TruckQualificationMapperExt;
 import com.jaagro.crm.biz.mapper.TruckTypeMapperExt;
+import com.jaagro.crm.biz.service.DriverClientService;
+import com.jaagro.crm.biz.service.OssSignUrlClientService;
+import com.jaagro.crm.biz.service.UserClientService;
+import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
+import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -61,7 +68,7 @@ public class TruckServiceImpl implements TruckService {
 
     private void changeUrl(List<ListTruckQualificationDto> driverQualificationList) {
         for (ListTruckQualificationDto dto : driverQualificationList
-                ) {
+        ) {
             //替换资质证照地址
             String[] strArray = {dto.getCertificateImageUrl()};
             List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
@@ -116,7 +123,7 @@ public class TruckServiceImpl implements TruckService {
         Truck truck = this.truckMapper.selectByPrimaryKey(truckId);
         GetTruckDto result = truckMapper.getTruckById(truckId);
         List<DriverReturnDto> drivers = driverClientService.listByTruckId(truckId);
-        if(null == result){
+        if (null == result) {
             return null;
         }
         result
@@ -152,18 +159,16 @@ public class TruckServiceImpl implements TruckService {
         //司机列表
         if (truckDto.getDriver() != null && truckDto.getDriver().size() > 0) {
             for (CreateDriverDto driverDto : truckDto.getDriver()) {
-                Integer driverId = 0;
                 driverDto
                         .setTruckId(truck.getId())
                         .setTruckTeamId(truck.getTruckTeamId());
-                try {
-                    driverId = driverClientService.createDriverReturnId(driverDto);
-                } catch (RuntimeException e) {
-                    log.error("司机新建失败：" + e.getCause().getMessage());
-                    throw new RuntimeException(e.getCause());
-                }
-                if (driverId == 0) {
-                    throw new NullPointerException("新增司机失败，司机id为空");
+                String driverId = driverClientService.createDriverReturnId(driverDto);
+                Integer driverIdInt = null;
+                if (NumberUtils.isNumber(driverId)) {
+                    driverIdInt = Integer.valueOf(driverId);
+                }else {
+                    BaseResponse result = JSON.parseObject(driverId, BaseResponse.class);
+                    throw new RuntimeException(result.getStatusMsg());
                 }
                 //司机资质列表
                 if (driverDto.getDriverQualifications() != null && driverDto.getDriverQualifications().size() > 0) {
@@ -173,7 +178,7 @@ public class TruckServiceImpl implements TruckService {
                         driverQualification
                                 .setTruckTeamId(truck.getTruckTeamId())
                                 .setTruckId(truck.getId())
-                                .setDriverId(driverId)
+                                .setDriverId(driverIdInt)
                                 .setCreateUserId(currentUserService.getCurrentUser().getId());
                         truckQualificationMapper.insertSelective(driverQualification);
                     }
@@ -205,8 +210,8 @@ public class TruckServiceImpl implements TruckService {
         //司机
         if (truckDto.getDriver() != null && truckDto.getDriver().size() > 0) {
             for (CreateDriverDto createDriverDto : truckDto.getDriver()
-                    ) {
-                Integer driverId = 0;
+            ) {
+                Integer driverIdInt = null;
                 //新增司机
                 if (createDriverDto.getId() == null) {
                     CreateDriverDto driverDto = new CreateDriverDto();
@@ -214,9 +219,12 @@ public class TruckServiceImpl implements TruckService {
                     driverDto
                             .setTruckId(truck.getId())
                             .setTruckTeamId(truck.getTruckTeamId());
-                    driverId = this.driverClientService.createDriverReturnId(driverDto);
-                    if (driverId < 1) {
-                        throw new RuntimeException("司机创建失败");
+                    String driverId = driverClientService.createDriverReturnId(driverDto);
+                    if (NumberUtils.isNumber(driverId)) {
+                        driverIdInt = Integer.valueOf(driverId);
+                    }else {
+                        BaseResponse result = JSON.parseObject(driverId, BaseResponse.class);
+                        throw new RuntimeException(result.getStatusMsg());
                     }
                 } else {
                     //修改
@@ -227,12 +235,12 @@ public class TruckServiceImpl implements TruckService {
                     } catch (Exception ex) {
                         throw new RuntimeException(ex.getMessage());
                     }
-                    driverId = updateDriverDto.getId();
+                    driverIdInt = updateDriverDto.getId();
                 }
                 //司机资质
                 if (createDriverDto.getDriverQualifications() != null && createDriverDto.getDriverQualifications().size() > 0) {
                     for (UpdateTruckQualificationDto truckQualificationDto : createDriverDto.getDriverQualifications()
-                            ) {
+                    ) {
                         // id为null - 新增
                         if (truckQualificationDto.getId() == null) {
                             CreateListTruckQualificationDto createListTruckQualificationDto = new CreateListTruckQualificationDto();
@@ -241,7 +249,7 @@ public class TruckServiceImpl implements TruckService {
                             createListTruckQualificationDto
                                     .setTruckId(truck.getId())
                                     .setTruckTeamId(truck.getTruckTeamId())
-                                    .setDriverId(driverId)
+                                    .setDriverId(driverIdInt)
                                     .setQualification(updateTruckQualificationDtos);
                             this.truckQualificationService.createTruckQualification(createListTruckQualificationDto);
                         } else {
@@ -255,7 +263,7 @@ public class TruckServiceImpl implements TruckService {
         //车辆资质
         if (truckDto.getTruckQualifications() != null && truckDto.getTruckQualifications().size() > 0) {
             for (UpdateTruckQualificationDto truckQualificationDto : truckDto.getTruckQualifications()
-                    ) {
+            ) {
                 // id为null - 新增
                 if (truckQualificationDto.getId() == null) {
                     CreateListTruckQualificationDto createListTruckQualificationDto = new CreateListTruckQualificationDto();

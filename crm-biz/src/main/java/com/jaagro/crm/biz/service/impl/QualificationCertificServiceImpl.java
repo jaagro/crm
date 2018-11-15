@@ -9,11 +9,11 @@ import com.jaagro.crm.api.dto.request.customer.ListCustomerQualificationCriteria
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerQualificationDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerQualificationReturnDto;
 import com.jaagro.crm.api.dto.response.customer.ReturnQualificationDto;
-import com.jaagro.crm.api.service.OssSignUrlClientService;
 import com.jaagro.crm.api.service.QualificationCertificService;
 import com.jaagro.crm.biz.entity.CustomerQualification;
 import com.jaagro.crm.biz.mapper.CustomerMapperExt;
 import com.jaagro.crm.biz.mapper.CustomerQualificationMapperExt;
+import com.jaagro.crm.biz.service.OssSignUrlClientService;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
