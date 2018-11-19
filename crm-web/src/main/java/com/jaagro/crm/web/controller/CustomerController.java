@@ -121,18 +121,6 @@ public class CustomerController {
     }
 
     /**
-     * 分页查询客户，提供给开单时选择客户
-     *
-     * @param criteriaDto
-     * @return
-     */
-    @ApiOperation("提供给开单时选择客户，分页查询客户")
-    @PostMapping("/listCustomerByCriteriaForOrder")
-    public BaseResponse listCustomerByCriteriaForOrder(@RequestBody ListCustomerCriteriaDto criteriaDto) {
-        return BaseResponse.service(this.customerService.listByCriteria(criteriaDto));
-    }
-
-    /**
      * 查询全部客户
      *
      * @param
