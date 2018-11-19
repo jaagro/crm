@@ -48,7 +48,7 @@
     </resultMap>
 
     <sql id="show_column">
-        id, customer_name
+        id, customer_name,enable_direct_order
     </sql>
 
     <select id="getById" parameterType="java.lang.Integer" resultMap="DetailInfo">
