@@ -1,4 +1,4 @@
-package com.jaagro.microservice.platform.jaagro.platform.crm;
+package com.jaagro;
 
 import org.junit.Test;
 import org.mybatis.generator.api.MyBatisGenerator;

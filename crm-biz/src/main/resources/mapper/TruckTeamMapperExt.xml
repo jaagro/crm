@@ -55,7 +55,7 @@
         <if test="teamStatus != null">
             and team_status = #{teamStatus}
         </if>
-        <if test="keywords != null">
+        <if test="keywords != null and keywords != '' ">
             <![CDATA[and (team_name like concat('%',#{keywords},'%') )]]>
         </if>
         order by create_time desc

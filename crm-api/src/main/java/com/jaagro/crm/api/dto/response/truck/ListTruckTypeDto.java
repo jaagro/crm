@@ -40,4 +40,9 @@ public class ListTruckTypeDto implements Serializable {
      * 承载总数
      */
     private String truckAmount;
+
+    /**
+     * 该车型下面一共有多少辆车
+     */
+    private long amount;
 }

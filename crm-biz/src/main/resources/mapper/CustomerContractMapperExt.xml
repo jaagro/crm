@@ -38,7 +38,7 @@
         select
         <include refid="Base_Column_List"/>
         from customer_contract
-        where 1 = 1
+        where contract_status != 3
         <if test="contractStatus != null and contractStatus != ''">
             and contract_status = #{contractStatus}
         </if>

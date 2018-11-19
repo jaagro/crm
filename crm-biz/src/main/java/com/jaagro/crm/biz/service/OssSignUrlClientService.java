@@ -1,4 +1,4 @@
-package com.jaagro.crm.api.service;
+package com.jaagro.crm.biz.service;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;

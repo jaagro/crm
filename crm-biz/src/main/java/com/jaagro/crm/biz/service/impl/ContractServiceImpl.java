@@ -11,12 +11,12 @@ import com.jaagro.crm.api.dto.response.contract.ReturnContractQualificationDto;
 import com.jaagro.crm.api.service.ContractPriceService;
 import com.jaagro.crm.api.service.ContractQualificationService;
 import com.jaagro.crm.api.service.ContractService;
-import com.jaagro.crm.api.service.OssSignUrlClientService;
 import com.jaagro.crm.biz.entity.Customer;
 import com.jaagro.crm.biz.entity.CustomerContract;
 import com.jaagro.crm.biz.entity.CustomerContractPrice;
 import com.jaagro.crm.biz.entity.CustomerContractSectionPrice;
 import com.jaagro.crm.biz.mapper.*;
+import com.jaagro.crm.biz.service.OssSignUrlClientService;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
@@ -295,10 +295,17 @@ public class ContractServiceImpl implements ContractService {
     @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> disableById(Integer id) {
+        CustomerContract contract = this.customerContractMapper.selectByPrimaryKey(id);
+        if (contract == null) {
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同不存在");
+        }
+        if (!contract.getContractStatus().equals(AuditStatus.UNCHECKED)) {
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "除待审核状态,其他状态合同不允许删除");
+        }
         ReturnContractDto contractDto = this.customerContractMapper.getById(id);
         CustomerContract customerContract = new CustomerContract();
         BeanUtils.copyProperties(contractDto, customerContract);
-        customerContract.setContractStatus(0);
+        customerContract.setContractStatus(AuditStatus.STOP_COOPERATION);
         this.customerContractMapper.updateByPrimaryKeySelective(customerContract);
         if (contractDto.getPrices() != null && contractDto.getPrices().size() > 0) {
             this.priceService.disableByContractId(customerContract.getId());

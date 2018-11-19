@@ -1,8 +1,11 @@
-package com.jaagro.crm.api.service;
+package com.jaagro.crm.biz.service;
 
+import com.jaagro.crm.api.dto.base.GetCustomerUserDto;
 import com.jaagro.crm.api.dto.request.truck.CreateDriverDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateDriverDto;
+import com.jaagro.crm.api.dto.response.department.DepartmentReturnDto;
 import com.jaagro.crm.api.dto.response.truck.DriverReturnDto;
+import com.jaagro.crm.biz.service.fallback.DriverClientServiceFallback;
 import com.jaagro.utils.BaseResponse;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +15,7 @@ import java.util.List;
 /**
  * @author tony
  */
-@FeignClient("user")
+@FeignClient(value = "user", fallbackFactory = DriverClientServiceFallback.class)
 public interface DriverClientService {
 
     /**
@@ -22,7 +25,7 @@ public interface DriverClientService {
      * @return
      */
     @PostMapping("/driverFeign")
-    Integer createDriverReturnId(@RequestBody CreateDriverDto driver);
+    String createDriverReturnId(@RequestBody CreateDriverDto driver);
 
     /**
      * 通过车辆id获取司机list
@@ -77,4 +80,21 @@ public interface DriverClientService {
      */
     @GetMapping("/getDeptNameById/{id}")
     String getDeptNameById(@PathVariable("id") Integer id);
+
+    /**
+     * 根据id获取部门(项目部)信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/getDepartmentById/{id}")
+    DepartmentReturnDto getDepartmentById(@PathVariable("id") Integer id);
+
+    /**
+     * id获取customerUser
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/customerUser/{id}")
+    GetCustomerUserDto getCustomerUserById(@PathVariable("id") Integer id);
 }

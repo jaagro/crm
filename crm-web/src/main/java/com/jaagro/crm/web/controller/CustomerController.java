@@ -80,9 +80,6 @@ public class CustomerController {
     @ApiOperation("删除客户[逻辑]")
     @DeleteMapping("/deleteCustomerById/{id}")
     public BaseResponse deleteById(@PathVariable Integer id) {
-        if (this.customerMapper.selectByPrimaryKey(id) == null) {
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到相应数据");
-        }
         return BaseResponse.service(this.customerService.disableCustomer(id));
     }
 
@@ -95,9 +92,6 @@ public class CustomerController {
     @ApiOperation("修改客户")
     @PutMapping("/customer")
     public BaseResponse updateCustomer(@RequestBody UpdateCustomerDto customer) {
-        if (this.customerMapper.selectByPrimaryKey(customer.getId()) == null) {
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户不存在");
-        }
         return BaseResponse.service(customerService.updateById(customer));
     }
 
@@ -110,9 +104,6 @@ public class CustomerController {
     @ApiOperation("查询单个客户")
     @GetMapping("/customer/{id}")
     public BaseResponse getById(@PathVariable Integer id) {
-        if (this.customerMapper.selectByPrimaryKey(id) == null) {
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户不存在");
-        }
         Map<String, Object> result = customerService.getById(id);
         return BaseResponse.service(result);
     }
@@ -212,9 +203,6 @@ public class CustomerController {
     @ApiOperation("客户联系人逻辑删除")
     @GetMapping("/deleteCustomerContactsById/{id}")
     public BaseResponse disableCustomerContacts(@PathVariable Integer id) {
-        if (this.customerContactsMapper.selectByPrimaryKey(id) == null) {
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到相应数据");
-        }
         return BaseResponse.service(this.customerContactsService.disableCustomerContacts(id));
     }
 

@@ -6,7 +6,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @author tony
+ *
+ * @author zhengwenzhu
+ * @date 2017/1/17
  */
 @Configuration
 public class CatFilterConfigure {

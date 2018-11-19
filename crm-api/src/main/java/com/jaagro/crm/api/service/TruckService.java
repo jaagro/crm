@@ -2,6 +2,7 @@ package com.jaagro.crm.api.service;
 
 import com.jaagro.crm.api.dto.request.truck.CreateTruckDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto;
+import com.jaagro.crm.api.dto.request.truck.QueryTruckDto;
 import com.jaagro.crm.api.dto.response.truck.GetTruckDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
 
@@ -97,7 +98,7 @@ public interface TruckService {
      * @param criteriaDto
      * @return
      */
-    Map<String, Object> listTrucksWithDrivers(ListTruckCriteriaDto criteriaDto);
+    Map<String, Object> listTrucksWithDrivers(QueryTruckDto criteriaDto);
 
     /**
      * 通过token获取truck

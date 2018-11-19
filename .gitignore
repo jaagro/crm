@@ -13,3 +13,4 @@ gen
 /crm-biz/target/
 /crm-api/target/
 /.mvn
+/crm-web/src/main/resources/application-dev.yml
