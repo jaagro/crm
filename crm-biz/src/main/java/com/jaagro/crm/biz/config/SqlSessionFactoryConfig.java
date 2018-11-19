@@ -4,7 +4,6 @@ import com.jaagro.crm.biz.cat.CatMybatisPlugin;
 import org.apache.ibatis.plugin.Interceptor;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import javax.sql.DataSource;
@@ -13,7 +12,7 @@ import java.io.IOException;
 /**
  * @author tony
  */
-@Configuration
+//@Configuration
 public class SqlSessionFactoryConfig {
 
     @Bean
