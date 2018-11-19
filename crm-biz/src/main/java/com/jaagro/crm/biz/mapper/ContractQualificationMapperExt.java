@@ -63,7 +63,7 @@ public interface ContractQualificationMapperExt extends ContractQualificationMap
 
 
     /**
-     * 根据合同id查询资质类型6、17、18是否都以审核通过
+     * 根据合同id查询资质类型16、17、18是否都以审核通过
      *
      * @param relevanceId
      * @return

@@ -289,7 +289,6 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                     }
                 }
                 break;
-
             default:
                 break;
         }
