@@ -41,7 +41,7 @@ public class TestController {
     public BaseResponse debug() {
         int a = 10;
         try{
-            a = 10 / 0;
+//            a = 10 / 0;
         } catch (Exception e){
             throw new NullPointerException("我是提供方抛出的异常： " + e.getMessage());
         }
