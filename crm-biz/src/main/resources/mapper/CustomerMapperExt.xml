@@ -86,6 +86,35 @@
         GROUP BY m.id
         order by m.create_time desc
     </select>
+    <select id="listByCriteriaDtoForOrder" resultType="com.jaagro.crm.api.dto.response.customer.ListCustomerDto"
+            parameterType="com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto">
+        SELECT
+        m.customer_type,
+        m.customer_name,
+        m.id,
+        m.city,
+        m.customer_status,
+        m.province,
+        m.county
+        FROM
+        customer m
+        LEFT JOIN customer_contacts c ON m.id = c.customer_id
+        WHERE m.customer_status != 0
+        <if test="customerType != null">
+            and m.customer_type = #{customerType}
+        </if>
+        <if test="phone != null and phone != ''">
+            and c.phone = #{phone}
+        </if>
+        <if test="customerStatus != null">
+            and m.customer_status = #{customerStatus}
+        </if>
+        <if test="customerName != null">
+            <![CDATA[and (m.customer_name like concat('%',#{customerName},'%') )]]>
+        </if>
+        GROUP BY m.id
+        order by m.create_time desc
+    </select>
     <select id="getByCustomerDto" resultMap="BaseResultMap"
             parameterType="com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto">
         select

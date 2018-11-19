@@ -47,6 +47,14 @@ public interface CustomerService {
     Map<String, Object> listByCriteria(ListCustomerCriteriaDto dto);
 
     /**
+     * 分页获取list，注意criteria查询条件,forOrder
+     *
+     * @param dto
+     * @return
+     */
+    Map<String, Object> listByCriteriaForOrder(ListCustomerCriteriaDto dto);
+
+    /**
      * 1
      * 审核客户，注意需要修改的字段有哪些，插入的表有哪些
      *

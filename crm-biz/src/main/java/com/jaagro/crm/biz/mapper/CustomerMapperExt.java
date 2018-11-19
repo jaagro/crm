@@ -32,6 +32,14 @@ public interface CustomerMapperExt extends CustomerMapper {
     List<ListCustomerDto> listByCriteriaDto(ListCustomerCriteriaDto dto);
 
     /**
+     * 分页查询
+     *
+     * @param dto
+     * @return
+     */
+    List<ListCustomerDto> listByCriteriaDtoForOrder(ListCustomerCriteriaDto dto);
+
+    /**
      * 新增时判断名称是否重复
      *
      * @param customer

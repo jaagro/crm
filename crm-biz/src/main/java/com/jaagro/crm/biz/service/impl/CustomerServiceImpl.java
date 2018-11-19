@@ -153,6 +153,31 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
+     * 分页获取list，注意criteria查询条件,forOrder
+     *
+     * @param dto
+     * @return
+     */
+    @Override
+    public Map<String, Object> listByCriteriaForOrder(ListCustomerCriteriaDto dto) {
+        PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
+        List<ListCustomerDto> customerReturnDtos = this.customerMapper.listByCriteriaDtoForOrder(dto);
+        if (customerReturnDtos != null && customerReturnDtos.size() > 0) {
+            for (ListCustomerDto customerDto : customerReturnDtos
+            ) {
+                List<CustomerContactsReturnDto> contractDtoList = this.customerContactsMapper.listByCustomerId(customerDto.getId());
+                if (contractDtoList.size() > 0) {
+                    CustomerContactsReturnDto contactsReturnDto = contractDtoList.get(0);
+                    customerDto
+                            .setContactName(contactsReturnDto.getContact())
+                            .setPhone(contactsReturnDto.getPhone());
+                }
+            }
+        }
+        return ServiceResult.toResult(new PageInfo<>(customerReturnDtos));
+    }
+
+    /**
      * 审核客户，注意需要修改的字段有哪些，插入的表有哪些
      *
      * @param id
