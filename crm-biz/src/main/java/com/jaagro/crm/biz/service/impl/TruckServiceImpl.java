@@ -18,7 +18,7 @@ import com.jaagro.crm.biz.mapper.TruckQualificationMapperExt;
 import com.jaagro.crm.biz.mapper.TruckTypeMapperExt;
 import com.jaagro.crm.biz.service.DriverClientService;
 import com.jaagro.crm.biz.service.OssSignUrlClientService;
-import com.jaagro.crm.biz.service.UserClientService;
+import com.jaagro.crm.biz.service.AuthClientService;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
@@ -65,7 +65,7 @@ public class TruckServiceImpl implements TruckService {
     @Autowired
     private HttpServletRequest request;
     @Autowired
-    private UserClientService userClientService;
+    private AuthClientService authClientService;
     @Autowired
     private DriverClientService deptClientService;
 
@@ -421,7 +421,7 @@ public class TruckServiceImpl implements TruckService {
     @Override
     public GetTruckDto getTruckByToken() {
         String token = request.getHeader("token");
-        UserInfo userInfo = userClientService.getUserByToken(token);
+        UserInfo userInfo = authClientService.getUserByToken(token);
         DriverReturnDto driver;
         GetTruckDto truck = null;
         log.info("当前user: " + userInfo.toString());

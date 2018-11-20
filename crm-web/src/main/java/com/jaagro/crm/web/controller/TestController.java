@@ -2,7 +2,7 @@ package com.jaagro.crm.web.controller;
 
 import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.biz.service.OssSignUrlClientService;
-import com.jaagro.crm.biz.service.UserClientService;
+import com.jaagro.crm.biz.service.AuthClientService;
 import com.jaagro.crm.biz.service.impl.CurrentUserService;
 import com.jaagro.utils.BaseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class TestController {
     @Autowired
     HttpServletRequest request;
     @Autowired
-    UserClientService userClientService;
+    AuthClientService authClientService;
     @Autowired
     CurrentUserService currentUserService;
     @Autowired
@@ -29,7 +29,7 @@ public class TestController {
     @GetMapping("/test")
     public UserInfo getToken() {
         String token = request.getHeader("token");
-        return userClientService.getUserByToken(token);
+        return authClientService.getUserByToken(token);
     }
 
     @GetMapping("/test2")
@@ -41,7 +41,7 @@ public class TestController {
     public BaseResponse debug() {
         int a = 10;
         try{
-            a = 10 / 0;
+//            a = 10 / 0;
         } catch (Exception e){
             throw new NullPointerException("我是提供方抛出的异常： " + e.getMessage());
         }

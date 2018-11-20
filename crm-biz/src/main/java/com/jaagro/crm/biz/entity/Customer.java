@@ -121,4 +121,8 @@ public class Customer implements Serializable {
      * 修改人(References: user)
      */
     private Integer modifyUserId;
+    /**
+     * 客户可以直接下单开关
+     */
+    private  String enableDirectOrder;
 }
