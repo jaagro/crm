@@ -5,6 +5,7 @@ import org.apache.ibatis.plugin.Interceptor;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import javax.sql.DataSource;
@@ -15,7 +16,7 @@ import java.io.IOException;
  * @author zhengwenzhu
  * @date 2017/1/17
  */
-//@Configuration
+@Configuration
 public class CatFilterConfigure {
 
     @Bean
