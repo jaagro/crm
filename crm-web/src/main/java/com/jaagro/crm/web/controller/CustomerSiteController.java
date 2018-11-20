@@ -45,6 +45,13 @@ public class CustomerSiteController {
         if (siteDto.getSiteType() == null) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "地址类型:[siteType]不能为空");
         }
+        if (siteDto.getSiteType() != null) {
+            if (siteDto.getSiteType().equals(1)) {
+                if (siteDto.getDeptId() == null) {
+                    return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "装货地归属网点不能为空");
+                }
+            }
+        }
         if (siteDto.getSiteName() == null) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "地址名称:[siteName]不能为空");
         }

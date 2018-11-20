@@ -3,7 +3,7 @@ package com.jaagro.crm.biz.service.impl;
 import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.dto.base.GetCustomerUserDto;
 import com.jaagro.crm.biz.service.DriverClientService;
-import com.jaagro.crm.biz.service.UserClientService;
+import com.jaagro.crm.biz.service.AuthClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 @Service
 public class CurrentUserService {
     @Autowired
-    private UserClientService tokenClient;
+    private AuthClientService tokenClient;
     @Autowired
     private HttpServletRequest request;
     @Autowired
