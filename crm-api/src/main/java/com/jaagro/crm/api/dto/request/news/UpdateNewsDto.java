@@ -3,6 +3,8 @@ package com.jaagro.crm.api.dto.request.news;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -17,6 +19,8 @@ public class UpdateNewsDto implements Serializable{
     /**
      * 新闻表id
      */
+    @NotNull(message = "{id.NotNull}")
+    @Min(value = 1,message = "{id.Min}")
     private Integer id;
 
     /**
