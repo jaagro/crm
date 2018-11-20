@@ -83,4 +83,11 @@ public interface TruckMapperExt extends TruckMapper {
      * @return
      */
     List<ListTruckDto> listTruckForAssignWaybill();
+
+    /**
+     * 查询近一个月过期的证件
+     * @param expiryDateType
+     * @return
+     */
+    List<GetTruckDto> listCertificateOverdueNotice(Integer expiryDateType);
 }

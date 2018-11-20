@@ -83,6 +83,7 @@ public interface DriverClientService {
 
     /**
      * 根据id获取部门(项目部)信息
+     *
      * @param id
      * @return
      */
@@ -97,4 +98,11 @@ public interface DriverClientService {
      */
     @GetMapping("/customerUser/{id}")
     GetCustomerUserDto getCustomerUserById(@PathVariable("id") Integer id);
+
+    /**
+     * 查询近一个月过期证件
+     * Author: @Gao.
+     */
+    @GetMapping("/listDriverCertificateOverdueNotice")
+    List<DriverReturnDto> listDriverCertificateOverdueNotice();
 }

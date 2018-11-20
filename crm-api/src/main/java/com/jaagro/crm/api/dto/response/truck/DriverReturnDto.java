@@ -127,4 +127,9 @@ public class DriverReturnDto implements Serializable {
      * 司机资质证照
      */
     private List<ListTruckQualificationDto> driverQualificationList;
+
+    /**
+     * 设备标识，用于jpush
+     */
+    private String registrationId;
 }
