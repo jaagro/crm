@@ -1,4 +1,4 @@
-package com.jaagro.crm.web.config.cat;
+package com.jaagro.crm.biz.config.cat;
 
 import com.dianping.cat.servlet.CatFilter;
 import org.apache.ibatis.plugin.Interceptor;
@@ -39,6 +39,7 @@ public class CatFilterConfigure {
         //mapperLocation
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath*:/mapper/*.xml"));
+        sqlSessionFactoryBean.setConfigLocation(resolver.getResources("classpath*:/mybatis/mybatis_config.xml")[0]);
         return sqlSessionFactoryBean;
     }
 }
