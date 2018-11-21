@@ -78,6 +78,17 @@ public class DriverClientServiceFallback implements FallbackFactory<DriverClient
             public GetCustomerUserDto getCustomerUserById(Integer id) {
                 return null;
             }
+
+            /**
+             * 查询近一个月过期证件
+             * Author: @Gao.
+             *
+             * @return
+             */
+            @Override
+            public BaseResponse listDriverCertificateOverdueNotice() {
+                return BaseResponse.errorInstance("查询出错");
+            }
         };
     }
 }
