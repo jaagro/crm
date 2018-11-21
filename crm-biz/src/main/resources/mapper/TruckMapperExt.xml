@@ -257,12 +257,22 @@
         where truck_status = 3
         <if test="expiryDateType==1">
             <![CDATA[
-        and expiry_date > NOW() and expiry_date < DATE_ADD(NOW(),INTERVAL 30 DAY);
+        and expiry_date > NOW() and expiry_date < DATE_ADD(NOW(),INTERVAL 30 DAY)
     ]]>
         </if>
         <if test="expiryDateType==2">
             <![CDATA[
-     and expiry_annual > NOW() and expiry_annual < DATE_ADD(NOW(),INTERVAL 30 DAY);
+     and expiry_annual > NOW() and expiry_annual < DATE_ADD(NOW(),INTERVAL 30 DAY)
+    ]]>
+        </if>
+        <if test="expiryDateType==3">
+            <![CDATA[
+        and expiry_date < NOW()
+    ]]>
+        </if>
+        <if test="expiryDateType==4">
+            <![CDATA[
+        and expiry_annual < NOW()
     ]]>
         </if>
     </select>

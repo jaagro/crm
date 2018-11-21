@@ -86,7 +86,7 @@ public class DriverClientServiceFallback implements FallbackFactory<DriverClient
              * @return
              */
             @Override
-            public BaseResponse listDriverCertificateOverdueNotice() {
+            public BaseResponse listDriverCertificateOverdueNotice(Integer driverExpiryDateType) {
                 return BaseResponse.errorInstance("查询出错");
             }
         };

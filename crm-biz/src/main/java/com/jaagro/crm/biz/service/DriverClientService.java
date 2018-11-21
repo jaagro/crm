@@ -102,8 +102,9 @@ public interface DriverClientService {
     /**
      * 查询近一个月过期证件
      * Author: @Gao.
+     *
      * @return
      */
     @GetMapping("/listDriverCertificateOverdueNotice")
-    BaseResponse listDriverCertificateOverdueNotice();
+    BaseResponse listDriverCertificateOverdueNotice(Integer driverExpiryDateType);
 }
