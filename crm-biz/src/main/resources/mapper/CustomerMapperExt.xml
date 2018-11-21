@@ -66,7 +66,8 @@
         m.city,
         m.customer_status,
         m.province,
-        m.county
+        m.county,
+        m.enable_direct_order
         FROM
         customer m
         LEFT JOIN customer_contacts c ON m.id = c.customer_id
