@@ -24,7 +24,6 @@ public interface AccountClientService {
      */
     @PostMapping("/account")
     BaseResponse insertAccount(@RequestBody  CreateAccountDto createAccountDto);
-
     /**
      * 删除账户
      * @param id
