@@ -88,16 +88,16 @@ public class CertificateOverdueNoticeService {
      */
     private void driverCertificateOverdueNotice(Integer driverExpiryDateType, String redisKey) {
         List<DriverReturnDto> driverReturnDtos = (List<DriverReturnDto>) driverClientService.listDriverCertificateOverdueNotice(driverExpiryDateType).getData();
+        List<DriverReturnDto> drivers = new ArrayList<>();
         for (DriverReturnDto driverReturnDto : driverReturnDtos) {
             String driverId = redisTemplate.opsForValue().get(redisKey + driverReturnDto.getId());
-            List<DriverReturnDto> drivers = new ArrayList<>();
             if (StringUtils.isEmpty(driverId)) {
                 drivers.add(driverReturnDto);
-                sendMessage(drivers, null, stringToDate(driverReturnDto.getExpiryDrivingLicense()), null, driverExpiryDateType);
             } else {
                 setRefIdToRedis(redisKey + driverReturnDto.getId(), driverReturnDto.getId().toString());
             }
         }
+        sendMessage(drivers, null, null, null, driverExpiryDateType);
     }
 
     /**
@@ -116,7 +116,7 @@ public class CertificateOverdueNoticeService {
      * @param expiryDrivingLicense
      * @return
      */
-    private Date stringToDate(String expiryDrivingLicense) {
+    private static Date stringToDate(String expiryDrivingLicense) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
         try {
@@ -126,6 +126,17 @@ public class CertificateOverdueNoticeService {
             log.error("转化异常", e);
         }
         return date;
+    }
+
+    /**
+     * 将date 转化为指定格式
+     *
+     * @param date
+     * @return
+     */
+    private static String formatDateToString(Date date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日");
+        return simpleDateFormat.format(date);
     }
 
     /**
@@ -167,12 +178,13 @@ public class CertificateOverdueNoticeService {
             templateMap.put("driverName", driver.getName());
             //保险到期提醒
             if (ExpiryDateType.EXPIRY_DATE.equals(msgType)) {
-                msgContent = driver.getName() + "师傅，您的车号" + getTruckDto.getTruckNumber() + "保险到期时间为" + expiryDate + "，请及时处理，以免影响您的正常使用！";
+                msgContent = driver.getName() + "师傅，您的车号" + getTruckDto.getTruckNumber() + "保险到期时间为" + formatDateToString(expiryDate) + "，请及时处理，以免影响您的正常使用！";
                 createMessageDto
                         .setBody(msgContent);
                 JpushClientUtil.sendPush(alias, msgTitle, msgContent, regId, extraParam);
                 BaseResponse response = smsClientService.sendSMS(driver.getPhoneNumber(), "SMS_146803933", templateMap);
                 log.trace("给司机发短信,driver" + "::::" + driver + ",短信结果:::" + response);
+                messageClientService.createMessage(createMessageDto);
             }
             //保险过期提醒
             if (ExpiryDateType.OVER_DATE.equals(msgType)) {
@@ -183,32 +195,36 @@ public class CertificateOverdueNoticeService {
                 JpushClientUtil.sendPush(alias, msgTitle, msgContent, regId, extraParam);
                 BaseResponse response = smsClientService.sendSMS(driver.getPhoneNumber(), "SMS_146803933", templateMap);
                 log.trace("给司机发短信,driver" + "::::" + driver + ",短信结果:::" + response);
+                messageClientService.createMessage(createMessageDto);
             }
             //年检到期提醒
             if (ExpiryDateType.EXPIRY_ANNUAL.equals(msgType)) {
-                msgContent = driver.getName() + "师傅，您的车号" + getTruckDto.getTruckNumber() + "年检到期时间为" + expiryDate + "，请及时处理，以免影响您的正常使用！";
+                msgContent = driver.getName() + "师傅，您的车号" + getTruckDto.getTruckNumber() + "年检到期时间为" + formatDateToString(expiryDate) + "，请及时处理，以免影响您的正常使用！";
                 createMessageDto
                         .setBody(msgContent);
                 JpushClientUtil.sendPush(alias, msgTitle, msgContent, regId, extraParam);
                 BaseResponse response = smsClientService.sendSMS(driver.getPhoneNumber(), "SMS_146803933", templateMap);
                 log.trace("给司机发短信,driver" + "::::" + driver + ",短信结果:::" + response);
+                messageClientService.createMessage(createMessageDto);
             }
             //年检过期提醒
-            if (ExpiryDateType.OVER_DATE.equals(msgType)) {
+            if (ExpiryDateType.OVER_ANNUAL.equals(msgType)) {
                 msgContent = driver.getName() + "师傅，您的车号" + getTruckDto.getTruckNumber() + "年检到期时间已经超期，请及时处理，以免影响您的正常使用！";
                 createMessageDto
                         .setBody(msgContent);
                 JpushClientUtil.sendPush(alias, msgTitle, msgContent, regId, extraParam);
                 BaseResponse response = smsClientService.sendSMS(driver.getPhoneNumber(), "SMS_146803933", templateMap);
                 log.trace("给司机发短信,driver" + "::::" + driver + ",短信结果:::" + response);
+                messageClientService.createMessage(createMessageDto);
             }
             if (ExpiryDateType.EXPIRY_DRIVING_LICENSE.equals(msgType)) {
-                msgContent = driver.getName() + "师傅，您的驾驶证到期时间为" + driver.getExpiryDrivingLicense() + "，请及时处理，以免影响您的正常使用！";
+                msgContent = driver.getName() + "师傅，您的驾驶证到期时间为" + formatDateToString(stringToDate(driver.getExpiryDrivingLicense())) + "，请及时处理，以免影响您的正常使用！";
                 createMessageDto
                         .setBody(msgContent);
                 JpushClientUtil.sendPush(alias, msgTitle, msgContent, regId, extraParam);
                 BaseResponse response = smsClientService.sendSMS(driver.getPhoneNumber(), "SMS_146803933", templateMap);
                 log.trace("给司机发短信,driver" + "::::" + driver + ",短信结果:::" + response);
+                messageClientService.createMessage(createMessageDto);
             }
             if (ExpiryDateType.OVER_DRIVING_LICENSE.equals(msgType)) {
                 msgContent = driver.getName() + "师傅，您的驾驶证到期时间已超期，请及时处理，以免影响您的正常使用！";
@@ -217,8 +233,8 @@ public class CertificateOverdueNoticeService {
                 JpushClientUtil.sendPush(alias, msgTitle, msgContent, regId, extraParam);
                 BaseResponse response = smsClientService.sendSMS(driver.getPhoneNumber(), "SMS_146803933", templateMap);
                 log.trace("给司机发短信,driver" + "::::" + driver + ",短信结果:::" + response);
+                messageClientService.createMessage(createMessageDto);
             }
-            messageClientService.createMessage(createMessageDto);
         }
     }
 }
