@@ -199,7 +199,7 @@
                 #{modifyUserId,jdbcType=INTEGER},
             </if>
             <if test="enableDirectOrder != null">
-                enable_direct_order = #{enableDirectOrder,jdbcType=VARCHAR},
+                #{enableDirectOrder,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
