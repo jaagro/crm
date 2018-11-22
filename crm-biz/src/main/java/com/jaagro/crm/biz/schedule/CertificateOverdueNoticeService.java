@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -42,7 +43,7 @@ public class CertificateOverdueNoticeService {
     @Autowired
     private MessageClientService messageClientService;
 
-    @Scheduled(fixedRate = 2000)
+    //@Scheduled(fixedRate = 2000)
     //每天上午10:15触发一次
     //@Scheduled(cron = "0 15 10 * * ?")
     public void certificateOverdueNoticeBySystem() {
@@ -53,7 +54,7 @@ public class CertificateOverdueNoticeService {
         //提前一个月查询年检过期时间
         certificateOverdueNotice(ExpiryDateType.EXPIRY_ANNUAL, "expiryAnnual");
         //查询年检已经过期
-        certificateOverdueNotice(ExpiryDateType.OVER_ANNUAL, "overAnnual");
+         certificateOverdueNotice(ExpiryDateType.OVER_ANNUAL, "overAnnual");
         //提前一个月查询驾驶证过期时间
         driverCertificateOverdueNotice(ExpiryDateType.EXPIRY_DRIVING_LICENSE, "expiryDrivingLicense");
         //查询驾驶证过期
@@ -69,12 +70,16 @@ public class CertificateOverdueNoticeService {
     private void certificateOverdueNotice(Integer expiryDateType, String redisKey) {
         List<GetTruckDto> expiryDateTruck = truckMapper.listCertificateOverdueNotice(expiryDateType);
         for (GetTruckDto expiryDate : expiryDateTruck) {
-            String expiryDateTruckId = redisTemplate.opsForValue().get(redisKey + expiryDate.getId());
-            if (StringUtils.isEmpty(expiryDateTruckId)) {
-                List<DriverReturnDto> drivers = driverClientService.listByTruckId(expiryDate.getId());
-                sendMessage(drivers, expiryDate, expiryDate.getExpiryDate(), expiryDate.getId(), expiryDateType);
-            } else {
-                setRefIdToRedis(redisKey + expiryDate.getId(), expiryDate.getId().toString());
+            if (null != expiryDate.getId() && null != expiryDate.getExpiryDate()) {
+                String expiryDateTruckId = redisTemplate.opsForValue().get(redisKey + expiryDate.getId());
+                List<DriverReturnDto> drivers;
+                if (StringUtils.isEmpty(expiryDateTruckId)) {
+                    setRefIdToRedis(redisKey + expiryDate.getId(), expiryDate.getId().toString());
+                    drivers = driverClientService.listByTruckId(expiryDate.getId());
+                    if (!CollectionUtils.isEmpty(drivers)) {
+                        sendMessage(drivers, expiryDate, expiryDateType);
+                    }
+                }
             }
         }
 
@@ -87,17 +92,25 @@ public class CertificateOverdueNoticeService {
      * @param redisKey
      */
     private void driverCertificateOverdueNotice(Integer driverExpiryDateType, String redisKey) {
-        List<DriverReturnDto> driverReturnDtos = (List<DriverReturnDto>) driverClientService.listDriverCertificateOverdueNotice(driverExpiryDateType).getData();
+
+        List<DriverReturnDto> driverReturnDtos = new ArrayList<>();
+        BaseResponse<List<DriverReturnDto>> baseResponse = driverClientService.listDriverCertificateOverdueNotice(driverExpiryDateType);
+        if (!CollectionUtils.isEmpty((baseResponse.getData()))) {
+            driverReturnDtos = baseResponse.getData();
+        }
         List<DriverReturnDto> drivers = new ArrayList<>();
         for (DriverReturnDto driverReturnDto : driverReturnDtos) {
-            String driverId = redisTemplate.opsForValue().get(redisKey + driverReturnDto.getId());
-            if (StringUtils.isEmpty(driverId)) {
-                drivers.add(driverReturnDto);
-            } else {
-                setRefIdToRedis(redisKey + driverReturnDto.getId(), driverReturnDto.getId().toString());
+            if (null != driverReturnDto.getId()) {
+                String driverId = redisTemplate.opsForValue().get(redisKey + driverReturnDto.getId());
+                if (StringUtils.isEmpty(driverId)) {
+                    setRefIdToRedis(redisKey + driverReturnDto.getId(), driverReturnDto.getId().toString());
+                    drivers.add(driverReturnDto);
+                }
             }
         }
-        sendMessage(drivers, null, null, null, driverExpiryDateType);
+        if (!CollectionUtils.isEmpty(drivers)) {
+            sendMessage(drivers, null, driverExpiryDateType);
+        }
     }
 
     /**
@@ -107,7 +120,7 @@ public class CertificateOverdueNoticeService {
      * @param value
      */
     private void setRefIdToRedis(String key, String value) {
-        redisTemplate.opsForValue().set(key, value, 31, TimeUnit.DAYS);
+        redisTemplate.opsForValue().set(key, value, 30, TimeUnit.SECONDS);
     }
 
     /**
@@ -143,9 +156,9 @@ public class CertificateOverdueNoticeService {
      * 发送jpush 短信 消息
      *
      * @param
-     * @param expiryDate
+     * @param
      */
-    private void sendMessage(List<DriverReturnDto> drivers, GetTruckDto getTruckDto, Date expiryDate, Integer truckId, Integer msgType) {
+    private void sendMessage(List<DriverReturnDto> drivers, GetTruckDto getTruckDto, Integer msgType) {
         String alias = "";
         String msgTitle = "证件过期提醒消息";
         String msgContent;
@@ -161,13 +174,13 @@ public class CertificateOverdueNoticeService {
             //调用jpush接口给司机发送短息
             Map<String, String> extraParam = new HashMap<>();
             extraParam.put("driverId", driver.getId().toString());
-            extraParam.put("expiryDate", expiryDate.toString());
+            extraParam.put("expiryDate", getTruckDto.getExpiryDate().toString());
             regId = driver.getRegistrationId();
             //在app消息插入一条司机记录
             CreateMessageDto createMessageDto = new CreateMessageDto();
             createMessageDto
                     .setHeader(msgTitle)
-                    .setReferId(truckId)
+                    .setReferId(getTruckDto.getId())
                     .setMsgType(5)
                     .setMsgSource(1)
                     .setToUserType(2)
@@ -175,63 +188,70 @@ public class CertificateOverdueNoticeService {
                     .setToUserId(driver.getId());
             //发送短信给truckId 对应的司机
             Map<String, Object> templateMap = new HashMap<>();
-            templateMap.put("driverName", driver.getName());
+            templateMap.put("driver", driver.getName());
             //保险到期提醒
             if (ExpiryDateType.EXPIRY_DATE.equals(msgType)) {
-                msgContent = driver.getName() + "师傅，您的车号" + getTruckDto.getTruckNumber() + "保险到期时间为" + formatDateToString(expiryDate) + "，请及时处理，以免影响您的正常使用！";
+                templateMap.put("expiryDate", formatDateToString(getTruckDto.getExpiryDate()));
+                templateMap.put("truckNumber", getTruckDto.getTruckNumber());
+                msgContent = driver.getName() + "师傅，您的车号" + getTruckDto.getTruckNumber() + "保险到期时间为" + formatDateToString(getTruckDto.getExpiryDate()) + "，请及时处理，以免影响您的正常使用！";
                 createMessageDto
                         .setBody(msgContent);
                 JpushClientUtil.sendPush(alias, msgTitle, msgContent, regId, extraParam);
-                BaseResponse response = smsClientService.sendSMS(driver.getPhoneNumber(), "SMS_146803933", templateMap);
-                log.trace("给司机发短信,driver" + "::::" + driver + ",短信结果:::" + response);
+                smsClientService.sendSMS(driver.getPhoneNumber(), "SMS_151690358", templateMap);
                 messageClientService.createMessage(createMessageDto);
             }
-            //保险过期提醒
+            //保险超期
             if (ExpiryDateType.OVER_DATE.equals(msgType)) {
-                //xxx师傅，您的车号苏WNC133保险到期时间已超期，请及时处理，以免影响您的正常使用！
+                templateMap.put("truckNumber", getTruckDto.getTruckNumber());
                 msgContent = driver.getName() + "师傅，您的车号" + getTruckDto.getTruckNumber() + "保险到期时间已经超期，请及时处理，以免影响您的正常使用！";
                 createMessageDto
                         .setBody(msgContent);
                 JpushClientUtil.sendPush(alias, msgTitle, msgContent, regId, extraParam);
-                BaseResponse response = smsClientService.sendSMS(driver.getPhoneNumber(), "SMS_146803933", templateMap);
+                BaseResponse response = smsClientService.sendSMS(driver.getPhoneNumber(), "SMS_151690363", templateMap);
                 log.trace("给司机发短信,driver" + "::::" + driver + ",短信结果:::" + response);
                 messageClientService.createMessage(createMessageDto);
             }
             //年检到期提醒
             if (ExpiryDateType.EXPIRY_ANNUAL.equals(msgType)) {
-                msgContent = driver.getName() + "师傅，您的车号" + getTruckDto.getTruckNumber() + "年检到期时间为" + formatDateToString(expiryDate) + "，请及时处理，以免影响您的正常使用！";
+                templateMap.put("truckNumber", getTruckDto.getTruckNumber());
+                templateMap.put("expiryDate", formatDateToString(getTruckDto.getExpiryAnnual()));
+                msgContent = driver.getName() + "师傅，您的车号" + getTruckDto.getTruckNumber() + "年检到期时间为" + formatDateToString(getTruckDto.getExpiryAnnual()) + "，请及时处理，以免影响您的正常使用！";
                 createMessageDto
                         .setBody(msgContent);
                 JpushClientUtil.sendPush(alias, msgTitle, msgContent, regId, extraParam);
-                BaseResponse response = smsClientService.sendSMS(driver.getPhoneNumber(), "SMS_146803933", templateMap);
+                BaseResponse response = smsClientService.sendSMS(driver.getPhoneNumber(), "SMS_151690360", templateMap);
                 log.trace("给司机发短信,driver" + "::::" + driver + ",短信结果:::" + response);
                 messageClientService.createMessage(createMessageDto);
             }
-            //年检过期提醒
+            //年检超期
             if (ExpiryDateType.OVER_ANNUAL.equals(msgType)) {
+                templateMap.put("truckNumber", getTruckDto.getTruckNumber());
                 msgContent = driver.getName() + "师傅，您的车号" + getTruckDto.getTruckNumber() + "年检到期时间已经超期，请及时处理，以免影响您的正常使用！";
                 createMessageDto
                         .setBody(msgContent);
                 JpushClientUtil.sendPush(alias, msgTitle, msgContent, regId, extraParam);
-                BaseResponse response = smsClientService.sendSMS(driver.getPhoneNumber(), "SMS_146803933", templateMap);
+                BaseResponse response = smsClientService.sendSMS(driver.getPhoneNumber(), "SMS_151670611", templateMap);
                 log.trace("给司机发短信,driver" + "::::" + driver + ",短信结果:::" + response);
                 messageClientService.createMessage(createMessageDto);
             }
+            //驾驶证过期提醒
             if (ExpiryDateType.EXPIRY_DRIVING_LICENSE.equals(msgType)) {
+                templateMap.put("expiryDate", formatDateToString(stringToDate(driver.getExpiryDrivingLicense())));
                 msgContent = driver.getName() + "师傅，您的驾驶证到期时间为" + formatDateToString(stringToDate(driver.getExpiryDrivingLicense())) + "，请及时处理，以免影响您的正常使用！";
                 createMessageDto
                         .setBody(msgContent);
                 JpushClientUtil.sendPush(alias, msgTitle, msgContent, regId, extraParam);
-                BaseResponse response = smsClientService.sendSMS(driver.getPhoneNumber(), "SMS_146803933", templateMap);
+                BaseResponse response = smsClientService.sendSMS(driver.getPhoneNumber(), "SMS_151690362", templateMap);
                 log.trace("给司机发短信,driver" + "::::" + driver + ",短信结果:::" + response);
                 messageClientService.createMessage(createMessageDto);
             }
+            //驾驶证超期
             if (ExpiryDateType.OVER_DRIVING_LICENSE.equals(msgType)) {
                 msgContent = driver.getName() + "师傅，您的驾驶证到期时间已超期，请及时处理，以免影响您的正常使用！";
                 createMessageDto
                         .setBody(msgContent);
                 JpushClientUtil.sendPush(alias, msgTitle, msgContent, regId, extraParam);
-                BaseResponse response = smsClientService.sendSMS(driver.getPhoneNumber(), "SMS_146803933", templateMap);
+                BaseResponse response = smsClientService.sendSMS(driver.getPhoneNumber(), "SMS_151549248", templateMap);
                 log.trace("给司机发短信,driver" + "::::" + driver + ",短信结果:::" + response);
                 messageClientService.createMessage(createMessageDto);
             }
