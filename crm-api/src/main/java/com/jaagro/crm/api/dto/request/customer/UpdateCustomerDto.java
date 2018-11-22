@@ -103,6 +103,10 @@ public class UpdateCustomerDto implements Serializable {
      * 备注信息(用车要求)
      */
     private String notes;
+    /**
+     * 客户是否直接下单
+     */
+    private String enableDirectOrder;
 
     /* *//**
      * 客户联系人
