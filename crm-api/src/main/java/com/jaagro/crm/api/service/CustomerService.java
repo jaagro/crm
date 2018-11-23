@@ -66,6 +66,7 @@ public interface CustomerService {
 
     /**
      * 通过id获取客户显示对象，
+     *
      * @param id
      * @return
      */
@@ -73,7 +74,15 @@ public interface CustomerService {
 
     /**
      * 获得全部的客户
+     *
      * @return
      */
     List<ShowCustomerDto> listAllCustomer();
+
+    /**
+     * 查询正常合作的全部客户
+     *
+     * @return
+     */
+    List<ShowCustomerDto> listNormalCustomer();
 }

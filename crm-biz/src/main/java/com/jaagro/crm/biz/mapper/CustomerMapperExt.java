@@ -61,4 +61,11 @@ public interface CustomerMapperExt extends CustomerMapper {
      * @return
      */
     List<ShowCustomerDto> getAllCustomer();
+
+    /**
+     * 查询正常合作的全部客户
+     *
+     * @return
+     */
+    List<ShowCustomerDto> listNormalCustomer();
 }
