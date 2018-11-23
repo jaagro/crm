@@ -57,5 +57,9 @@ public class ListCustomerDto implements Serializable {
      * 审核状态
      */
     private Integer customerStatus;
+    /**
+     * 客户是否直接下单
+     */
+    private String enableDirectOrder;
 
 }

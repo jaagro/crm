@@ -125,6 +125,10 @@ public class CustomerReturnDto implements Serializable {
      * 修改人(References: user)
      */
     private Integer modifyUserId;
+    /**
+     * 客户是否直接下单
+     */
+    private String enableDirectOrder;
 
     /**
      * 客户联系人
