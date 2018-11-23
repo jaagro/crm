@@ -106,5 +106,5 @@ public interface DriverClientService {
      * @return
      */
     @GetMapping("/listDriverCertificateOverdueNotice/{driverExpiryDateType}")
-    BaseResponse listDriverCertificateOverdueNotice(@PathVariable("driverExpiryDateType")Integer driverExpiryDateType);
+    BaseResponse<List<DriverReturnDto>> listDriverCertificateOverdueNotice(@PathVariable("driverExpiryDateType")Integer driverExpiryDateType);
 }

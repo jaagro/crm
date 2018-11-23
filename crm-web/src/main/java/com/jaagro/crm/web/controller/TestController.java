@@ -1,12 +1,14 @@
 package com.jaagro.crm.web.controller;
 
 import com.jaagro.constant.UserInfo;
+import com.jaagro.crm.api.dto.request.message.CreateMessageDto;
 import com.jaagro.crm.api.dto.response.truck.DriverReturnDto;
 import com.jaagro.crm.api.dto.response.truck.GetTruckDto;
 import com.jaagro.crm.biz.mapper.TruckMapper;
 import com.jaagro.crm.biz.mapper.TruckMapperExt;
 import com.jaagro.crm.biz.schedule.CertificateOverdueNoticeService;
 import com.jaagro.crm.biz.service.DriverClientService;
+import com.jaagro.crm.biz.service.MessageClientService;
 import com.jaagro.crm.biz.service.OssSignUrlClientService;
 import com.jaagro.crm.biz.service.AuthClientService;
 import com.jaagro.crm.biz.service.impl.CurrentUserService;
@@ -40,6 +42,8 @@ public class TestController {
     TruckMapperExt truckMapper;
     @Autowired
     DriverClientService driverClientService;
+    @Autowired
+    MessageClientService messageClientService;
 
     @GetMapping("/test")
     public UserInfo getToken() {
@@ -63,19 +67,10 @@ public class TestController {
         return BaseResponse.successInstance(a);
     }
 
+
     @GetMapping("/test3")
     public BaseResponse test3() {
-         certificateOverdueNoticeService.certificateOverdueNoticeBySystem();
-        //List<GetTruckDto> getTruckDtos = truckMapper.listCertificateOverdueNotice(2);
-        //System.out.println(getTruckDtos.toString());
-        //List<DriverReturnDto> baseResponse = (List<DriverReturnDto>) driverClientService.listDriverCertificateOverdueNotice(6).getData();
-        //System.out.println(baseResponse.toString());
-//        List<DriverReturnDto> driverReturnDtos = new ArrayList<>();
-//        BaseResponse baseResponse = driverClientService.listDriverCertificateOverdueNotice(5);
-//        if (!CollectionUtils.isEmpty((List) baseResponse.getData())) {
-//            driverReturnDtos = (List<DriverReturnDto>) baseResponse.getData();
-//        }
-//        System.out.println(driverReturnDtos.toString());
+        certificateOverdueNoticeService.certificateOverdueNoticeBySystem();
         return null;
     }
 
