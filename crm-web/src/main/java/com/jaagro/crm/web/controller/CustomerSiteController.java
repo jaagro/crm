@@ -120,4 +120,11 @@ public class CustomerSiteController {
     public ShowSiteDto getShowSiteById(@PathVariable("id") Integer id) {
         return siteService.getShowSiteById(id);
     }
+
+    @Ignore
+    @ApiOperation("提供给feign:根据地址id数组获得地址名称")
+    @PostMapping("/listSiteNameByIds")
+    public List<String> listSiteNameByIds(@RequestBody List<Integer> siteIds) {
+        return siteService.listSiteNameByIds(siteIds);
+    }
 }

@@ -184,4 +184,15 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
         return siteMapper.listAllSite(criteriaDto);
     }
 
+    /**
+     * 根据地址id数组获得地址名称
+     *
+     * @param siteIds
+     * @return
+     */
+    @Override
+    public List<String> listSiteNameByIds(List<Integer> siteIds) {
+        return siteMapper.listSiteNameByIds(siteIds);
+    }
+
 }

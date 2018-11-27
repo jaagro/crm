@@ -112,4 +112,12 @@ public interface CustomerSiteService {
      * @return
      */
     List<ReturnSelectSiteDto> listSiteForSelectByCustomerId(ListSiteCriteriaDto criteriaDto);
+
+    /**
+     * 根据地址id数组获得地址名称
+     *
+     * @param siteIds
+     * @return
+     */
+    List<String> listSiteNameByIds(List<Integer> siteIds);
 }
