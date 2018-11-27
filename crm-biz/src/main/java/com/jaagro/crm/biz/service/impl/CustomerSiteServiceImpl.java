@@ -7,6 +7,7 @@ import com.jaagro.crm.api.dto.request.customer.ListSiteCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.ShowSiteDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerSiteDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto;
+import com.jaagro.crm.api.dto.response.selectValue.ReturnSelectSiteDto;
 import com.jaagro.crm.api.service.CustomerSiteService;
 import com.jaagro.crm.biz.entity.CustomerSite;
 import com.jaagro.crm.biz.mapper.CustomerSiteMapperExt;
@@ -170,6 +171,17 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
     @Override
     public ShowSiteDto getBySiteName(String siteName, Integer customerId) {
         return this.siteMapper.getBySiteName(siteName, customerId);
+    }
+
+    /**
+     * 根据客户查询收发货地址
+     *
+     * @param criteriaDto
+     * @return
+     */
+    @Override
+    public List<ReturnSelectSiteDto> listSiteForSelectByCustomerId(ListSiteCriteriaDto criteriaDto) {
+        return siteMapper.listAllSite(criteriaDto);
     }
 
 }

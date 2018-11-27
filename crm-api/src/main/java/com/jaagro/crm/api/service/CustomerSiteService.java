@@ -5,6 +5,7 @@ import com.jaagro.crm.api.dto.request.customer.ListSiteCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.ShowSiteDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerSiteDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto;
+import com.jaagro.crm.api.dto.response.selectValue.ReturnSelectSiteDto;
 
 import java.util.List;
 import java.util.Map;
@@ -103,4 +104,12 @@ public interface CustomerSiteService {
      * @return
      */
     ShowSiteDto getBySiteName(String siteName, Integer customerId);
+
+    /**
+     * 根据客户查询收发货地址
+     *
+     * @param criteriaDto
+     * @return
+     */
+    List<ReturnSelectSiteDto> listSiteForSelectByCustomerId(ListSiteCriteriaDto criteriaDto);
 }
