@@ -116,4 +116,10 @@
         from customer
         where customer_status != 3
     </select>
+    <select id="listNormalCustomer" resultType="com.jaagro.crm.api.dto.request.customer.ShowCustomerDto">
+        select
+        <include refid="show_column"></include>
+        from customer
+        where customer_status = 1
+    </select>
 </mapper>

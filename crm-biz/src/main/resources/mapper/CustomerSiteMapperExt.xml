@@ -53,9 +53,12 @@
         select
         <include refid="Base_Column_List"/>
         from customer_site
-        where 1=1
+        where site_status = 1
         <if test="customerId != null">
             and customer_id = #{customerId,jdbcType=INTEGER}
+        </if>
+        <if test="keywords != null and keywords != ''">
+            <![CDATA[and site_name like concat(#{keywords},'%')]]>
         </if>
         <if test="siteType != null">
             and site_type = #{siteType,jdbcType=INTEGER}
@@ -63,7 +66,6 @@
         <if test="productType != null">
             and product_type = #{productType,jdbcType=INTEGER}
         </if>
-        and site_status = 1
         order by create_time desc
     </select>
     <select id="getByCriteriDto" resultMap="ReturnMap"
@@ -119,4 +121,17 @@
         and site_name = #{siteName}
         and site_status = 1
     </select>
+    <select id="listSiteNameByIds" resultType="java.lang.String">
+        select
+        site_name
+        from customer_site
+        where site_status = 1
+        <if test="siteIds != null and siteIds.size() > 0">
+            and id in
+            <foreach collection="siteIds" open="(" separator="," close=")" item="sid">
+                ${sid}
+            </foreach>
+        </if>
+    </select>
+
 </mapper>

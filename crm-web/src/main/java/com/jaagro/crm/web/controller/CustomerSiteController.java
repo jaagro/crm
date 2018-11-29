@@ -4,6 +4,7 @@ import com.jaagro.crm.api.dto.request.customer.CreateCustomerSiteDto;
 import com.jaagro.crm.api.dto.request.customer.ListSiteCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.ShowSiteDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerSiteDto;
+import com.jaagro.crm.api.dto.response.selectValue.ReturnSelectSiteDto;
 import com.jaagro.crm.api.service.CustomerSiteService;
 import com.jaagro.crm.biz.mapper.CustomerMapperExt;
 import com.jaagro.crm.biz.mapper.CustomerSiteMapperExt;
@@ -15,6 +16,8 @@ import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 /**
@@ -102,18 +105,26 @@ public class CustomerSiteController {
         return BaseResponse.service(this.siteService.listByCriteria(criteriaDto));
     }
 
-    @ApiOperation("根据客户查询收发货地址")
+    @ApiOperation("根据客户查询全部收发货地址")
     @PostMapping("/listSiteForSelect")
     public BaseResponse getById(@RequestBody ListSiteCriteriaDto criteriaDto) {
         if (this.customerMapper.selectByPrimaryKey(criteriaDto.getCustomerId()) == null) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户不存在");
         }
-        return BaseResponse.successInstance(this.siteMapper.listAllSite(criteriaDto));
+        List<ReturnSelectSiteDto> siteDtoList = siteService.listSiteForSelectByCustomerId(criteriaDto);
+        return BaseResponse.successInstance(siteDtoList);
     }
 
     @Ignore
     @GetMapping("/getShowSite/{id}")
     public ShowSiteDto getShowSiteById(@PathVariable("id") Integer id) {
         return siteService.getShowSiteById(id);
+    }
+
+    @Ignore
+    @ApiOperation("提供给feign:根据地址id数组获得地址名称")
+    @PostMapping("/listSiteNameByIds")
+    public List<String> listSiteNameByIds(@RequestBody List<Integer> siteIds) {
+        return siteService.listSiteNameByIds(siteIds);
     }
 }

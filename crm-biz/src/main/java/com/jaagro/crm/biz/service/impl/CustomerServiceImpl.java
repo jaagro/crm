@@ -63,6 +63,7 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerContactsMapperExt customerContactsMapper;
     @Autowired
     private AccountService accountService;
+
     /**
      * 创建客户
      * 该api有图片上传的功能，图片删除用的是oss
@@ -139,7 +140,7 @@ public class CustomerServiceImpl implements CustomerService {
         List<ListCustomerDto> customerReturnDtos = this.customerMapper.listByCriteriaDto(dto);
         if (customerReturnDtos != null && customerReturnDtos.size() > 0) {
             for (ListCustomerDto customerDto : customerReturnDtos
-                    ) {
+            ) {
                 List<CustomerContactsReturnDto> contractDtoList = this.customerContactsMapper.listByCustomerId(customerDto.getId());
                 if (contractDtoList.size() > 0) {
                     CustomerContactsReturnDto contactsReturnDto = contractDtoList.get(0);
@@ -223,5 +224,15 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<ShowCustomerDto> listAllCustomer() {
         return customerMapper.getAllCustomer();
+    }
+
+    /**
+     * 查询正常合作的全部客户
+     *
+     * @return
+     */
+    @Override
+    public List<ShowCustomerDto> listNormalCustomer() {
+        return customerMapper.listNormalCustomer();
     }
 }
