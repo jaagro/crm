@@ -51,6 +51,7 @@ public class NewsController {
     @ApiOperation(value = "新增新闻")
     @PostMapping("/news")
     public BaseResponse createNews(@RequestBody @Validated CreateNewsDto createNewsDto) {
+
         boolean isSuccess = newsService.createNews(createNewsDto);
         if (isSuccess){
            return BaseResponse.successInstance("发布新闻成功");
