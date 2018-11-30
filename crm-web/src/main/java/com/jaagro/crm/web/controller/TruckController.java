@@ -180,7 +180,7 @@ public class TruckController {
      * @return
      */
     @GetMapping("/listTruckByIds")
-    public BaseResponse<List<TruckDto>> listTruckByIds(@RequestParam List<Integer> truckIdList){
+    public BaseResponse<List<TruckDto>> listTruckByIds(@RequestParam("truckIdList") List<Integer> truckIdList){
         return BaseResponse.successInstance(truckService.listTruckByIds(truckIdList));
     }
 
