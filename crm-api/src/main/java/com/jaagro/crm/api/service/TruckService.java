@@ -5,6 +5,7 @@ import com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.QueryTruckDto;
 import com.jaagro.crm.api.dto.response.truck.GetTruckDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
+import com.jaagro.crm.api.dto.response.truck.TruckDto;
 
 import java.util.List;
 import java.util.Map;
@@ -114,4 +115,12 @@ public interface TruckService {
      * @return
      */
     List<Integer> getTruckIdsByTruckNum(String truckNumber);
+
+    /**
+     * 根据车辆id列表获取车辆信息
+     * @author yj
+     * @param truckIdList
+     * @return
+     */
+    List<TruckDto> listTruckByIds(List<Integer> truckIdList);
 }

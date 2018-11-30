@@ -249,4 +249,16 @@
             <![CDATA[and truck_number like concat('%',#{truckNumber},'%') ]]>
         </if>
     </select>
+
+    <select id="listTruckByIds" resultType="com.jaagro.crm.api.dto.response.truck.TruckDto">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM truck
+        WHERE
+        id in
+        <foreach collection="truckIdList" close=")" open="(" item="item" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
 </mapper>
