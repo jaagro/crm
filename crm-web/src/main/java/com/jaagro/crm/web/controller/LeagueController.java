@@ -39,7 +39,7 @@ public class LeagueController {
     private LeagueService leagueService;
 
     @ApiOperation(value = "新增销售机会")
-    @PostMapping("/league")
+    @PostMapping(value = "/league", consumes = "application/json")
     public BaseResponse insertLeague(@RequestBody CreateLeagueDto createLeagueDto) {
         if (StringUtils.isEmpty(createLeagueDto.getLeagueType())) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "销售机会类型不能为空");
