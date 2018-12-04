@@ -1,6 +1,7 @@
 package com.jaagro.crm.biz.service.fallback;
 
 import com.jaagro.crm.api.dto.base.GetCustomerUserDto;
+import com.jaagro.crm.api.dto.request.message.CreateMessageDto;
 import com.jaagro.crm.api.dto.request.truck.CreateDriverDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateDriverDto;
 import com.jaagro.crm.api.dto.response.department.DepartmentReturnDto;
@@ -10,6 +11,8 @@ import com.jaagro.utils.BaseResponse;
 import feign.hystrix.FallbackFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -56,7 +59,6 @@ public class DriverClientServiceFallback implements FallbackFactory<DriverClient
             public String getDeptNameById(Integer id) {
                 return null;
             }
-
             /**
              * 根据id获取部门(项目部)信息
              *
@@ -77,6 +79,17 @@ public class DriverClientServiceFallback implements FallbackFactory<DriverClient
             @Override
             public GetCustomerUserDto getCustomerUserById(Integer id) {
                 return null;
+            }
+
+            /**
+             * 查询近一个月过期证件
+             * Author: @Gao.
+             *
+             * @return
+             */
+            @Override
+            public BaseResponse<List<DriverReturnDto>> listDriverCertificateOverdueNotice(Integer driverExpiryDateType) {
+                return BaseResponse.errorInstance("查询出错");
             }
         };
     }
