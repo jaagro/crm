@@ -14,6 +14,7 @@ import com.jaagro.crm.biz.mapper.NewsCategoryMapperExt;
 import com.jaagro.crm.biz.mapper.NewsMapperExt;
 import com.jaagro.crm.biz.service.NewsService;
 import com.jaagro.crm.biz.service.AuthClientService;
+import com.jaagro.crm.biz.service.OssSignUrlClientService;
 import com.jaagro.crm.biz.service.UserClientService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,9 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -41,6 +44,8 @@ public class NewsServiceImpl implements NewsService {
     private CurrentUserService currentUserService;
     @Autowired
     private UserClientService userClientService;
+    @Autowired
+    private OssSignUrlClientService ossSignUrlClientService;
     /**
      * 创建新闻
      *
@@ -110,7 +115,14 @@ public class NewsServiceImpl implements NewsService {
     @Override
     @Cacheable
     public NewsReturnDto getNewsById(Integer id) {
-        return newsMapperExt.selectById(id);
+        NewsReturnDto newsReturnDto = newsMapperExt.selectById(id);
+        if (newsReturnDto != null){
+            convertImageUrl(newsReturnDto);
+            List<NewsReturnDto> list = new ArrayList<>();
+            list.add(newsReturnDto);
+            putUserInfo(list);
+        }
+        return newsReturnDto;
     }
 
     /**
@@ -150,6 +162,7 @@ public class NewsServiceImpl implements NewsService {
         List<NewsReturnDto> newsReturnDtoList = newsMapperExt.listByCriteria(listNewsCriteriaDto);
         if (!CollectionUtils.isEmpty(newsReturnDtoList)){
             putUserInfo(newsReturnDtoList);
+            newsReturnDtoList.forEach(newsReturnDto -> convertImageUrl(newsReturnDto));
         }
         return new PageInfo<>(newsReturnDtoList);
     }
@@ -182,6 +195,28 @@ public class NewsServiceImpl implements NewsService {
             return newsCategoryList.get(0).getId();
         }
         return null;
+    }
+
+    private String getAbstractImageUrl(String relativeImageUrl){
+        if (StringUtils.hasText(relativeImageUrl)){
+            String[] strArray = {relativeImageUrl};
+            List<URL> urls = ossSignUrlClientService.listSignedUrl(strArray);
+            if (!CollectionUtils.isEmpty(urls)){
+                return urls.get(0).toString();
+            }
+        }
+        return null;
+    }
+
+    private void convertImageUrl(NewsReturnDto newsReturnDto){
+        if (newsReturnDto != null){
+            if (StringUtils.hasText(newsReturnDto.getImageUrl())){
+                newsReturnDto.setImageUrl(getAbstractImageUrl(newsReturnDto.getImageUrl()));
+            }
+            if(StringUtils.hasText(newsReturnDto.getContent())){
+                // TODO 截取新闻主体内容内图片路径转换成绝对路径
+            }
+        }
     }
 
 }

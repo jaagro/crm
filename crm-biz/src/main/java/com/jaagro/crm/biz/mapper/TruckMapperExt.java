@@ -5,6 +5,7 @@ import com.jaagro.crm.api.dto.request.truck.QueryTruckDto;
 import com.jaagro.crm.api.dto.response.truck.GetTruckDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckDto;
 import com.jaagro.crm.api.dto.response.truck.ReturnCheckTruckDto;
+import com.jaagro.crm.api.dto.response.truck.TruckDto;
 import com.jaagro.crm.biz.entity.Truck;
 import org.apache.ibatis.annotations.Param;
 
@@ -92,4 +93,11 @@ public interface TruckMapperExt extends TruckMapper {
      * @return
      */
     List<GetTruckDto> listCertificateOverdueNotice(@Param("expiryDateType") Integer expiryDateType);
+
+    /**
+     * 批量查询车辆信息 不区分状态
+     * @param truckIdList
+     * @return
+     */
+    List<TruckDto> listTruckByIds(@Param("truckIdList") List<Integer> truckIdList);
 }
