@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * 社会司机注册意向管理
+ *
  * @author yj
  * @since 2018/12/4
  */
@@ -29,13 +30,13 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
     @Override
     public SocialDriverRegisterPurposeDto getByPhoneNumber(String phoneNumber) {
         SocialDriverRegisterPurpose socialDriverRegisterPurpose = socialDriverRegisterPurposeMapperExt.selectByPhoneNumber(phoneNumber);
-        if (socialDriverRegisterPurpose != null){
+        if (socialDriverRegisterPurpose != null) {
             SocialDriverRegisterPurposeDto socialDriverRegisterPurposeDto = new SocialDriverRegisterPurposeDto();
-            BeanUtils.copyProperties(socialDriverRegisterPurpose,socialDriverRegisterPurposeDto);
-            if (socialDriverRegisterPurpose.getUploadTime() == null){
+            BeanUtils.copyProperties(socialDriverRegisterPurpose, socialDriverRegisterPurposeDto);
+            if (socialDriverRegisterPurpose.getUploadTime() == null) {
                 socialDriverRegisterPurposeDto.setUploadTime(socialDriverRegisterPurpose.getCreateTime());
             }
-            return  socialDriverRegisterPurposeDto;
+            return socialDriverRegisterPurposeDto;
         }
         return null;
     }

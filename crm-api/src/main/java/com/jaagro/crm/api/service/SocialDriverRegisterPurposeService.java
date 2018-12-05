@@ -1,5 +1,7 @@
 package com.jaagro.crm.api.service;
 
+import com.jaagro.crm.api.dto.response.socialDriver.SocialDriverRegisterPurposeDto;
+
 /**
  * 社会司机注册意向管理
  * @author yj
@@ -7,9 +9,9 @@ package com.jaagro.crm.api.service;
  */
 public interface SocialDriverRegisterPurposeService {
     /**
-     * 是否存在社会司机
+     * 根据手机号查询
      * @param phoneNumber
      * @return
      */
-    Boolean existSocialDriver(String phoneNumber);
+    SocialDriverRegisterPurposeDto getByPhoneNumber(String phoneNumber);
 }
