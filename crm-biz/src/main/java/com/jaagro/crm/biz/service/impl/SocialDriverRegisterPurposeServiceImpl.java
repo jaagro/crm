@@ -1,9 +1,11 @@
 package com.jaagro.crm.biz.service.impl;
 
+import com.jaagro.crm.api.dto.response.socialDriver.SocialDriverRegisterPurposeDto;
 import com.jaagro.crm.api.service.SocialDriverRegisterPurposeService;
 import com.jaagro.crm.biz.entity.SocialDriverRegisterPurpose;
 import com.jaagro.crm.biz.mapper.SocialDriverRegisterPurposeMapperExt;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,18 +19,24 @@ import org.springframework.stereotype.Service;
 public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegisterPurposeService {
     @Autowired
     private SocialDriverRegisterPurposeMapperExt socialDriverRegisterPurposeMapperExt;
+
     /**
-     * 是否存在社会司机
+     * 根据手机号查询
      *
      * @param phoneNumber
      * @return
      */
     @Override
-    public Boolean existSocialDriver(String phoneNumber) {
+    public SocialDriverRegisterPurposeDto getByPhoneNumber(String phoneNumber) {
         SocialDriverRegisterPurpose socialDriverRegisterPurpose = socialDriverRegisterPurposeMapperExt.selectByPhoneNumber(phoneNumber);
         if (socialDriverRegisterPurpose != null){
-            return Boolean.TRUE;
+            SocialDriverRegisterPurposeDto socialDriverRegisterPurposeDto = new SocialDriverRegisterPurposeDto();
+            BeanUtils.copyProperties(socialDriverRegisterPurpose,socialDriverRegisterPurposeDto);
+            if (socialDriverRegisterPurpose.getUploadTime() == null){
+                socialDriverRegisterPurposeDto.setUploadTime(socialDriverRegisterPurpose.getCreateTime());
+            }
+            return  socialDriverRegisterPurposeDto;
         }
-        return Boolean.FALSE;
+        return null;
     }
 }

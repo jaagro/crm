@@ -1,5 +1,6 @@
 package com.jaagro.crm.web.controller;
 
+import com.jaagro.crm.api.dto.response.socialDriver.SocialDriverRegisterPurposeDto;
 import com.jaagro.crm.api.service.SocialDriverRegisterPurposeService;
 import com.jaagro.utils.BaseResponse;
 import io.swagger.annotations.Api;
@@ -24,10 +25,10 @@ public class SocialDriverRegisterPurposeController {
     @Autowired
     private SocialDriverRegisterPurposeService socialDriverRegisterPurposeService;
 
-    @GetMapping("/existSocialDriver")
+    @GetMapping("/getByPhoneNumber")
     @ApiOperation("查询是否存在社会司机")
-    public BaseResponse<Boolean> existSocialDriver(@RequestParam("phoneNumber") String phoneNumber){
-        Boolean existSocialDriver = socialDriverRegisterPurposeService.existSocialDriver(phoneNumber);
-        return BaseResponse.successInstance(existSocialDriver);
+    public BaseResponse<SocialDriverRegisterPurposeDto> getByPhoneNumber(@RequestParam("phoneNumber") String phoneNumber){
+        SocialDriverRegisterPurposeDto socialDriverRegisterPurposeDto = socialDriverRegisterPurposeService.getByPhoneNumber(phoneNumber);
+        return BaseResponse.successInstance(socialDriverRegisterPurposeDto);
     }
 }
