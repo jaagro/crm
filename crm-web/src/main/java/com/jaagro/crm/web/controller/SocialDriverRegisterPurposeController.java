@@ -3,7 +3,6 @@ package com.jaagro.crm.web.controller;
 import com.jaagro.crm.api.dto.response.socialDriver.SocialDriverRegisterPurposeDto;
 import com.jaagro.crm.api.service.SocialDriverRegisterPurposeService;
 import com.jaagro.utils.BaseResponse;
-import com.jaagro.utils.ResponseStatusCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
