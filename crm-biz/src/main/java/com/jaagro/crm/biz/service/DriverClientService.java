@@ -107,4 +107,12 @@ public interface DriverClientService {
      */
     @GetMapping("/listDriverCertificateOverdueNotice/{driverExpiryDateType}")
     BaseResponse<List<DriverReturnDto>> listDriverCertificateOverdueNotice(@PathVariable("driverExpiryDateType")Integer driverExpiryDateType);
+
+    /**
+     * 根据手机号查询司机
+     * @param phoneNumber
+     * @return
+     */
+    @GetMapping("/getByPhoneNumber")
+    BaseResponse<DriverReturnDto> getByPhoneNumber(@RequestParam("phoneNumber") String phoneNumber);
 }

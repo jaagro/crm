@@ -1,20 +1,30 @@
 package com.jaagro.crm.biz.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Maps;
+import com.jaagro.crm.api.constant.Constants;
+import com.jaagro.crm.api.dto.request.socialDriver.ListDriverRegisterPurposeCriteriaDto;
+import com.jaagro.crm.api.dto.request.socialDriver.UpdateSocialDriverRegisterPurposeDto;
 import com.jaagro.crm.api.dto.response.socialDriver.SocialDriverRegisterPurposeDto;
+import com.jaagro.crm.api.dto.response.truck.DriverReturnDto;
 import com.jaagro.crm.api.service.SocialDriverRegisterPurposeService;
 import com.jaagro.crm.biz.entity.SocialDriverRegisterPurpose;
 import com.jaagro.crm.biz.mapper.SocialDriverRegisterPurposeMapperExt;
 import com.jaagro.crm.biz.service.DriverClientService;
+import com.jaagro.crm.biz.service.SmsClientService;
+import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.util.CollectionUtils;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 社会司机注册意向管理
@@ -29,6 +39,12 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
     private SocialDriverRegisterPurposeMapperExt socialDriverRegisterPurposeMapperExt;
     @Autowired
     private DriverClientService driverClientService;
+    @Autowired
+    private SmsClientService smsClientService;
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+
+
     /**
      * 根据手机号查询
      *
@@ -58,7 +74,7 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
     @Override
     public SocialDriverRegisterPurposeDto getSocialDriverRegisterPurposeDtoById(Integer id) {
         SocialDriverRegisterPurpose sdr = socialDriverRegisterPurposeMapperExt.selectByPrimaryKey(id);
-        if(null == sdr){
+        if (null == sdr) {
             throw new NullPointerException("id error");
         }
         SocialDriverRegisterPurposeDto sdrDto = new SocialDriverRegisterPurposeDto();
@@ -69,18 +85,20 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
 
     /**
      * 根据手机号创建
+     *
      * @param phoneNumber
      */
     @Override
-    public boolean createSocialDriverByPhoneNumber(String phoneNumber) {
+    public void createSocialDriverByPhoneNumber(String phoneNumber) {
+        log.info("O createSocialDriverByPhoneNumber phoneNumber={}", phoneNumber);
         SocialDriverRegisterPurpose socialDriverRegisterPurpose = socialDriverRegisterPurposeMapperExt.selectByPhoneNumber(phoneNumber);
         if (socialDriverRegisterPurpose != null) {
-            return false;
+            throw new RuntimeException("该手机号已注册");
         }
         socialDriverRegisterPurpose = new SocialDriverRegisterPurpose();
-        socialDriverRegisterPurpose.setPhoneNumber(phoneNumber);
+        socialDriverRegisterPurpose.setPhoneNumber(phoneNumber)
+                .setCreateTime(new Date());
         socialDriverRegisterPurposeMapperExt.insertSelective(socialDriverRegisterPurpose);
-        return true;
     }
 
     /**
@@ -90,13 +108,80 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
      * @return
      */
     @Override
-    public Map<String, String> registerSendSMS(String phoneNumber) {
+    public Map<String, Object> registerSendSMS(String phoneNumber) {
+        log.info("R registerSendSMS phoneNumber={}", phoneNumber);
         // 手机号不是原有司机且未注册才可以发送验证码
-        Map<String,String> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
         SocialDriverRegisterPurpose socialDriverRegisterPurpose = socialDriverRegisterPurposeMapperExt.selectByPhoneNumber(phoneNumber);
         if (socialDriverRegisterPurpose != null) {
-            result.put(ServiceKey.status.name(), ResponseStatusCode.QUERY_DATA_ERROR.getCode()+"");
+            result.put(ServiceKey.status.name(), ResponseStatusCode.QUERY_DATA_ERROR.getCode());
+            result.put(ServiceKey.msg.name(), "该手机号已注册");
+            return result;
         }
-        return null;
+        BaseResponse<DriverReturnDto> response = driverClientService.getByPhoneNumber(phoneNumber);
+        if (ResponseStatusCode.OPERATION_SUCCESS.getCode() == response.getStatusCode()) {
+            DriverReturnDto driverReturnDto = response.getData();
+            if (driverReturnDto != null) {
+                result.put(ServiceKey.status.name(), ResponseStatusCode.QUERY_DATA_ERROR.getCode());
+                result.put(ServiceKey.msg.name(), "该手机号已注册为正式司机");
+                return result;
+            }
+        }
+        sendSMS(phoneNumber);
+        return result;
+    }
+
+    /**
+     * 加入平台更新社会司机注册意向
+     *
+     * @param registerPurposeDto
+     */
+    @Override
+    public void updateSocialDriverRegisterPurpose(UpdateSocialDriverRegisterPurposeDto registerPurposeDto) {
+        SocialDriverRegisterPurpose socialDriverRegisterPurpose = socialDriverRegisterPurposeMapperExt.selectByPrimaryKey(registerPurposeDto.getId());
+        if (socialDriverRegisterPurpose == null) {
+            throw new NullPointerException("id不存在");
+        }
+        BeanUtils.copyProperties(registerPurposeDto, socialDriverRegisterPurpose);
+        socialDriverRegisterPurposeMapperExt.updateByPrimaryKeySelective(socialDriverRegisterPurpose);
+    }
+
+    /**
+     * 查询司机注册意向列表
+     *
+     * @param criteria
+     * @return
+     */
+    @Override
+    public PageInfo listDriverRegisterPurposeByCriteria(ListDriverRegisterPurposeCriteriaDto criteria) {
+        PageHelper.startPage(criteria.getPageNum(), criteria.getPageSize());
+        List<SocialDriverRegisterPurposeDto> registerPurposeDtoList = socialDriverRegisterPurposeMapperExt.listByCriteria(criteria);
+        return new PageInfo<>(registerPurposeDtoList);
+    }
+
+    private void sendSMS(String phoneNumber) {
+        Random random = new Random();
+        //获取5位随机验证码
+        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder verificationCodeBuilder = null;
+        for (int i = 0; i < 5; i++) {
+            verificationCodeBuilder = stringBuilder.append(random.nextInt(9));
+        }
+        String verificationCode = verificationCodeBuilder.toString();
+        //先存库
+        try {
+            redisTemplate.opsForValue().set(Constants.SOCIAL_DRIVER_REGISTER + phoneNumber, verificationCode, 10, TimeUnit.MINUTES);
+        } catch (Exception e) {
+            log.error("set verificationCode to redis error phoneNumber=" + phoneNumber + ",verificationCode=" + verificationCode, e);
+            throw new RuntimeException("验证码发送失败");
+        }
+        Map<String, Object> map = Maps.newLinkedHashMap();
+        map.put("code", verificationCode);
+        try {
+            smsClientService.sendSMS(phoneNumber, Constants.SOCIAL_DRIVER_REGISTER_SMS_TEMPLATE_CODE, map);
+        } catch (Exception e) {
+            log.error("sendSMS error phoneNumber=" + phoneNumber + ",verificationCode=" + verificationCode, e);
+            throw new RuntimeException("验证码发送失败");
+        }
     }
 }
