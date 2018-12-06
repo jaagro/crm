@@ -89,8 +89,11 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
      * @param phoneNumber
      */
     @Override
-    public void createSocialDriverByPhoneNumber(String phoneNumber) {
-        log.info("O createSocialDriverByPhoneNumber phoneNumber={}", phoneNumber);
+    public Integer createSocialDriverByPhoneNumber(String phoneNumber,String verificationCode){
+        log.info("O createSocialDriverByPhoneNumber phoneNumber={},verificationCode={}", phoneNumber,verificationCode);
+        if (!verificationCode.equals(redisTemplate.opsForValue().get(Constants.SOCIAL_DRIVER_REGISTER + phoneNumber))){
+            throw new RuntimeException("验证码不正确");
+        }
         SocialDriverRegisterPurpose socialDriverRegisterPurpose = socialDriverRegisterPurposeMapperExt.selectByPhoneNumber(phoneNumber);
         if (socialDriverRegisterPurpose != null) {
             throw new RuntimeException("该手机号已注册");
@@ -98,7 +101,8 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
         socialDriverRegisterPurpose = new SocialDriverRegisterPurpose();
         socialDriverRegisterPurpose.setPhoneNumber(phoneNumber)
                 .setCreateTime(new Date());
-        socialDriverRegisterPurposeMapperExt.insertSelective(socialDriverRegisterPurpose);
+        Integer id = socialDriverRegisterPurposeMapperExt.insertSelective(socialDriverRegisterPurpose);
+        return id;
     }
 
     /**
@@ -128,6 +132,7 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
             }
         }
         sendSMS(phoneNumber);
+        result.put(ServiceKey.success.name(),true);
         return result;
     }
 

@@ -31,8 +31,10 @@ public interface SocialDriverRegisterPurposeService {
     /**
      * 根据手机号创建
      * @param phoneNumber
+     * @param verificationCode
+     * @return
      */
-    void createSocialDriverByPhoneNumber(String phoneNumber);
+    Integer createSocialDriverByPhoneNumber(String phoneNumber,String verificationCode);
 
     /**
      * 注册发送验证码
