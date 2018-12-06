@@ -44,28 +44,28 @@ public class SocialDriverRegisterPurposeController {
 
     @PostMapping("/socialDriver")
     @ApiOperation("创建社会司机")
-    public BaseResponse<Integer> createSocialDriverByPhoneNumber(@RequestParam("phoneNumber") String phoneNumber,@RequestParam("verificationCode") String verificationCode) {
-        Integer id = socialDriverRegisterPurposeService.createSocialDriverByPhoneNumber(phoneNumber,verificationCode);
+    public BaseResponse<Integer> createSocialDriverByPhoneNumber(@RequestParam("phoneNumber") String phoneNumber, @RequestParam("verificationCode") String verificationCode) {
+        Integer id = socialDriverRegisterPurposeService.createSocialDriverByPhoneNumber(phoneNumber, verificationCode);
         return BaseResponse.successInstance(id);
     }
 
     @GetMapping("/socialDriverRegisterPurpose/{id}")
     @ApiOperation("根据id查询")
-    public BaseResponse<SocialDriverRegisterPurposeDto> getSocialDriverRegisterPurposeDtoById(@PathVariable(value = "id") Integer id){
+    public BaseResponse<SocialDriverRegisterPurposeDto> getSocialDriverRegisterPurposeDtoById(@PathVariable(value = "id") Integer id) {
         SocialDriverRegisterPurposeDto sdrDto = socialDriverRegisterPurposeService.getSocialDriverRegisterPurposeDtoById(id);
         return BaseResponse.successInstance(sdrDto);
     }
 
     @PutMapping("/socialDriverRegisterPurpose")
     @ApiOperation("加入平台")
-    public BaseResponse updateSocialDriverRegisterPurpose(@RequestBody @Validated UpdateSocialDriverRegisterPurposeDto registerPurposeDto){
+    public BaseResponse updateSocialDriverRegisterPurpose(@RequestBody @Validated UpdateSocialDriverRegisterPurposeDto registerPurposeDto) {
         socialDriverRegisterPurposeService.updateSocialDriverRegisterPurpose(registerPurposeDto);
         return BaseResponse.successInstance("加入平台成功");
     }
 
     @PostMapping("/listDriverRegisterPurposeByCriteria")
     @ApiOperation("查询社会司机注册意向列表")
-    public BaseResponse<PageInfo<List<SocialDriverRegisterPurposeDto>>> listDriverRegisterPurposeByCriteria(@RequestBody @Validated ListDriverRegisterPurposeCriteriaDto criteria){
+    public BaseResponse<PageInfo<List<SocialDriverRegisterPurposeDto>>> listDriverRegisterPurposeByCriteria(@RequestBody @Validated ListDriverRegisterPurposeCriteriaDto criteria) {
         return BaseResponse.successInstance(socialDriverRegisterPurposeService.listDriverRegisterPurposeByCriteria(criteria));
     }
 

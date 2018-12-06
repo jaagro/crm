@@ -21,7 +21,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -89,9 +88,9 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
      * @param phoneNumber
      */
     @Override
-    public Integer createSocialDriverByPhoneNumber(String phoneNumber,String verificationCode){
-        log.info("O createSocialDriverByPhoneNumber phoneNumber={},verificationCode={}", phoneNumber,verificationCode);
-        if (!verificationCode.equals(redisTemplate.opsForValue().get(Constants.SOCIAL_DRIVER_REGISTER + phoneNumber))){
+    public Integer createSocialDriverByPhoneNumber(String phoneNumber, String verificationCode) {
+        log.info("O createSocialDriverByPhoneNumber phoneNumber={},verificationCode={}", phoneNumber, verificationCode);
+        if (!verificationCode.equals(redisTemplate.opsForValue().get(Constants.SOCIAL_DRIVER_REGISTER + phoneNumber))) {
             throw new RuntimeException("验证码不正确");
         }
         SocialDriverRegisterPurpose socialDriverRegisterPurpose = socialDriverRegisterPurposeMapperExt.selectByPhoneNumber(phoneNumber);
@@ -132,7 +131,7 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
             }
         }
         sendSMS(phoneNumber);
-        result.put(ServiceKey.success.name(),true);
+        result.put(ServiceKey.success.name(), true);
         return result;
     }
 
