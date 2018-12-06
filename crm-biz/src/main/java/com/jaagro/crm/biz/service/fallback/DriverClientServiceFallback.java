@@ -91,6 +91,17 @@ public class DriverClientServiceFallback implements FallbackFactory<DriverClient
             public BaseResponse<List<DriverReturnDto>> listDriverCertificateOverdueNotice(Integer driverExpiryDateType) {
                 return BaseResponse.errorInstance("查询出错");
             }
+
+            /**
+             * 根据手机号查询司机
+             *
+             * @param phoneNumber
+             * @return
+             */
+            @Override
+            public BaseResponse<DriverReturnDto> getByPhoneNumber(String phoneNumber) {
+                return null;
+            }
         };
     }
 }
