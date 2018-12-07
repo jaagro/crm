@@ -432,6 +432,9 @@ public class TruckServiceImpl implements TruckService {
             }
             log.info("当前司机: " + driver.toString());
             truck = truckMapper.getTruckById(driver.getTruckId());
+            List<DriverReturnDto> driverList = new ArrayList<>();
+            driverList.add(driver);
+            truck.setDrivers(driverList);
             log.info("当前车辆: " + truck.toString());
         }
         return truck;
