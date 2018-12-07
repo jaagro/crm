@@ -22,4 +22,11 @@ public interface UserClientService {
      */
     @GetMapping("/listUserInfo")
     List<UserInfo> listUserInfo(@RequestParam("userIdList") List<Integer> userIdList, @RequestParam("userType") String userType);
+
+    /**
+     * 获取用户id
+     * @return
+     */
+    @GetMapping("/getNextUserId")
+    int getNextUserId();
 }

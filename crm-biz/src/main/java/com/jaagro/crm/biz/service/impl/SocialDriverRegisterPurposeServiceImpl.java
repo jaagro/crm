@@ -13,6 +13,7 @@ import com.jaagro.crm.biz.entity.SocialDriverRegisterPurpose;
 import com.jaagro.crm.biz.mapper.SocialDriverRegisterPurposeMapperExt;
 import com.jaagro.crm.biz.service.DriverClientService;
 import com.jaagro.crm.biz.service.SmsClientService;
+import com.jaagro.crm.biz.service.UserClientService;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceKey;
@@ -42,6 +43,8 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
     private SmsClientService smsClientService;
     @Autowired
     private StringRedisTemplate redisTemplate;
+    @Autowired
+    private UserClientService userClientService;
 
 
     /**
@@ -97,9 +100,11 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
         if (socialDriverRegisterPurpose != null) {
             throw new RuntimeException("该手机号已注册");
         }
+        int nextUserId = userClientService.getNextUserId();
         socialDriverRegisterPurpose = new SocialDriverRegisterPurpose();
         socialDriverRegisterPurpose.setPhoneNumber(phoneNumber)
-                .setCreateTime(new Date());
+                .setCreateTime(new Date())
+                .setId(nextUserId);
         Integer id = socialDriverRegisterPurposeMapperExt.insertSelective(socialDriverRegisterPurpose);
         return id;
     }
