@@ -105,8 +105,8 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
         socialDriverRegisterPurpose.setPhoneNumber(phoneNumber)
                 .setCreateTime(new Date())
                 .setId(nextUserId);
-        Integer id = socialDriverRegisterPurposeMapperExt.insertSelective(socialDriverRegisterPurpose);
-        return id;
+        socialDriverRegisterPurposeMapperExt.insertSelective(socialDriverRegisterPurpose);
+        return socialDriverRegisterPurpose.getId();
     }
 
     /**
@@ -120,6 +120,7 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
         log.info("R registerSendSMS phoneNumber={}", phoneNumber);
         // 手机号不是原有司机且未注册才可以发送验证码
         Map<String, Object> result = new HashMap<>();
+        result.put(ServiceKey.success.name(), Boolean.FALSE);
         SocialDriverRegisterPurpose socialDriverRegisterPurpose = socialDriverRegisterPurposeMapperExt.selectByPhoneNumber(phoneNumber);
         if (socialDriverRegisterPurpose != null) {
             result.put(ServiceKey.status.name(), ResponseStatusCode.QUERY_DATA_ERROR.getCode());
@@ -136,7 +137,7 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
             }
         }
         sendSMS(phoneNumber);
-        result.put(ServiceKey.success.name(), true);
+        result.put(ServiceKey.success.name(), Boolean.TRUE);
         return result;
     }
 
