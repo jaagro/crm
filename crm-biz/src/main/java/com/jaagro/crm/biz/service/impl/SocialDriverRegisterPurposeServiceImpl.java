@@ -93,12 +93,19 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
     @Override
     public Integer createSocialDriverByPhoneNumber(String phoneNumber, String verificationCode) {
         log.info("O createSocialDriverByPhoneNumber phoneNumber={},verificationCode={}", phoneNumber, verificationCode);
-        if (!verificationCode.equals(redisTemplate.opsForValue().get(Constants.SOCIAL_DRIVER_REGISTER + phoneNumber))) {
+        if (!verificationCode.equals(redisTemplate.opsForValue().get(phoneNumber))) {
             throw new RuntimeException("验证码不正确");
         }
         SocialDriverRegisterPurpose socialDriverRegisterPurpose = socialDriverRegisterPurposeMapperExt.selectByPhoneNumber(phoneNumber);
         if (socialDriverRegisterPurpose != null) {
             throw new RuntimeException("该手机号已注册");
+        }
+        BaseResponse<DriverReturnDto> response = driverClientService.getByPhoneNumber(phoneNumber);
+        if (ResponseStatusCode.OPERATION_SUCCESS.getCode() == response.getStatusCode()) {
+            DriverReturnDto driverReturnDto = response.getData();
+            if (driverReturnDto != null) {
+                throw new RuntimeException("该手机号已注册");
+            }
         }
         int nextUserId = userClientService.getNextUserId();
         socialDriverRegisterPurpose = new SocialDriverRegisterPurpose();
@@ -116,6 +123,7 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
      * @return
      */
     @Override
+    @Deprecated
     public Map<String, Object> registerSendSMS(String phoneNumber) {
         log.info("R registerSendSMS phoneNumber={}", phoneNumber);
         // 手机号不是原有司机且未注册才可以发送验证码
@@ -169,6 +177,7 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
         return new PageInfo<>(registerPurposeDtoList);
     }
 
+    @Deprecated
     private void sendSMS(String phoneNumber) {
         Random random = new Random();
         //获取5位随机验证码
@@ -188,7 +197,7 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
         Map<String, Object> map = Maps.newLinkedHashMap();
         map.put("code", verificationCode);
         try {
-            smsClientService.sendSMS(phoneNumber, Constants.SOCIAL_DRIVER_REGISTER_SMS_TEMPLATE_CODE, map);
+            smsClientService.sendSMS(phoneNumber, Constants.SMS_TEMPLATE_CODE, map);
         } catch (Exception e) {
             log.error("sendSMS error phoneNumber=" + phoneNumber + ",verificationCode=" + verificationCode, e);
             throw new RuntimeException("验证码发送失败");

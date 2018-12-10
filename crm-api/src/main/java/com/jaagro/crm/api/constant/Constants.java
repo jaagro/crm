@@ -7,9 +7,9 @@ package com.jaagro.crm.api.constant;
  */
 public class Constants {
     /**
-     * 社会司机注册发送验证码模板编号
+     * 发送验证码模板编号
      */
-    public static final String SOCIAL_DRIVER_REGISTER_SMS_TEMPLATE_CODE = "";
+    public static final String SMS_TEMPLATE_CODE = "SMS_141605531";
     /**
      * 社会司机注册redis前缀
      */

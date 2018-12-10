@@ -38,6 +38,7 @@ public class SocialDriverRegisterPurposeController {
 
     @PostMapping("registerSendSMS")
     @ApiOperation("注册登录发送验证码")
+    @Deprecated
     public BaseResponse registerSendSMS(@RequestParam("phoneNumber") String phoneNumber) {
         return BaseResponse.service(socialDriverRegisterPurposeService.registerSendSMS(phoneNumber));
     }

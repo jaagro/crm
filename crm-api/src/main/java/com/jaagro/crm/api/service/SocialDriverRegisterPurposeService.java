@@ -45,6 +45,7 @@ public interface SocialDriverRegisterPurposeService {
      * @param phoneNumber
      * @return
      */
+    @Deprecated
     Map<String, Object> registerSendSMS(String phoneNumber);
 
     /**
