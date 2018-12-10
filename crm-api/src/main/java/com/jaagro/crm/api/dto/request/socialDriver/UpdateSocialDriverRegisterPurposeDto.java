@@ -19,8 +19,6 @@ public class UpdateSocialDriverRegisterPurposeDto implements Serializable{
     /**
      * 社会司机注册意向表id
      */
-    @NotNull(message = "{id.NotNull}")
-    @Min(value = 1,message = "{id.Min}")
     private Integer id;
     /**
      * 真实姓名

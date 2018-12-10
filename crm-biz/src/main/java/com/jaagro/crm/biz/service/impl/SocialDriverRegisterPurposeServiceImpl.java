@@ -3,6 +3,7 @@ package com.jaagro.crm.biz.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
+import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.constant.Constants;
 import com.jaagro.crm.api.dto.request.socialDriver.ListDriverRegisterPurposeCriteriaDto;
 import com.jaagro.crm.api.dto.request.socialDriver.UpdateSocialDriverRegisterPurposeDto;
@@ -48,6 +49,8 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
     private UserClientService userClientService;
     @Autowired
     private VerificationCodeClientService verificationCodeClientService;
+    @Autowired
+    private CurrentUserService currentUserService;
 
 
     /**
@@ -161,6 +164,11 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
      */
     @Override
     public void updateSocialDriverRegisterPurpose(UpdateSocialDriverRegisterPurposeDto registerPurposeDto) {
+        UserInfo currentUser = currentUserService.getCurrentUser();
+        if (currentUser == null){
+            throw new RuntimeException("用户未登录");
+        }
+        registerPurposeDto.setId(currentUser.getId());
         SocialDriverRegisterPurpose socialDriverRegisterPurpose = socialDriverRegisterPurposeMapperExt.selectByPrimaryKey(registerPurposeDto.getId());
         if (socialDriverRegisterPurpose == null) {
             throw new NullPointerException("id不存在");
