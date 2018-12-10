@@ -432,6 +432,9 @@ public class TruckServiceImpl implements TruckService {
             }
             log.info("当前司机: " + driver.toString());
             truck = truckMapper.getTruckById(driver.getTruckId());
+            List<DriverReturnDto> driverList = new ArrayList<>();
+            driverList.add(driver);
+            truck.setDrivers(driverList);
             log.info("当前车辆: " + truck.toString());
         }
         return truck;
@@ -451,5 +454,17 @@ public class TruckServiceImpl implements TruckService {
             return truckIds;
         }
         return null;
+    }
+
+    /**
+     * 根据车辆id列表获取车辆信息 不区分状态
+     *
+     * @param truckIdList
+     * @return
+     * @author yj
+     */
+    @Override
+    public List<TruckDto> listTruckByIds(List<Integer> truckIdList) {
+        return truckMapper.listTruckByIds(truckIdList);
     }
 }

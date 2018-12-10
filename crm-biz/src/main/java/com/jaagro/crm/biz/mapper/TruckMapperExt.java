@@ -5,6 +5,7 @@ import com.jaagro.crm.api.dto.request.truck.QueryTruckDto;
 import com.jaagro.crm.api.dto.response.truck.GetTruckDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckDto;
 import com.jaagro.crm.api.dto.response.truck.ReturnCheckTruckDto;
+import com.jaagro.crm.api.dto.response.truck.TruckDto;
 import com.jaagro.crm.biz.entity.Truck;
 import org.apache.ibatis.annotations.Param;
 
@@ -80,7 +81,23 @@ public interface TruckMapperExt extends TruckMapper {
 
     /**
      * 列出所有可派的车辆（车队审核通过 、车队合同审核通过、车辆审核通过） gavin
+     *
      * @return
      */
     List<ListTruckDto> listTruckForAssignWaybill();
+
+    /**
+     * 查询近一个月过期的证件
+     *
+     * @param expiryDateType
+     * @return
+     */
+    List<GetTruckDto> listCertificateOverdueNotice(@Param("expiryDateType") Integer expiryDateType);
+
+    /**
+     * 批量查询车辆信息 不区分状态
+     * @param truckIdList
+     * @return
+     */
+    List<TruckDto> listTruckByIds(@Param("truckIdList") List<Integer> truckIdList);
 }

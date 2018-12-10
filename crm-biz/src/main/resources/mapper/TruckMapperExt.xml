@@ -249,4 +249,42 @@
             <![CDATA[and truck_number like concat('%',#{truckNumber},'%') ]]>
         </if>
     </select>
+
+    <select id="listCertificateOverdueNotice" resultMap="DetailInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from truck
+        where truck_status != 3
+        <if test="expiryDateType==1">
+            <![CDATA[
+        and expiry_date > NOW() and expiry_date < DATE_ADD(NOW(),INTERVAL 30 DAY)
+    ]]>
+        </if>
+        <if test="expiryDateType==2">
+            <![CDATA[
+        and expiry_annual > NOW() and expiry_annual < DATE_ADD(NOW(),INTERVAL 30 DAY)
+    ]]>
+        </if>
+        <if test="expiryDateType==3">
+            <![CDATA[
+        and expiry_date < NOW()
+    ]]>
+        </if>
+        <if test="expiryDateType==4">
+            <![CDATA[
+        and expiry_annual < NOW()
+    ]]>
+        </if>
+    </select>
+
+    <select id="listTruckByIds" resultType="com.jaagro.crm.api.dto.response.truck.TruckDto">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM truck
+        WHERE
+        id in
+        <foreach collection="truckIdList" close=")" open="(" item="item" separator=",">
+            #{item}
+        </foreach>
+    </select>
 </mapper>

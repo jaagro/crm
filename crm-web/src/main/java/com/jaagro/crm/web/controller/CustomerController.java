@@ -144,6 +144,17 @@ public class CustomerController {
         return customerService.getShowCustomerById(id);
     }
 
+    /**
+     * 查询正常合作的全部客户，提供给feign
+     *
+     * @return
+     */
+    @Ignore
+    @GetMapping("/listNormalCustomer")
+    public List<ShowCustomerDto> listNormalCustomer() {
+        return customerService.listNormalCustomer();
+    }
+
     //-------------------------------------------------客户联系人---------------------------------
 
     /**
