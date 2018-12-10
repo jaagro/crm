@@ -86,16 +86,13 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
 
 
     /**
-     * 根据手机号创建
+     * 根据手机号创建 验证码发送和校验都调用component通用验证码接口
      *
      * @param phoneNumber
      */
     @Override
-    public Integer createSocialDriverByPhoneNumber(String phoneNumber, String verificationCode) {
-        log.info("O createSocialDriverByPhoneNumber phoneNumber={},verificationCode={}", phoneNumber, verificationCode);
-        if (!verificationCode.equals(redisTemplate.opsForValue().get(phoneNumber))) {
-            throw new RuntimeException("验证码不正确");
-        }
+    public Integer createSocialDriverByPhoneNumber(String phoneNumber) {
+        log.info("O createSocialDriverByPhoneNumber phoneNumber={}", phoneNumber);
         SocialDriverRegisterPurpose socialDriverRegisterPurpose = socialDriverRegisterPurposeMapperExt.selectByPhoneNumber(phoneNumber);
         if (socialDriverRegisterPurpose != null) {
             throw new RuntimeException("该手机号已注册");
