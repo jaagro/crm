@@ -45,8 +45,8 @@ public class SocialDriverRegisterPurposeController {
 
     @PostMapping("/socialDriver")
     @ApiOperation("创建社会司机")
-    public BaseResponse<Integer> createSocialDriverByPhoneNumber(@RequestParam("phoneNumber") String phoneNumber, @RequestParam("verificationCode") String verificationCode) {
-        Integer id = socialDriverRegisterPurposeService.createSocialDriverByPhoneNumber(phoneNumber, verificationCode);
+    public BaseResponse<Integer> createSocialDriverByPhoneNumber(@RequestParam("phoneNumber") String phoneNumber,@RequestParam("verificationCode") String verificationCode) {
+        Integer id = socialDriverRegisterPurposeService.createSocialDriverByPhoneNumber(phoneNumber,verificationCode);
         return BaseResponse.successInstance(id);
     }
 

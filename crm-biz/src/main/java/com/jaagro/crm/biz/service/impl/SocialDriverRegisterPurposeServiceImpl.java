@@ -14,6 +14,7 @@ import com.jaagro.crm.biz.mapper.SocialDriverRegisterPurposeMapperExt;
 import com.jaagro.crm.biz.service.DriverClientService;
 import com.jaagro.crm.biz.service.SmsClientService;
 import com.jaagro.crm.biz.service.UserClientService;
+import com.jaagro.crm.biz.service.VerificationCodeClientService;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceKey;
@@ -45,6 +46,8 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
     private StringRedisTemplate redisTemplate;
     @Autowired
     private UserClientService userClientService;
+    @Autowired
+    private VerificationCodeClientService verificationCodeClientService;
 
 
     /**
@@ -89,10 +92,15 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
      * 根据手机号创建 验证码发送和校验都调用component通用验证码接口
      *
      * @param phoneNumber
+     * @param verificationCode
      */
     @Override
-    public Integer createSocialDriverByPhoneNumber(String phoneNumber) {
+    public Integer createSocialDriverByPhoneNumber(String phoneNumber,String verificationCode) {
         log.info("O createSocialDriverByPhoneNumber phoneNumber={}", phoneNumber);
+        boolean existMessage = verificationCodeClientService.existMessage(phoneNumber, verificationCode);
+        if (!existMessage){
+            throw new RuntimeException("验证码不正确");
+        }
         SocialDriverRegisterPurpose socialDriverRegisterPurpose = socialDriverRegisterPurposeMapperExt.selectByPhoneNumber(phoneNumber);
         if (socialDriverRegisterPurpose != null) {
             throw new RuntimeException("该手机号已注册");

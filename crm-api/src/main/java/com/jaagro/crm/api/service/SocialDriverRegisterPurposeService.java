@@ -31,12 +31,13 @@ public interface SocialDriverRegisterPurposeService {
     SocialDriverRegisterPurposeDto getSocialDriverRegisterPurposeDtoById(Integer id);
 
     /**
-     * 根据手机号创建 验证码发送和校验都调用component通用验证码接口
+     * 根据手机号创建 验证码发送调用通用验证码接口
      *
      * @param phoneNumber
+     * @param verificationCode
      * @return
      */
-    Integer createSocialDriverByPhoneNumber(String phoneNumber);
+    Integer createSocialDriverByPhoneNumber(String phoneNumber,String verificationCode);
 
     /**
      * 注册发送验证码
