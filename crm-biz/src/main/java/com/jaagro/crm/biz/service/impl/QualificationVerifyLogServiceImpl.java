@@ -131,7 +131,7 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
             case 2:
                 TruckQualification truckQualification = truckQualificationMapper.selectByPrimaryKey(dto.getReferencesId());
                 if (truckQualification == null) {
-                    return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队资质证不存在");
+                    return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质证不存在");
                 }
                 UserInfo currentUser = userService.getCurrentUser();
                 Integer currentUserId = currentUser == null ? null : currentUser.getId();

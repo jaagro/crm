@@ -278,7 +278,7 @@ public class TruckServiceImpl implements TruckService {
                 }
             }
         }
-        return ServiceResult.toResult(truckMapper.getTruckById(truckDto.getId()));
+        return ServiceResult.toResult(this.getTruckById(truckDto.getId()));
     }
 
     /**
