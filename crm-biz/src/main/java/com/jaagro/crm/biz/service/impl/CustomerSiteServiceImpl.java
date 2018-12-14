@@ -118,7 +118,7 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
         List<CustomerSiteReturnDto> siteReturnDtos = siteMapper.getByCriteriDto(dto);
         for (CustomerSiteReturnDto siteReturnDto : siteReturnDtos
-        ) {
+                ) {
             if (siteReturnDto.getSiteType() < 2) {
                 siteReturnDto.setDeptName(deptClientService.getDeptNameById(siteReturnDto.getDeptId()));
             }
@@ -211,36 +211,37 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
     @Override
     public int updateAllCustomerSite() {
 
-        List<CustomerSiteReturnDto>  customerSiteReturnDtos = siteMapper.listAllCustomerSite();
-        log.info("O CustomerSiteService.updateAllCustomerSite totalSize():{}",customerSiteReturnDtos.size());
+        List<CustomerSiteReturnDto> customerSiteReturnDtos = siteMapper.listAllCustomerSite();
+        log.info("O CustomerSiteService.updateAllCustomerSite totalSize():{}", customerSiteReturnDtos.size());
         int count = 0;
         for (CustomerSiteReturnDto customerSiteDto : customerSiteReturnDtos) {
             StringBuffer sb = new StringBuffer();
-            if(!StringUtils.isEmpty(customerSiteDto.getProvince())){
+            if (!StringUtils.isEmpty(customerSiteDto.getProvince())) {
                 sb.append(customerSiteDto.getProvince());
             }
-            if(!StringUtils.isEmpty(customerSiteDto.getCity())){
+            if (!StringUtils.isEmpty(customerSiteDto.getCity())) {
                 sb.append(customerSiteDto.getCity());
             }
-            if(!StringUtils.isEmpty(customerSiteDto.getCounty())){
+            if (!StringUtils.isEmpty(customerSiteDto.getCounty())) {
                 sb.append(customerSiteDto.getCounty());
             }
-            if(!StringUtils.isEmpty(customerSiteDto.getAddress())){
+            if (!StringUtils.isEmpty(customerSiteDto.getAddress())) {
                 sb.append(customerSiteDto.getAddress());
             }
             String address = sb.toString();
-            log.info("O CustomerSiteService.updateAllCustomerSite address:{}",address);
-            GaodeLocation result =  gaoDeMapUtil.getLocatoin(address);
-            if("1".equals(result.getStatus())&&result.getGeocodes().size()>0) {
+            log.info("O CustomerSiteService.updateAllCustomerSite address:{}", address);
+            GaodeLocation result = gaoDeMapUtil.getLocatoin(address);
+            log.info("O gaoDeMapUtil.getLocatoin result:{}", result);
+            if ("1".equals(result.getStatus()) && result.getGeocodes().size() > 0) {
                 String location = result.getGeocodes().get(0).getLocation();
-                if(!org.springframework.util.StringUtils.isEmpty(location)){
+                if (!org.springframework.util.StringUtils.isEmpty(location)) {
                     String[] centerPoint = location.split(",");
                     BigDecimal latitude = new BigDecimal(centerPoint[0]);
                     BigDecimal longitude = new BigDecimal(centerPoint[1]);
                     customerSiteDto.setLatitude(latitude);
                     customerSiteDto.setLongitude(longitude);
                     CustomerSite customerSite = new CustomerSite();
-                    BeanUtils.copyProperties(customerSiteDto,customerSite);
+                    BeanUtils.copyProperties(customerSiteDto, customerSite);
                     customerSite.setModifyUserId(1);
                     customerSite.setModifyTime(new Date());
                     siteMapper.updateByPrimaryKeySelective(customerSite);
@@ -248,7 +249,7 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
                 }
             }
         }
-        log.info("O CustomerSiteService.updateAllCustomerSite updateSize():{}",count);
+        log.info("O CustomerSiteService.updateAllCustomerSite updateSize():{}", count);
         return count;
     }
 

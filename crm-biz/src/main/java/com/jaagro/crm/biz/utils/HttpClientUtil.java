@@ -1,9 +1,6 @@
 package com.jaagro.crm.biz.utils;
 
-import com.dianping.cat.configuration.client.transform.DefaultSaxParser;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.*;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -16,21 +13,13 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import java.io.IOException;
-
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-
-
 
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * @Author Gavin
@@ -150,11 +139,12 @@ public class HttpClientUtil {
 
         return resultString;
     }
+
     /**
      * 发送httppost请求
      *
      * @param url
-     * @param data  提交的参数为key=value&key1=value1的形式
+     * @param data 提交的参数为key=value&key1=value1的形式
      * @return
      */
     public static String httpPost(String url, String data) {

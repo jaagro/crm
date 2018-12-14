@@ -18,6 +18,10 @@ public class Geocodes implements Serializable {
      */
     private String formatted_address;
     /**
+     * 国家
+     */
+    private String country;
+    /**
      * 所在省
      */
     private String province;
@@ -35,7 +39,7 @@ public class Geocodes implements Serializable {
      */
     private String district;
     /**
-     *  地址所在的乡镇
+     * 地址所在的乡镇
      */
     private String township;
 

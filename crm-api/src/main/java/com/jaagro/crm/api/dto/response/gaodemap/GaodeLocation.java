@@ -28,6 +28,8 @@ public class GaodeLocation implements Serializable {
      */
     private String info;
 
+
+    private String infocode;
     /**
      * 识别的结果列表
      */
