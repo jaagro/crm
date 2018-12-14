@@ -210,7 +210,7 @@ public class TruckQualificationController {
             criteriaDto.setTruckId(id);
         }
         if (type == 1) {
-            if (this.driverClientService.getDriverReturnObject(id) == null) {
+            if (this.driverClientService.getDriverByIdFeign(id) == null) {
                 return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "当前司机不存在");
             }
             criteriaDto.setDriverId(id);
