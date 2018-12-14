@@ -46,6 +46,14 @@ public interface CustomerSiteMapperExt extends CustomerSiteMapper {
     List<ReturnSelectSiteDto> listAllSite(ListSiteCriteriaDto criteriaDto);
 
     /**
+     * 获取所有的装卸货地，用于更新他们的经纬度
+     * @Athor Gavin
+     * 20181213
+     * @return
+     */
+    List<CustomerSiteReturnDto> listAllCustomerSite();
+
+    /**
      * 获取显示地址对象
      *
      * @param id

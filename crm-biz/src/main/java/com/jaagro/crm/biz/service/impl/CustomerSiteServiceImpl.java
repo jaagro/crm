@@ -7,11 +7,13 @@ import com.jaagro.crm.api.dto.request.customer.ListSiteCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.ShowSiteDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerSiteDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerSiteReturnDto;
+import com.jaagro.crm.api.dto.response.gaodemap.GaodeLocation;
 import com.jaagro.crm.api.dto.response.selectValue.ReturnSelectSiteDto;
 import com.jaagro.crm.api.service.CustomerSiteService;
 import com.jaagro.crm.biz.entity.CustomerSite;
 import com.jaagro.crm.biz.mapper.CustomerSiteMapperExt;
 import com.jaagro.crm.biz.service.DriverClientService;
+import com.jaagro.crm.biz.utils.GaoDeMapUtil;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +23,9 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +45,9 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
     private CurrentUserService userService;
     @Autowired
     private DriverClientService deptClientService;
+
+    @Autowired
+    private GaoDeMapUtil gaoDeMapUtil;
 
     @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
@@ -193,6 +200,56 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
     @Override
     public List<String> listSiteNameByIds(List<Integer> siteIds) {
         return siteMapper.listSiteNameByIds(siteIds);
+    }
+
+    /**
+     * 更新他们的经纬度
+     *
+     * @return
+     * @Ahtor : Gavin
+     */
+    @Override
+    public int updateAllCustomerSite() {
+
+        List<CustomerSiteReturnDto>  customerSiteReturnDtos = siteMapper.listAllCustomerSite();
+        log.info("O CustomerSiteService.updateAllCustomerSite totalSize():{}",customerSiteReturnDtos.size());
+        int count = 0;
+        for (CustomerSiteReturnDto customerSiteDto : customerSiteReturnDtos) {
+            StringBuffer sb = new StringBuffer();
+            if(!StringUtils.isEmpty(customerSiteDto.getProvince())){
+                sb.append(customerSiteDto.getProvince());
+            }
+            if(!StringUtils.isEmpty(customerSiteDto.getCity())){
+                sb.append(customerSiteDto.getCity());
+            }
+            if(!StringUtils.isEmpty(customerSiteDto.getCounty())){
+                sb.append(customerSiteDto.getCounty());
+            }
+            if(!StringUtils.isEmpty(customerSiteDto.getAddress())){
+                sb.append(customerSiteDto.getAddress());
+            }
+            String address = sb.toString();
+            log.info("O CustomerSiteService.updateAllCustomerSite address:{}",address);
+            GaodeLocation result =  gaoDeMapUtil.getLocatoin(address);
+            if("1".equals(result.getStatus())&&result.getGeocodes().size()>0) {
+                String location = result.getGeocodes().get(0).getLocation();
+                if(!org.springframework.util.StringUtils.isEmpty(location)){
+                    String[] centerPoint = location.split(",");
+                    BigDecimal latitude = new BigDecimal(centerPoint[0]);
+                    BigDecimal longitude = new BigDecimal(centerPoint[1]);
+                    customerSiteDto.setLatitude(latitude);
+                    customerSiteDto.setLongitude(longitude);
+                    CustomerSite customerSite = new CustomerSite();
+                    BeanUtils.copyProperties(customerSiteDto,customerSite);
+                    customerSite.setModifyUserId(1);
+                    customerSite.setModifyTime(new Date());
+                    siteMapper.updateByPrimaryKeySelective(customerSite);
+                    count++;
+                }
+            }
+        }
+        log.info("O CustomerSiteService.updateAllCustomerSite updateSize():{}",count);
+        return count;
     }
 
 }

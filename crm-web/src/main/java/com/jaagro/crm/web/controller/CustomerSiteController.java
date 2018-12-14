@@ -114,4 +114,10 @@ public class CustomerSiteController {
     public List<String> listSiteNameByIds(@RequestBody List<Integer> siteIds) {
         return siteService.listSiteNameByIds(siteIds);
     }
+
+    @ApiOperation("更新装卸货地的经纬度")
+    @PostMapping("/updateAllCustomerSite")
+    public BaseResponse updateAllCustomerSite() {
+        return BaseResponse.successInstance(siteService.updateAllCustomerSite());
+    }
 }
