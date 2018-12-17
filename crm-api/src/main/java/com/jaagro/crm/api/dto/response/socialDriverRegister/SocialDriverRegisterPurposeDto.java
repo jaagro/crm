@@ -1,4 +1,4 @@
-package com.jaagro.crm.api.dto.response.socialDriver;
+package com.jaagro.crm.api.dto.response.socialDriverRegister;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
