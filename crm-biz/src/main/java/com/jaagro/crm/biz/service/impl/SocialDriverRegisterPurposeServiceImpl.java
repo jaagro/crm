@@ -7,7 +7,7 @@ import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.constant.Constants;
 import com.jaagro.crm.api.dto.request.socialDriver.ListDriverRegisterPurposeCriteriaDto;
 import com.jaagro.crm.api.dto.request.socialDriver.UpdateSocialDriverRegisterPurposeDto;
-import com.jaagro.crm.api.dto.response.socialDriver.SocialDriverRegisterPurposeDto;
+import com.jaagro.crm.api.dto.response.socialDriverRegister.SocialDriverRegisterPurposeDto;
 import com.jaagro.crm.api.dto.response.truck.DriverReturnDto;
 import com.jaagro.crm.api.service.SocialDriverRegisterPurposeService;
 import com.jaagro.crm.biz.entity.SocialDriverRegisterPurpose;
@@ -62,15 +62,7 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
     @Override
     public SocialDriverRegisterPurposeDto getByPhoneNumber(String phoneNumber) {
         SocialDriverRegisterPurpose socialDriverRegisterPurpose = socialDriverRegisterPurposeMapperExt.selectByPhoneNumber(phoneNumber);
-        if (socialDriverRegisterPurpose != null) {
-            SocialDriverRegisterPurposeDto socialDriverRegisterPurposeDto = new SocialDriverRegisterPurposeDto();
-            BeanUtils.copyProperties(socialDriverRegisterPurpose, socialDriverRegisterPurposeDto);
-            if (socialDriverRegisterPurpose.getUploadTime() == null) {
-                socialDriverRegisterPurposeDto.setUploadTime(socialDriverRegisterPurpose.getCreateTime());
-            }
-            return socialDriverRegisterPurposeDto;
-        }
-        return null;
+        return convertToDto(socialDriverRegisterPurpose);
     }
 
     /**
@@ -82,12 +74,7 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
     @Override
     public SocialDriverRegisterPurposeDto getSocialDriverRegisterPurposeDtoById(Integer id) {
         SocialDriverRegisterPurpose sdr = socialDriverRegisterPurposeMapperExt.selectByPrimaryKey(id);
-        if (null == sdr) {
-            throw new NullPointerException("id error");
-        }
-        SocialDriverRegisterPurposeDto sdrDto = new SocialDriverRegisterPurposeDto();
-        BeanUtils.copyProperties(sdr, sdrDto);
-        return sdrDto;
+        return convertToDto(sdr);
     }
 
 
@@ -99,7 +86,6 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
      */
     @Override
     public Integer createSocialDriverByPhoneNumber(String phoneNumber,String verificationCode) {
-        log.info("O createSocialDriverByPhoneNumber phoneNumber={}", phoneNumber);
         boolean existMessage = verificationCodeClientService.existMessage(phoneNumber, verificationCode);
         if (!existMessage){
             throw new RuntimeException("验证码不正确");
@@ -174,6 +160,8 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
             throw new NullPointerException("id不存在");
         }
         BeanUtils.copyProperties(registerPurposeDto, socialDriverRegisterPurpose);
+        socialDriverRegisterPurpose.setUploadFlag(Boolean.TRUE);
+        socialDriverRegisterPurpose.setUploadTime(new Date());
         socialDriverRegisterPurposeMapperExt.updateByPrimaryKeySelective(socialDriverRegisterPurpose);
     }
 
@@ -215,5 +203,17 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
             log.error("sendSMS error phoneNumber=" + phoneNumber + ",verificationCode=" + verificationCode, e);
             throw new RuntimeException("验证码发送失败");
         }
+    }
+
+    private SocialDriverRegisterPurposeDto convertToDto(SocialDriverRegisterPurpose socialDriverRegisterPurpose){
+        if (socialDriverRegisterPurpose != null) {
+            SocialDriverRegisterPurposeDto socialDriverRegisterPurposeDto = new SocialDriverRegisterPurposeDto();
+            BeanUtils.copyProperties(socialDriverRegisterPurpose, socialDriverRegisterPurposeDto);
+            if (socialDriverRegisterPurpose.getUploadTime() == null) {
+                socialDriverRegisterPurposeDto.setUploadTime(socialDriverRegisterPurpose.getCreateTime());
+            }
+            return socialDriverRegisterPurposeDto;
+        }
+        return null;
     }
 }

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jaagro.crm.biz.mapper.SocialDriverRegisterPurposeMapperExt" >
-  <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.SocialDriverRegisterPurpose" >
+<mapper namespace="com.jaagro.crm.biz.mapper.CustomerRegisterPurposeMapperExt" >
+  <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.CustomerRegisterPurpose" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="phone_number" property="phoneNumber" jdbcType="VARCHAR" />
-    <result column="driver_type" property="driverType" jdbcType="INTEGER" />
-    <result column="truck_quantity" property="truckQuantity" jdbcType="INTEGER" />
+    <result column="customer_type" property="customerType" jdbcType="INTEGER" />
+    <result column="goods_type" property="goodsType" jdbcType="INTEGER" />
     <result column="city" property="city" jdbcType="VARCHAR" />
     <result column="detail_address" property="detailAddress" jdbcType="VARCHAR" />
     <result column="upload_time" property="uploadTime" jdbcType="TIMESTAMP" />
@@ -19,35 +19,35 @@
     <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, phone_number, driver_type, truck_quantity, city, detail_address, upload_time, upload_flag,
+    id, name, phone_number, customer_type, goods_type, city, detail_address, upload_time,upload_flag,
     notes, enable, create_time, create_user_id, modify_time, modify_user_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from social_driver_register_purpose
+    from customer_register_purpose
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from social_driver_register_purpose
+    delete from customer_register_purpose
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.SocialDriverRegisterPurpose" useGeneratedKeys="true" keyProperty="id"
+  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.CustomerRegisterPurpose" useGeneratedKeys="true" keyProperty="id"
           keyColumn="id">
-    insert into social_driver_register_purpose (id, name, phone_number, 
-      driver_type, truck_quantity, city, 
+    insert into customer_register_purpose (id, name, phone_number, 
+      customer_type, goods_type, city, 
       detail_address, upload_time,upload_flag, notes,
       enable, create_time, create_user_id, 
       modify_time, modify_user_id)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{phoneNumber,jdbcType=VARCHAR}, 
-      #{driverType,jdbcType=INTEGER}, #{truckQuantity,jdbcType=INTEGER}, #{city,jdbcType=VARCHAR}, 
+      #{customerType,jdbcType=INTEGER}, #{goodsType,jdbcType=INTEGER}, #{city,jdbcType=VARCHAR}, 
       #{detailAddress,jdbcType=VARCHAR}, #{uploadTime,jdbcType=TIMESTAMP},#{uploadFlag,jdbcType=TINYINT}, #{notes,jdbcType=VARCHAR},
       #{enable,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, 
       #{modifyTime,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.SocialDriverRegisterPurpose" useGeneratedKeys="true" keyProperty="id"
+  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.CustomerRegisterPurpose" useGeneratedKeys="true" keyProperty="id"
           keyColumn="id">
-    insert into social_driver_register_purpose
+    insert into customer_register_purpose
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -58,11 +58,11 @@
       <if test="phoneNumber != null" >
         phone_number,
       </if>
-      <if test="driverType != null" >
-        driver_type,
+      <if test="customerType != null" >
+        customer_type,
       </if>
-      <if test="truckQuantity != null" >
-        truck_quantity,
+      <if test="goodsType != null" >
+        goods_type,
       </if>
       <if test="city != null" >
         city,
@@ -105,11 +105,11 @@
       <if test="phoneNumber != null" >
         #{phoneNumber,jdbcType=VARCHAR},
       </if>
-      <if test="driverType != null" >
-        #{driverType,jdbcType=INTEGER},
+      <if test="customerType != null" >
+        #{customerType,jdbcType=INTEGER},
       </if>
-      <if test="truckQuantity != null" >
-        #{truckQuantity,jdbcType=INTEGER},
+      <if test="goodsType != null" >
+        #{goodsType,jdbcType=INTEGER},
       </if>
       <if test="city != null" >
         #{city,jdbcType=VARCHAR},
@@ -143,8 +143,8 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.SocialDriverRegisterPurpose" >
-    update social_driver_register_purpose
+  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.CustomerRegisterPurpose" >
+    update customer_register_purpose
     <set >
       <if test="name != null" >
         name = #{name,jdbcType=VARCHAR},
@@ -152,11 +152,11 @@
       <if test="phoneNumber != null" >
         phone_number = #{phoneNumber,jdbcType=VARCHAR},
       </if>
-      <if test="driverType != null" >
-        driver_type = #{driverType,jdbcType=INTEGER},
+      <if test="customerType != null" >
+        customer_type = #{customerType,jdbcType=INTEGER},
       </if>
-      <if test="truckQuantity != null" >
-        truck_quantity = #{truckQuantity,jdbcType=INTEGER},
+      <if test="goodsType != null" >
+        goods_type = #{goodsType,jdbcType=INTEGER},
       </if>
       <if test="city != null" >
         city = #{city,jdbcType=VARCHAR},
@@ -191,12 +191,12 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.SocialDriverRegisterPurpose" >
-    update social_driver_register_purpose
+  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.CustomerRegisterPurpose" >
+    update customer_register_purpose
     set name = #{name,jdbcType=VARCHAR},
       phone_number = #{phoneNumber,jdbcType=VARCHAR},
-      driver_type = #{driverType,jdbcType=INTEGER},
-      truck_quantity = #{truckQuantity,jdbcType=INTEGER},
+      customer_type = #{customerType,jdbcType=INTEGER},
+      goods_type = #{goodsType,jdbcType=INTEGER},
       city = #{city,jdbcType=VARCHAR},
       detail_address = #{detailAddress,jdbcType=VARCHAR},
       upload_time = #{uploadTime,jdbcType=TIMESTAMP},
