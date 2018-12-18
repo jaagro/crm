@@ -13,7 +13,7 @@
             resultType="com.jaagro.crm.api.dto.response.socialDriverRegister.SocialDriverRegisterPurposeDto">
         SELECT
         id, name, phone_number, driver_type, truck_quantity, city, detail_address,
-        ( CASE WHEN upload_time IS NULL THEN create_time ELSE upload_time END ) AS upload_time,
+        ( CASE WHEN upload_time IS NULL THEN create_time ELSE upload_time END ) AS upload_time,upload_flag,
         notes
         FROM
         social_driver_register_purpose

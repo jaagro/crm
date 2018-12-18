@@ -55,6 +55,11 @@ public class CustomerRegisterPurposeDto implements Serializable{
     private Date uploadTime;
 
     /**
+     * 是否上传基本信息 0-未上传,1-已上传
+     */
+    private Boolean uploadFlag;
+
+    /**
      * 备注
      */
     private String notes;

@@ -70,6 +70,7 @@ public class CustomerRegisterPurposeController {
     @PostMapping("/listCustomerRegisterPurposeByCriteria")
     @ApiOperation("查询客户注册意向列表")
     public BaseResponse<PageInfo<List<CustomerRegisterPurposeDto>>> listCustomerRegisterPurposeByCriteria(@RequestBody @Validated ListCustomerRegisterPurposeCriteriaDto criteria) {
+        log.info("O listCustomerRegisterPurposeByCriteria criteria={}",criteria);
         return BaseResponse.successInstance(customerRegisterPurposeService.listCustomerRegisterPurposeByCriteria(criteria));
     }
 }

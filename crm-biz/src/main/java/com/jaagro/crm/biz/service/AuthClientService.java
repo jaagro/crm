@@ -30,5 +30,5 @@ public interface AuthClientService {
      * @return
      */
     @GetMapping("/invalidateToken")
-    BaseResponse invalidateToken(String token, String userId);
+    BaseResponse invalidateToken(@RequestParam("token") String token, @RequestParam("userId") String userId);
 }
