@@ -2,12 +2,10 @@ package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.QueryTruckDto;
-import com.jaagro.crm.api.dto.response.truck.GetTruckDto;
-import com.jaagro.crm.api.dto.response.truck.ListTruckDto;
-import com.jaagro.crm.api.dto.response.truck.ReturnCheckTruckDto;
-import com.jaagro.crm.api.dto.response.truck.TruckDto;
+import com.jaagro.crm.api.dto.response.truck.*;
 import com.jaagro.crm.biz.entity.Truck;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -96,8 +94,17 @@ public interface TruckMapperExt extends TruckMapper {
 
     /**
      * 批量查询车辆信息 不区分状态
+     *
      * @param truckIdList
      * @return
      */
     List<TruckDto> listTruckByIds(@Param("truckIdList") List<Integer> truckIdList);
+
+    /**
+     * 根据车队id获取换车列表
+     *
+     * @param truckTeamId
+     * @return
+     */
+    List<ChangeTruckDto> listTruckByTruckTeamId(@PathVariable("truckTeamId") Integer truckTeamId);
 }
