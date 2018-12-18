@@ -169,7 +169,7 @@ public class TruckServiceImpl implements TruckService {
                 Integer driverIdInt = null;
                 if (NumberUtils.isNumber(driverId)) {
                     driverIdInt = Integer.valueOf(driverId);
-                }else {
+                } else {
                     BaseResponse result = JSON.parseObject(driverId, BaseResponse.class);
                     throw new RuntimeException(result.getStatusMsg());
                 }
@@ -225,7 +225,7 @@ public class TruckServiceImpl implements TruckService {
                     String driverId = driverClientService.createDriverReturnId(driverDto);
                     if (NumberUtils.isNumber(driverId)) {
                         driverIdInt = Integer.valueOf(driverId);
-                    }else {
+                    } else {
                         BaseResponse result = JSON.parseObject(driverId, BaseResponse.class);
                         throw new RuntimeException(result.getStatusMsg());
                     }
@@ -466,5 +466,25 @@ public class TruckServiceImpl implements TruckService {
     @Override
     public List<TruckDto> listTruckByIds(List<Integer> truckIdList) {
         return truckMapper.listTruckByIds(truckIdList);
+    }
+
+    /**
+     * 根据车队id获取换车列表
+     *
+     * @param truckTeamId
+     * @return
+     */
+    @Override
+    public List<ChangeTruckDto> listTruckByTruckTeamId(Integer truckTeamId) {
+        List<ChangeTruckDto> truckDtoList = truckMapper.listTruckByTruckTeamId(truckTeamId);
+        if (!CollectionUtils.isEmpty(truckDtoList)) {
+            for (ChangeTruckDto truckDto : truckDtoList) {
+                List<DriverReturnDto> driverReturnDtoList = driverClientService.listByTruckId(truckDto.getId() == null ? null : truckDto.getId());
+                if (!CollectionUtils.isEmpty(driverReturnDtoList)) {
+                    truckDto.setDriverAmount(driverReturnDtoList.size());
+                }
+            }
+        }
+        return truckDtoList;
     }
 }
