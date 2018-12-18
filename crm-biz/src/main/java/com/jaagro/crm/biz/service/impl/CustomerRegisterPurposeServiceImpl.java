@@ -114,6 +114,7 @@ public class CustomerRegisterPurposeServiceImpl implements CustomerRegisterPurpo
         }
         BeanUtils.copyProperties(registerPurposeDto, customerRegisterPurpose);
         customerRegisterPurpose.setUploadTime(new Date());
+        customerRegisterPurpose.setUploadFlag(Boolean.TRUE);
         customerRegisterPurposeMapperExt.updateByPrimaryKeySelective(customerRegisterPurpose);
     }
 

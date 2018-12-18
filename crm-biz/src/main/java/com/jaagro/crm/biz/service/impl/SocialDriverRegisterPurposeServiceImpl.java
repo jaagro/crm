@@ -160,6 +160,8 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
             throw new NullPointerException("id不存在");
         }
         BeanUtils.copyProperties(registerPurposeDto, socialDriverRegisterPurpose);
+        socialDriverRegisterPurpose.setUploadFlag(Boolean.TRUE);
+        socialDriverRegisterPurpose.setUploadTime(new Date());
         socialDriverRegisterPurposeMapperExt.updateByPrimaryKeySelective(socialDriverRegisterPurpose);
     }
 
