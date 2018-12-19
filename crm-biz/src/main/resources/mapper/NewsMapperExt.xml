@@ -36,5 +36,6 @@
         <if test="criteria.categoryId != null">
             AND category_id = #{criteria.categoryId,jdbcType=INTEGER}
         </if>
+        order by create_time desc
     </select>
 </mapper>
