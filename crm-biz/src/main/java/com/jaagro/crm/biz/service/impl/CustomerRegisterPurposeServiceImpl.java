@@ -108,6 +108,7 @@ public class CustomerRegisterPurposeServiceImpl implements CustomerRegisterPurpo
         if (currentUser == null) {
             throw new RuntimeException("未登录");
         }
+        registerPurposeDto.setId(currentUser.getId());
         CustomerRegisterPurpose customerRegisterPurpose = customerRegisterPurposeMapperExt.selectByPrimaryKey(currentUser.getId());
         if (customerRegisterPurpose == null) {
             throw new RuntimeException("id不存在");
