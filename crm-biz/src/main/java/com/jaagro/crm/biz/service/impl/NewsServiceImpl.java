@@ -213,9 +213,6 @@ public class NewsServiceImpl implements NewsService {
             if (StringUtils.hasText(newsReturnDto.getImageUrl())){
                 newsReturnDto.setImageUrl(getAbstractImageUrl(newsReturnDto.getImageUrl()));
             }
-            if(StringUtils.hasText(newsReturnDto.getContent())){
-                // TODO 截取新闻主体内容内图片路径转换成绝对路径
-            }
         }
     }
 
