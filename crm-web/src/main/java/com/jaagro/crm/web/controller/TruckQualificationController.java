@@ -6,8 +6,12 @@ import com.jaagro.crm.api.dto.request.truck.CreateListTruckQualificationDto;
 import com.jaagro.crm.api.dto.request.truck.CreateTruckQualificationByOneDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckQualificationDto;
+import com.jaagro.crm.api.dto.response.truck.ListTruckQualificationDto;
 import com.jaagro.crm.api.dto.response.truck.ReturnTruckQualificationDto;
-import com.jaagro.crm.api.service.*;
+import com.jaagro.crm.api.service.QualificationVerifyLogService;
+import com.jaagro.crm.api.service.TruckQualificationService;
+import com.jaagro.crm.api.service.TruckVerifyLogService;
+import com.jaagro.crm.biz.entity.TruckQualification;
 import com.jaagro.crm.biz.mapper.TruckMapperExt;
 import com.jaagro.crm.biz.mapper.TruckQualificationMapperExt;
 import com.jaagro.crm.biz.mapper.TruckTeamMapperExt;
@@ -102,6 +106,20 @@ public class TruckQualificationController {
         return BaseResponse.successInstance(result);
     }
 
+    /**
+     * 修改提供给feign
+     *
+     * @param dto
+     * @return
+     */
+    @Ignore
+    @ApiOperation("修改提供给feign")
+    @PutMapping("/truckQualificationToFeign")
+    public BaseResponse truckQualificationToFeign(@RequestBody TruckQualification qualification) {
+        truckQualificationMapper.updateByPrimaryKeySelective(qualification);
+        return BaseResponse.successInstance("ok");
+    }
+
     @ApiOperation("新增资质")
     @PostMapping("/truckQualification")
     public BaseResponse insert(@RequestBody CreateListTruckQualificationDto dto) {
@@ -153,6 +171,19 @@ public class TruckQualificationController {
     public BaseResponse listQualificationByTeamId(@RequestBody ListTruckQualificationCriteriaDto criteriaDto) {
         criteriaDto.setEnableCheck("查询详情");
         return BaseResponse.service(truckQualificationService.listQualificationByTruckIds(criteriaDto));
+    }
+
+    /**
+     * 获取司机的资质
+     *
+     * @param
+     * @return
+     */
+    @Ignore
+    @ApiOperation("获取司机的资质")
+    @PostMapping("/listQualificationByDriverId/{driverId}")
+    public BaseResponse<List<ListTruckQualificationDto>> listQualificationByDriverId(@PathVariable("driverId") Integer driverId) {
+        return BaseResponse.successInstance(truckQualificationService.listQualificationByDriverId(driverId));
     }
 
     @ApiOperation("查询单个运力资质【包括详细信息】")

@@ -76,4 +76,12 @@ public interface TruckQualificationMapperExt extends TruckQualificationMapper {
      * @return
      */
     Integer disbaleByDriverId(@Param("driverId") Integer driverId);
+
+    /**
+     * 根据司机id查询资质列表
+     *
+     * @param driverId
+     * @return
+     */
+    List<ListTruckQualificationDto> listQualificationByDriverId(@Param("driverId") Integer driverId);
 }
