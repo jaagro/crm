@@ -3,6 +3,7 @@ package com.jaagro.crm.api.service;
 import com.jaagro.crm.api.dto.request.truck.CreateListTruckQualificationDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckQualificationCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckQualificationDto;
+import com.jaagro.crm.api.dto.response.truck.ListTruckQualificationDto;
 
 import java.util.List;
 import java.util.Map;
@@ -66,4 +67,11 @@ public interface TruckQualificationService {
      */
     Map<String, Object> listQualificationByTruckIds(ListTruckQualificationCriteriaDto criteriaDto);
 
+    /**
+     * 根据司机id获取资质列表
+     *
+     * @param driverId
+     * @return
+     */
+    List<ListTruckQualificationDto> listQualificationByDriverId(Integer driverId);
 }

@@ -5,13 +5,17 @@ import com.jaagro.crm.api.constant.AccountType;
 import com.jaagro.crm.api.constant.AccountUserType;
 import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.constant.CertificateType;
+import com.jaagro.crm.api.dto.base.GetCustomerUserDto;
 import com.jaagro.crm.api.dto.request.customer.CreateQualificationVerifyLogDto;
 import com.jaagro.crm.api.dto.response.truck.DriverReturnDto;
 import com.jaagro.crm.api.service.AccountService;
 import com.jaagro.crm.api.service.QualificationVerifyLogService;
 import com.jaagro.crm.biz.entity.*;
 import com.jaagro.crm.biz.mapper.*;
+import com.jaagro.crm.biz.service.AuthClientService;
 import com.jaagro.crm.biz.service.DriverClientService;
+import com.jaagro.crm.biz.service.UserClientService;
+import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.BeanUtils;
@@ -54,6 +58,14 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
     private TruckMapperExt truckMapper;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private UserClientService userClientService;
+    @Autowired
+    private AuthClientService authClientService;
+    @Autowired
+    private CustomerRegisterPurposeMapperExt customerRegisterPurposeMapperExt;
+    @Autowired
+    private SocialDriverRegisterPurposeMapperExt socialDriverRegisterPurposeMapperExt;
 
     /**
      * 新增审核记录
@@ -101,6 +113,8 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                                 this.customerMapper.updateByPrimaryKeySelective(customer);
                                 // 创建账户 add by yj 20181025
                                 accountService.createAccount(customer.getId(), AccountUserType.CUSTOMER, AccountType.CASH, currentUserId);
+                                // 如果有游客客户则使游客客户登录失效 add by yj 20181217
+                                invalidVisitorCustomerToken(customer.getId());
                                 break;
                             }
                         }
@@ -119,6 +133,8 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                                 this.customerMapper.updateByPrimaryKeySelective(customer);
                                 // 创建账户 add by yj 20181025
                                 accountService.createAccount(customer.getId(), AccountUserType.CUSTOMER, AccountType.CASH, currentUserId);
+                                // 如果有游客客户则使游客客户登录失效 add by yj 20181217
+                                invalidVisitorCustomerToken(customer.getId());
                                 break;
                             }
                         }
@@ -156,6 +172,8 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                                 driverClientService.updateDriverStatusFeign(driverReturnDto.getId());
                                 // 创建账户 add by yj 20181025
                                 accountService.createAccount(driverReturnDto.getId(), AccountUserType.DRIVER, AccountType.CASH, currentUserId);
+                                // 如果有游客司机则使游客司机登录失效 add by yj 20181217
+                                invalidVisitorDriverToken(driverReturnDto.getPhoneNumber());
                                 break;
                             }
                             break;
@@ -296,5 +314,24 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
         verifyLog.setAuditor(this.userService.getCurrentUser().getId());
         this.verifyLogMapper.insertSelective(verifyLog);
         return ServiceResult.toResult("审核成功");
+    }
+
+    private void invalidVisitorCustomerToken(Integer customerId){
+        BaseResponse<GetCustomerUserDto> response = userClientService.getCustomerUserByRelevanceId(customerId);
+        if (ResponseStatusCode.OPERATION_SUCCESS.getCode() == response.getStatusCode()){
+            if (response.getData() != null){
+                CustomerRegisterPurpose customerRegisterPurpose = customerRegisterPurposeMapperExt.selectByPhoneNumber(response.getData().getPhoneNumber());
+                if (customerRegisterPurpose != null){
+                    authClientService.invalidateToken(null,customerRegisterPurpose.getId().toString());
+                }
+            }
+        }
+    }
+
+    private void invalidVisitorDriverToken(String phoneNumber){
+        SocialDriverRegisterPurpose socialDriverRegisterPurpose = socialDriverRegisterPurposeMapperExt.selectByPhoneNumber(phoneNumber);
+        if (socialDriverRegisterPurpose != null){
+            authClientService.invalidateToken(null,socialDriverRegisterPurpose.getId().toString());
+        }
     }
 }

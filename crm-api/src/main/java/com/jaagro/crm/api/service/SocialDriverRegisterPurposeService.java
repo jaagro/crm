@@ -3,7 +3,7 @@ package com.jaagro.crm.api.service;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.dto.request.socialDriver.ListDriverRegisterPurposeCriteriaDto;
 import com.jaagro.crm.api.dto.request.socialDriver.UpdateSocialDriverRegisterPurposeDto;
-import com.jaagro.crm.api.dto.response.socialDriver.SocialDriverRegisterPurposeDto;
+import com.jaagro.crm.api.dto.response.socialDriverRegister.SocialDriverRegisterPurposeDto;
 
 import java.util.Map;
 
