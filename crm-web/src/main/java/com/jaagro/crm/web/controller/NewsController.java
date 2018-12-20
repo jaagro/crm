@@ -124,6 +124,10 @@ public class NewsController {
             if (newsCategoryReturnDto != null) {
                 newsVo.setCategory(newsCategoryReturnDto.getName());
             }
+            UserInfo userInfo = newsReturnDto.getUserInfo();
+            if (userInfo != null){
+                newsVo.setCreateUserName(userInfo.getName());
+            }
             return newsVo;
         }
         return null;
