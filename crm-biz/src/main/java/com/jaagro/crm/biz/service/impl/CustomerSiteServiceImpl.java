@@ -236,8 +236,8 @@ public class CustomerSiteServiceImpl implements CustomerSiteService {
                 String location = result.getGeocodes().get(0).getLocation();
                 if (!org.springframework.util.StringUtils.isEmpty(location)) {
                     String[] centerPoint = location.split(",");
-                    BigDecimal latitude = new BigDecimal(centerPoint[0]);
-                    BigDecimal longitude = new BigDecimal(centerPoint[1]);
+                    BigDecimal longitude = new BigDecimal(centerPoint[0]);
+                    BigDecimal latitude = new BigDecimal(centerPoint[1]);
                     customerSiteDto.setLatitude(latitude);
                     customerSiteDto.setLongitude(longitude);
                     CustomerSite customerSite = new CustomerSite();

@@ -23,7 +23,7 @@
     </resultMap>
 
     <select id="getPriceByCriteria" resultMap="DetailInfo"
-            parameterType="com.jaagro.crm.api.dto.request.contract.ListContractPriceCriteriaDto">
+            parameterType="com.jaagro.crm.api.dto.request.contract.CalculatePaymentDto">
         select * from customer_contract_price where
         contract_id = #{contractId} and pricing_type = #{pricingType} and product_type = #{productType} and price_status = 1
         <if test="loadSiteId != null">
