@@ -1,6 +1,6 @@
 package com.jaagro.crm.biz.mapper;
 
-import com.jaagro.crm.api.dto.request.contract.ListContractPriceCriteriaDto;
+import com.jaagro.crm.api.dto.request.contract.CalculatePaymentDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractPriceDto;
 
 import java.util.List;
@@ -40,5 +40,5 @@ public interface CustomerContractPriceMapperExt extends CustomerContractPriceMap
      * @param dto
      * @return
      */
-    ReturnContractPriceDto getPriceByCriteria(ListContractPriceCriteriaDto dto);
+    ReturnContractPriceDto getPriceByCriteria(CalculatePaymentDto dto);
 }
