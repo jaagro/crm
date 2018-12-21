@@ -1,25 +1,24 @@
 package com.jaagro.crm.biz.service.impl;
 
-import com.jaagro.crm.api.constant.PricingType;
-import com.jaagro.crm.api.dto.request.contract.ListContractPriceCriteriaDto;
-import com.jaagro.crm.api.dto.response.PriceReturnDto;
-import com.jaagro.crm.api.dto.response.contract.ReturnContractPriceDto;
+import com.jaagro.crm.api.constant.ProductType;
+import com.jaagro.crm.api.dto.request.contract.CalculatePaymentDto;
 import com.jaagro.crm.api.service.CalculatePriceService;
-import com.jaagro.crm.biz.entity.CustomerContractSectionPrice;
 import com.jaagro.crm.biz.mapper.CustomerContractPriceMapperExt;
 import com.jaagro.crm.biz.mapper.CustomerContractSectionPriceMapperExt;
-import com.jaagro.utils.ResponseStatusCode;
-import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
+import java.beans.Transient;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * @author tony
  */
+
 @Service
 public class CalculatePriceServiceImpl implements CalculatePriceService {
 
@@ -28,134 +27,105 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
     @Autowired
     private CustomerContractSectionPriceMapperExt customerContractSectionPriceMapper;
 
+
     /**
-     * 根据条件计算费用
+     * 与客户结算的计算
      *
-     * @param dto
+     * @param dtoList
+     * @return 结算金额
+     */
+    @Override
+    public List<Map<Integer, BigDecimal>> calculatePaymentFromCustomer(List<CalculatePaymentDto> dtoList) {
+        List<Map<Integer, BigDecimal>> returnList = new ArrayList<>();
+        for (CalculatePaymentDto calculatePaymentDto : dtoList) {
+            Map<Integer, BigDecimal> map = new HashMap<>();
+            BigDecimal paymentMoney = new BigDecimal(0.00);
+            BigDecimal unitPrice = new BigDecimal(0.00);
+            BigDecimal minLoadWeight = new BigDecimal(0.00);
+            int compare =0;
+            int productType= calculatePaymentDto.getProductType();
+            switch (productType) {
+
+                //毛鸡结算
+                case 1:
+                    //根据合同id、装货地Id,卸货地id获取实际公里数
+                    BigDecimal actualMileage = new BigDecimal(40.00);
+
+                    //根据合同id、车型id获取最小载重量
+                    minLoadWeight = new BigDecimal(20.00);
+                    compare = calculatePaymentDto.getUnloadWeight().compareTo(minLoadWeight);
+
+                    //根据合同id、实际公里数、和运单完成时间获取区间重量单价
+                    unitPrice = new BigDecimal(20.00);
+
+                    //结算金额 = 结算重量（吨）✕ 区间重量单价（元/吨）
+                    paymentMoney = map.put(calculatePaymentDto.getWaybillId(), paymentMoney);
+
+                    returnList.add(map);
+                    break;
+                //饲料结算
+                case 2:
+
+                    ////根据合同id、装货地Id,卸货地id和车型id获取结算单价(元/吨)
+                    unitPrice = new BigDecimal(0.00);
+
+
+                    //根据合同Id,车型id和运单完成时间获取车型的最小装载量、常用装载量
+                    minLoadWeight = new BigDecimal(0.00);
+                    BigDecimal normalWeight = new BigDecimal(0.00);
+
+                    compare = calculatePaymentDto.getUnloadWeight().compareTo(minLoadWeight);
+                    if (compare == -1) {
+                        unitPrice = unitPrice.multiply(normalWeight.divide(minLoadWeight));
+                    }
+                    //结算金额 = 结算重量（吨）✕ 结算单价（元/吨）
+                    paymentMoney = calculatePaymentDto.getUnloadWeight().multiply(unitPrice);
+                    map.put(calculatePaymentDto.getWaybillId(), paymentMoney);
+                    returnList.add(map);
+                    break;
+
+                case 5:
+
+                    map.put(calculatePaymentDto.getWaybillId(), paymentMoney);
+                    returnList.add(map);
+                    break;
+
+                case 6:
+
+                    map.put(calculatePaymentDto.getWaybillId(), paymentMoney);
+                    returnList.add(map);
+                    break;
+
+            }
+
+        }
+        return returnList;
+    }
+
+    /**
+     * 运力结算：与司机的结算
+     *
+     * @param dtoList
      * @return
      */
     @Override
-    public Map<String, Object> calculatePrice(ListContractPriceCriteriaDto dto) {
+    public List<Map<Integer, BigDecimal>> calculatePaymentToDriver(List<CalculatePaymentDto> dtoList) {
+        for (CalculatePaymentDto calculatePaymentDto : dtoList) {
 
-        //按数量计价
-        if (PricingType.QUANTITY.longValue() == dto.getPricingType()) {
-            if (StringUtils.isEmpty(dto.getQuantity())) {
-                return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "数量不能为空");
+            //饲料结算
+            if (calculatePaymentDto.getProductType().equals(ProductType.CHICKEN)) {
+                BigDecimal unitPrice = new BigDecimal(0.00);
             }
-            ReturnContractPriceDto cp = customerContractPriceMapper.getPriceByCriteria(dto);
-            if (cp == null) {
-                return ServiceResult.error("未找到相应的报价");
+            //毛鸡结算
+            if (calculatePaymentDto.getProductType().equals(ProductType.FODDER)) {
+                BigDecimal unitPrice = new BigDecimal(0.00);
             }
-            PriceReturnDto priceReturnDto = new PriceReturnDto();
-            priceReturnDto
-                    .setPrice(cp.getPrice())
-                    .setMoney(cp.getPrice().multiply(new BigDecimal(dto.getQuantity())));
-            return ServiceResult.toResult(priceReturnDto);
-        }
 
-        //按每车计价
-        if (PricingType.VEHICLE.longValue() == dto.getPricingType()) {
-            if (StringUtils.isEmpty(dto.getUnloadSiteId())) {
-                return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "请选择收货地址");
-            }
-            if (StringUtils.isEmpty(dto.getLoadSiteId())) {
-                return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "请选择提货地址");
-            }
-            ReturnContractPriceDto cp = customerContractPriceMapper.getPriceByCriteria(dto);
-            if (cp == null) {
-                return ServiceResult.error("未找到相应的报价");
-            }
-            PriceReturnDto priceReturnDto = new PriceReturnDto();
-            priceReturnDto
-                    .setMoney(cp.getMinMoney());
-            return ServiceResult.toResult(priceReturnDto);
-        }
+            //仔猪/生猪结算：出租车模式
+            if (calculatePaymentDto.getProductType().equals(ProductType.PIGLET) || calculatePaymentDto.getProductType().equals(ProductType.LIVE_PIG)) {
 
-        //按里程计价
-        if (PricingType.MILEAGE.longValue() == dto.getPricingType()) {
-            if (StringUtils.isEmpty(dto.getMileage())) {
-                return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "里程数不能为空");
-            }
-            ReturnContractPriceDto cp = customerContractPriceMapper.getPriceByCriteria(dto);
-            if (cp == null) {
-                return ServiceResult.error("未找到相应的报价");
-            }
-            PriceReturnDto priceReturnDto = new PriceReturnDto();
-            priceReturnDto
-                    .setPrice(cp.getPrice())
-                    .setMoney(cp.getPrice().multiply(dto.getMileage()));
-            return ServiceResult.toResult(priceReturnDto);
-        }
-
-        //按起步里程数加价
-        if (PricingType.MILEAGE_RAISE_PRICE.longValue() == dto.getPricingType()) {
-            if (StringUtils.isEmpty(dto.getMileage())) {
-                return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "里程数不能为空");
-            }
-            ReturnContractPriceDto cp = customerContractPriceMapper.getPriceByCriteria(dto);
-            if (cp == null) {
-                return ServiceResult.error("未找到相应的报价");
-            }
-            PriceReturnDto priceReturnDto = new PriceReturnDto();
-            int compare = cp.getMinMile().compareTo(dto.getMileage());
-            if (compare == 1 || compare == 0) {
-                priceReturnDto.setMoney(cp.getMinMoney());
-                return ServiceResult.toResult(priceReturnDto);
-            }
-            if (compare == -1) {
-                BigDecimal collectMoneyMile = dto.getMileage().subtract(cp.getMinMile());
-                BigDecimal collectMoney = cp.getMinMoney().add(cp.getPrice().multiply(collectMoneyMile));
-                priceReturnDto
-                        .setPrice(cp.getPrice())
-                        .setMoney(collectMoney);
-                return ServiceResult.toResult(priceReturnDto);
             }
         }
-
-        //按里程区间计价
-        if (PricingType.MILEAGE_SUBSECTION_PRICE.longValue() == dto.getPricingType()) {
-            if (StringUtils.isEmpty(dto.getMileage())) {
-                return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "里程数不能为空");
-            }
-            ReturnContractPriceDto cp = customerContractPriceMapper.getPriceByCriteria(dto);
-            if (cp == null) {
-                return ServiceResult.error("未找到相应的报价");
-            }
-            CustomerContractSectionPrice csp = customerContractSectionPriceMapper.getByLimit(cp.getId(), dto.getMileage());
-            if (csp == null) {
-                return ServiceResult.error("未找到相应的区间报价");
-            }
-            PriceReturnDto priceReturnDto = new PriceReturnDto();
-            BigDecimal countMoney = dto.getMileage().multiply(csp.getPrice());
-            int compare = countMoney.compareTo(cp.getMinMoney());
-            if (compare == 1) {
-                priceReturnDto
-                        .setPrice(csp.getPrice())
-                        .setMoney(countMoney);
-                return ServiceResult.toResult(priceReturnDto);
-            }
-            if (compare == 0 || compare == -1) {
-                priceReturnDto.setMoney(cp.getMinMoney());
-                return ServiceResult.toResult(priceReturnDto);
-            }
-        }
-
-        //按重量计价
-        if (PricingType.WEIGHT.longValue() == dto.getPricingType()) {
-            if (StringUtils.isEmpty(dto.getWeight())) {
-                return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "重量不能为空");
-            }
-            ReturnContractPriceDto cp = customerContractPriceMapper.getPriceByCriteria(dto);
-            if (cp == null) {
-                return ServiceResult.error("未找到相应的报价");
-            }
-            PriceReturnDto priceReturnDto = new PriceReturnDto();
-            priceReturnDto
-                    .setPrice(cp.getPrice())
-                    .setMoney(cp.getPrice().multiply(dto.getWeight()));
-            return ServiceResult.toResult(priceReturnDto);
-        }
-        return ServiceResult.error("条件不正确，未找到相应的报价");
+        return null;
     }
-
 }
