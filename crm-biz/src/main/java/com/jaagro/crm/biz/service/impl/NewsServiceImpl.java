@@ -216,18 +216,20 @@ public class NewsServiceImpl implements NewsService {
                 // 获取新闻主体内容中所有的相对路径
                 List<String> imgStr = getImgUrl(content);
                 // 替换新闻主体内容中所有的相对路径改为绝对路径
-                replaceImageUrl(imgStr,content);
+                content = replaceImageUrl(imgStr,content);
+                newsReturnDto.setContent(content);
             }
         }
     }
 
-    private void replaceImageUrl(List<String> imgStr, String content) {
+    private String replaceImageUrl(List<String> imgStr, String content) {
         if (!CollectionUtils.isEmpty(imgStr) && StringUtils.hasText(content)){
             for (String imgUrl : imgStr){
                 String abstractImgUrl = getAbstractImageUrl(imgUrl);
-                content.replace(imgUrl,abstractImgUrl);
+                content = content.replace(imgUrl,abstractImgUrl);
             }
         }
+        return content;
     }
 
     /**
@@ -235,12 +237,12 @@ public class NewsServiceImpl implements NewsService {
      * @param htmlStr
      * @return
      */
-    private List<String> getImgUrl(String htmlStr) {
+    private static List<String> getImgUrl(String htmlStr) {
         List<String> pics = new ArrayList<>();
         String img ;
         Pattern p_image;
         Matcher m_image;
-        String regEx_img = "<img.*src\\s*=\\s*(.*?)[^>]*?>";
+        String regEx_img = "<.*img.*src\\s*=\\s*(.*?)[^>]*?>";
         p_image = Pattern.compile(regEx_img, Pattern.CASE_INSENSITIVE);
         m_image = p_image.matcher(htmlStr);
         while (m_image.find()) {
@@ -255,4 +257,8 @@ public class NewsServiceImpl implements NewsService {
         return pics;
     }
 
+    public static void main(String[] args) {
+        String str = "< img src=\"test/web/20181221/1545359652068i.jpg\" style=\"max-width: 100%;\">佛飘飘< img src=\"test/web/20181221/1545359626278l.jpg\" style=\"max-width:100%;\">考虑的放假啊可令肌肤<br>";
+        System.out.println(getImgUrl(str));
+    }
 }
