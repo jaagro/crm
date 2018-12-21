@@ -256,9 +256,5 @@ public class NewsServiceImpl implements NewsService {
         }
         return pics;
     }
-
-    public static void main(String[] args) {
-        String str = "< img src=\"test/web/20181221/1545359652068i.jpg\" style=\"max-width: 100%;\">佛飘飘< img src=\"test/web/20181221/1545359626278l.jpg\" style=\"max-width:100%;\">考虑的放假啊可令肌肤<br>";
-        System.out.println(getImgUrl(str));
-    }
+    
 }
