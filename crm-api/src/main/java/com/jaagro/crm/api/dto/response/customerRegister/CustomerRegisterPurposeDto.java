@@ -1,4 +1,4 @@
-package com.jaagro.crm.biz.entity;
+package com.jaagro.crm.api.dto.response.customerRegister;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -6,11 +6,16 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * 客户注册意向
+ * @author yj
+ * @since 2018/12/13
+ */
 @Data
 @Accessors(chain = true)
-public class SocialDriverRegisterPurpose implements Serializable{
+public class CustomerRegisterPurposeDto implements Serializable{
     /**
-     * 社会司机注册意向表id
+     * 客户注册意向表id
      */
     private Integer id;
 
@@ -25,14 +30,14 @@ public class SocialDriverRegisterPurpose implements Serializable{
     private String phoneNumber;
 
     /**
-     * 司机类型(1-个人,2-企业)
+     * 客户类型(1-个人,2-企业)
      */
-    private Integer driverType;
+    private Integer customerType;
 
     /**
-     * 车辆数量
+     * 货物类型 1-毛鸡,2-饲料,3-母猪,4-公猪,5-仔猪,6-生猪
      */
-    private Integer truckQuantity;
+    private Integer goodsType;
 
     /**
      * 所属城市
@@ -58,30 +63,5 @@ public class SocialDriverRegisterPurpose implements Serializable{
      * 备注
      */
     private String notes;
-
-    /**
-     * 是否有效：1-有效 0-无效
-     */
-    private Boolean enable;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 创建人
-     */
-    private Integer createUserId;
-
-    /**
-     * 修改时间
-     */
-    private Date modifyTime;
-
-    /**
-     * 修改人
-     */
-    private Integer modifyUserId;
 
 }

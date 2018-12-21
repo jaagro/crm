@@ -149,4 +149,11 @@
         set enabled = 0
         where driver_id = #{driverId}
     </update>
+    <select id="listQualificationByDriverId" parameterType="java.lang.Integer"
+            resultType="com.jaagro.crm.api.dto.response.truck.ListTruckQualificationDto">
+        select * from
+        truck_qualification
+        where driver_id = #{driverId}
+        and certificate_status = 1
+    </select>
 </mapper>

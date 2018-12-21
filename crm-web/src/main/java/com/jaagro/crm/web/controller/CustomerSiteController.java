@@ -48,22 +48,9 @@ public class CustomerSiteController {
         if (siteDto.getSiteType() == null) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "地址类型:[siteType]不能为空");
         }
-        if (siteDto.getSiteType() != null) {
-            if (siteDto.getSiteType().equals(1)) {
-                if (siteDto.getDeptId() == null) {
-                    return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "装货地归属网点不能为空");
-                }
-            }
-        }
         if (siteDto.getSiteName() == null) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "地址名称:[siteName]不能为空");
         }
-        UpdateCustomerSiteDto customerSiteDto = new UpdateCustomerSiteDto();
-        customerSiteDto.setSiteName(siteDto.getSiteName());
-        /*CustomerSiteReturnDto site = this.siteMapper.getSiteDto(customerSiteDto);
-        if (site != null) {
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "地址名称:[siteName]已存在");
-        }*/
         return BaseResponse.service(siteService.createSite(siteDto));
     }
 
@@ -126,5 +113,11 @@ public class CustomerSiteController {
     @PostMapping("/listSiteNameByIds")
     public List<String> listSiteNameByIds(@RequestBody List<Integer> siteIds) {
         return siteService.listSiteNameByIds(siteIds);
+    }
+
+    @ApiOperation("更新装卸货地的经纬度")
+    @PostMapping("/updateAllCustomerSite")
+    public BaseResponse updateAllCustomerSite() {
+        return BaseResponse.successInstance(siteService.updateAllCustomerSite());
     }
 }

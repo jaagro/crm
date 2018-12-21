@@ -29,6 +29,7 @@ import java.util.List;
 
 /**
  * 新闻管理
+ *
  * @author yj
  * @since 2018/11/16
  */
@@ -42,7 +43,7 @@ public class NewsController {
 
     @ApiOperation(value = "查询新闻类别")
     @GetMapping("/getAllNewsCategory")
-    public BaseResponse getAllNewsCategory(){
+    public BaseResponse getAllNewsCategory() {
         List<NewsCategory> allNewsCategory = newsService.getAllNewsCategory();
         List<NewsCategoryVo> newsCategoryVoList = generateNewsCategoryVo(allNewsCategory);
         return BaseResponse.successInstance(newsCategoryVoList);
@@ -51,19 +52,18 @@ public class NewsController {
     @ApiOperation(value = "新增新闻")
     @PostMapping("/news")
     public BaseResponse createNews(@RequestBody @Validated CreateNewsDto createNewsDto) {
-
         boolean isSuccess = newsService.createNews(createNewsDto);
-        if (isSuccess){
-           return BaseResponse.successInstance("发布新闻成功");
+        if (isSuccess) {
+            return BaseResponse.successInstance("发布新闻成功");
         }
         return BaseResponse.errorInstance("发布新闻失败");
     }
 
     @ApiOperation(value = "编辑新闻")
     @PutMapping("/news")
-    public BaseResponse updateNews(@RequestBody @Validated UpdateNewsDto updateNewsDto){
+    public BaseResponse updateNews(@RequestBody @Validated UpdateNewsDto updateNewsDto) {
         boolean isSuccess = newsService.updateNews(updateNewsDto);
-        if (isSuccess){
+        if (isSuccess) {
             return BaseResponse.successInstance("编辑新闻成功");
         }
         return BaseResponse.errorInstance("编辑新闻失败");
@@ -71,10 +71,10 @@ public class NewsController {
 
     @ApiOperation(value = "查看新闻详情")
     @GetMapping("/news/{id}")
-    public BaseResponse getNewsById(@PathVariable(value = "id") Integer id){
+    public BaseResponse getNewsById(@PathVariable(value = "id") Integer id) {
         NewsReturnDto newsReturnDto = newsService.getNewsById(id);
-        if (newsReturnDto == null){
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(),"id="+id+"不存在");
+        if (newsReturnDto == null) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "id=" + id + "不存在");
         }
         NewsVo newsVo = generateNewsVo(newsReturnDto);
         return BaseResponse.successInstance(newsVo);
@@ -84,7 +84,7 @@ public class NewsController {
     @DeleteMapping("/news/{id}")
     public BaseResponse deleteNews(@PathVariable(value = "id") Integer id) {
         boolean isSuccess = newsService.deleteNews(id);
-        if (isSuccess){
+        if (isSuccess) {
             return BaseResponse.successInstance("删除新闻成功");
         }
         return BaseResponse.errorInstance("删除新闻失败");
@@ -92,10 +92,10 @@ public class NewsController {
 
     @ApiOperation(value = "新闻列表")
     @PostMapping("/listNewsByCriteria")
-    public BaseResponse listByCriteria(@RequestBody @Validated ListNewsCriteriaDto listNewsCriteriaDto){
+    public BaseResponse listByCriteria(@RequestBody @Validated ListNewsCriteriaDto listNewsCriteriaDto) {
         PageInfo pageInfo = newsService.listByCriteria(listNewsCriteriaDto);
-        if (pageInfo != null){
-            List<NewsVo> newsVoList = generateNewsVoList(pageInfo.getList(),listNewsCriteriaDto.getRequestSource());
+        if (pageInfo != null) {
+            List<NewsVo> newsVoList = generateNewsVoList(pageInfo.getList(), listNewsCriteriaDto.getRequestSource());
             pageInfo.setList(newsVoList);
             return BaseResponse.successInstance(pageInfo);
         }
@@ -105,8 +105,8 @@ public class NewsController {
 
     private List<NewsCategoryVo> generateNewsCategoryVo(List<NewsCategory> allNewsCategory) {
         List<NewsCategoryVo> newsCategoryVoList = new LinkedList<>();
-        if (!CollectionUtils.isEmpty(allNewsCategory)){
-            for (NewsCategory newsCategory : allNewsCategory){
+        if (!CollectionUtils.isEmpty(allNewsCategory)) {
+            for (NewsCategory newsCategory : allNewsCategory) {
                 NewsCategoryVo vo = new NewsCategoryVo();
                 vo.setId(newsCategory.getId());
                 vo.setName(newsCategory.getName());
@@ -117,29 +117,33 @@ public class NewsController {
     }
 
     private NewsVo generateNewsVo(NewsReturnDto newsReturnDto) {
-        if (newsReturnDto != null){
+        if (newsReturnDto != null) {
             NewsVo newsVo = new NewsVo();
-            BeanUtils.copyProperties(newsReturnDto,newsVo);
+            BeanUtils.copyProperties(newsReturnDto, newsVo);
             NewsCategoryReturnDto newsCategoryReturnDto = newsReturnDto.getNewsCategoryReturnDto();
-            if (newsCategoryReturnDto != null){
+            if (newsCategoryReturnDto != null) {
                 newsVo.setCategory(newsCategoryReturnDto.getName());
+            }
+            UserInfo userInfo = newsReturnDto.getUserInfo();
+            if (userInfo != null){
+                newsVo.setCreateUserName(userInfo.getName());
             }
             return newsVo;
         }
         return null;
     }
 
-    private List<NewsVo> generateNewsVoList(List<NewsReturnDto> list,Integer requestSource) {
+    private List<NewsVo> generateNewsVoList(List<NewsReturnDto> list, Integer requestSource) {
         List<NewsVo> newsVoList = new LinkedList<>();
-        if (!CollectionUtils.isEmpty(list)){
-            for (NewsReturnDto dto : list){
+        if (!CollectionUtils.isEmpty(list)) {
+            for (NewsReturnDto dto : list) {
                 NewsVo newsVo = new NewsVo();
-                BeanUtils.copyProperties(dto,newsVo);
-                if (dto.getNewsCategoryReturnDto() != null){
+                BeanUtils.copyProperties(dto, newsVo);
+                if (dto.getNewsCategoryReturnDto() != null) {
                     NewsCategoryReturnDto newsCategoryReturnDto = dto.getNewsCategoryReturnDto();
                     newsVo.setCategory(newsCategoryReturnDto.getName());
                 }
-                if (RequestSource.PORTAL.equals(requestSource)){
+                if (RequestSource.PORTAL.equals(requestSource)) {
                     UserInfo userInfo = dto.getUserInfo();
                     newsVo.setCreateUserName(userInfo == null ? null : userInfo.getName());
                     // 运力后台新闻列表不展示新闻内容为减少网络消耗设置为空

@@ -1,4 +1,4 @@
-package com.jaagro.crm.api.dto.response.socialDriver;
+package com.jaagro.crm.api.dto.response.socialDriverRegister;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -52,6 +52,11 @@ public class SocialDriverRegisterPurposeDto implements Serializable {
      * 上传时间
      */
     private Date uploadTime;
+
+    /**
+     * 是否上传基本信息 0-未上传,1-已上传
+     */
+    private Boolean uploadFlag;
 
     /**
      * 备注

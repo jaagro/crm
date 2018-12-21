@@ -1,0 +1,37 @@
+package com.jaagro.crm.api.constant;
+
+/**
+ * @author tony
+ */
+public final class GoodsType {
+
+    /**
+     * 毛鸡
+     */
+    public static final Integer CHICKEN = 1;
+
+    /**
+     * 饲料
+     */
+    public static final Integer FODDER = 2;
+
+    /**
+     * 母猪
+     */
+    public static final Integer SOW = 3;
+
+    /**
+     * 公猪
+     */
+    public static final Integer BOAR = 4;
+
+    /**
+     * 仔猪
+     */
+    public static final Integer PIGLET = 5;
+
+    /**
+     * 生猪
+     */
+    public static final Integer LIVE_PIG = 6;
+}

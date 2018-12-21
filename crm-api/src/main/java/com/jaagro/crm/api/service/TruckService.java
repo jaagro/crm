@@ -3,6 +3,7 @@ package com.jaagro.crm.api.service;
 import com.jaagro.crm.api.dto.request.truck.CreateTruckDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.QueryTruckDto;
+import com.jaagro.crm.api.dto.response.truck.ChangeTruckDto;
 import com.jaagro.crm.api.dto.response.truck.GetTruckDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
 import com.jaagro.crm.api.dto.response.truck.TruckDto;
@@ -118,9 +119,18 @@ public interface TruckService {
 
     /**
      * 根据车辆id列表获取车辆信息
-     * @author yj
+     *
      * @param truckIdList
      * @return
+     * @author yj
      */
     List<TruckDto> listTruckByIds(List<Integer> truckIdList);
+
+    /**
+     * 根据车队id获取换车列表
+     *
+     * @param truckTeamId
+     * @return
+     */
+    List<ChangeTruckDto> listTruckByTruckTeamId(Integer truckTeamId);
 }

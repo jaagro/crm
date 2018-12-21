@@ -46,13 +46,22 @@ public interface DriverClientService {
     BaseResponse deleteDriverByTruckId(@PathVariable("truckId") Integer truckId);
 
     /**
-     * 通过司机id获取司机
+     * 通过司机id获取司机 状态为1
      *
      * @param id
      * @return
      */
     @GetMapping("/driverFeign/{id}")
     DriverReturnDto getDriverReturnObject(@PathVariable("id") Integer id);
+
+    /**
+     * 通过id获取司机 状态包括0,1,2,3
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/getDriverByIdFeign/{id}")
+    DriverReturnDto getDriverByIdFeign(@PathVariable("id") Integer id);
 
     /**
      * 通过司机id获取司机
@@ -102,14 +111,16 @@ public interface DriverClientService {
     /**
      * 查询近一个月过期证件
      * Author: @Gao.
+     *
      * @param driverExpiryDateType
      * @return
      */
     @GetMapping("/listDriverCertificateOverdueNotice/{driverExpiryDateType}")
-    BaseResponse<List<DriverReturnDto>> listDriverCertificateOverdueNotice(@PathVariable("driverExpiryDateType")Integer driverExpiryDateType);
+    BaseResponse<List<DriverReturnDto>> listDriverCertificateOverdueNotice(@PathVariable("driverExpiryDateType") Integer driverExpiryDateType);
 
     /**
      * 根据手机号查询司机
+     *
      * @param phoneNumber
      * @return
      */

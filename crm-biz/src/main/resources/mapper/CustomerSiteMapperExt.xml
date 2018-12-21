@@ -133,5 +133,9 @@
             </foreach>
         </if>
     </select>
-
+    <select id="listAllCustomerSite" resultMap="ReturnMap">
+        select
+        <include refid="Base_Column_List"/>
+        from customer_site
+    </select>
 </mapper>

@@ -132,7 +132,8 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.TruckQualification">
+    <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.TruckQualification" useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id">
         update truck_qualification
         <set>
             <if test="truckTeamId != null">
@@ -174,7 +175,8 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.TruckQualification">
+    <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.TruckQualification" useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id">
     update truck_qualification
     set truck_team_id = #{truckTeamId,jdbcType=INTEGER},
       truck_id = #{truckId,jdbcType=INTEGER},

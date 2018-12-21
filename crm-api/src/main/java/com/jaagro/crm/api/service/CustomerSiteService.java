@@ -75,15 +75,14 @@ public interface CustomerSiteService {
     /**
      * 删除地点，注意逻辑删除
      *
-     * @param id
-     * @return
+     * @param siteReturnDtos @return
      */
     Map<String, Object> disableSite(List<CustomerSiteReturnDto> siteReturnDtos);
 
     /**
      * 验证名称是否重复
      *
-     * @param id
+     * @param siteDto
      * @return
      */
     Map<String, Object> getBySiteDto(UpdateCustomerSiteDto siteDto);
@@ -120,4 +119,12 @@ public interface CustomerSiteService {
      * @return
      */
     List<String> listSiteNameByIds(List<Integer> siteIds);
+
+    /**
+     *
+     * 更新所有装卸货地的经纬度
+     * @Ahtor : Gavin
+     * @return
+     */
+    int updateAllCustomerSite();
 }
