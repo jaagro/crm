@@ -2,7 +2,6 @@ package com.jaagro.crm.web.controller;
 
 import com.jaagro.crm.api.dto.request.contract.CalculatePaymentDto;
 import com.jaagro.crm.api.service.CalculatePriceService;
-import com.jaagro.utils.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -32,8 +33,7 @@ public class CalculatePaymentController {
      */
     @ApiOperation("客户结算")
     @PostMapping("/calculatePaymentFromCustomer")
-
-    public BaseResponse calculatePaymentFromCustomer(@RequestBody @Validated List<CalculatePaymentDto> dtoList) {
-        return BaseResponse.successInstance(calculatePriceService.calculatePaymentFromCustomer(dtoList));
+    public List<Map<Integer, BigDecimal>> calculatePaymentFromCustomer(@RequestBody @Validated List<CalculatePaymentDto> dtoList) {
+        return calculatePriceService.calculatePaymentFromCustomer(dtoList);
     }
 }

@@ -68,9 +68,9 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
                 case 2:
 
                     //根据合同id、装货地Id,卸货地id和车型id获取结算单价(元/吨)
-                    unitPrice = new BigDecimal(0.00);
+                    unitPrice = new BigDecimal(10.00);
                     //根据合同Id,车型id和运单完成时间获取车型的最小装载量、常用装载量
-                    minLoadWeight = new BigDecimal(0.00);
+                    minLoadWeight = new BigDecimal(1.00);
                     BigDecimal normalWeight = new BigDecimal(0.00);
 
                     if (minLoadWeight != null && minLoadWeight.compareTo(new BigDecimal(0.00)) != 0) {
