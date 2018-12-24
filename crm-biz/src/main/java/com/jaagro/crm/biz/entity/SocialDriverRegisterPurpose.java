@@ -9,6 +9,7 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class SocialDriverRegisterPurpose implements Serializable{
+    private static final long serialVersionUID = -3643793045116813252L;
     /**
      * 社会司机注册意向表id
      */

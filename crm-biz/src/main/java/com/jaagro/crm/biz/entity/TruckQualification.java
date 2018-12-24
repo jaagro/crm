@@ -12,6 +12,7 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class TruckQualification implements Serializable {
+    private static final long serialVersionUID = 4118179567234564755L;
     /**
      * 资质证照主键id
      */

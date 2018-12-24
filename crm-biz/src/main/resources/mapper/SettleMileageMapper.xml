@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jaagro.crm.biz.mapper.SettleMileageMapperExt" >
+  <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.SettleMileage" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="customer_contract_id" property="customerContractId" jdbcType="INTEGER" />
+    <result column="department_id" property="departmentId" jdbcType="INTEGER" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+    <result column="load_site_id" property="loadSiteId" jdbcType="INTEGER" />
+    <result column="load_site_name" property="loadSiteName" jdbcType="VARCHAR" />
+    <result column="unload_site_id" property="unloadSiteId" jdbcType="INTEGER" />
+    <result column="unload_site_name" property="unloadSiteName" jdbcType="VARCHAR" />
+    <result column="customer_settle_mileage" property="customerSettleMileage" jdbcType="DECIMAL" />
+    <result column="driver_settle_mileage" property="driverSettleMileage" jdbcType="DECIMAL" />
+    <result column="track_mileage" property="trackMileage" jdbcType="DECIMAL" />
+    <result column="enable" property="enable" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER" />
+    <result column="modify_user_name" property="modifyUserName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, customer_contract_id, department_id, department_name, load_site_id, load_site_name, 
+    unload_site_id, unload_site_name, customer_settle_mileage, driver_settle_mileage, 
+    track_mileage, enable, create_time, create_user_id, create_user_name, modify_time, 
+    modify_user_id, modify_user_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from settle_mileage
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from settle_mileage
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.SettleMileage" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
+    insert into settle_mileage (id, customer_contract_id, department_id, 
+      department_name, load_site_id, load_site_name, 
+      unload_site_id, unload_site_name, customer_settle_mileage, 
+      driver_settle_mileage, track_mileage, enable, 
+      create_time, create_user_id, create_user_name, 
+      modify_time, modify_user_id, modify_user_name
+      )
+    values (#{id,jdbcType=INTEGER}, #{customerContractId,jdbcType=INTEGER}, #{departmentId,jdbcType=INTEGER}, 
+      #{departmentName,jdbcType=VARCHAR}, #{loadSiteId,jdbcType=INTEGER}, #{loadSiteName,jdbcType=VARCHAR}, 
+      #{unloadSiteId,jdbcType=INTEGER}, #{unloadSiteName,jdbcType=VARCHAR}, #{customerSettleMileage,jdbcType=DECIMAL}, 
+      #{driverSettleMileage,jdbcType=DECIMAL}, #{trackMileage,jdbcType=DECIMAL}, #{enable,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, 
+      #{modifyTime,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=INTEGER}, #{modifyUserName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.SettleMileage" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
+    insert into settle_mileage
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="customerContractId != null" >
+        customer_contract_id,
+      </if>
+      <if test="departmentId != null" >
+        department_id,
+      </if>
+      <if test="departmentName != null" >
+        department_name,
+      </if>
+      <if test="loadSiteId != null" >
+        load_site_id,
+      </if>
+      <if test="loadSiteName != null" >
+        load_site_name,
+      </if>
+      <if test="unloadSiteId != null" >
+        unload_site_id,
+      </if>
+      <if test="unloadSiteName != null" >
+        unload_site_name,
+      </if>
+      <if test="customerSettleMileage != null" >
+        customer_settle_mileage,
+      </if>
+      <if test="driverSettleMileage != null" >
+        driver_settle_mileage,
+      </if>
+      <if test="trackMileage != null" >
+        track_mileage,
+      </if>
+      <if test="enable != null" >
+        enable,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createUserName != null" >
+        create_user_name,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+      <if test="modifyUserId != null" >
+        modify_user_id,
+      </if>
+      <if test="modifyUserName != null" >
+        modify_user_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="customerContractId != null" >
+        #{customerContractId,jdbcType=INTEGER},
+      </if>
+      <if test="departmentId != null" >
+        #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="departmentName != null" >
+        #{departmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="loadSiteId != null" >
+        #{loadSiteId,jdbcType=INTEGER},
+      </if>
+      <if test="loadSiteName != null" >
+        #{loadSiteName,jdbcType=VARCHAR},
+      </if>
+      <if test="unloadSiteId != null" >
+        #{unloadSiteId,jdbcType=INTEGER},
+      </if>
+      <if test="unloadSiteName != null" >
+        #{unloadSiteName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerSettleMileage != null" >
+        #{customerSettleMileage,jdbcType=DECIMAL},
+      </if>
+      <if test="driverSettleMileage != null" >
+        #{driverSettleMileage,jdbcType=DECIMAL},
+      </if>
+      <if test="trackMileage != null" >
+        #{trackMileage,jdbcType=DECIMAL},
+      </if>
+      <if test="enable != null" >
+        #{enable,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createUserName != null" >
+        #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyUserId != null" >
+        #{modifyUserId,jdbcType=INTEGER},
+      </if>
+      <if test="modifyUserName != null" >
+        #{modifyUserName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.SettleMileage" >
+    update settle_mileage
+    <set >
+      <if test="customerContractId != null" >
+        customer_contract_id = #{customerContractId,jdbcType=INTEGER},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="departmentName != null" >
+        department_name = #{departmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="loadSiteId != null" >
+        load_site_id = #{loadSiteId,jdbcType=INTEGER},
+      </if>
+      <if test="loadSiteName != null" >
+        load_site_name = #{loadSiteName,jdbcType=VARCHAR},
+      </if>
+      <if test="unloadSiteId != null" >
+        unload_site_id = #{unloadSiteId,jdbcType=INTEGER},
+      </if>
+      <if test="unloadSiteName != null" >
+        unload_site_name = #{unloadSiteName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerSettleMileage != null" >
+        customer_settle_mileage = #{customerSettleMileage,jdbcType=DECIMAL},
+      </if>
+      <if test="driverSettleMileage != null" >
+        driver_settle_mileage = #{driverSettleMileage,jdbcType=DECIMAL},
+      </if>
+      <if test="trackMileage != null" >
+        track_mileage = #{trackMileage,jdbcType=DECIMAL},
+      </if>
+      <if test="enable != null" >
+        enable = #{enable,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createUserName != null" >
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyUserId != null" >
+        modify_user_id = #{modifyUserId,jdbcType=INTEGER},
+      </if>
+      <if test="modifyUserName != null" >
+        modify_user_name = #{modifyUserName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.SettleMileage" >
+    update settle_mileage
+    set customer_contract_id = #{customerContractId,jdbcType=INTEGER},
+      department_id = #{departmentId,jdbcType=INTEGER},
+      department_name = #{departmentName,jdbcType=VARCHAR},
+      load_site_id = #{loadSiteId,jdbcType=INTEGER},
+      load_site_name = #{loadSiteName,jdbcType=VARCHAR},
+      unload_site_id = #{unloadSiteId,jdbcType=INTEGER},
+      unload_site_name = #{unloadSiteName,jdbcType=VARCHAR},
+      customer_settle_mileage = #{customerSettleMileage,jdbcType=DECIMAL},
+      driver_settle_mileage = #{driverSettleMileage,jdbcType=DECIMAL},
+      track_mileage = #{trackMileage,jdbcType=DECIMAL},
+      enable = #{enable,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      modify_user_id = #{modifyUserId,jdbcType=INTEGER},
+      modify_user_name = #{modifyUserName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

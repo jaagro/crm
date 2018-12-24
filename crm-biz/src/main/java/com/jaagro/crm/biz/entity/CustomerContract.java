@@ -12,6 +12,7 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class CustomerContract implements Serializable {
+    private static final long serialVersionUID = -6165501853448661949L;
     /**
      * 合同ID
      */

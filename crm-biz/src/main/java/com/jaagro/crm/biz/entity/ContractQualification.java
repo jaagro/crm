@@ -12,6 +12,7 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class ContractQualification implements Serializable {
+    private static final long serialVersionUID = -6223602075099167596L;
     /**
      * 合同资质证照主键id
      */

@@ -15,6 +15,7 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class League implements Serializable {
+    private static final long serialVersionUID = -7905420828702376035L;
     /**
      * 主键id
      */

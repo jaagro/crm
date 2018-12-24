@@ -12,6 +12,7 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class TruckVerifyLog implements Serializable {
+    private static final long serialVersionUID = 7601705092223526580L;
     /**
      * 司机车辆车队审核表主键id
      */

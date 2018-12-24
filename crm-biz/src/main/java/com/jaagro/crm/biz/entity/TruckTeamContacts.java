@@ -12,6 +12,7 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class TruckTeamContacts implements Serializable {
+    private static final long serialVersionUID = -6338132275404916705L;
     /**
      * 主键车队表联系人ID
      */

@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 @Data
 @Accessors(chain = true)
 public class TruckTeamContractSectionPrice implements Serializable {
+    private static final long serialVersionUID = -7835806769340828417L;
     /**
      * 
      */

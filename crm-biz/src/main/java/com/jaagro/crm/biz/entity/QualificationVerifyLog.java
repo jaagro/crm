@@ -9,6 +9,7 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class QualificationVerifyLog implements Serializable {
+    private static final long serialVersionUID = -3339524781441680785L;
     /**
      * 审核表主键id
      */
