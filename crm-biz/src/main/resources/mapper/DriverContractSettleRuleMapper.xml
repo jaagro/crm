@@ -184,7 +184,8 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.DriverContractSettleRule" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.DriverContractSettleRule" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
     update driver_contract_settle_rule
     <set >
       <if test="truckTeamContractId != null" >
@@ -247,7 +248,8 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.DriverContractSettleRule" >
+  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.DriverContractSettleRule" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
     update driver_contract_settle_rule
     set truck_team_contract_id = #{truckTeamContractId,jdbcType=INTEGER},
       truck_type_id = #{truckTypeId,jdbcType=INTEGER},
