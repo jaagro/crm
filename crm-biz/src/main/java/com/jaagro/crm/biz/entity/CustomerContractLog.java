@@ -11,7 +11,8 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-public class    CustomerContractLog implements Serializable {
+public class CustomerContractLog implements Serializable {
+    private static final long serialVersionUID = 7554346661686932448L;
     /**
      * 合同日志
      */

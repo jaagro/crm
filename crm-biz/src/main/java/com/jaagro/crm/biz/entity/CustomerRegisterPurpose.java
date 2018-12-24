@@ -14,6 +14,7 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class CustomerRegisterPurpose implements Serializable{
+    private static final long serialVersionUID = -231999703336410797L;
     /**
      * 客户注册意向表id
      */

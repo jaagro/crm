@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Data
 @Accessors(chain = true)
 public class TruckType implements Serializable {
+    private static final long serialVersionUID = -9063223075834408089L;
     /**
      * 车型表主键id
      */

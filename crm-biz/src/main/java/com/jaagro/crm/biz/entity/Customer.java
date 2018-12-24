@@ -13,6 +13,7 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class Customer implements Serializable {
+    private static final long serialVersionUID = 6958779518702642899L;
     /**
      * 客户主键idnabled
      */
