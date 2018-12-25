@@ -53,9 +53,4 @@ public class UpdateTruckTeamContractDto implements Serializable {
      */
     private String notes;
 
-    /**
-     * 合同报价
-     */
-    private List<UpdateTruckTeamContractPriceDto> contractPriceDtoList;
-
 }
