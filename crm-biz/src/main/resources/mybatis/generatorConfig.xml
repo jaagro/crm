@@ -50,8 +50,5 @@
         <table tableName="customer_contract_settle_price" domainObjectName="CustomerContractSettlePrice" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false"></table>
-        <!--
-        <table tableName="customer_site" domainObjectName="CustomerSite" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
-        <table tableName="truck_team_contract_section_price" domainObjectName="TruckTeamContractSectionPrice" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
     </context>
 </generatorConfiguration>

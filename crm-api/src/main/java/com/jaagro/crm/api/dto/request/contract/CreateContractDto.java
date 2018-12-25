@@ -65,10 +65,6 @@ public class CreateContractDto implements Serializable {
      */
     private String remark;
 
-    /**
-     * 报价
-     */
-    private List<CreateContractPriceDto> price;
 
     /**
      * 合同资质证件照

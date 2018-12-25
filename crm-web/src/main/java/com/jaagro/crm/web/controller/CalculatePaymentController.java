@@ -1,5 +1,6 @@
 package com.jaagro.crm.web.controller;
 
+import com.jaagro.crm.api.dto.ValidList;
 import com.jaagro.crm.api.dto.request.contract.CalculatePaymentDto;
 import com.jaagro.crm.api.service.CalculatePriceService;
 import io.swagger.annotations.Api;
@@ -35,7 +36,7 @@ public class CalculatePaymentController {
      */
     @ApiOperation("客户结算")
     @PostMapping("/calculatePaymentFromCustomer")
-    public List<Map<Integer, BigDecimal>> calculatePaymentFromCustomer(@RequestBody @Validated List<CalculatePaymentDto> dtoList) {
+    public List<Map<Integer, BigDecimal>> calculatePaymentFromCustomer(@RequestBody @Validated ValidList<CalculatePaymentDto> dtoList) {
         log.info("O calculatePaymentFromCustomer param={}",dtoList);
         return calculatePriceService.calculatePaymentFromCustomer(dtoList);
     }
@@ -47,7 +48,7 @@ public class CalculatePaymentController {
      */
     @ApiOperation("司机结算")
     @PostMapping("/calculatePaymentFromDriver")
-    public List<Map<Integer, BigDecimal>> calculatePaymentFromDriver(@RequestBody @Validated List<CalculatePaymentDto> dtoList) {
+    public List<Map<Integer, BigDecimal>> calculatePaymentFromDriver(@RequestBody @Validated ValidList<CalculatePaymentDto> dtoList) {
         log.info("O calculatePaymentFromDriver param={}",dtoList);
         return calculatePriceService.calculatePaymentToDriver(dtoList);
     }

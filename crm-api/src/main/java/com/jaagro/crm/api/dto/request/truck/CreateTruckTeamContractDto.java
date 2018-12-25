@@ -45,11 +45,6 @@ public class CreateTruckTeamContractDto implements Serializable {
     private String notes;
 
     /**
-     * 合同报价
-     */
-    private List<CreateTruckTeamContractPriceDto> contractPriceDtoList;
-
-    /**
      * 合同资质证件照
      */
     private List<CreateContractQualificationDto> qualificationDtoList;
