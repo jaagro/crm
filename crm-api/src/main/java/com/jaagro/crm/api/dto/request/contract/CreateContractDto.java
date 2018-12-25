@@ -14,6 +14,7 @@ import java.util.List;
 @Accessors(chain = true)
 public class CreateContractDto implements Serializable {
 
+    private static final long serialVersionUID = 2729052832985945646L;
     /**
      * 客户ID
      */
