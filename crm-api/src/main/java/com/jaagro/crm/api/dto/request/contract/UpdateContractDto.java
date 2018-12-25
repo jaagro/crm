@@ -75,5 +75,4 @@ public class UpdateContractDto implements Serializable {
      */
     private String remark;
 
-    private List<UpdateContractPriceDto> price;
 }
