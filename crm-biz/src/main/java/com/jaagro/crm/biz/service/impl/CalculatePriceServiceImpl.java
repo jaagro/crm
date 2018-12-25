@@ -138,10 +138,12 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
     @Override
     public List<Map<Integer, BigDecimal>> calculatePaymentToDriver(List<CalculatePaymentDto> dtoList) {
         for (CalculatePaymentDto calculatePaymentDto : dtoList) {
-
+            // 1 获取合同装卸货地里程,一装多卸取最远里程
+            settleMileageMapperExt.getSettleMileageList(calculatePaymentDto.getCustomerContractId(),calculatePaymentDto.getSiteDtoList());
             //饲料结算
             if (calculatePaymentDto.getProductType().equals(ProductType.CHICKEN)) {
                 BigDecimal unitPrice = new BigDecimal(0.00);
+
             }
             //毛鸡结算
             if (calculatePaymentDto.getProductType().equals(ProductType.FODDER)) {
