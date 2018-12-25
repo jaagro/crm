@@ -20,6 +20,8 @@
         <result column="end_date" property="endDate" jdbcType="TIMESTAMP"/>
         <result column="contract_status" property="contractStatus" jdbcType="INTEGER"/>
         <result column="notes" property="notes" jdbcType="VARCHAR"/>
+        <collection property="qualificationDtoList" column="id"
+                    select="com.jaagro.crm.biz.mapper.ContractQualificationMapperExt.listQualificationByContractId"></collection>
     </resultMap>
     <select id="getById" parameterType="java.lang.Integer" resultMap="ReturnInfo">
         select
