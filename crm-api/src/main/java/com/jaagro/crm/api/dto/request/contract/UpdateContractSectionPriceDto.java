@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 @Accessors(chain = true)
 public class UpdateContractSectionPriceDto implements Serializable {
 
+    private static final long serialVersionUID = 707352195923618956L;
     /**
      * 客户合同阶梯报价
      */

@@ -59,6 +59,7 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
                 case 1:
                     //根据合同id、装货地Id,卸货地id获取实际公里数
                     actualMileage = new BigDecimal(40.00);
+                    settleMileageMapperExt.
 
                     //根据合同id、车型id获取最小载重量
                     minLoadWeight = new BigDecimal(20.00);

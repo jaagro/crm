@@ -12,6 +12,7 @@ import java.io.Serializable;
 @Accessors(chain = true)
 public class CreateContractQualificationDto implements Serializable {
 
+    private static final long serialVersionUID = 6204518611244505211L;
     /**
      * 关联id
      */

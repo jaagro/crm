@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 @Accessors(chain = true)
 public class ListContractSecPriceCriteriaDto implements Serializable {
 
+    private static final long serialVersionUID = -1195852192413693296L;
     private Integer selectionId;
 
     private Long contractPriceId;
