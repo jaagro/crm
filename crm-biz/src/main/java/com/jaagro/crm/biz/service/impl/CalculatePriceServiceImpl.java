@@ -3,15 +3,13 @@ package com.jaagro.crm.biz.service.impl;
 import com.jaagro.crm.api.constant.ProductType;
 import com.jaagro.crm.api.dto.request.contract.CalculatePaymentDto;
 import com.jaagro.crm.api.service.CalculatePriceService;
+import com.jaagro.crm.biz.entity.SettleMileage;
 import com.jaagro.crm.biz.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author tony
@@ -60,18 +58,23 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
                 case 1:
                     //根据合同id、装货地Id,卸货地id获取实际公里数
                     actualMileage = new BigDecimal(40.00);
+                    List<SettleMileage> mileageList = settleMileageMapperExt.getSettleMileageList(calculatePaymentDto.getContractId(),calculatePaymentDto.getSiteDtoList());
+                    if(mileageList.size()==calculatePaymentDto.getSiteDtoList().size()) {
+                        //找出最远里程的
+//                        Optional<SettleMileage> employeeOptional = mileageList.stream().max((e1, e2)->Integer.compare(e1.getCustomerSettleMileage(),e2.getCustomerSettleMileage()));
 
-                    //根据合同id、车型id获取最小载重量
-                    minLoadWeight = new BigDecimal(20.00);
-                    compare = calculatePaymentDto.getUnloadWeight().compareTo(minLoadWeight);
+                        //根据合同id、车型id获取最小载重量
+                        minLoadWeight = new BigDecimal(20.00);
+                        compare = calculatePaymentDto.getUnloadWeight().compareTo(minLoadWeight);
 
-                    //根据合同id、实际公里数、和运单完成时间获取区间重量单价
-                    unitPrice = new BigDecimal(20.00);
+                        //根据合同id、实际公里数、和运单完成时间获取区间重量单价
+                        unitPrice = new BigDecimal(20.00);
 
-                    //结算金额 = 结算重量（吨）✕ 区间重量单价（元/吨）
-                    paymentMoney = map.put(calculatePaymentDto.getWaybillId(), paymentMoney);
+                        //结算金额 = 结算重量（吨）✕ 区间重量单价（元/吨）
+                        paymentMoney = map.put(calculatePaymentDto.getWaybillId(), paymentMoney);
 
-                    returnList.add(map);
+                        returnList.add(map);
+                    }
                     break;
                 //饲料结算
                 case 2:
