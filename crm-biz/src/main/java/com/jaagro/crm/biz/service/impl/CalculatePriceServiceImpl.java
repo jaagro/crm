@@ -29,13 +29,14 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
     @Autowired
     private CustomerContractSettlePriceMapperExt customerContractSettlePriceMapperExt;
     @Autowired
-    private CustomerContractSectionPriceMapperExt customerContractSectionPriceMapperExt;
+    private CustomerContractSettleSectionRuleMapperExt customerContractSettleSectionRuleMapperExt;
     @Autowired
     private DriverContractSettleSectionRuleMapperExt driverContractSettleSectionRuleMapperExt;
     @Autowired
     private DriverContractSettleRuleMapperExt driverContractSettleRuleMapperExt;
     @Autowired
     private SettleMileageMapperExt settleMileageMapperExt;
+
     /**
      * 与客户结算的计算
      *
