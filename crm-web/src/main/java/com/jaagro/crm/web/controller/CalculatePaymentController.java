@@ -4,6 +4,7 @@ import com.jaagro.crm.api.dto.request.contract.CalculatePaymentDto;
 import com.jaagro.crm.api.service.CalculatePriceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -21,6 +22,7 @@ import java.util.Map;
  */
 @RestController
 @Api(description = "结算管理", produces = MediaType.APPLICATION_JSON_VALUE)
+@Slf4j
 public class CalculatePaymentController {
 
     @Autowired
@@ -34,6 +36,19 @@ public class CalculatePaymentController {
     @ApiOperation("客户结算")
     @PostMapping("/calculatePaymentFromCustomer")
     public List<Map<Integer, BigDecimal>> calculatePaymentFromCustomer(@RequestBody @Validated List<CalculatePaymentDto> dtoList) {
+        log.info("O calculatePaymentFromCustomer param={}",dtoList);
         return calculatePriceService.calculatePaymentFromCustomer(dtoList);
+    }
+
+    /**
+     * 与司机结算的计算
+     * @param dtoList
+     * @return 结算金额
+     */
+    @ApiOperation("司机结算")
+    @PostMapping("/calculatePaymentFromDriver")
+    public List<Map<Integer, BigDecimal>> calculatePaymentFromDriver(@RequestBody @Validated List<CalculatePaymentDto> dtoList) {
+        log.info("O calculatePaymentFromDriver param={}",dtoList);
+        return calculatePriceService.calculatePaymentToDriver(dtoList);
     }
 }

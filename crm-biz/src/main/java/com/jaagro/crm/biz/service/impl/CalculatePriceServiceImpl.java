@@ -3,12 +3,10 @@ package com.jaagro.crm.biz.service.impl;
 import com.jaagro.crm.api.constant.ProductType;
 import com.jaagro.crm.api.dto.request.contract.CalculatePaymentDto;
 import com.jaagro.crm.api.service.CalculatePriceService;
-import com.jaagro.crm.biz.mapper.CustomerContractPriceMapperExt;
-import com.jaagro.crm.biz.mapper.CustomerContractSectionPriceMapperExt;
+import com.jaagro.crm.biz.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.beans.Transient;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,11 +21,21 @@ import java.util.Map;
 public class CalculatePriceServiceImpl implements CalculatePriceService {
 
     @Autowired
-    private CustomerContractPriceMapperExt customerContractPriceMapper;
+    private ContractOilPriceMapperExt contractOilPriceMapperExt;
     @Autowired
-    private CustomerContractSectionPriceMapperExt customerContractSectionPriceMapper;
-
-
+    private CustomerContractSettleRuleMapperExt customerContractSettleRuleMapperExt;
+    @Autowired
+    private CustomerContractSettleTruckRuleMapperExt customerContractSettleTruckRuleMapperExt;
+    @Autowired
+    private CustomerContractSettlePriceMapperExt customerContractSettlePriceMapperExt;
+    @Autowired
+    private CustomerContractSectionPriceMapperExt customerContractSectionPriceMapperExt;
+    @Autowired
+    private DriverContractSettleSectionRuleMapperExt driverContractSettleSectionRuleMapperExt;
+    @Autowired
+    private DriverContractSettleRuleMapperExt driverContractSettleRuleMapperExt;
+    @Autowired
+    private SettleMileageMapperExt settleMileageMapperExt;
     /**
      * 与客户结算的计算
      *
