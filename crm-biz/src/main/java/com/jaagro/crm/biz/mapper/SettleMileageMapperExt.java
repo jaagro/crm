@@ -12,5 +12,11 @@ import java.util.List;
  * @since 2018/12/24
  */
 public interface SettleMileageMapperExt extends SettleMileageMapper {
+    /**
+     * 根据合同id装卸货地id列表查询
+     * @param customerContractId
+     * @param siteDtoList
+     * @return
+     */
     List<SettleMileage> getSettleMileageList(@Param("customerContractId") Integer customerContractId,@Param("siteDtoList") List<SiteDto> siteDtoList);
 }
