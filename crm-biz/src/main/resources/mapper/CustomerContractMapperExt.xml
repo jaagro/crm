@@ -14,10 +14,6 @@
         <result column="context" property="context" jdbcType="VARCHAR"/>
         <result column="contract_number" property="contractNumber" jdbcType="VARCHAR"/>
         <result column="remark" property="remark" jdbcType="VARCHAR"/>
-        <collection property="prices" column="id"
-                    select="com.jaagro.crm.biz.mapper.CustomerContractPriceMapperExt.getByContractId"></collection>
-        <collection property="qualifications" column="id"
-                    select="com.jaagro.crm.biz.mapper.ContractQualificationMapperExt.listQualificationByContractId"></collection>
     </resultMap>
     <resultMap id="ReturnCheckMap" type="com.jaagro.crm.api.dto.response.contract.ReturnCheckContractDto">
         <id column="id" property="id" jdbcType="INTEGER"/>
