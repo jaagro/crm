@@ -27,11 +27,18 @@ public class CalculatePaymentDto implements Serializable {
      * 运单完成时间，必须完成的运单才能有结算金额
      */
     private Date doneDate;
+
     /**
-     * 合同id
+     * 客户合同id
      */
-    @NotNull(message = "{contractId.NotNull}")
-    private Integer contractId;
+    @NotNull(message = "{customerContractId.NotNull}")
+    private Integer customerContractId;
+
+    /**
+     * 车队合同id
+     */
+    @NotNull(message = "{truckTeamContractId.NotNull}")
+    private Integer truckTeamContractId;
 
     /**
      * 货物类型
