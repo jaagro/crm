@@ -10,5 +10,5 @@ import java.util.List;
  * @since 2018/12/24
  */
 public interface SettleMileageMapperExt extends SettleMileageMapper {
-    List<SettleMileage> get
+    List<SettleMileage> getSettleMileageList(SettleMileage settleMileage);
 }
