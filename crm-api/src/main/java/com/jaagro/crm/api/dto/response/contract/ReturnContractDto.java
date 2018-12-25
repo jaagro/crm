@@ -82,10 +82,6 @@ public class ReturnContractDto implements Serializable {
      */
     private String remark;
 
-    /**
-     * 合同报价
-     */
-    private List<ReturnContractPriceDto> prices;
 
     /**
      * 合同资质

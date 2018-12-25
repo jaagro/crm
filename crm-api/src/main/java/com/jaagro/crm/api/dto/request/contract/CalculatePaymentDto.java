@@ -2,6 +2,7 @@ package com.jaagro.crm.api.dto.request.contract;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -27,11 +28,18 @@ public class CalculatePaymentDto implements Serializable {
      * 运单完成时间，必须完成的运单才能有结算金额
      */
     private Date doneDate;
+
     /**
-     * 合同id
+     * 客户合同id
      */
-    @NotNull(message = "{contractId.NotNull}")
-    private Integer contractId;
+    @NotNull(message = "{customerContractId.NotNull}")
+    private Integer customerContractId;
+
+    /**
+     * 车队合同id
+     */
+    @NotNull(message = "{truckTeamContractId.NotNull}")
+    private Integer truckTeamContractId;
 
     /**
      * 货物类型
@@ -44,6 +52,7 @@ public class CalculatePaymentDto implements Serializable {
     /**
      * 运单装卸货地ID列表对象
      */
+    @NotEmpty(message = "{siteDtoList.NotEmpty}")
     private List<SiteDto> siteDtoList;
 
 
