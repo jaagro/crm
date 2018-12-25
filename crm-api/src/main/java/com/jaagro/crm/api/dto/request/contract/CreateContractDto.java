@@ -1,5 +1,7 @@
 package com.jaagro.crm.api.dto.request.contract;
 
+import com.jaagro.crm.api.dto.request.customer.CreateCustomerOilPriceDto;
+import com.jaagro.crm.api.dto.request.customer.CreateCustomerSettlePriceDto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -74,4 +76,15 @@ public class CreateContractDto implements Serializable {
      * 合同资质证件照
      */
     private List<CreateContractQualificationDto> qualificationDtos;
+
+    /**
+     * 合同报价
+     */
+    private List<CreateCustomerSettlePriceDto> settlePriceDtoList;
+
+    /**
+     * 油价
+     */
+    private CreateCustomerOilPriceDto oilPriceDto;
+
 }
