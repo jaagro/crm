@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 @Accessors(chain = true)
 public class CreateContractSectionPriceDto implements Serializable {
 
+    private static final long serialVersionUID = -7243316648996113676L;
     /**
      * 1-重量阶梯报价 2-里程阶梯报价
      */

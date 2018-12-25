@@ -14,6 +14,7 @@ import java.util.List;
 @Accessors(chain = true)
 public class CreateContractPriceDto implements Serializable {
 
+    private static final long serialVersionUID = -9131615925507984571L;
     /**
      * 计价方式
      * 说明：

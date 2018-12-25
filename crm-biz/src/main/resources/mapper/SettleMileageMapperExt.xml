@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jaagro.crm.biz.mapper.SettleMileageMapperExt" >
-
+<mapper namespace="com.jaagro.crm.biz.mapper.SettleMileageMapperExt">
+    <select id="getSettleMileageList" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM settle_mileage
+        WHERE customer_contract_id = #{customerContractId}
+        <if test="siteDtoList !=null and siteDtoList.size() > 0">
+            and
+            <foreach collection="siteDtoList" separator=") or (" item="site" open="((" close="))">
+                load_site_id = #{site.loadSiteId} and unload_site_id = #{site.unloadSiteId}
+            </foreach>
+        </if>
+    </select>
 </mapper>

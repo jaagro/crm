@@ -14,6 +14,7 @@ import java.util.List;
 @Accessors(chain = true)
 public class UpdateContractPriceDto implements Serializable {
 
+    private static final long serialVersionUID = -4159747630749762921L;
     /**
      * 客户合同报价
      */
