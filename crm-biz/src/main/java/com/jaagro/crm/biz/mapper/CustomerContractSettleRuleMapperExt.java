@@ -6,4 +6,6 @@ package com.jaagro.crm.biz.mapper;
  * @since 2018/12/24
  */
 public interface CustomerContractSettleRuleMapperExt extends CustomerContractSettleRuleMapper {
+
+
 }
