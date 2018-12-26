@@ -11,8 +11,8 @@ import java.util.Date;
  * @author baiyiran
  * @Date 2018/12/25
  */
-@Accessors
 @Data
+@Accessors(chain = true)
 public class CreateCustomerSettlePriceDto implements Serializable {
 
     /**
@@ -80,33 +80,4 @@ public class CreateCustomerSettlePriceDto implements Serializable {
      */
     private Date invalidTime;
 
-    /**
-     * 是否为历史配制 0-否,1-是
-     */
-    private Boolean historyFlag;
-
-    /**
-     * 是否有效：1-有效 0-无效
-     */
-    private Boolean enable;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 创建人
-     */
-    private Integer createUserId;
-
-    /**
-     * 修改时间
-     */
-    private Date modifyTime;
-
-    /**
-     * 修改人
-     */
-    private Integer modifyUserId;
 }

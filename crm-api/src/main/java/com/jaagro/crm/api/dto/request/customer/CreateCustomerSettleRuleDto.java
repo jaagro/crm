@@ -12,7 +12,7 @@ import java.util.List;
  * @author baiyiran
  * @Date 2018/12/25
  */
-@Accessors
+@Accessors(chain = true)
 @Data
 public class CreateCustomerSettleRuleDto implements Serializable {
 

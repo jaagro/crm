@@ -11,7 +11,7 @@ import java.util.Date;
  * @author baiyiran
  * @Date 2018/12/25
  */
-@Accessors
+@Accessors(chain = true)
 @Data
 public class CreateCustomerSectionRuleDto implements Serializable {
 

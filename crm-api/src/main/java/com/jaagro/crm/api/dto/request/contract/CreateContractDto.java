@@ -74,17 +74,17 @@ public class CreateContractDto implements Serializable {
     private List<CreateContractQualificationDto> qualificationDtos;
 
     /**
-     * 结算信息
+     * 结算基础信息
      */
     private List<CreateCustomerSettlePriceDto> settlePriceDtoList;
 
     /**
-     * 油价
+     * 油价设置
      */
     private CreateCustomerOilPriceDto oilPriceDto;
 
     /**
-     * 结算配置
+     * 结算配制
      */
     private CreateCustomerSettleRuleDto settleRuleDto;
 
