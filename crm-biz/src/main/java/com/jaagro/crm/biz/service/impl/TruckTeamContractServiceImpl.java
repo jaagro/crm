@@ -10,7 +10,6 @@ import com.jaagro.crm.api.dto.response.contract.ReturnContractQualificationDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTeamContractDto;
 import com.jaagro.crm.api.dto.response.truck.TruckTeamContractReturnDto;
 import com.jaagro.crm.api.service.ContractQualificationService;
-import com.jaagro.crm.api.service.TruckTeamContractPriceService;
 import com.jaagro.crm.api.service.TruckTeamContractService;
 import com.jaagro.crm.biz.entity.TruckTeam;
 import com.jaagro.crm.biz.entity.TruckTeamContract;
@@ -46,8 +45,6 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     @Autowired
     private TruckTeamContractMapperExt truckTeamContractMapper;
     @Autowired
-    private TruckTeamContractPriceService contractPriceService;
-    @Autowired
     private TruckTeamMapperExt truckTeamMapper;
     @Autowired
     private ContractQualificationMapperExt contractQualificationMapper;
@@ -78,14 +75,6 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                 .setCreateUserId(this.userService.getCurrentUser().getId());
         truckTeamContractMapper.insertSelective(truckTeamContract);
 
-        //创建合同报价及阶梯报价
-        if (dto.getContractPriceDtoList() != null && dto.getContractPriceDtoList().size() > 0) {
-            for (CreateTruckTeamContractPriceDto truckTeamContractPriceDto : dto.getContractPriceDtoList()
-            ) {
-                truckTeamContractPriceDto.setTruckTeamContractId(truckTeamContract.getId());
-                this.contractPriceService.createPrice(truckTeamContractPriceDto);
-            }
-        }
         //创建合同资质证
         if (dto.getQualificationDtoList() != null && dto.getQualificationDtoList().size() > 0) {
             for (CreateContractQualificationDto qualificationDto : dto.getQualificationDtoList()) {
@@ -151,17 +140,6 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                     .setModifyUserId(this.userService.getCurrentUser().getId());
             truckTeamContractMapper.updateByPrimaryKeySelective(truckTeamContract);
         }
-        //修改合同报价
-        if (dto.getContractPriceDtoList() != null && dto.getContractPriceDtoList().size() > 0) {
-            this.contractPriceService.deleteByContractId(dto.getId());
-            for (UpdateTruckTeamContractPriceDto priceDto : dto.getContractPriceDtoList()
-            ) {
-                priceDto.setTruckTeamContractId(truckTeamContract.getId());
-                CreateTruckTeamContractPriceDto contractPriceDto = new CreateTruckTeamContractPriceDto();
-                BeanUtils.copyProperties(priceDto, contractPriceDto);
-                this.contractPriceService.createPrice(contractPriceDto);
-            }
-        }
         return ServiceResult.toResult("修改车队合同成功");
     }
 
@@ -222,10 +200,6 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                     .setModifyUserId(this.userService.getCurrentUser().getId())
                     .setContractStatus(AuditStatus.STOP_COOPERATION);
             this.truckTeamContractMapper.updateByPrimaryKeySelective(contract);
-            if (contractReturnDto.getContractPriceDtoList().size() > 0) {
-                this.contractPriceService.disableByContractId(contract.getId());
-            }
-
         }
         return ServiceResult.toResult("删除成功");
     }

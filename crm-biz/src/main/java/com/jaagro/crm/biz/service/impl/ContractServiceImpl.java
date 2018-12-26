@@ -3,18 +3,22 @@ package com.jaagro.crm.biz.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.constant.AuditStatus;
-import com.jaagro.crm.api.dto.request.contract.*;
+import com.jaagro.crm.api.constant.ContractType;
+import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
+import com.jaagro.crm.api.dto.request.contract.CreateContractQualificationDto;
+import com.jaagro.crm.api.dto.request.contract.ListContractCriteriaDto;
+import com.jaagro.crm.api.dto.request.contract.UpdateContractDto;
+import com.jaagro.crm.api.dto.request.customer.CreateCustomerOilPriceDto;
+import com.jaagro.crm.api.dto.request.customer.CreateCustomerSettlePriceDto;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
-import com.jaagro.crm.api.dto.response.contract.ReturnContractPriceDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractQualificationDto;
-import com.jaagro.crm.api.service.ContractPriceService;
+import com.jaagro.crm.api.service.ContractOilPriceService;
 import com.jaagro.crm.api.service.ContractQualificationService;
 import com.jaagro.crm.api.service.ContractService;
+import com.jaagro.crm.api.service.CustomerContractSettlePriceService;
 import com.jaagro.crm.biz.entity.Customer;
 import com.jaagro.crm.biz.entity.CustomerContract;
-import com.jaagro.crm.biz.entity.CustomerContractPrice;
-import com.jaagro.crm.biz.entity.CustomerContractSectionPrice;
 import com.jaagro.crm.biz.mapper.*;
 import com.jaagro.crm.biz.service.OssSignUrlClientService;
 import com.jaagro.utils.ResponseStatusCode;
@@ -27,6 +31,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.net.URL;
@@ -48,15 +53,9 @@ public class ContractServiceImpl implements ContractService {
     @Autowired
     private CustomerContractMapperExt customerContractMapper;
     @Autowired
-    private CustomerContractPriceMapperExt customerContractPriceMapper;
-    @Autowired
-    private CustomerContractSectionPriceMapperExt customerContractSectionPriceMapper;
-    @Autowired
     private CustomerContractLogMapperExt customerContractLogMapper;
     @Autowired
     private CurrentUserService userService;
-    @Autowired
-    private ContractPriceService priceService;
     @Autowired
     private CustomerSiteMapperExt siteMapper;
     @Autowired
@@ -67,6 +66,10 @@ public class ContractServiceImpl implements ContractService {
     private ContractQualificationService contractQualificationService;
     @Autowired
     private OssSignUrlClientService ossSignUrlClientService;
+    @Autowired
+    private CustomerContractSettlePriceService settlePriceService;
+    @Autowired
+    private ContractOilPriceService oilPriceService;
 
     /**
      * 创建合同
@@ -91,15 +94,57 @@ public class ContractServiceImpl implements ContractService {
                 .setCreateUser(userService.getCurrentUser().getId());
         customerContractMapper.insertSelective(customerContract);
 
-        //创建资质证
-        if (dto.getQualificationDtos() != null && dto.getQualificationDtos().size() > 0) {
+        //创建 资质证
+        if (!CollectionUtils.isEmpty(dto.getQualificationDtos())) {
             for (CreateContractQualificationDto qualificationDto : dto.getQualificationDtos()) {
                 qualificationDto.setRelevanceId(customerContract.getId());
-                this.contractQualificationService.createQuation(qualificationDto);
+                contractQualificationService.createQuation(qualificationDto);
             }
         }
-        //创建合同报价及阶梯报价
-        createPrice(dto, customerContract);
+        //创建 结算基础信息(存在历史)
+        if (!CollectionUtils.isEmpty(dto.getSettlePriceDtoList())) {
+            for (CreateCustomerSettlePriceDto settlePriceDtos : dto.getSettlePriceDtoList()) {
+                if (StringUtils.isEmpty(settlePriceDtos.getLoadSiteId())) {
+                    throw new RuntimeException("合同报价装货地不能为空");
+                }
+                if (StringUtils.isEmpty(settlePriceDtos.getUnloadSiteId())) {
+                    throw new RuntimeException("合同报价卸货地不能为空");
+                }
+                if (StringUtils.isEmpty(settlePriceDtos.getTruckTypeId())) {
+                    throw new RuntimeException("合同报价车型不能为空");
+                }
+                settlePriceDtos
+                        .setCustomerContractId(customerContract.getId())
+                        .setEffectiveTime(customerContract.getStartDate())
+                        .setInvalidTime(customerContract.getEndDate());
+                Boolean result = settlePriceService.createCustomerSettlePrice(settlePriceDtos);
+                if (!result) {
+                    throw new RuntimeException("创建合同报价失败");
+                }
+            }
+        }
+        //创建 油价设置(存在历史)
+        if (dto.getOilPriceDto() != null) {
+            CreateCustomerOilPriceDto oilPriceDto = dto.getOilPriceDto();
+            if (StringUtils.isEmpty(oilPriceDto.getPrice())) {
+                throw new RuntimeException("油价配制价格不能为空");
+            }
+            oilPriceDto
+                    .setContractId(customerContract.getId())
+                    .setContractType(ContractType.CUSTOMER)
+                    .setEffectiveTime(customerContract.getStartDate())
+                    .setInvalidTime(customerContract.getEndDate());
+            Boolean result = oilPriceService.createOilPrice(oilPriceDto);
+            if (!result) {
+                throw new RuntimeException("创建合同油价配制失败");
+            }
+        }
+        //创建 结算配制(存在历史)
+        if (dto.getSettleRuleDto() != null) {
+
+        }
+
+
         return ServiceResult.toResult("合同创建成功");
     }
 
@@ -115,9 +160,6 @@ public class ContractServiceImpl implements ContractService {
                 customerContract
                         .setCreateUser(userService.getCurrentUser().getId());
                 customerContractMapper.insertSelective(customerContract);
-
-                //创建contractPrice对象
-                createPrice(contractDto, customerContract);
             }
         }
         return ServiceResult.toResult("合同列表创建成功");
@@ -145,16 +187,6 @@ public class ContractServiceImpl implements ContractService {
                 .setNewUpdateUser(userService.getCurrentUser().getId());
         customerContractMapper.updateByPrimaryKeySelective(customerContract);
 
-        //删除原数据
-        List<ReturnContractPriceDto> priceList = customerContractPriceMapper.listByContractId(dto.getId());
-        if (priceList.size() > 0) {
-            for (ReturnContractPriceDto cp : priceList) {
-                customerContractSectionPriceMapper.deleteByPriceId(cp.getId());
-            }
-            customerContractPriceMapper.deleteByContractId(dto.getId());
-        }
-        //创建contractPrice对象
-        createPrice(dto, customerContract);
         return ServiceResult.toResult("合同修改成功");
     }
 
@@ -171,82 +203,9 @@ public class ContractServiceImpl implements ContractService {
                         .setNewUpdateTime(new Date())
                         .setNewUpdateUser(userService.getCurrentUser().getId());
                 customerContractMapper.updateByPrimaryKeySelective(customerContract);
-
-                //删除原数据
-                List<ReturnContractPriceDto> priceList = customerContractPriceMapper.listByContractId(contractDto.getId());
-                if (priceList.size() > 0) {
-                    for (ReturnContractPriceDto cp : priceList) {
-                        customerContractSectionPriceMapper.deleteByPriceId(cp.getId());
-                    }
-                    customerContractPriceMapper.deleteByContractId(contractDto.getId());
-                }
-                //创建contractPrice对象
-                createPrice(contractDto, customerContract);
             }
         }
         return ServiceResult.toResult("合同修改成功");
-    }
-
-    private void createPrice(UpdateContractDto dto, CustomerContract customerContract) {
-        //创建contractPrice对象
-        if (dto.getPrice() != null && dto.getPrice().size() > 0) {
-            for (UpdateContractPriceDto cp : dto.getPrice()) {
-                CustomerContractPrice customerContractPrice = new CustomerContractPrice();
-                BeanUtils.copyProperties(cp, customerContractPrice);
-                customerContractPrice
-                        .setContractId(customerContract.getId())
-                        .setPriceStatus(1);
-                if (StringUtils.isEmpty(customerContractPrice.getPricingType())) {
-                    throw new RuntimeException("计价模式不能为空");
-                }
-                customerContractPriceMapper.insertSelective(customerContractPrice);
-                //创建contractSectionPrice对象
-                if (cp.getSectionPrice() != null && cp.getSectionPrice().size() > 0) {
-                    for (CreateContractSectionPriceDto cspDto : cp.getSectionPrice()) {
-                        CustomerContractSectionPrice csp = new CustomerContractSectionPrice();
-                        BeanUtils.copyProperties(cspDto, csp);
-                        csp
-                                .setContractPriceId(customerContractPrice.getId())
-                                .setSelectionStatus(1);
-                        customerContractSectionPriceMapper.insertSelective(csp);
-                    }
-                }
-            }
-        }
-    }
-
-    private void createPrice(CreateContractDto dto, CustomerContract customerContract) {
-        //创建contractPrice对象
-        if (dto.getPrice() != null && dto.getPrice().size() > 0) {
-            for (CreateContractPriceDto cp : dto.getPrice()) {
-                CustomerContractPrice customerContractPrice = new CustomerContractPrice();
-                BeanUtils.copyProperties(cp, customerContractPrice);
-                customerContractPrice
-                        .setContractId(customerContract.getId())
-                        .setPriceStatus(1);
-                if (StringUtils.isEmpty(customerContractPrice.getPricingType())) {
-                    throw new RuntimeException("计价模式不能为空");
-                }
-                if (this.siteMapper.selectByPrimaryKey(customerContractPrice.getLoadSiteId()) == null) {
-                    throw new RuntimeException("发货地址:[" + customerContractPrice.getLoadSiteId() + "]不存在");
-                }
-                if (this.siteMapper.selectByPrimaryKey(customerContractPrice.getUnloadSiteId()) == null) {
-                    throw new RuntimeException("收货地址:[" + customerContractPrice.getUnloadSiteId() + "]不存在");
-                }
-                customerContractPriceMapper.insertSelective(customerContractPrice);
-                //创建contractSectionPrice对象
-                if (cp.getSectionPrice() != null && cp.getSectionPrice().size() > 0) {
-                    for (CreateContractSectionPriceDto cspDto : cp.getSectionPrice()) {
-                        CustomerContractSectionPrice csp = new CustomerContractSectionPrice();
-                        BeanUtils.copyProperties(cspDto, csp);
-                        csp
-                                .setContractPriceId(customerContractPrice.getId())
-                                .setSelectionStatus(1);
-                        customerContractSectionPriceMapper.insertSelective(csp);
-                    }
-                }
-            }
-        }
     }
 
     /**
@@ -307,9 +266,6 @@ public class ContractServiceImpl implements ContractService {
         BeanUtils.copyProperties(contractDto, customerContract);
         customerContract.setContractStatus(AuditStatus.STOP_COOPERATION);
         this.customerContractMapper.updateByPrimaryKeySelective(customerContract);
-        if (contractDto.getPrices() != null && contractDto.getPrices().size() > 0) {
-            this.priceService.disableByContractId(customerContract.getId());
-        }
         return ServiceResult.toResult("合同删除成功");
     }
 
@@ -323,9 +279,6 @@ public class ContractServiceImpl implements ContractService {
             BeanUtils.copyProperties(contractDto, customerContract);
             customerContract.setContractStatus(0);
             this.customerContractMapper.updateByPrimaryKeySelective(customerContract);
-            if (contractDto.getPrices() != null && contractDto.getPrices().size() > 0) {
-                this.priceService.disableByContractId(customerContract.getId());
-            }
         }
         return ServiceResult.toResult("合同删除成功");
     }

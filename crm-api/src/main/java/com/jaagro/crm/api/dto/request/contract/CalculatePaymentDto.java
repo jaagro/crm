@@ -2,6 +2,7 @@ package com.jaagro.crm.api.dto.request.contract;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -51,6 +52,7 @@ public class CalculatePaymentDto implements Serializable {
     /**
      * 运单装卸货地ID列表对象
      */
+    @NotEmpty(message = "{siteDtoList.NotEmpty}")
     private List<SiteDto> siteDtoList;
 
 

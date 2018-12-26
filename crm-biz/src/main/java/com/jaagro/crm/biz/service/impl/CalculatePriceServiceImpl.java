@@ -4,13 +4,16 @@ import com.jaagro.crm.api.constant.ProductType;
 import com.jaagro.crm.api.dto.request.contract.CalculatePaymentDto;
 import com.jaagro.crm.api.dto.request.contract.QuerySettleRuleDto;
 import com.jaagro.crm.api.service.CalculatePriceService;
+import com.jaagro.crm.biz.entity.SettleMileage;
 import com.jaagro.crm.biz.entity.CustomerContractSettlePrice;
 import com.jaagro.crm.biz.entity.CustomerContractSettleSectionRule;
 import com.jaagro.crm.biz.entity.CustomerContractSettleTruckRule;
 import com.jaagro.crm.biz.entity.SettleMileage;
 import com.jaagro.crm.biz.mapper.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -20,6 +23,7 @@ import java.util.*;
  */
 
 @Service
+@Slf4j
 public class CalculatePriceServiceImpl implements CalculatePriceService {
 
     @Autowired
@@ -286,6 +290,24 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
     public List<Map<Integer, BigDecimal>> calculatePaymentToDriver(List<CalculatePaymentDto> dtoList) {
         for (CalculatePaymentDto calculatePaymentDto : dtoList) {
             // 1 获取合同装卸货地里程,一装多卸取最远里程
+            List<SettleMileage> settleMileageList = settleMileageMapperExt.getSettleMileageList(calculatePaymentDto.getCustomerContractId(), calculatePaymentDto.getSiteDtoList());
+            if (CollectionUtils.isEmpty(settleMileageList)){
+                log.warn("O calculatePaymentToDriver settleMileageList isEmpty calculatePaymentDto={}",calculatePaymentDto);
+                continue;
+            }
+            if (settleMileageList.size() > calculatePaymentDto.getSiteDtoList().size()){
+                log.warn("O calculatePaymentToDriver settleMileage is not enough calculatePaymentDto={}",calculatePaymentDto);
+                continue;
+            }
+            BigDecimal mileage = new BigDecimal("0");
+            for (SettleMileage settleMileage : settleMileageList){
+                BigDecimal driverSettleMileage = settleMileage.getDriverSettleMileage();
+                if (driverSettleMileage != null && driverSettleMileage.compareTo(mileage) == 1){
+                    mileage = driverSettleMileage;
+                }
+            }
+            // 获取客户合同结算配制信息
+
             settleMileageMapperExt.getSettleMileageList(calculatePaymentDto.getCustomerContractId(), calculatePaymentDto.getSiteDtoList());
             //饲料结算
             if (calculatePaymentDto.getProductType().equals(ProductType.CHICKEN)) {
