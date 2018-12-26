@@ -14,5 +14,5 @@ public interface CtmContractSettleTruckService {
      * @param settleRuleDto
      * @return
      */
-    Boolean createSettleTruck(CreateCustomerSettleTruckRuleDto settleRuleDto);
+    Boolean createSettleTruck(CreateCustomerSettleTruckRuleDto truckRuleDto);
 }

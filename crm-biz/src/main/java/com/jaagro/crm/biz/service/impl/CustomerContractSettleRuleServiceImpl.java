@@ -61,29 +61,36 @@ public class CustomerContractSettleRuleServiceImpl implements CustomerContractSe
                 .setCreateUserId(userService.getCurrentUser().getId())
                 .setCreateTime(new Date());
         int result = settleRuleMapperExt.insertSelective(settleRule);
-        if (result > 0) {
+        if (result > 0 && settleRule.getId() != null && settleRule.getId() > 0) {
+            //里程区间
+            if (!CollectionUtils.isEmpty(settleRuleDto.getSectionRuleDtoList())) {
+                for (CreateCustomerSectionRuleDto sectionRuleDto : settleRuleDto.getSectionRuleDtoList()) {
+                    sectionRuleDto
+                            .setCustomerContractId(settleRuleDto.getCustomerContractId())
+                            .setCustomerContractSettleRuleId(settleRule.getId());
+                    //存疑!!!
+                    Boolean sectionResult = settleSectionRuleService.createSectionRule(sectionRuleDto);
+                    if (!sectionResult) {
+                        log.error("createSectionRule 创建里程区间失败");
+                        return flag;
+                    }
+                }
+            }
+            //车辆设置
+            if (!CollectionUtils.isEmpty(settleRuleDto.getTruckRuleDtoList())) {
+                for (CreateCustomerSettleTruckRuleDto truckRuleDto : settleRuleDto.getTruckRuleDtoList()) {
+                    truckRuleDto
+                            .setCustomerContractId(settleRule.getCustomerContractId())
+                            .setCustomerContractSettleRuleId(settleRule.getId());
+                    //存疑!!!
+                    Boolean truckResult = settleTruckService.createSettleTruck(truckRuleDto);
+                    if (!truckResult) {
+                        log.error("createSectionRule 创建车辆配制失败");
+                        return flag;
+                    }
+                }
+            }
             flag = true;
-            return flag;
-        }
-        //里程区间
-        if (!CollectionUtils.isEmpty(settleRuleDto.getSectionRuleDtoList())) {
-            for (CreateCustomerSectionRuleDto sectionRuleDto : settleRuleDto.getSectionRuleDtoList()) {
-                Boolean sectionResult = settleSectionRuleService.createSectionRule(sectionRuleDto);
-                if (!sectionResult) {
-                    log.error("createSectionRule 创建里程区间失败");
-                    return flag;
-                }
-            }
-        }
-        //车辆设置
-        if (!CollectionUtils.isEmpty(settleRuleDto.getTruckRuleDtoList())) {
-            for (CreateCustomerSettleTruckRuleDto truckRuleDto : settleRuleDto.getTruckRuleDtoList()) {
-                Boolean truckResult = settleTruckService.createSettleTruck(truckRuleDto);
-                if (!truckResult) {
-                    log.error("createSectionRule 创建车辆配制失败");
-                    return flag;
-                }
-            }
         }
         return flag;
     }
