@@ -8,6 +8,8 @@ import com.jaagro.crm.biz.mapper.CustomerContractSettleRuleMapperExt;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * @author baiyiran
@@ -34,6 +36,19 @@ public class CustomerContractSettleRuleServiceImpl implements CustomerContractSe
      */
     @Override
     public Boolean createSettleRule(CreateCustomerSettleRuleDto settleRuleDto) {
-        return null;
+        Boolean flag = false;
+        if (StringUtils.isEmpty(settleRuleDto.getCustomerContractId())) {
+            log.error("createSettleRule 创建里程区间配制合同id不能为空");
+            return flag;
+        }
+        //里程区间
+        if (!CollectionUtils.isEmpty(settleRuleDto.getSectionRuleDtoList())) {
+
+        }
+        //车辆设置
+        if (!CollectionUtils.isEmpty(settleRuleDto.getTruckRuleDtoList())) {
+
+        }
+        return flag;
     }
 }

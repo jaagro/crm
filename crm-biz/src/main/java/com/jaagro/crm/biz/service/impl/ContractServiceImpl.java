@@ -142,26 +142,20 @@ public class ContractServiceImpl implements ContractService {
         //创建 结算配制(存在历史)
         if (dto.getSettleRuleDto() != null) {
             CreateCustomerSettleRuleDto settleRuleDto = dto.getSettleRuleDto();
-            settleRuleDto
-                    .setEffectiveTime(customerContract.getStartDate())
-                    .setInvalidTime(customerContract.getEndDate())
-                    .setCustomerContractId(customerContract.getId());
-
             //货物类型为毛鸡
             if (customerContract.getType().equals(ProductType.CHICKEN)) {
                 if (CollectionUtils.isEmpty(settleRuleDto.getTruckRuleDtoList())) {
                     throw new RuntimeException("毛鸡类型的合同里程区间配制不能为空");
                 }
             }
-            //里程区间
-            if (!CollectionUtils.isEmpty(settleRuleDto.getSectionRuleDtoList())) {
-
+            settleRuleDto
+                    .setEffectiveTime(customerContract.getStartDate())
+                    .setInvalidTime(customerContract.getEndDate())
+                    .setCustomerContractId(customerContract.getId());
+            Boolean result = settleRuleService.createSettleRule(settleRuleDto);
+            if (!result) {
+                throw new RuntimeException("创建合同里程区间配制失败");
             }
-            //车辆设置
-            if (!CollectionUtils.isEmpty(settleRuleDto.getTruckRuleDtoList())) {
-
-            }
-
         }
         return ServiceResult.toResult("合同创建成功");
     }
