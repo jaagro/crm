@@ -6,12 +6,16 @@ import com.jaagro.crm.api.dto.request.customer.CreateCustomerSettleTruckRuleDto;
 import com.jaagro.crm.api.service.CtmContractSettleSectionRuleService;
 import com.jaagro.crm.api.service.CtmContractSettleTruckService;
 import com.jaagro.crm.api.service.CustomerContractSettleRuleService;
+import com.jaagro.crm.biz.entity.CustomerContractSettleRule;
 import com.jaagro.crm.biz.mapper.CustomerContractSettleRuleMapperExt;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+
+import java.util.Date;
 
 /**
  * @author baiyiran
@@ -49,6 +53,16 @@ public class CustomerContractSettleRuleServiceImpl implements CustomerContractSe
         }
         if (StringUtils.isEmpty(settleRuleDto.getEndMileage())) {
             log.error("createSettleRule 创建结算配制结束里程不能为空");
+            return flag;
+        }
+        CustomerContractSettleRule settleRule = new CustomerContractSettleRule();
+        BeanUtils.copyProperties(settleRuleDto, settleRule);
+        settleRule
+                .setCreateUserId(userService.getCurrentUser().getId())
+                .setCreateTime(new Date());
+        int result = settleRuleMapperExt.insertSelective(settleRule);
+        if (result > 0) {
+            flag = true;
             return flag;
         }
         //里程区间

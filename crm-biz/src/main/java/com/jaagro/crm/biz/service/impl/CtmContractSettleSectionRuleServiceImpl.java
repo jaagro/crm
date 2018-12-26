@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 public class CtmContractSettleSectionRuleServiceImpl implements CtmContractSettleSectionRuleService {
 
 
-
     /**
      * 创建里程区间配制
      *
