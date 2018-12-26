@@ -13,7 +13,7 @@ import java.util.Date;
  */
 @Accessors(chain = true)
 @Data
-public class CreateCustomerOilPriceDto implements Serializable {
+public class CreateContractOilPriceDto implements Serializable {
 
     /**
      * 合同id

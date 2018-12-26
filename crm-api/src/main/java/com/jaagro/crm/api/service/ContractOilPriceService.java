@@ -1,6 +1,6 @@
 package com.jaagro.crm.api.service;
 
-import com.jaagro.crm.api.dto.request.customer.CreateCustomerOilPriceDto;
+import com.jaagro.crm.api.dto.request.customer.CreateContractOilPriceDto;
 
 /**
  * @author baiyiran
@@ -11,8 +11,8 @@ public interface ContractOilPriceService {
     /**
      * 创建油价配制
      *
-     * @param createCustomerOilPriceDto
+     * @param createContractOilPriceDto
      * @return
      */
-    Boolean createOilPrice(CreateCustomerOilPriceDto createCustomerOilPriceDto);
+    Boolean createOilPrice(CreateContractOilPriceDto createContractOilPriceDto);
 }

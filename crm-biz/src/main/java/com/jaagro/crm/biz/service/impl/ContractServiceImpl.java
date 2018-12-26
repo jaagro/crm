@@ -4,19 +4,18 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.constant.ContractType;
+import com.jaagro.crm.api.constant.ProductType;
 import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
 import com.jaagro.crm.api.dto.request.contract.CreateContractQualificationDto;
 import com.jaagro.crm.api.dto.request.contract.ListContractCriteriaDto;
 import com.jaagro.crm.api.dto.request.contract.UpdateContractDto;
-import com.jaagro.crm.api.dto.request.customer.CreateCustomerOilPriceDto;
+import com.jaagro.crm.api.dto.request.customer.CreateContractOilPriceDto;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerSettlePriceDto;
+import com.jaagro.crm.api.dto.request.customer.CreateCustomerSettleRuleDto;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractQualificationDto;
-import com.jaagro.crm.api.service.ContractOilPriceService;
-import com.jaagro.crm.api.service.ContractQualificationService;
-import com.jaagro.crm.api.service.ContractService;
-import com.jaagro.crm.api.service.CustomerContractSettlePriceService;
+import com.jaagro.crm.api.service.*;
 import com.jaagro.crm.biz.entity.Customer;
 import com.jaagro.crm.biz.entity.CustomerContract;
 import com.jaagro.crm.biz.mapper.*;
@@ -70,6 +69,8 @@ public class ContractServiceImpl implements ContractService {
     private CustomerContractSettlePriceService settlePriceService;
     @Autowired
     private ContractOilPriceService oilPriceService;
+    @Autowired
+    private CustomerContractSettleRuleService settleRuleService;
 
     /**
      * 创建合同
@@ -93,7 +94,6 @@ public class ContractServiceImpl implements ContractService {
                 .setContractStatus(AuditStatus.UNCHECKED)
                 .setCreateUser(userService.getCurrentUser().getId());
         customerContractMapper.insertSelective(customerContract);
-
         //创建 资质证
         if (!CollectionUtils.isEmpty(dto.getQualificationDtos())) {
             for (CreateContractQualificationDto qualificationDto : dto.getQualificationDtos()) {
@@ -125,7 +125,7 @@ public class ContractServiceImpl implements ContractService {
         }
         //创建 油价设置(存在历史)
         if (dto.getOilPriceDto() != null) {
-            CreateCustomerOilPriceDto oilPriceDto = dto.getOilPriceDto();
+            CreateContractOilPriceDto oilPriceDto = dto.getOilPriceDto();
             if (StringUtils.isEmpty(oilPriceDto.getPrice())) {
                 throw new RuntimeException("油价配制价格不能为空");
             }
@@ -141,10 +141,28 @@ public class ContractServiceImpl implements ContractService {
         }
         //创建 结算配制(存在历史)
         if (dto.getSettleRuleDto() != null) {
+            CreateCustomerSettleRuleDto settleRuleDto = dto.getSettleRuleDto();
+            settleRuleDto
+                    .setEffectiveTime(customerContract.getStartDate())
+                    .setInvalidTime(customerContract.getEndDate())
+                    .setCustomerContractId(customerContract.getId());
+
+            //货物类型为毛鸡
+            if (customerContract.getType().equals(ProductType.CHICKEN)) {
+                if (CollectionUtils.isEmpty(settleRuleDto.getTruckRuleDtoList())) {
+                    throw new RuntimeException("毛鸡类型的合同里程区间配制不能为空");
+                }
+            }
+            //里程区间
+            if (!CollectionUtils.isEmpty(settleRuleDto.getSectionRuleDtoList())) {
+
+            }
+            //车辆设置
+            if (!CollectionUtils.isEmpty(settleRuleDto.getTruckRuleDtoList())) {
+
+            }
 
         }
-
-
         return ServiceResult.toResult("合同创建成功");
     }
 
