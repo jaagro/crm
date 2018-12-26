@@ -13,4 +13,18 @@
         AND unload_site_id = #{unloadSiteId}
         AND truck_type_id = #{truckTypeId}
     </select>
+
+    <select id="getSectionWeightPrice" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM customer_contract_settle_price
+        WHERE customer_contract_id = #{customerContractId}
+        and #{doneDate} between effective_time and invalid_time
+        <if test="siteDtoList !=null and siteDtoList.size() > 0">
+            and
+            <foreach collection="siteDtoList" separator=") or (" item="site" open="((" close="))">
+                load_site_id = #{site.loadSiteId} and unload_site_id = #{site.unloadSiteId}
+            </foreach>
+        </if>
+    </select>
 </mapper>

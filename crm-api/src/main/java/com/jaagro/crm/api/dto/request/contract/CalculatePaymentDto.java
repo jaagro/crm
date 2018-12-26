@@ -56,7 +56,6 @@ public class CalculatePaymentDto implements Serializable {
     private List<SiteDto> siteDtoList;
 
 
-
     /**
      * 车辆类型
      */
