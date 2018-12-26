@@ -1,6 +1,8 @@
 package com.jaagro.crm.biz.service.impl;
 
+import com.jaagro.crm.api.dto.request.customer.CreateCustomerSectionRuleDto;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerSettleRuleDto;
+import com.jaagro.crm.api.dto.request.customer.CreateCustomerSettleTruckRuleDto;
 import com.jaagro.crm.api.service.CtmContractSettleSectionRuleService;
 import com.jaagro.crm.api.service.CtmContractSettleTruckService;
 import com.jaagro.crm.api.service.CustomerContractSettleRuleService;
@@ -38,16 +40,36 @@ public class CustomerContractSettleRuleServiceImpl implements CustomerContractSe
     public Boolean createSettleRule(CreateCustomerSettleRuleDto settleRuleDto) {
         Boolean flag = false;
         if (StringUtils.isEmpty(settleRuleDto.getCustomerContractId())) {
-            log.error("createSettleRule 创建里程区间配制合同id不能为空");
+            log.error("createSettleRule 创建结算配制合同id不能为空");
+            return flag;
+        }
+        if (StringUtils.isEmpty(settleRuleDto.getStartMileage())) {
+            log.error("createSettleRule 创建结算配制起始里程不能为空");
+            return flag;
+        }
+        if (StringUtils.isEmpty(settleRuleDto.getEndMileage())) {
+            log.error("createSettleRule 创建结算配制结束里程不能为空");
             return flag;
         }
         //里程区间
         if (!CollectionUtils.isEmpty(settleRuleDto.getSectionRuleDtoList())) {
-
+            for (CreateCustomerSectionRuleDto sectionRuleDto : settleRuleDto.getSectionRuleDtoList()) {
+                Boolean sectionResult = settleSectionRuleService.createSectionRule(sectionRuleDto);
+                if (!sectionResult) {
+                    log.error("createSectionRule 创建里程区间失败");
+                    return flag;
+                }
+            }
         }
         //车辆设置
         if (!CollectionUtils.isEmpty(settleRuleDto.getTruckRuleDtoList())) {
-
+            for (CreateCustomerSettleTruckRuleDto truckRuleDto : settleRuleDto.getTruckRuleDtoList()) {
+                Boolean truckResult = settleTruckService.createSettleTruck(truckRuleDto);
+                if (!truckResult) {
+                    log.error("createSectionRule 创建车辆配制失败");
+                    return flag;
+                }
+            }
         }
         return flag;
     }

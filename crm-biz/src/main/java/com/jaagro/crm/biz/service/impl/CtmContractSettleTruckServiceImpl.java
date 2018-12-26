@@ -1,6 +1,6 @@
 package com.jaagro.crm.biz.service.impl;
 
-import com.jaagro.crm.api.dto.request.contract.CreateCustomerSettleTruckDto;
+import com.jaagro.crm.api.dto.request.customer.CreateCustomerSettleTruckRuleDto;
 import com.jaagro.crm.api.service.CtmContractSettleTruckService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class CtmContractSettleTruckServiceImpl implements CtmContractSettleTruck
      * @return
      */
     @Override
-    public Boolean createSettleTruck(CreateCustomerSettleTruckDto settleRuleDto) {
+    public Boolean createSettleTruck(CreateCustomerSettleTruckRuleDto settleRuleDto) {
         return null;
     }
 }

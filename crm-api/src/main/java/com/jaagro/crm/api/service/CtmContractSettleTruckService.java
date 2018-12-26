@@ -1,6 +1,6 @@
 package com.jaagro.crm.api.service;
 
-import com.jaagro.crm.api.dto.request.contract.CreateCustomerSettleTruckDto;
+import com.jaagro.crm.api.dto.request.customer.CreateCustomerSettleTruckRuleDto;
 
 /**
  * @author baiyiran
@@ -14,5 +14,5 @@ public interface CtmContractSettleTruckService {
      * @param settleRuleDto
      * @return
      */
-    Boolean createSettleTruck(CreateCustomerSettleTruckDto settleRuleDto);
+    Boolean createSettleTruck(CreateCustomerSettleTruckRuleDto settleRuleDto);
 }
