@@ -14,7 +14,7 @@ import java.util.List;
 @Accessors(chain = true)
 public class CreateDriverContractSettleDto implements Serializable {
 
-    //----------------区间里程-------------
+
     /**
      * 计价方式(1-按区间重量单价,2-按区间里程单价,3-按起步里程+里程单价)
      */
@@ -24,6 +24,7 @@ public class CreateDriverContractSettleDto implements Serializable {
      * 车辆类型id
      */
     private Integer truckTypeId;
+    //----------------区间里程-------------
 
     /**
      * 最小结算里程

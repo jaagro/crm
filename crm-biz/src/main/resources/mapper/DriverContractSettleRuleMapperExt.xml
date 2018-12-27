@@ -7,16 +7,16 @@
         from driver_contract_settle_rule
         where enable=1
         <if test="truckTeamContractId!=null">
-            truck_team_contract_id=#{truckTeamContractId}
+            and truck_team_contract_id=#{truckTeamContractId}
         </if>
         <if test="truckTypeId!=null">
-            truck_type_id=#{truckTypeId}
+           and truck_type_id=#{truckTypeId}
         </if>
         <if test="pricingMethodFlag == 1">
-            pricing_method=#{pricingMethod}
+           and pricing_method=#{pricingMethod}
         </if>
         <if test="pricingMethodFlag == 2">
-            pricing_method in (2 ,3)
+           and pricing_method in (2 ,3)
         </if>
         ORDER BY invalid_time desc LIMIT 1
     </select>

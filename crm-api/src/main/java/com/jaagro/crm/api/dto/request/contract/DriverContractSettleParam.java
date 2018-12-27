@@ -80,6 +80,11 @@ public class DriverContractSettleParam implements Serializable {
     private BigDecimal minSettleWeight;
 
     /**
+     * 计价方式(1-按区间重量单价,2-按区间里程单价,3-按起步里程+里程单价)
+     */
+    private Integer pricingMethod;
+
+    /**
      * 创建人
      */
     private Integer createUserId;
