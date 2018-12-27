@@ -11,7 +11,6 @@ import com.jaagro.crm.biz.entity.CustomerContractSettleSectionRule;
 import com.jaagro.crm.biz.entity.CustomerContractSettleTruckRule;
 import com.jaagro.crm.biz.entity.DriverContractSettleRule;
 import com.jaagro.crm.biz.entity.DriverContractSettleSectionRule;
-import com.jaagro.crm.biz.entity.SettleMileage;
 import com.jaagro.crm.biz.mapper.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -317,16 +316,13 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
             }
             // 获取司机合同结算配制信息
             DriverContractSettleRule driverContractSettleRule = driverContractSettleRuleMapperExt.selectEffectiveOne(calculatePaymentDto.getTruckTeamContractId(),calculatePaymentDto.getTruckTypeId(),calculatePaymentDto.getDoneDate());
-            if (driverContractSettleRule == null){
-                log.warn("O calculatePaymentToDriver driverContractSettleRule isNull calculatePaymentDto={}",calculatePaymentDto);
+            if (driverContractSettleRule == null) {
+                log.warn("O calculatePaymentToDriver driverContractSettleRule isNull calculatePaymentDto={}", calculatePaymentDto);
                 continue;
-            // 获取客户合同结算配制信息
-
-            settleMileageMapperExt.getSettleMileageList(calculatePaymentDto.getCustomerContractId(), calculatePaymentDto.getSiteDtoList());
-            //饲料结算
-            if (calculatePaymentDto.getProductType().equals(ProductType.CHICKEN)) {
-                BigDecimal unitPrice = new BigDecimal(0.00);
-
+            }
+            // 当司机里程小于最小结算里程,以最小结算里程计算
+            if (driverContractSettleRule.getMinSettleMileage() != null && mileage.compareTo(driverContractSettleRule.getMinSettleMileage()) < 0){
+                mileage = driverContractSettleRule.getMinSettleMileage();
             }
             // 按区间重量单价,按区间里程单价
             if (!driverContractSettleRule.getPricingMethod().equals(PricingMethod.BEGIN_WEIGHT)){
@@ -336,10 +332,6 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
                 if (CollectionUtils.isEmpty(settleSectionRuleList)){
                     log.warn("O calculatePaymentToDriver settleSectionRuleList isEmpty calculatePaymentDto={}",calculatePaymentDto);
                     continue;
-                }
-                // 当司机里程小于最小结算里程,以最小结算里程计算
-                if (driverContractSettleRule.getMinSettleMileage() != null && mileage.compareTo(driverContractSettleRule.getMinSettleMileage()) < 0){
-                    mileage = driverContractSettleRule.getMinSettleMileage();
                 }
                 for (DriverContractSettleSectionRule driverContractSettleSectionRule : settleSectionRuleList){
                     if (mileage.compareTo(driverContractSettleSectionRule.getStart()) == 1 && mileage.compareTo(driverContractSettleSectionRule.getEnd()) <= 0){
