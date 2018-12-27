@@ -71,7 +71,7 @@ public class DriverContractSettleRule implements Serializable{
     private BigDecimal minSettleWeight;
 
     /**
-     * 计价方式(1-按区间重量单价,2-按区间里程单价,3-按起步里程+里程单价)
+     * 计价方式(1-按区间重量单价,2-按区间里程单价,3-按起步加价)
      */
     private Integer pricingMethod;
 
