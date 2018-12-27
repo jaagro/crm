@@ -4,10 +4,8 @@ import com.jaagro.crm.biz.entity.DriverContractSettleRule;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
-import com.jaagro.crm.api.dto.request.contract.DriverContractSettleCondition;
-import com.jaagro.crm.biz.entity.DriverContractSettleRule;
 
-import java.util.List;
+import com.jaagro.crm.api.dto.request.contract.DriverContractSettleCondition;
 
 /**
  * 司机合同结算配制CRUD扩展
@@ -25,8 +23,10 @@ public interface DriverContractSettleRuleMapperExt extends DriverContractSettleR
      * @author @Gao.
      */
     DriverContractSettleRule listDriverContractSettleRuleByCondition(DriverContractSettleCondition condition);
+
     /**
      * 根据车队合同id,车辆类型id,完成时间查询有效的司机合同结算配制
+     *
      * @param truckTeamContractId
      * @param truckTypeId
      * @param doneDate

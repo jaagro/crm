@@ -67,8 +67,6 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     private DriverContractSettleRuleMapperExt driverContractSettleRuleMapper;
     @Autowired
     private DriverContractSettleSectionRuleMapperExt driverContractSettleSectionRuleMapper;
-    @Autowired
-    private TruckTeamContractMapperExt truckTeamContractMapper;
 
     /**
      * 创建车队合同
