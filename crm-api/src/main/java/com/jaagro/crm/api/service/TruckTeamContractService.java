@@ -63,4 +63,9 @@ public interface TruckTeamContractService {
      * @return
      */
     Map<String, Object> disableContract(Integer id);
+
+    /**
+     * 创建车队合同报价
+     */
+    void createTruckTeamContractPrice(CreateTruckTeamContractDto dto, Integer userId, Integer contractId);
 }

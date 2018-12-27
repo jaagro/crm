@@ -1,6 +1,7 @@
 package com.jaagro.crm.api.dto.request.truck;
 
 import com.jaagro.crm.api.dto.request.contract.CreateContractQualificationDto;
+import com.jaagro.crm.api.dto.request.contract.CreateDriverContractSettleDto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -48,5 +49,11 @@ public class CreateTruckTeamContractDto implements Serializable {
      * 合同资质证件照
      */
     private List<CreateContractQualificationDto> qualificationDtoList;
+
+    /**
+     * 创建运力合同报价
+     */
+    private CreateDriverContractSettleDto createDriverContractSettleDto;
+
 
 }

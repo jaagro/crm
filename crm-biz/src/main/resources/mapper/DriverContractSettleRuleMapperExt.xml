@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.jaagro.crm.biz.mapper.DriverContractSettleRuleMapperExt">
+    <select id="listDriverContractSettleRuleByCondition" resultMap="BaseResultMap" parameterType="com.jaagro.crm.api.dto.request.contract.DriverContractSettleCondition">
+        select
+        <include refid="Base_Column_List"/>
+        from driver_contract_settle_rule
+        where enable=1
+        <if test="truckTeamContractId!=null">
+            and truck_team_contract_id=#{truckTeamContractId}
+        </if>
+        <if test="truckTypeId!=null">
+           and truck_type_id=#{truckTypeId}
+        </if>
+        <if test="pricingMethodFlag == 1">
+           and pricing_method=#{pricingMethod}
+        </if>
+        <if test="pricingMethodFlag == 2">
+           and pricing_method in (2 ,3)
+        </if>
+        ORDER BY invalid_time desc LIMIT 1
+    </select>
     <select id="selectEffectiveOne" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
