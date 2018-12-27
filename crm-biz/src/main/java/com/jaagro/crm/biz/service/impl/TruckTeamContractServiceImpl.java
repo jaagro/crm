@@ -2,23 +2,27 @@ package com.jaagro.crm.biz.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.constant.ContractStatus;
-import com.jaagro.crm.api.dto.request.contract.CreateContractQualificationDto;
+import com.jaagro.crm.api.constant.GoodsType;
+import com.jaagro.crm.api.dto.request.contract.*;
 import com.jaagro.crm.api.dto.request.truck.*;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractQualificationDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTeamContractDto;
+import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
 import com.jaagro.crm.api.dto.response.truck.TruckTeamContractReturnDto;
 import com.jaagro.crm.api.service.ContractQualificationService;
 import com.jaagro.crm.api.service.TruckTeamContractService;
+import com.jaagro.crm.biz.entity.DriverContractSettleRule;
+import com.jaagro.crm.biz.entity.DriverContractSettleSectionRule;
 import com.jaagro.crm.biz.entity.TruckTeam;
 import com.jaagro.crm.biz.entity.TruckTeamContract;
-import com.jaagro.crm.biz.mapper.ContractQualificationMapperExt;
-import com.jaagro.crm.biz.mapper.TruckTeamContractMapperExt;
-import com.jaagro.crm.biz.mapper.TruckTeamMapperExt;
+import com.jaagro.crm.biz.mapper.*;
 import com.jaagro.crm.biz.service.OssSignUrlClientService;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
+import org.apache.commons.lang.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -27,6 +31,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.net.URL;
 import java.util.Date;
@@ -54,6 +59,14 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     private ContractQualificationService contractQualificationService;
     @Autowired
     private OssSignUrlClientService ossSignUrlClientService;
+    @Autowired
+    private TruckTeamContractService truckTeamContractService;
+    @Autowired
+    private TruckTypeMapperExt truckTypeMapper;
+    @Autowired
+    private DriverContractSettleRuleMapperExt driverContractSettleRuleMapper;
+    @Autowired
+    private DriverContractSettleSectionRuleMapperExt driverContractSettleSectionRuleMapper;
 
     /**
      * 创建车队合同
@@ -68,13 +81,13 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
         if (this.truckTeamMapper.selectByPrimaryKey(dto.getTruckTeamId()) == null) {
             throw new NullPointerException("车队不存在");
         }
+        UserInfo currentUser = this.userService.getCurrentUser();
         //创建合同
         TruckTeamContract truckTeamContract = new TruckTeamContract();
         BeanUtils.copyProperties(dto, truckTeamContract);
         truckTeamContract
-                .setCreateUserId(this.userService.getCurrentUser().getId());
+                .setCreateUserId(currentUser.getId());
         truckTeamContractMapper.insertSelective(truckTeamContract);
-
         //创建合同资质证
         if (dto.getQualificationDtoList() != null && dto.getQualificationDtoList().size() > 0) {
             for (CreateContractQualificationDto qualificationDto : dto.getQualificationDtoList()) {
@@ -82,6 +95,10 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                 this.contractQualificationService.createQuation(qualificationDto);
             }
         }
+        //创建运力合同报价
+//        if (null != dto.getCreateDriverContractSettleDto()) {
+//            truckTeamContractService.createTruckTeamContractPrice(dto, currentUser.getId(), truckTeamContract.getId());
+//        }
         return ServiceResult.toResult("合同创建成功");
     }
 
@@ -202,5 +219,175 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
             this.truckTeamContractMapper.updateByPrimaryKeySelective(contract);
         }
         return ServiceResult.toResult("删除成功");
+    }
+
+    /**
+     * 创建车队合同报价
+     *
+     * @param dto
+     * @author @Gao.
+     */
+    @Override
+    public void createTruckTeamContractPrice(CreateTruckTeamContractDto dto, Integer userId, Integer contractId) {
+        if (null != dto.getCreateDriverContractSettleDto()) {
+            CreateDriverContractSettleDto driverContractSettleDto = dto.getCreateDriverContractSettleDto();
+            if (null != driverContractSettleDto.getTruckTypeId()) {
+                ListTruckTypeDto truckType = truckTypeMapper.getById(driverContractSettleDto.getTruckTypeId());
+                DriverContractSettleCondition driverContractSettleCondition = new DriverContractSettleCondition();
+                driverContractSettleCondition
+                        .setTruckTeamContractId(contractId)
+                        .setTruckTypeId(driverContractSettleDto.getTruckTypeId());
+                DriverContractSettleParam driverContractSettleParam = new DriverContractSettleParam();
+                driverContractSettleParam
+                        .setTruckTeamContractId(contractId)
+                        .setCreateUserId(userId)
+                        .setTruckTypeId(driverContractSettleDto.getTruckTypeId())
+                        .setTruckTypeName(truckType.getTypeName());
+                //鸡车类型
+                if (GoodsType.CHICKEN.equals(Integer.parseInt(truckType.getProductName()))) {
+                    //按照区间里程单价
+                    contractCapacitySettle(dto, driverContractSettleCondition, driverContractSettleDto, driverContractSettleParam);
+                }
+                //饲料类型
+                if (GoodsType.FODDER.equals(Integer.parseInt(truckType.getProductName()))) {
+                    //按照区间重量单价
+                    contractCapacitySettle(dto, driverContractSettleCondition, driverContractSettleDto, driverContractSettleParam);
+                }
+                //仔猪 生猪类型
+                boolean flag = (GoodsType.SOW.equals(Integer.parseInt(truckType.getProductName())) || GoodsType.BOAR.equals(Integer.parseInt(truckType.getProductName()))
+                        || GoodsType.PIGLET.equals(Integer.parseInt(truckType.getProductName())) || GoodsType.LIVE_PIG.equals(Integer.parseInt(truckType.getProductName())));
+                if (flag) {
+                    driverContractSettleCondition.setPricingMethodFlag(2);
+                    DriverContractSettleRule driverContractSettleRule = driverContractSettleRuleMapper.listDriverContractSettleRuleByCondition(driverContractSettleCondition);
+                    if (null != driverContractSettleRule) {
+                        if (driverContractSettleDto.getPricingMethod().equals(driverContractSettleRule.getPricingMethod())) {
+                            //按照区间里程单价 或者按照起步价
+                            contractCapacitySettle(dto, driverContractSettleCondition, driverContractSettleDto, driverContractSettleParam);
+                        } else {
+                            throw new NullPointerException("当前已经产生了一种类型的报价");
+                        }
+                    } else {
+                        //按照区间里程单价 或者按照起步价
+                        contractCapacitySettle(dto, driverContractSettleCondition, driverContractSettleDto, driverContractSettleParam);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 1-按区间重量单价,2-按区间里程单价,3-按照起步价
+     *
+     * @param dto
+     * @param driverContractSettleCondition
+     * @param driverContractSettleDto
+     * @param driverContractSettleParam
+     * @author @Gao.
+     */
+
+    private void contractCapacitySettle(CreateTruckTeamContractDto dto, DriverContractSettleCondition driverContractSettleCondition,
+                                        CreateDriverContractSettleDto driverContractSettleDto, DriverContractSettleParam driverContractSettleParam) {
+        driverContractSettleCondition
+                .setPricingMethodFlag(1)
+                .setPricingMethod(driverContractSettleDto.getPricingMethod());
+        DriverContractSettleRule driverContractSettleRule = driverContractSettleRuleMapper.listDriverContractSettleRuleByCondition(driverContractSettleCondition);
+        // 1-按区间重量单价
+        if (1 == driverContractSettleDto.getPricingMethod()) {
+            driverContractSettleParam
+                    .setUnit(1)
+                    .setType(2)
+                    .setPricingMethod(1)
+                    .setMinSettleWeight(driverContractSettleDto.getMinSettleWeight());
+        }
+        //2-按区间里程单价
+        if (2 == driverContractSettleDto.getPricingMethod()) {
+            driverContractSettleParam
+                    .setType(1)
+                    .setUnit(2)
+                    .setPricingMethod(2)
+                    .setMinSettleMileage(driverContractSettleDto.getMinSettleMileage());
+        }
+        //3-按照起步价
+        if (3 == driverContractSettleDto.getPricingMethod()) {
+            driverContractSettleParam
+                    .setPricingMethod(3)
+                    .setBeginMileage(driverContractSettleDto.getBeginMileage())
+                    .setBeginPrice(driverContractSettleDto.getBeginPrice())
+                    .setMileagePrice(driverContractSettleDto.getMileagePrice());
+        }
+        if (null == driverContractSettleRule) {
+            driverContractSettleParam
+                    .setEffectiveTime(dto.getStartDate())
+                    .setInvalidTime(dto.getEndDate());
+            if (judgeExpired(dto.getEndDate())) {
+                throw new NullPointerException("合同截止日期小于当前时间");
+            }
+            saveDriverContractSettle(driverContractSettleDto, driverContractSettleParam, null);
+        } else {
+            if (driverContractSettleDto.getPricingMethod().equals(driverContractSettleRule.getPricingMethod())) {
+                driverContractSettleParam
+                        .setEffectiveTime(new Date())
+                        .setTruckTeamContractId(driverContractSettleRule.getTruckTeamContractId())
+                        .setInvalidTime(driverContractSettleRule.getInvalidTime());
+                TruckTeamContract truckTeamContract = truckTeamContractMapper.selectByPrimaryKey(driverContractSettleRule.getTruckTeamContractId());
+                if (judgeExpired(truckTeamContract.getEndDate())) {
+                    throw new NullPointerException("合同已经过期了");
+                }
+                saveDriverContractSettle(driverContractSettleDto, driverContractSettleParam, driverContractSettleRule.getId());
+            }
+        }
+    }
+
+    /**
+     * 用于判断当前合同截止时间是否超过当前时间
+     *
+     * @param endDate
+     * @return
+     * @author @Gao.
+     */
+    private boolean judgeExpired(Date endDate) {
+        Date currentDate = new Date();
+        if (currentDate.after(endDate)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 插入合同结算相关配置表
+     *
+     * @param driverContractSettleDto
+     * @param driverContractSettleParam
+     * @author @Gao.
+     */
+    private void saveDriverContractSettle(CreateDriverContractSettleDto driverContractSettleDto, DriverContractSettleParam driverContractSettleParam, Integer driverContractSettleId) {
+        //有历史合同结算配置记录，更新失效时间
+        if (null != driverContractSettleId) {
+            DriverContractSettleRule driverContractSettle = new DriverContractSettleRule();
+            driverContractSettle
+                    .setHistoryFlag(true)
+                    .setId(driverContractSettleId)
+                    .setInvalidTime(new Date());
+            driverContractSettleRuleMapper.updateByPrimaryKeySelective(driverContractSettle);
+        }
+        //插入合同结算配置规则
+        DriverContractSettleRule driverContractSettleRule = new DriverContractSettleRule();
+        BeanUtils.copyProperties(driverContractSettleParam, driverContractSettleRule);
+        driverContractSettleRuleMapper.insertSelective(driverContractSettleRule);
+        if (null != driverContractSettleDto.getCreateDriverContractSettleSectionDto()) {
+            List<CreateDriverContractSettleSectionDto> driverContractSettleSectionDto = driverContractSettleDto.getCreateDriverContractSettleSectionDto();
+            for (CreateDriverContractSettleSectionDto driverContractSettleSection : driverContractSettleSectionDto) {
+                DriverContractSettleSectionRule driverContractSettleSectionRule = new DriverContractSettleSectionRule();
+                BeanUtils.copyProperties(driverContractSettleSection, driverContractSettleSectionRule);
+                driverContractSettleSectionRule
+                        .setType(driverContractSettleParam.getType() == null ? null : driverContractSettleParam.getType())
+                        .setUnit(driverContractSettleParam.getUnit() == null ? null : driverContractSettleParam.getUnit())
+                        .setCreateUserId(driverContractSettleParam.getCreateUserId() == null ? null : driverContractSettleParam.getCreateUserId())
+                        .setTruckTeamContractId(driverContractSettleParam.getTruckTeamContractId() == null ? null : driverContractSettleParam.getTruckTeamContractId())
+                        .setDriverContractSettleRuleId(driverContractSettleRule.getId() == null ? null : driverContractSettleRule.getId());
+                //插入合同结算区间配置
+                driverContractSettleSectionRuleMapper.insertSelective(driverContractSettleSectionRule);
+            }
+        }
     }
 }

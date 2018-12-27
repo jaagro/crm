@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * 客户合同结算配制主表dto
+ *
  * @author baiyiran
  * @Date 2018/12/25
  */
@@ -42,39 +44,9 @@ public class CreateCustomerSettleRuleDto implements Serializable {
     private Date invalidTime;
 
     /**
-     * 是否为历史配制 0-否,1-是
-     */
-    private Boolean historyFlag;
-
-    /**
-     * 是否有效：1-有效 0-无效
-     */
-    private Boolean enable;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 创建人
-     */
-    private Integer createUserId;
-
-    /**
-     * 更新时间
-     */
-    private Date modifyTime;
-
-    /**
-     * 修改人
-     */
-    private Integer modifyUserId;
-
-    /**
      * 车辆设置
      */
-    private List<CreateCustomerTruckRuleDto> truckRuleDtoList;
+    private List<CreateCustomerSettleTruckRuleDto> truckRuleDtoList;
 
     /**
      * 里程区间

@@ -8,6 +8,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
+ * 客户合同结算基础信息主表dto
+ *
  * @author baiyiran
  * @Date 2018/12/25
  */

@@ -1,5 +1,6 @@
 package com.jaagro.crm.biz.service.impl;
 
+import com.jaagro.crm.api.constant.PricingMethod;
 import com.jaagro.crm.api.constant.ProductType;
 import com.jaagro.crm.api.dto.request.contract.CalculatePaymentDto;
 import com.jaagro.crm.api.dto.request.contract.QuerySettleRuleDto;
@@ -7,7 +8,8 @@ import com.jaagro.crm.api.service.CalculatePriceService;
 import com.jaagro.crm.biz.entity.CustomerContractSettlePrice;
 import com.jaagro.crm.biz.entity.CustomerContractSettleSectionRule;
 import com.jaagro.crm.biz.entity.CustomerContractSettleTruckRule;
-import com.jaagro.crm.biz.entity.SettleMileage;
+import com.jaagro.crm.biz.entity.DriverContractSettleRule;
+import com.jaagro.crm.biz.entity.DriverContractSettleSectionRule;
 import com.jaagro.crm.biz.mapper.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -287,6 +289,11 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
      */
     @Override
     public List<Map<Integer, BigDecimal>> calculatePaymentToDriver(List<CalculatePaymentDto> dtoList) {
+        List<Map<Integer, BigDecimal>> result = new ArrayList<>();
+        if (CollectionUtils.isEmpty(dtoList)){
+            log.info("O calculatePaymentToDriver dtoList isEmpty");
+            return result;
+        }
         for (CalculatePaymentDto calculatePaymentDto : dtoList) {
             // 1 获取合同装卸货地里程,一装多卸取最远里程
             List<SettleMileage> settleMileageList = settleMileageMapperExt.getSettleMileageList(calculatePaymentDto.getCustomerContractId(), calculatePaymentDto.getSiteDtoList());
@@ -298,6 +305,7 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
                 log.warn("O calculatePaymentToDriver settleMileage is not enough calculatePaymentDto={}",calculatePaymentDto);
                 continue;
             }
+            // 结算里程
             BigDecimal mileage = new BigDecimal("0");
             for (SettleMileage settleMileage : settleMileageList){
                 BigDecimal driverSettleMileage = settleMileage.getDriverSettleMileage();
@@ -305,24 +313,69 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
                     mileage = driverSettleMileage;
                 }
             }
-            // 获取客户合同结算配制信息
-
-            settleMileageMapperExt.getSettleMileageList(calculatePaymentDto.getCustomerContractId(), calculatePaymentDto.getSiteDtoList());
-            //饲料结算
-            if (calculatePaymentDto.getProductType().equals(ProductType.CHICKEN)) {
-                BigDecimal unitPrice = new BigDecimal(0.00);
-
+            // 获取司机合同结算配制信息
+            DriverContractSettleRule driverContractSettleRule = driverContractSettleRuleMapperExt.selectEffectiveOne(calculatePaymentDto.getTruckTeamContractId(),calculatePaymentDto.getTruckTypeId(),calculatePaymentDto.getDoneDate());
+            if (driverContractSettleRule == null) {
+                log.warn("O calculatePaymentToDriver driverContractSettleRule isNull calculatePaymentDto={}", calculatePaymentDto);
+                continue;
             }
-            //毛鸡结算
-            if (calculatePaymentDto.getProductType().equals(ProductType.FODDER)) {
-                BigDecimal unitPrice = new BigDecimal(0.00);
+            // 当司机里程小于最小结算里程,以最小结算里程计算
+            if (driverContractSettleRule.getMinSettleMileage() != null && mileage.compareTo(driverContractSettleRule.getMinSettleMileage()) < 0){
+                mileage = driverContractSettleRule.getMinSettleMileage();
             }
-
-            //仔猪/生猪结算：出租车模式
-            if (calculatePaymentDto.getProductType().equals(ProductType.PIGLET) || calculatePaymentDto.getProductType().equals(ProductType.LIVE_PIG)) {
-
+            // 按区间重量单价,按区间里程单价
+            if (!driverContractSettleRule.getPricingMethod().equals(PricingMethod.BEGIN_WEIGHT)){
+                // 获取里程区间
+                DriverContractSettleSectionRule effectiveSection = null;
+                List<DriverContractSettleSectionRule> settleSectionRuleList = driverContractSettleSectionRuleMapperExt.listByDriverContractSettleRuleId(driverContractSettleRule.getId());
+                if (CollectionUtils.isEmpty(settleSectionRuleList)){
+                    log.warn("O calculatePaymentToDriver settleSectionRuleList isEmpty calculatePaymentDto={}",calculatePaymentDto);
+                    continue;
+                }
+                for (DriverContractSettleSectionRule driverContractSettleSectionRule : settleSectionRuleList){
+                    if (mileage.compareTo(driverContractSettleSectionRule.getStart()) == 1 && mileage.compareTo(driverContractSettleSectionRule.getEnd()) <= 0){
+                        effectiveSection = driverContractSettleSectionRule;
+                    }
+                }
+                // 饲料结算(结算金额 = 结算重量（吨）✕ 区间重量单价（元/吨）最小结算重量：实际重量数小于最小重量时，按最小重量结算。)
+                if (ProductType.FODDER.equals(calculatePaymentDto.getProductType())){
+                    BigDecimal settleWeight = calculatePaymentDto.getUnloadWeight();
+                    if (calculatePaymentDto.getUnloadWeight() != null && effectiveSection.getSettlePrice() != null){
+                        if (settleWeight.compareTo(driverContractSettleRule.getMinSettleWeight()) < 0){
+                            settleWeight = driverContractSettleRule.getMinSettleWeight();
+                        }
+                        BigDecimal settlePrice = settleWeight.multiply(effectiveSection.getSettlePrice()).setScale(2,BigDecimal.ROUND_HALF_UP);
+                        Map<Integer, BigDecimal> settlePriceMap = new HashMap<>(2);
+                        settlePriceMap.put(calculatePaymentDto.getWaybillId(),settlePrice);
+                        result.add(settlePriceMap);
+                    }
+                }else{
+                    // 毛鸡/仔猪/生猪结算(结算金额 = 里程（公里）✕ 区间里程单价（元/公里）,最小结算里程：实际里程数小于最小里程时，按最小里程结算。)
+                    BigDecimal settlePrice = mileage.multiply(effectiveSection.getSettlePrice()).setScale(2,BigDecimal.ROUND_HALF_UP);
+                    Map<Integer, BigDecimal> settlePriceMap = new HashMap<>(2);
+                    settlePriceMap.put(calculatePaymentDto.getWaybillId(),settlePrice);
+                    result.add(settlePriceMap);
+                }
+            // 按起步里程+里程单价,结算金额 = 起步价（元）+ 结算单价 ✕（实际里程 - 起小里程）
+            }else {
+                if (driverContractSettleRule.getBeginMileage() != null && mileage.compareTo(driverContractSettleRule.getBeginMileage()) < 0){
+                    BigDecimal settlePrice = driverContractSettleRule.getBeginPrice();
+                    Map<Integer, BigDecimal> settlePriceMap = new HashMap<>(2);
+                    settlePriceMap.put(calculatePaymentDto.getWaybillId(),settlePrice);
+                    result.add(settlePriceMap);
+                }else {
+                    if (driverContractSettleRule.getBeginPrice() != null && driverContractSettleRule.getBeginMileage() != null && driverContractSettleRule.getMileagePrice() != null){
+                        BigDecimal settlePrice = driverContractSettleRule.getBeginPrice().add(mileage.subtract(driverContractSettleRule.getBeginMileage()).multiply(driverContractSettleRule.getMileagePrice())).setScale(2,BigDecimal.ROUND_HALF_UP);
+                        Map<Integer, BigDecimal> settlePriceMap = new HashMap<>(2);
+                        settlePriceMap.put(calculatePaymentDto.getWaybillId(),settlePrice);
+                        result.add(settlePriceMap);
+                    }else {
+                       log.warn("O calculatePaymentToDriver driverContractSettleRule value is not enough,calculatePaymentDto={}",calculatePaymentDto);
+                       continue;
+                    }
+                }
             }
         }
-        return null;
+        return result;
     }
 }

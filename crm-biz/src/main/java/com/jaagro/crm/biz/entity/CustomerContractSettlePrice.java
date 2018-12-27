@@ -55,7 +55,7 @@ public class CustomerContractSettlePrice implements Serializable{
     private String truckTypeName;
 
     /**
-     * 货物类型 1-毛鸡,2-饲料,3-仔猪,4-生猪
+     * 货物类型 1-毛鸡,2-饲料,3-仔猪,4-商品猪(包含生猪,公猪,母猪)
      */
     private Integer goodsType;
 

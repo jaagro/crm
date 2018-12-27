@@ -42,23 +42,25 @@ public class CertificateOverdueNoticeService {
     @Autowired
     private MessageClientService messageClientService;
 
-    //@Scheduled(fixedRate = 2000)
-    //每天上午10:15触发一次
-    //@Scheduled(cron = "0 15 10 * * ?")
+
+    /**
+     * 每天上午10:15触发一次
+     */
+   // @Scheduled(cron = "0 15 10 * * ?")
     public void certificateOverdueNoticeBySystem() {
-        log.info("定时任务开始============");
+        log.info("R-certificateOverdueNoticeBySystem()");
         //提前一个月查询保险过期时间
-        //certificateOverdueNotice(ExpiryDateType.EXPIRY_DATE, "expiryDate");
+        certificateOverdueNotice(ExpiryDateType.EXPIRY_DATE, "expiryDate");
         //查询保险已经过期
-        //certificateOverdueNotice(ExpiryDateType.OVER_DATE, "overDate");
+        certificateOverdueNotice(ExpiryDateType.OVER_DATE, "overDate");
         //提前一个月查询年检过期时间
-        //certificateOverdueNotice(ExpiryDateType.EXPIRY_ANNUAL, "expiryAnnual");
+        certificateOverdueNotice(ExpiryDateType.EXPIRY_ANNUAL, "expiryAnnual");
         //查询年检已经过期
-        //certificateOverdueNotice(ExpiryDateType.OVER_ANNUAL, "overAnnual");
+        certificateOverdueNotice(ExpiryDateType.OVER_ANNUAL, "overAnnual");
         //提前一个月查询驾驶证过期时间
-        //driverCertificateOverdueNotice(ExpiryDateType.EXPIRY_DRIVING_LICENSE, "expiryDrivingLicense");
+        driverCertificateOverdueNotice(ExpiryDateType.EXPIRY_DRIVING_LICENSE, "expiryDrivingLicense");
         //查询驾驶证过期
-        //driverCertificateOverdueNotice(ExpiryDateType.OVER_DRIVING_LICENSE, "overDrivingLicense");
+        driverCertificateOverdueNotice(ExpiryDateType.OVER_DRIVING_LICENSE, "overDrivingLicense");
         log.info("定时任务结束============");
     }
 
@@ -120,7 +122,7 @@ public class CertificateOverdueNoticeService {
      * @param value
      */
     private void setRefIdToRedis(String key, String value) {
-        redisTemplate.opsForValue().set(key, value, 3, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(key, value, 15, TimeUnit.DAYS);
     }
 
     /**

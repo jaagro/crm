@@ -1,6 +1,6 @@
 package com.jaagro.crm.biz.service.impl;
 
-import com.jaagro.crm.api.dto.request.customer.CreateCustomerOilPriceDto;
+import com.jaagro.crm.api.dto.request.customer.CreateContractOilPriceDto;
 import com.jaagro.crm.api.service.ContractOilPriceService;
 import com.jaagro.crm.biz.entity.ContractOilPrice;
 import com.jaagro.crm.biz.mapper.ContractOilPriceMapperExt;
@@ -30,30 +30,30 @@ public class ContractOilPriceServiceImpl implements ContractOilPriceService {
     /**
      * 创建油价配制
      *
-     * @param createCustomerOilPriceDto
+     * @param createContractOilPriceDto
      * @return
      */
     @Override
-    public Boolean createOilPrice(CreateCustomerOilPriceDto createCustomerOilPriceDto) {
+    public Boolean createOilPrice(CreateContractOilPriceDto createContractOilPriceDto) {
         Boolean flag = false;
-        if (StringUtils.isEmpty(createCustomerOilPriceDto.getContractId())) {
+        if (StringUtils.isEmpty(createContractOilPriceDto.getContractId())) {
             log.error("createOilPrice 创建油价配制合同id不能为空");
             return flag;
         }
-        if (StringUtils.isEmpty(createCustomerOilPriceDto.getContractType())) {
+        if (StringUtils.isEmpty(createContractOilPriceDto.getContractType())) {
             log.error("createOilPrice 创建油价配制合同类型不能为空");
             return flag;
         }
-        if (StringUtils.isEmpty(createCustomerOilPriceDto.getEffectiveTime())) {
+        if (StringUtils.isEmpty(createContractOilPriceDto.getEffectiveTime())) {
             log.error("createOilPrice 创建油价配制起始时间不能为空");
             return flag;
         }
-        if (StringUtils.isEmpty(createCustomerOilPriceDto.getInvalidTime())) {
+        if (StringUtils.isEmpty(createContractOilPriceDto.getInvalidTime())) {
             log.error("createOilPrice 创建油价配制失效时间不能为空");
             return flag;
         }
         //查询是否存在历史记录
-        List<ContractOilPrice> oilPriceList = oilPriceMapperExt.getByContractIdAndType(createCustomerOilPriceDto.getContractId(), createCustomerOilPriceDto.getContractType());
+        List<ContractOilPrice> oilPriceList = oilPriceMapperExt.getByContractIdAndType(createContractOilPriceDto.getContractId(), createContractOilPriceDto.getContractType());
         if (!CollectionUtils.isEmpty(oilPriceList)) {
             for (ContractOilPrice price : oilPriceList) {
                 price
@@ -65,8 +65,8 @@ public class ContractOilPriceServiceImpl implements ContractOilPriceService {
             }
         }
         ContractOilPrice oilPrice = new ContractOilPrice();
-        BeanUtils.copyProperties(createCustomerOilPriceDto, oilPrice);
-        if (createCustomerOilPriceDto != null) {
+        BeanUtils.copyProperties(createContractOilPriceDto, oilPrice);
+        if (createContractOilPriceDto != null) {
             oilPrice
                     .setCreateUserId(userService.getCurrentUser().getId())
                     .setCreateTime(new Date())
