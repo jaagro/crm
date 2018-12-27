@@ -137,7 +137,8 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.ContractOilPrice" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.ContractOilPrice" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
     update contract_oil_price
     <set >
       <if test="contractId != null" >
@@ -182,7 +183,8 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.ContractOilPrice" >
+  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.ContractOilPrice" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id" >
     update contract_oil_price
     set contract_id = #{contractId,jdbcType=INTEGER},
       contract_type = #{contractType,jdbcType=INTEGER},

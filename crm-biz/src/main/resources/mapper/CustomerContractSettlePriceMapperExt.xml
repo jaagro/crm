@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jaagro.crm.biz.mapper.CustomerContractSettlePriceMapperExt" >
+<mapper namespace="com.jaagro.crm.biz.mapper.CustomerContractSettlePriceMapperExt">
+    <select id="getByCriteria" parameterType="com.jaagro.crm.api.dto.base.QueryCustomerContractSettlePriceDto"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from customer_contract_settle_price
+        where enable = 1
+        AND history_flag = 0
+        AND customer_contract_id = #{customerContractId}
+        AND load_site_id = #{loadSiteId}
+        AND unload_site_id = #{unloadSiteId}
+        AND truck_type_id = #{truckTypeId}
+    </select>
 
+    <select id="getSectionWeightPrice" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM customer_contract_settle_price
+        WHERE customer_contract_id = #{customerContractId}
+        and #{doneDate} between effective_time and invalid_time
+        <if test="siteDtoList !=null and siteDtoList.size() > 0">
+            and
+            <foreach collection="siteDtoList" separator=") or (" item="site" open="((" close="))">
+                load_site_id = #{site.loadSiteId} and unload_site_id = #{site.unloadSiteId}
+            </foreach>
+        </if>
+    </select>
 </mapper>
