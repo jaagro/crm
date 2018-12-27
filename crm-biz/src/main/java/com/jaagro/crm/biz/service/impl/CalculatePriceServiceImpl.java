@@ -4,7 +4,6 @@ import com.jaagro.crm.api.constant.ProductType;
 import com.jaagro.crm.api.dto.request.contract.CalculatePaymentDto;
 import com.jaagro.crm.api.dto.request.contract.QuerySettleRuleDto;
 import com.jaagro.crm.api.service.CalculatePriceService;
-import com.jaagro.crm.biz.entity.SettleMileage;
 import com.jaagro.crm.biz.entity.CustomerContractSettlePrice;
 import com.jaagro.crm.biz.entity.CustomerContractSettleSectionRule;
 import com.jaagro.crm.biz.entity.CustomerContractSettleTruckRule;
