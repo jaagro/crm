@@ -296,7 +296,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
         if (PricingMethod.SECTION_WEIGHT.equals(driverContractSettleDto.getPricingMethod())) {
             driverContractSettleParam
                     .setUnit(1)
-                    .setType(2)
+                    .setType(1)
                     .setPricingMethod(PricingMethod.SECTION_WEIGHT)
                     .setMinSettleWeight(driverContractSettleDto.getMinSettleWeight());
         }
