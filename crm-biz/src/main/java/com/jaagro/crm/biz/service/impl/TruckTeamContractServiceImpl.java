@@ -96,9 +96,9 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
             }
         }
         //创建运力合同报价
-        if (null != dto.getCreateDriverContractSettleDto()) {
-            truckTeamContractService.createTruckTeamContractPrice(dto, currentUser.getId(), truckTeamContract.getId());
-        }
+//        if (null != dto.getCreateDriverContractSettleDto()) {
+//            truckTeamContractService.createTruckTeamContractPrice(dto, currentUser.getId(), truckTeamContract.getId());
+//        }
         return ServiceResult.toResult("合同创建成功");
     }
 
