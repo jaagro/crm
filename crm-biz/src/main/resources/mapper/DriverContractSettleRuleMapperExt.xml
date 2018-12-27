@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jaagro.crm.biz.mapper.DriverContractSettleRuleMapperExt" >
-
+<mapper namespace="com.jaagro.crm.biz.mapper.DriverContractSettleRuleMapperExt">
+    <select id="selectEffectiveOne" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM driver_contract_settle_rule
+        WHERE truck_team_contract_id = #{truckTeamContractId}
+        and truck_type_id = #{truckTypeId}
+        and effective_time &lt;= #{doneDate}
+        and invalid_time &gt; #{doneDate}
+        order by create_time limit 1;
+    </select>
 </mapper>
