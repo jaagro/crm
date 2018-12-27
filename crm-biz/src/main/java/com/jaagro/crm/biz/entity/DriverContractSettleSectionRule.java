@@ -41,7 +41,7 @@ public class DriverContractSettleSectionRule implements Serializable{
     private BigDecimal end;
 
     /**
-     * 区间类型,1-里程,2-重量
+     * 区间类型,1-按里程区间计价,2-按重量阶梯计价
      */
     private Integer type;
 
