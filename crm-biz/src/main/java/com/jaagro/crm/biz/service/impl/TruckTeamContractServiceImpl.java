@@ -6,6 +6,7 @@ import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.constant.ContractStatus;
 import com.jaagro.crm.api.constant.GoodsType;
+import com.jaagro.crm.api.constant.PricingMethod;
 import com.jaagro.crm.api.dto.request.contract.*;
 import com.jaagro.crm.api.dto.request.truck.*;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractQualificationDto;
@@ -96,9 +97,9 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
             }
         }
         //创建运力合同报价
-//        if (null != dto.getCreateDriverContractSettleDto()) {
-//            truckTeamContractService.createTruckTeamContractPrice(dto, currentUser.getId(), truckTeamContract.getId());
-//        }
+        if (null != dto.getCreateDriverContractSettleDto()) {
+            truckTeamContractService.createTruckTeamContractPrice(dto, currentUser.getId(), truckTeamContract.getId());
+        }
         return ServiceResult.toResult("合同创建成功");
     }
 
@@ -292,25 +293,25 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                 .setPricingMethod(driverContractSettleDto.getPricingMethod());
         DriverContractSettleRule driverContractSettleRule = driverContractSettleRuleMapper.listDriverContractSettleRuleByCondition(driverContractSettleCondition);
         // 1-按区间重量单价
-        if (1 == driverContractSettleDto.getPricingMethod()) {
+        if (PricingMethod.SECTION_WEIGHT.equals(driverContractSettleDto.getPricingMethod())) {
             driverContractSettleParam
                     .setUnit(1)
                     .setType(2)
-                    .setPricingMethod(1)
+                    .setPricingMethod(PricingMethod.SECTION_WEIGHT)
                     .setMinSettleWeight(driverContractSettleDto.getMinSettleWeight());
         }
         //2-按区间里程单价
-        if (2 == driverContractSettleDto.getPricingMethod()) {
+        if (PricingMethod.SECTION_MILEAGE.equals(driverContractSettleDto.getPricingMethod())) {
             driverContractSettleParam
                     .setType(1)
                     .setUnit(2)
-                    .setPricingMethod(2)
+                    .setPricingMethod(PricingMethod.SECTION_MILEAGE)
                     .setMinSettleMileage(driverContractSettleDto.getMinSettleMileage());
         }
         //3-按照起步价
-        if (3 == driverContractSettleDto.getPricingMethod()) {
+        if (PricingMethod.BEGIN_WEIGHT.equals(driverContractSettleDto.getPricingMethod())) {
             driverContractSettleParam
-                    .setPricingMethod(3)
+                    .setPricingMethod(PricingMethod.BEGIN_WEIGHT)
                     .setBeginMileage(driverContractSettleDto.getBeginMileage())
                     .setBeginPrice(driverContractSettleDto.getBeginPrice())
                     .setMileagePrice(driverContractSettleDto.getMileagePrice());
