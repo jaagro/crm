@@ -1,6 +1,9 @@
 package com.jaagro.crm.api.service;
 
-import com.jaagro.crm.api.dto.request.customer.CreateCustomerSectionRuleDto;
+import com.jaagro.crm.api.dto.request.contract.CreateCustomerSettleSectionRuleDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnCustomerSettleSectionRuleDto;
+
+import java.util.List;
 
 /**
  * @author baiyiran
@@ -14,5 +17,13 @@ public interface CtmContractSettleSectionRuleService {
      * @param sectionRuleDto
      * @return
      */
-    Boolean createSectionRule(CreateCustomerSectionRuleDto sectionRuleDto);
+    Boolean createSectionRule(CreateCustomerSettleSectionRuleDto sectionRuleDto);
+
+    /**
+     * 根据配置结算主表id获得列表
+     *
+     * @param id
+     * @return
+     */
+    List<ReturnCustomerSettleSectionRuleDto> listByRuleId(Integer id);
 }

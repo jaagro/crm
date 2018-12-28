@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jaagro.crm.biz.mapper.CustomerContractSettleSectionRuleMapperExt" >
-<select id="getSettleSectionRuleByCriteria" resultMap="BaseResultMap">
+<mapper namespace="com.jaagro.crm.biz.mapper.CustomerContractSettleSectionRuleMapperExt">
+    <select id="getSettleSectionRuleByCriteria" resultMap="BaseResultMap">
 
     select b.settle_price,b.customer_contract_id,b.type,b.start,b.end from customer_contract_settle_rule a,customer_contract_settle_section_rule b
     where b.customer_contract_settle_rule_id = a.id and a.customer_contract_id= b.customer_contract_id
@@ -11,6 +11,15 @@
         and #{doneDate} between a.effective_time and a.invalid_time
     <![CDATA[
         and #{actualMileage} > b.start and #{actualMileage}<=b.end
-    ]]>
-</select>
+
+        ]]>
+    </select>
+    <select id="listByRuleId" parameterType="java.lang.Integer"
+            resultType="com.jaagro.crm.api.dto.response.contract.ReturnCustomerSettleSectionRuleDto">
+        select
+        <include refid="Base_Column_List"/>
+        from customer_contract_settle_section_rule
+        where customer_contract_settle_rule_id = #{ruleId}
+        AND enable = 1
+    </select>
 </mapper>

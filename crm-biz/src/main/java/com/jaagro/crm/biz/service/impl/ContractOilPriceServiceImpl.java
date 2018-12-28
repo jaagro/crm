@@ -1,6 +1,8 @@
 package com.jaagro.crm.biz.service.impl;
 
 import com.jaagro.crm.api.dto.request.customer.CreateContractOilPriceDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnContractOilPriceDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnCustomerSettlePriceDto;
 import com.jaagro.crm.api.service.ContractOilPriceService;
 import com.jaagro.crm.biz.entity.ContractOilPrice;
 import com.jaagro.crm.biz.mapper.ContractOilPriceMapperExt;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -53,7 +56,7 @@ public class ContractOilPriceServiceImpl implements ContractOilPriceService {
             return flag;
         }
         //查询是否存在历史记录
-        List<ContractOilPrice> oilPriceList = oilPriceMapperExt.getByContractIdAndType(createContractOilPriceDto.getContractId(), createContractOilPriceDto.getContractType());
+        List<ContractOilPrice> oilPriceList = oilPriceMapperExt.listByContractIdAndType(createContractOilPriceDto.getContractId(), createContractOilPriceDto.getContractType());
         if (!CollectionUtils.isEmpty(oilPriceList)) {
             for (ContractOilPrice price : oilPriceList) {
                 price
@@ -79,4 +82,16 @@ public class ContractOilPriceServiceImpl implements ContractOilPriceService {
         }
         return flag;
     }
+
+    /**
+     * 根据合同id获取列表【不包括历史】
+     *
+     * @param contractId
+     * @return
+     */
+    @Override
+    public ReturnContractOilPriceDto getByContractId(Integer contractId, Integer contractType) {
+        return oilPriceMapperExt.getByContractIdAndType(contractId, contractType);
+    }
+
 }

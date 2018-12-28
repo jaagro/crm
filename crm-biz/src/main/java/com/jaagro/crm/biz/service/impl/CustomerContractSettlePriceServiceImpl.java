@@ -1,8 +1,11 @@
 package com.jaagro.crm.biz.service.impl;
 
 import com.jaagro.crm.api.dto.base.QueryCustomerContractSettlePriceDto;
-import com.jaagro.crm.api.dto.request.customer.CreateCustomerSettlePriceDto;
+import com.jaagro.crm.api.dto.request.contract.CreateCustomerSettlePriceDto;
+import com.jaagro.crm.api.dto.request.contract.CreateSettleMileageDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnCustomerSettlePriceDto;
 import com.jaagro.crm.api.service.CustomerContractSettlePriceService;
+import com.jaagro.crm.api.service.SettleMileageService;
 import com.jaagro.crm.biz.entity.CustomerContractSettlePrice;
 import com.jaagro.crm.biz.mapper.CustomerContractSettlePriceMapperExt;
 import com.jaagro.crm.biz.mapper.CustomerSiteMapperExt;
@@ -33,6 +36,8 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
     private CustomerSiteMapperExt siteMapper;
     @Autowired
     private TruckTypeMapperExt truckTypeMapper;
+    @Autowired
+    private SettleMileageService mileageService;
 
     /**
      * 创建客户合同报价
@@ -74,9 +79,25 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
             int result = settlePriceMapper.insertSelective(settlePrice);
             if (result > 0) {
                 flag = true;
+                //结算里程
+                CreateSettleMileageDto createSettleMileageDto = new CreateSettleMileageDto();
+                BeanUtils.copyProperties(settlePrice, createSettleMileageDto);
+
+
                 return flag;
             }
         }
         return flag;
+    }
+
+    /**
+     * 根据合同id获得装卸货地报价列表【不包括历史】
+     *
+     * @param contractId
+     * @return
+     */
+    @Override
+    public List<ReturnCustomerSettlePriceDto> listByContractId(Integer contractId) {
+        return settlePriceMapper.listByContractId(contractId);
     }
 }

@@ -1,20 +1,23 @@
-package com.jaagro.crm.api.dto.request.customer;
+package com.jaagro.crm.api.dto.response.contract;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
- * 客户合同 结算配制 车辆配制子表dto
- * * @author baiyiran
- *
- * @Date 2018/12/25
+ * @author baiyiran
+ * @Date 2018/12/27
  */
-@Accessors(chain = true)
 @Data
-public class CreateCustomerSettleTruckRuleDto implements Serializable {
+@Accessors(chain = true)
+public class ReturnCustomerSettleTruckRuleDto implements Serializable {
+    /**
+     * 客户合同结算车辆规则表id
+     */
+    private Integer id;
 
     /**
      * 客户合同id
@@ -56,4 +59,28 @@ public class CreateCustomerSettleTruckRuleDto implements Serializable {
      */
     private BigDecimal minMileage;
 
+    /**
+     * 是否有效：1-有效 0-无效
+     */
+    private Boolean enable;
+
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+
+    /**
+     * 创建人
+     */
+    private Integer createUserId;
+
+    /**
+     * 修改时间
+     */
+    private Date modifyTime;
+
+    /**
+     * 修改人
+     */
+    private Integer modifyUserId;
 }
