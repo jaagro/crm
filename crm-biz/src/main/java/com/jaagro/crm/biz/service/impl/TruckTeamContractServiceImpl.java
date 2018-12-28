@@ -230,6 +230,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
      * @author @Gao.
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void createTruckTeamContractPrice(CreateTruckTeamContractDto dto, Integer userId, Integer contractId) {
         if (null != dto.getCreateDriverContractSettleDto()) {
             CreateDriverContractSettleDto driverContractSettleDto = dto.getCreateDriverContractSettleDto();
@@ -326,17 +327,20 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
             }
             saveDriverContractSettle(driverContractSettleDto, driverContractSettleParam, null);
         } else {
+            TruckTeamContract truckTeamContract = truckTeamContractMapper.selectByPrimaryKey(driverContractSettleRule.getTruckTeamContractId());
+            if (truckTeamContract.getEndDate() != null) {
+                if (judgeExpired(truckTeamContract.getEndDate())) {
+                    throw new NullPointerException("当前合同已经过期了");
+                }
+            }
             boolean flag = (driverContractSettleDto.getPricingMethod().equals(driverContractSettleRule.getPricingMethod())
-                    && driverContractSettleDto.getTruckTypeId().equals(driverContractSettleRule.getModifyUserId()));
+                    && driverContractSettleDto.getTruckTypeId().equals(driverContractSettleRule.getTruckTypeId()));
             if (flag) {
                 driverContractSettleParam
                         .setEffectiveTime(new Date())
                         .setTruckTeamContractId(driverContractSettleRule.getTruckTeamContractId())
                         .setInvalidTime(driverContractSettleRule.getInvalidTime());
-                TruckTeamContract truckTeamContract = truckTeamContractMapper.selectByPrimaryKey(driverContractSettleRule.getTruckTeamContractId());
-                if (judgeExpired(truckTeamContract.getEndDate())) {
-                    throw new NullPointerException("当前合同已经过期了");
-                }
+
                 saveDriverContractSettle(driverContractSettleDto, driverContractSettleParam, driverContractSettleRule.getId());
             } else {
                 log.info("O contractCapacitySettle :The current vehicle type already exists in the record!");

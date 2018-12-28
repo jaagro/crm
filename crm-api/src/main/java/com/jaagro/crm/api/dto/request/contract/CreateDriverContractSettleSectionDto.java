@@ -23,17 +23,7 @@ public class CreateDriverContractSettleSectionDto {
     private BigDecimal end;
 
     /**
-     * 区间类型,1-里程,2-重量
-     */
-    private Integer type;
-
-    /**
      * 结算单价
      */
     private BigDecimal settlePrice;
-
-    /**
-     * 单位,1-元/吨,2-元/公里
-     */
-    private Integer unit;
 }
