@@ -1,20 +1,23 @@
-package com.jaagro.crm.api.dto.request.customer;
+package com.jaagro.crm.api.dto.response.contract;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
- * 客户合同结算配制dto
- *
  * @author baiyiran
- * @Date 2018/12/25
+ * @Date 2018/12/27
  */
-@Accessors(chain = true)
 @Data
-public class CreateCustomerSectionRuleDto implements Serializable {
+@Accessors(chain = true)
+public class ReturnCustomerSettleSectionRuleDto implements Serializable {
+    /**
+     * 客户合同结算区间配制表id
+     */
+    private Integer id;
 
     /**
      * 客户合同id
@@ -46,4 +49,28 @@ public class CreateCustomerSectionRuleDto implements Serializable {
      */
     private BigDecimal settlePrice;
 
+    /**
+     * 是否有效：1-有效 0-无效
+     */
+    private Boolean enable;
+
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+
+    /**
+     * 创建人
+     */
+    private Integer createUserId;
+
+    /**
+     * 修改时间
+     */
+    private Date modifyTime;
+
+    /**
+     * 修改人
+     */
+    private Integer modifyUserId;
 }

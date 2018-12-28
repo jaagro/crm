@@ -1,16 +1,17 @@
 package com.jaagro.crm.biz.service.impl;
 
-import com.jaagro.crm.api.dto.request.customer.CreateCustomerSectionRuleDto;
+import com.jaagro.crm.api.dto.request.contract.CreateCustomerSettleSectionRuleDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnCustomerSettleSectionRuleDto;
 import com.jaagro.crm.api.service.CtmContractSettleSectionRuleService;
 import com.jaagro.crm.biz.entity.CustomerContractSettleSectionRule;
 import com.jaagro.crm.biz.mapper.CustomerContractSettleSectionRuleMapperExt;
-import com.jaagro.crm.biz.service.UserClientService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author baiyiran
@@ -32,7 +33,7 @@ public class CtmContractSettleSectionRuleServiceImpl implements CtmContractSettl
      * @return
      */
     @Override
-    public Boolean createSectionRule(CreateCustomerSectionRuleDto sectionRuleDto) {
+    public Boolean createSectionRule(CreateCustomerSettleSectionRuleDto sectionRuleDto) {
         Boolean flag = false;
         CustomerContractSettleSectionRule sectionRule = new CustomerContractSettleSectionRule();
         BeanUtils.copyProperties(sectionRuleDto, sectionRule);
@@ -45,5 +46,16 @@ public class CtmContractSettleSectionRuleServiceImpl implements CtmContractSettl
             return flag;
         }
         return flag;
+    }
+
+    /**
+     * 根据配置结算主表id获得列表
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public List<ReturnCustomerSettleSectionRuleDto> listByRuleId(Integer id) {
+        return sectionRuleMapperExt.listByRuleId(id);
     }
 }

@@ -1,5 +1,6 @@
 package com.jaagro.crm.web.controller;
 
+import com.jaagro.crm.api.constant.ProductType;
 import com.jaagro.crm.api.dto.request.truck.*;
 import com.jaagro.crm.api.service.TruckService;
 import com.jaagro.crm.api.service.TruckTeamContactsService;
@@ -7,7 +8,6 @@ import com.jaagro.crm.api.service.TruckTeamService;
 import com.jaagro.crm.biz.mapper.TruckTeamMapper;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
-import com.jaagro.utils.ServiceResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

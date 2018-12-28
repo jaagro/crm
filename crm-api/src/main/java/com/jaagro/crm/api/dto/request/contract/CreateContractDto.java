@@ -1,8 +1,6 @@
 package com.jaagro.crm.api.dto.request.contract;
 
 import com.jaagro.crm.api.dto.request.customer.CreateContractOilPriceDto;
-import com.jaagro.crm.api.dto.request.customer.CreateCustomerSettlePriceDto;
-import com.jaagro.crm.api.dto.request.customer.CreateCustomerSettleRuleDto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

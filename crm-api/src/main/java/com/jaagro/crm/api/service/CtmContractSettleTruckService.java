@@ -1,6 +1,9 @@
 package com.jaagro.crm.api.service;
 
-import com.jaagro.crm.api.dto.request.customer.CreateCustomerSettleTruckRuleDto;
+import com.jaagro.crm.api.dto.request.contract.CreateCustomerSettleTruckRuleDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnCustomerSettleTruckRuleDto;
+
+import java.util.List;
 
 /**
  * @author baiyiran
@@ -15,4 +18,12 @@ public interface CtmContractSettleTruckService {
      * @return
      */
     Boolean createSettleTruck(CreateCustomerSettleTruckRuleDto truckRuleDto);
+
+    /**
+     * 根据配置结算主表id获得列表
+     *
+     * @param id
+     * @return
+     */
+    List<ReturnCustomerSettleTruckRuleDto> listByRuleId(Integer id);
 }

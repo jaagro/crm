@@ -1,5 +1,6 @@
 package com.jaagro.crm.biz.mapper;
 
+import com.jaagro.crm.api.dto.response.contract.ReturnContractOilPriceDto;
 import com.jaagro.crm.biz.entity.ContractOilPrice;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,6 +21,14 @@ public interface ContractOilPriceMapperExt extends ContractOilPriceMapper {
      * @param contractType 合同类型
      * @return
      */
-    List<ContractOilPrice> getByContractIdAndType(@Param("contractId") Integer contractId, @Param("contractType") Integer contractType);
+    List<ContractOilPrice> listByContractIdAndType(@Param("contractId") Integer contractId, @Param("contractType") Integer contractType);
 
+    /**
+     * 根据合同id获得油价配置
+     *
+     * @param contractId
+     * @param contractType
+     * @return
+     */
+    ReturnContractOilPriceDto getByContractIdAndType(@Param("contractId") Integer contractId, @Param("contractType") Integer contractType);
 }

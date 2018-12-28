@@ -1,20 +1,18 @@
-package com.jaagro.crm.biz.entity;
+package com.jaagro.crm.api.dto.request.contract;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
+/**
+ * @author baiyiran
+ * @Date 2018/12/27
+ */
 @Data
 @Accessors(chain = true)
-public class SettleMileage implements Serializable {
-    /**
-     * 结算里程表id
-     */
-    private Integer id;
-
+public class CreateSettleMileageDto implements Serializable {
     /**
      * 客户合同id
      */
@@ -64,40 +62,4 @@ public class SettleMileage implements Serializable {
      * 轨迹里程
      */
     private BigDecimal trackMileage;
-
-    /**
-     * 是否有效：1-有效 0-无效
-     */
-    private Boolean enable;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 创建人id
-     */
-    private Integer createUserId;
-
-    /**
-     * 创建人姓名
-     */
-    private String createUserName;
-
-    /**
-     * 修改时间
-     */
-    private Date modifyTime;
-
-    /**
-     * 修改人id
-     */
-    private Integer modifyUserId;
-
-    /**
-     * 修改人姓名
-     */
-    private String modifyUserName;
-
 }
