@@ -1,11 +1,13 @@
 package com.jaagro.crm.biz.service.impl;
 
+import com.jaagro.crm.api.constant.ContractType;
 import com.jaagro.crm.api.dto.request.customer.CreateContractOilPriceDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractOilPriceDto;
-import com.jaagro.crm.api.dto.response.contract.ReturnCustomerSettlePriceDto;
 import com.jaagro.crm.api.service.ContractOilPriceService;
 import com.jaagro.crm.biz.entity.ContractOilPrice;
+import com.jaagro.crm.biz.entity.CustomerContract;
 import com.jaagro.crm.biz.mapper.ContractOilPriceMapperExt;
+import com.jaagro.crm.biz.mapper.CustomerContractMapperExt;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -29,6 +30,8 @@ public class ContractOilPriceServiceImpl implements ContractOilPriceService {
     private ContractOilPriceMapperExt oilPriceMapperExt;
     @Autowired
     private CurrentUserService userService;
+    @Autowired
+    private CustomerContractMapperExt contractMapperExt;
 
     /**
      * 创建油价配制
@@ -69,8 +72,16 @@ public class ContractOilPriceServiceImpl implements ContractOilPriceService {
         }
         ContractOilPrice oilPrice = new ContractOilPrice();
         BeanUtils.copyProperties(createContractOilPriceDto, oilPrice);
+        CustomerContract customerContract = contractMapperExt.selectByPrimaryKey(createContractOilPriceDto.getContractId());
+        if (customerContract == null) {
+            log.error("createOilPrice 创建油价配制合同不存在");
+            return flag;
+        }
         if (createContractOilPriceDto != null) {
             oilPrice
+                    .setContractType(ContractType.CUSTOMER)
+                    .setEffectiveTime(customerContract.getStartDate())
+                    .setInvalidTime(customerContract.getEndDate())
                     .setCreateUserId(userService.getCurrentUser().getId())
                     .setCreateTime(new Date())
                     .setCreateUserName(userService.getCurrentUser().getName());

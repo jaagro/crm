@@ -13,7 +13,7 @@ public interface CustomerContractSettleRuleMapperExt extends CustomerContractSet
 
 
     /**
-     * 根据合同id查询
+     * 根据合同id查询不是历史纪录的
      *
      * @param contractId
      * @return
