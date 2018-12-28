@@ -1,8 +1,9 @@
 package com.jaagro.crm.biz.service.impl;
 
-import com.jaagro.crm.api.dto.request.customer.CreateCustomerSectionRuleDto;
-import com.jaagro.crm.api.dto.request.customer.CreateCustomerSettleRuleDto;
-import com.jaagro.crm.api.dto.request.customer.CreateCustomerSettleTruckRuleDto;
+import com.jaagro.crm.api.dto.request.contract.CreateCustomerSettleSectionRuleDto;
+import com.jaagro.crm.api.dto.request.contract.CreateCustomerSettleRuleDto;
+import com.jaagro.crm.api.dto.request.contract.CreateCustomerSettleTruckRuleDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnCustomerSettleRuleDto;
 import com.jaagro.crm.api.service.CtmContractSettleSectionRuleService;
 import com.jaagro.crm.api.service.CtmContractSettleTruckService;
 import com.jaagro.crm.api.service.CustomerContractSettleRuleService;
@@ -64,7 +65,7 @@ public class CustomerContractSettleRuleServiceImpl implements CustomerContractSe
         if (result > 0 && settleRule.getId() != null && settleRule.getId() > 0) {
             //里程区间
             if (!CollectionUtils.isEmpty(settleRuleDto.getSectionRuleDtoList())) {
-                for (CreateCustomerSectionRuleDto sectionRuleDto : settleRuleDto.getSectionRuleDtoList()) {
+                for (CreateCustomerSettleSectionRuleDto sectionRuleDto : settleRuleDto.getSectionRuleDtoList()) {
                     sectionRuleDto
                             .setCustomerContractId(settleRuleDto.getCustomerContractId())
                             .setCustomerContractSettleRuleId(settleRule.getId());
@@ -94,4 +95,22 @@ public class CustomerContractSettleRuleServiceImpl implements CustomerContractSe
         }
         return flag;
     }
+
+    /**
+     * 根据合同id获得结算
+     *
+     * @param contractId
+     * @return
+     */
+    @Override
+    public ReturnCustomerSettleRuleDto getByContractId(Integer contractId) {
+        ReturnCustomerSettleRuleDto ruleDto = settleRuleMapperExt.getByContractId(contractId);
+        if (ruleDto != null) {
+            ruleDto
+                    .setSectionRuleDtoList(settleSectionRuleService.listByRuleId(ruleDto.getId()))
+                    .setTruckRuleDtoList(settleTruckService.listByRuleId(ruleDto.getId()));
+        }
+        return ruleDto;
+    }
+
 }

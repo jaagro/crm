@@ -82,10 +82,25 @@ public class ReturnContractDto implements Serializable {
      */
     private String remark;
 
-
     /**
      * 合同资质
      */
     private List<ReturnContractQualificationDto> qualifications;
+
+    /**
+     * 结算基础信息
+     */
+    private List<ReturnCustomerSettlePriceDto> settlePriceDtoList;
+
+    /**
+     * 油价设置
+     */
+    private ReturnContractOilPriceDto contractOilPriceDto;
+
+    /**
+     * 结算配制
+     */
+    private ReturnCustomerSettleRuleDto settleRuleDto;
+
 
 }

@@ -5,16 +5,10 @@ import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.constant.ContractType;
 import com.jaagro.crm.api.constant.ProductType;
-import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
-import com.jaagro.crm.api.dto.request.contract.CreateContractQualificationDto;
-import com.jaagro.crm.api.dto.request.contract.ListContractCriteriaDto;
-import com.jaagro.crm.api.dto.request.contract.UpdateContractDto;
+import com.jaagro.crm.api.dto.request.contract.*;
 import com.jaagro.crm.api.dto.request.customer.CreateContractOilPriceDto;
-import com.jaagro.crm.api.dto.request.customer.CreateCustomerSettlePriceDto;
-import com.jaagro.crm.api.dto.request.customer.CreateCustomerSettleRuleDto;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto;
-import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
-import com.jaagro.crm.api.dto.response.contract.ReturnContractQualificationDto;
+import com.jaagro.crm.api.dto.response.contract.*;
 import com.jaagro.crm.api.service.*;
 import com.jaagro.crm.biz.entity.Customer;
 import com.jaagro.crm.biz.entity.CustomerContract;
@@ -71,6 +65,10 @@ public class ContractServiceImpl implements ContractService {
     private ContractOilPriceService oilPriceService;
     @Autowired
     private CustomerContractSettleRuleService settleRuleService;
+    @Autowired
+    private CustomerSiteMapperExt siteMapperExt;
+    @Autowired
+    private TruckTypeMapperExt truckTypeMapperExt;
 
     /**
      * 创建合同
@@ -241,6 +239,22 @@ public class ContractServiceImpl implements ContractService {
                 contractQualificationDto.setCertificateImageUrl(urlList.get(0).toString());
             }
         }
+        //结算装卸货地
+        List<ReturnCustomerSettlePriceDto> settlePriceDtoList = settlePriceService.listByContractId(contractId);
+        if (!CollectionUtils.isEmpty(settlePriceDtoList)) {
+            for (ReturnCustomerSettlePriceDto settlePriceDto : settlePriceDtoList) {
+                settlePriceDto
+                        .setLoadSiteName(siteMapperExt.selectByPrimaryKey(settlePriceDto.getLoadSiteId()).getSiteName())
+                        .setUnloadSiteName(siteMapperExt.selectByPrimaryKey(settlePriceDto.getUnloadSiteId()).getSiteName())
+                        .setTruckTypeName(truckTypeMapperExt.selectByPrimaryKey(settlePriceDto.getTruckTypeId()).getTypeName());
+            }
+            contractDto.setSettlePriceDtoList(settlePriceDtoList);
+        }
+
+        //油价
+        contractDto.setContractOilPriceDto(oilPriceService.getByContractId(contractId, ContractType.CUSTOMER));
+        //结算配制
+        contractDto.setSettleRuleDto(settleRuleService.getByContractId(contractId));
         return ServiceResult.toResult(contractDto);
     }
 
