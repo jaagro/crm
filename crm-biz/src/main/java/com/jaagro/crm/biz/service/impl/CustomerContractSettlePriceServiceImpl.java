@@ -71,24 +71,28 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
             QueryCustomerContractSettlePriceDto queryCustomerContractSettlePriceDto = new QueryCustomerContractSettlePriceDto();
             BeanUtils.copyProperties(settlePriceDto, queryCustomerContractSettlePriceDto);
             List<CustomerContractSettlePrice> contractSettlePrice = settlePriceMapper.getByCriteria(queryCustomerContractSettlePriceDto);
+            CustomerContract customerContract = contractMapperExt.selectByPrimaryKey(settlePriceDto.getCustomerContractId());
             if (!CollectionUtils.isEmpty(contractSettlePrice)) {
                 for (CustomerContractSettlePrice price : contractSettlePrice) {
-                    //将原来的记录改为历史记录
+                    //将已存在的记录设置为历史 && 截止日期设置为当前日期
                     price
+                            .setInvalidTime(new Date())
                             .setHistoryFlag(true)
                             .setModifyTime(new Date())
                             .setModifyUserId(userService.getCurrentUser().getId());
                     settlePriceMapper.updateByPrimaryKeySelective(price);
                 }
-            }
-            CustomerContract customerContract = contractMapperExt.selectByPrimaryKey(settlePriceDto.getCustomerContractId());
-            if (customerContract != null) {
+                //若有历史纪录 ==将新纪录的开始日期设置为当前日期
                 settlePrice
-                        .setEffectiveTime(customerContract.getStartDate())
-                        .setInvalidTime(customerContract.getEndDate());
+                        .setEffectiveTime(new Date());
+            } else {
+                //若无历史纪录 ==将新纪录的开始日期设置为合同的生效日期
+                settlePrice
+                        .setEffectiveTime(customerContract.getStartDate());
             }
             settlePrice
                     .setCreateTime(new Date())
+                    .setInvalidTime(customerContract.getEndDate())
                     .setCreateUserId(userService.getCurrentUser().getId())
                     .setLoadSiteName(siteMapper.selectByPrimaryKey(settlePriceDto.getLoadSiteId()).getSiteName())
                     .setUnloadSiteName(siteMapper.selectByPrimaryKey(settlePriceDto.getUnloadSiteId()).getSiteName())
