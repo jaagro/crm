@@ -16,6 +16,10 @@ public class DriverContractSettleCondition implements Serializable {
      * 车队合同id
      */
     private Integer truckTeamContractId;
+    /**
+     *运力合同配置主表id
+     */
+    private Integer contractSettleId;
 
     /**
      * 车辆类型id
@@ -29,5 +33,5 @@ public class DriverContractSettleCondition implements Serializable {
     /**
      *
      */
-    private Integer pricingMethodFlag;
+    private Integer flag;
 }
