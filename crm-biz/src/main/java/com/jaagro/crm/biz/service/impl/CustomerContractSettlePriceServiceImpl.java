@@ -5,6 +5,7 @@ import com.jaagro.crm.api.dto.request.contract.CreateCustomerSettlePriceDto;
 import com.jaagro.crm.api.dto.request.contract.CreateSettleMileageDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnCustomerSettlePriceDto;
 import com.jaagro.crm.api.service.CustomerContractSettlePriceService;
+import com.jaagro.crm.api.service.SettleMileageService;
 import com.jaagro.crm.biz.entity.CustomerContractSettlePrice;
 import com.jaagro.crm.biz.mapper.CustomerContractSettlePriceMapperExt;
 import com.jaagro.crm.biz.mapper.CustomerSiteMapperExt;
@@ -35,6 +36,8 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
     private CustomerSiteMapperExt siteMapper;
     @Autowired
     private TruckTypeMapperExt truckTypeMapper;
+    @Autowired
+    private SettleMileageService mileageService;
 
     /**
      * 创建客户合同报价
@@ -79,7 +82,6 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
                 //结算里程
                 CreateSettleMileageDto createSettleMileageDto = new CreateSettleMileageDto();
                 BeanUtils.copyProperties(settlePrice, createSettleMileageDto);
-//未完成
 
 
                 return flag;
