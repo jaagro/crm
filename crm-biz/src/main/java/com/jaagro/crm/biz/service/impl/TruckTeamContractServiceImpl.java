@@ -10,6 +10,7 @@ import com.jaagro.crm.api.constant.PricingMethod;
 import com.jaagro.crm.api.dto.request.contract.*;
 import com.jaagro.crm.api.dto.request.truck.*;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractQualificationDto;
+import com.jaagro.crm.api.dto.response.truck.ListDriverContractSettleDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTeamContractDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
 import com.jaagro.crm.api.dto.response.truck.TruckTeamContractReturnDto;
@@ -260,7 +261,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                 boolean flag = (GoodsType.SOW.equals(Integer.parseInt(truckType.getProductName())) || GoodsType.BOAR.equals(Integer.parseInt(truckType.getProductName()))
                         || GoodsType.PIGLET.equals(Integer.parseInt(truckType.getProductName())) || GoodsType.LIVE_PIG.equals(Integer.parseInt(truckType.getProductName())));
                 if (flag) {
-                    driverContractSettleCondition.setPricingMethodFlag(2);
+                    driverContractSettleCondition.setFlag(2);
                     DriverContractSettleRule driverContractSettleRule = driverContractSettleRuleMapper.listDriverContractSettleRuleByCondition(driverContractSettleCondition);
                     if (null != driverContractSettleRule) {
                         if (driverContractSettleDto.getPricingMethod().equals(driverContractSettleRule.getPricingMethod())) {
@@ -291,7 +292,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     private void contractCapacitySettle(CreateTruckTeamContractDto dto, DriverContractSettleCondition driverContractSettleCondition,
                                         CreateDriverContractSettleDto driverContractSettleDto, DriverContractSettleParam driverContractSettleParam) {
         driverContractSettleCondition
-                .setPricingMethodFlag(1)
+                .setFlag(1)
                 .setPricingMethod(driverContractSettleDto.getPricingMethod());
         DriverContractSettleRule driverContractSettleRule = driverContractSettleRuleMapper.listDriverContractSettleRuleByCondition(driverContractSettleCondition);
         // 1-按区间重量单价
@@ -399,5 +400,14 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                 driverContractSettleSectionRuleMapper.insertSelective(driverContractSettleSectionRule);
             }
         }
+    }
+
+    /**
+     * @param condition
+     * @return
+     */
+    @Override
+    public List<ListDriverContractSettleDto> listTruckTeamContractPrice(DriverContractSettleCondition condition) {
+        return driverContractSettleRuleMapper.listTruckTeamContractPriceCondition(condition);
     }
 }

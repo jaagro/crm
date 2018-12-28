@@ -1,9 +1,11 @@
 package com.jaagro.crm.biz.mapper;
 
+import com.jaagro.crm.api.dto.response.truck.ListDriverContractSettleDto;
 import com.jaagro.crm.biz.entity.DriverContractSettleRule;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
+import java.util.List;
 
 import com.jaagro.crm.api.dto.request.contract.DriverContractSettleCondition;
 
@@ -33,4 +35,12 @@ public interface DriverContractSettleRuleMapperExt extends DriverContractSettleR
      * @return
      */
     DriverContractSettleRule selectEffectiveOne(@Param("truckTeamContractId") Integer truckTeamContractId, @Param("truckTypeId") Integer truckTypeId, @Param("doneDate") Date doneDate);
+
+    /**
+     * 查询运力合同结算配置及报价区间表
+     *
+     * @param condition
+     * @return
+     */
+    List<ListDriverContractSettleDto> listTruckTeamContractPriceCondition(DriverContractSettleCondition condition);
 }

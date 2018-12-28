@@ -1,8 +1,10 @@
 package com.jaagro.crm.api.service;
 
+import com.jaagro.crm.api.dto.request.contract.DriverContractSettleCondition;
 import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContractDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckTeamContractCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamContractDto;
+import com.jaagro.crm.api.dto.response.truck.ListDriverContractSettleDto;
 
 import java.util.List;
 import java.util.Map;
@@ -68,4 +70,11 @@ public interface TruckTeamContractService {
      * 创建车队合同报价
      */
     void createTruckTeamContractPrice(CreateTruckTeamContractDto dto, Integer userId, Integer contractId);
+
+    /**
+     *
+     * @param condition
+     * @return
+     */
+    List<ListDriverContractSettleDto> listTruckTeamContractPrice(DriverContractSettleCondition condition);
 }
