@@ -23,6 +23,7 @@ import com.jaagro.crm.biz.mapper.*;
 import com.jaagro.crm.biz.service.OssSignUrlClientService;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -265,7 +266,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                             //按照区间里程单价 或者按照起步价
                             contractCapacitySettle(dto, driverContractSettleCondition, driverContractSettleDto, driverContractSettleParam);
                         } else {
-                            throw new NullPointerException("当前已经产生了一种类型的报价");
+                            throw new NullPointerException("当前货物类型只能选择一种报价方式");
                         }
                     } else {
                         //按照区间里程单价 或者按照起步价
@@ -321,20 +322,24 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                     .setEffectiveTime(dto.getStartDate())
                     .setInvalidTime(dto.getEndDate());
             if (judgeExpired(dto.getEndDate())) {
-                throw new NullPointerException("合同截止日期小于当前时间");
+                throw new NullPointerException("合同截止日期应当小于当前时间");
             }
             saveDriverContractSettle(driverContractSettleDto, driverContractSettleParam, null);
         } else {
-            if (driverContractSettleDto.getPricingMethod().equals(driverContractSettleRule.getPricingMethod())) {
+            boolean flag = (driverContractSettleDto.getPricingMethod().equals(driverContractSettleRule.getPricingMethod())
+                    && driverContractSettleDto.getTruckTypeId().equals(driverContractSettleRule.getModifyUserId()));
+            if (flag) {
                 driverContractSettleParam
                         .setEffectiveTime(new Date())
                         .setTruckTeamContractId(driverContractSettleRule.getTruckTeamContractId())
                         .setInvalidTime(driverContractSettleRule.getInvalidTime());
                 TruckTeamContract truckTeamContract = truckTeamContractMapper.selectByPrimaryKey(driverContractSettleRule.getTruckTeamContractId());
                 if (judgeExpired(truckTeamContract.getEndDate())) {
-                    throw new NullPointerException("合同已经过期了");
+                    throw new NullPointerException("当前合同已经过期了");
                 }
                 saveDriverContractSettle(driverContractSettleDto, driverContractSettleParam, driverContractSettleRule.getId());
+            } else {
+                log.info("O contractCapacitySettle :The current vehicle type already exists in the record!");
             }
         }
     }

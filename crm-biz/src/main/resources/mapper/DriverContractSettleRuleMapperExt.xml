@@ -18,7 +18,7 @@
         <if test="pricingMethodFlag == 2">
            and pricing_method in (2 ,3)
         </if>
-        ORDER BY invalid_time desc LIMIT 1
+        ORDER BY create_time desc LIMIT 1
     </select>
     <select id="selectEffectiveOne" resultMap="BaseResultMap">
         SELECT
