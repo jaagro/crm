@@ -1,10 +1,12 @@
 package com.jaagro.crm.web.controller;
 
 import com.jaagro.constant.UserInfo;
+import com.jaagro.crm.api.dto.request.contract.DriverContractSettleCondition;
 import com.jaagro.crm.api.dto.request.message.CreateMessageDto;
 import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContractDto;
 import com.jaagro.crm.api.dto.response.truck.DriverReturnDto;
 import com.jaagro.crm.api.dto.response.truck.GetTruckDto;
+import com.jaagro.crm.api.dto.response.truck.ListDriverContractSettleDto;
 import com.jaagro.crm.api.service.TruckTeamContractService;
 import com.jaagro.crm.biz.mapper.TruckMapper;
 import com.jaagro.crm.biz.mapper.TruckMapperExt;
@@ -75,10 +77,14 @@ public class TestController {
 
 
     @PostMapping("/test3")
-    public BaseResponse test3(@RequestBody CreateTruckTeamContractDto dto) {
+    public BaseResponse test3() {
 //        certificateOverdueNoticeService.certificateOverdueNoticeBySystem();
-        truckTeamContractService.createTruckTeamContractPrice(dto, 1, 1);
-        return null;
+       // truckTeamContractService.createTruckTeamContractPrice(dto, 1, 1);
+        DriverContractSettleCondition driverContractSettleCondition = new DriverContractSettleCondition();
+        driverContractSettleCondition.setTruckTeamContractId(1).setTruckTypeId(8).setPricingMethod(2).setFlag(2);
+        List<ListDriverContractSettleDto> listDriverContractSettleDtos = truckTeamContractService.listTruckTeamContractPrice(driverContractSettleCondition);
+        System.out.println(listDriverContractSettleDtos.toString());
+        return BaseResponse.successInstance(listDriverContractSettleDtos);
 
     }
 

@@ -23,14 +23,14 @@ public class CreateDriverContractSettleSectionDto {
     private BigDecimal end;
 
     /**
-     * 区间类型,1-里程,2-重量
-     */
-    private Integer type;
-
-    /**
      * 结算单价
      */
     private BigDecimal settlePrice;
+
+    /**
+     * 区间类型,1-按里程区间计价,2-按重量阶梯计价
+     */
+    private Integer type;
 
     /**
      * 单位,1-元/吨,2-元/公里

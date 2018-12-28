@@ -1,10 +1,12 @@
-package com.jaagro.crm.api.dto.request.contract;
+package com.jaagro.crm.api.dto.response.truck;
 
+import com.jaagro.crm.api.dto.request.contract.CreateDriverContractSettleSectionDto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -12,18 +14,41 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
-public class CreateDriverContractSettleDto implements Serializable {
-
+public class ListDriverContractSettleDto implements Serializable {
 
     /**
-     * 计价方式(1-按区间重量单价,2-按区间里程单价,3-按起步里程)
+     * 合同运力结算配置表 id
      */
-    private Integer pricingMethod;
+    private Integer id;
 
     /**
      * 车辆类型id
      */
     private Integer truckTypeId;
+
+    /**
+     * 车辆类型名称
+     */
+    private String truckTypeName;
+    /**
+     * 是否记为历史
+     */
+    private Integer historyFlag;
+    /**
+     *
+     */
+    private Integer pricingMethod;
+
+    /**
+     * 生效时间
+     */
+    private Date effectiveTime;
+
+    /**
+     * 失效时间
+     */
+    private Date invalidTime;
+
     //----------------区间里程-------------
 
     /**
