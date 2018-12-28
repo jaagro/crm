@@ -80,10 +80,15 @@ public class CustomerContractSettleRuleServiceImpl implements CustomerContractSe
             BeanUtils.copyProperties(ruleDto, rule);
             //将原来的记录改为历史
             rule
+                    .setInvalidTime(new Date())
                     .setHistoryFlag(true)
                     .setModifyTime(new Date())
                     .setModifyUserId(userService.getCurrentUser().getId());
             settleRuleMapperExt.updateByPrimaryKeySelective(rule);
+            //如果存在历史纪录 将新纪录的开始日期设置为当前日期
+            settleRule
+                    .setEffectiveTime(new Date())
+                    .setInvalidTime(customerContract.getEndDate());
         }
         //将新纪录新增
         settleRule
