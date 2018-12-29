@@ -1,4 +1,4 @@
-package com.jaagro.crm.biz.entity;
+package com.jaagro.crm.api.entity;
 
 import java.util.ArrayList;
 import java.util.Date;

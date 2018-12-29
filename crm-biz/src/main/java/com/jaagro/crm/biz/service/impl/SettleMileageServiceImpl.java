@@ -2,6 +2,7 @@ package com.jaagro.crm.biz.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.dto.request.contract.CreateSettleMileageDto;
 import com.jaagro.crm.api.dto.request.contract.UpdateSettleMileageDto;
 import com.jaagro.crm.api.dto.request.contract.listSettleMileageCriteriaDto;
@@ -60,10 +61,11 @@ public class SettleMileageServiceImpl implements SettleMileageService {
         Boolean flag = false;
         SettleMileage settleMileage = new SettleMileage();
         BeanUtils.copyProperties(mileageDto, settleMileage);
+        UserInfo currentUser = userService.getCurrentUser();
         settleMileage
                 .setCreateTime(new Date())
-                .setCreateUserId(userService.getCurrentUser().getId())
-                .setCreateUserName(userService.getCurrentUser().getName());
+                .setCreateUserId(currentUser == null ? null : currentUser.getId())
+                .setCreateUserName(currentUser == null ? null : currentUser.getName());
         CustomerSite site = siteMapperExt.selectByPrimaryKey(settleMileage.getLoadSiteId());
         if (site != null) {
             settleMileage
@@ -119,11 +121,12 @@ public class SettleMileageServiceImpl implements SettleMileageService {
         if (settleMileage == null) {
             throw new RuntimeException("结算里程不存在");
         }
+        UserInfo currentUser = userService.getCurrentUser();
         settleMileage
                 .setDriverSettleMileage(dto.getDriverSettleMileage())
                 .setModifyTime(new Date())
-                .setModifyUserName(userService.getCurrentUser().getName())
-                .setModifyUserId(userService.getCurrentUser().getId());
+                .setModifyUserName(currentUser == null ? null : currentUser.getName())
+                .setModifyUserId(currentUser == null ? null : currentUser.getId());
         int result = settleMileageMapperExt.updateByPrimaryKeySelective(settleMileage);
         if (result > 0) {
             return ServiceResult.toResult("修改成功");

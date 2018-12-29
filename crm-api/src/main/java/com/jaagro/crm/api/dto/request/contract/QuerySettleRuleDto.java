@@ -17,6 +17,7 @@ import java.util.List;
 @Accessors(chain = true)
 public class QuerySettleRuleDto implements Serializable {
 
+    private static final long serialVersionUID = -3186071023129320101L;
     /**
      * 运单完成时间，必须完成的运单才能有结算金额
      */

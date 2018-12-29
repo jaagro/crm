@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Data
 @Accessors(chain = true)
 public class CreateTruckTeamContactsDto implements Serializable {
+    private static final long serialVersionUID = -2687018742675870115L;
     /**
      * 主键车队表联系人ID
      */

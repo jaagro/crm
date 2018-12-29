@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Data
 @Accessors(chain = true)
 public class ListTruckTeamContractCriteriaDto implements Serializable {
+    private static final long serialVersionUID = -4071829474511812010L;
     /**
      * 起始页
      */

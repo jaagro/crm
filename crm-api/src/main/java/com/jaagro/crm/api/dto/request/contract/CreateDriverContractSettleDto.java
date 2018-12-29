@@ -15,6 +15,7 @@ import java.util.List;
 public class CreateDriverContractSettleDto implements Serializable {
 
 
+    private static final long serialVersionUID = 2328859250127634282L;
     /**
      * 计价方式(1-按区间重量单价,2-按区间里程单价,3-按起步里程)
      */

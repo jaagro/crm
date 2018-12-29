@@ -15,6 +15,7 @@ import java.util.Date;
 @Accessors(chain = true)
 public class NewsReturnDto implements Serializable{
 
+    private static final long serialVersionUID = 7905489408368938478L;
     /**
      * 新闻表id
      */

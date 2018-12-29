@@ -1,12 +1,11 @@
-package com.jaagro.crm.biz.service;
+package com.jaagro.crm.api.service;
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.dto.request.news.CreateNewsDto;
 import com.jaagro.crm.api.dto.request.news.ListNewsCriteriaDto;
 import com.jaagro.crm.api.dto.request.news.UpdateNewsDto;
 import com.jaagro.crm.api.dto.response.news.NewsReturnDto;
-import com.jaagro.crm.biz.entity.NewsCategory;
+import com.jaagro.crm.api.entity.NewsCategory;
 
 import java.util.List;
 

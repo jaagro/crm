@@ -556,7 +556,7 @@ public class ContractController {
     /**
      * 修改结算信息
      *
-     * @param priceId
+     * @param priceDto
      * @return
      */
     @ApiOperation("合同结算信息修改")
@@ -568,7 +568,7 @@ public class ContractController {
     /**
      * 合同结算信息
      *
-     * @param priceDtoList
+     * @param priceId
      * @return
      */
     @ApiOperation("修改结算单价时查询历史纪录列表")
@@ -600,15 +600,11 @@ public class ContractController {
         //油价
         CreateContractOilPriceDto oilPriceDto = settleDto.getOilPriceDto();
         oilPriceDto.setContractId(settleDto.getContractId());
-        Boolean result = oilPriceService.createOilPrice(oilPriceDto);
-        if (!result) {
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "创建合同报价失败");
-        }
         //结算配置
         CreateCustomerSettleRuleDto ruleDto = settleDto.getRuleDto();
         ruleDto.setCustomerContractId(settleDto.getContractId());
         try {
-            Boolean ruleResult = settleRuleService.createSettleRule(ruleDto);
+            Boolean ruleResult = settleRuleService.createSettleRule(ruleDto,oilPriceDto);
             if (!ruleResult) {
                 return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "创建合同结算配置失败");
             }

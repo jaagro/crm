@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 @Accessors(chain = true)
 public class UpdateSettleMileageDto implements Serializable {
 
+    private static final long serialVersionUID = -8172479595478794743L;
     /**
      * 结算里程表id
      */

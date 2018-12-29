@@ -1,6 +1,7 @@
 package com.jaagro.crm.api.service;
 
 import com.jaagro.crm.api.dto.request.contract.CreateCustomerSettleRuleDto;
+import com.jaagro.crm.api.dto.request.customer.CreateContractOilPriceDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnCustomerSettleRuleDto;
 
 /**
@@ -15,7 +16,7 @@ public interface CustomerContractSettleRuleService {
      * @param settleRuleDto
      * @return
      */
-    Boolean createSettleRule(CreateCustomerSettleRuleDto settleRuleDto);
+    Boolean createSettleRule(CreateCustomerSettleRuleDto settleRuleDto, CreateContractOilPriceDto oilPriceDto);
 
     /**
      * 根据合同id获得结算

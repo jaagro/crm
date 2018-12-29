@@ -1,15 +1,18 @@
 package com.jaagro.crm.biz.service.impl;
 
+import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.constant.ProductType;
 import com.jaagro.crm.api.dto.base.QueryCustomerContractSettlePriceDto;
 import com.jaagro.crm.api.dto.request.contract.CreateCustomerSettlePriceDto;
 import com.jaagro.crm.api.dto.request.contract.CreateSettleMileageDto;
 import com.jaagro.crm.api.dto.request.contract.UpdateCustomerContractSettlePriceDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnCustomerSettlePriceDto;
+import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
 import com.jaagro.crm.api.service.CustomerContractSettlePriceService;
 import com.jaagro.crm.api.service.SettleMileageService;
 import com.jaagro.crm.biz.entity.CustomerContract;
 import com.jaagro.crm.biz.entity.CustomerContractSettlePrice;
+import com.jaagro.crm.biz.entity.CustomerSite;
 import com.jaagro.crm.biz.mapper.CustomerContractMapperExt;
 import com.jaagro.crm.biz.mapper.CustomerContractSettlePriceMapperExt;
 import com.jaagro.crm.biz.mapper.CustomerSiteMapperExt;
@@ -20,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -57,6 +61,7 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean createCustomerSettlePrice(CreateCustomerSettlePriceDto settlePriceDto) {
         Boolean flag = false;
         if (StringUtils.isEmpty(settlePriceDto.getCustomerContractId())) {
@@ -72,16 +77,16 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
             BeanUtils.copyProperties(settlePriceDto, queryCustomerContractSettlePriceDto);
             List<CustomerContractSettlePrice> contractSettlePrice = settlePriceMapper.getByCriteria(queryCustomerContractSettlePriceDto);
             CustomerContract customerContract = contractMapperExt.selectByPrimaryKey(settlePriceDto.getCustomerContractId());
+            UserInfo currentUser = userService.getCurrentUser();
             if (!CollectionUtils.isEmpty(contractSettlePrice)) {
-                for (CustomerContractSettlePrice price : contractSettlePrice) {
-                    //将已存在的记录设置为历史 && 截止日期设置为当前日期
-                    price
-                            .setInvalidTime(new Date())
-                            .setHistoryFlag(true)
-                            .setModifyTime(new Date())
-                            .setModifyUserId(userService.getCurrentUser().getId());
-                    settlePriceMapper.updateByPrimaryKeySelective(price);
-                }
+                CustomerContractSettlePrice price = contractSettlePrice.get(0);
+                //将已存在的记录设置为历史 && 截止日期设置为当前日期
+                price
+                        .setInvalidTime(new Date())
+                        .setHistoryFlag(true)
+                        .setModifyTime(new Date())
+                        .setModifyUserId(currentUser == null ? null : currentUser.getId());
+                settlePriceMapper.updateByPrimaryKeySelective(price);
                 //若有历史纪录 ==将新纪录的开始日期设置为当前日期
                 settlePrice
                         .setEffectiveTime(new Date());
@@ -90,16 +95,18 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
                 settlePrice
                         .setEffectiveTime(customerContract.getStartDate());
             }
+            CustomerSite loadSite = siteMapper.selectByPrimaryKey(settlePriceDto.getLoadSiteId());
+            CustomerSite unloadSite = siteMapper.selectByPrimaryKey(settlePriceDto.getUnloadSiteId());
+            ListTruckTypeDto truckType = truckTypeMapper.getById(settlePriceDto.getTruckTypeId());
             settlePrice
                     .setCreateTime(new Date())
                     .setInvalidTime(customerContract.getEndDate())
-                    .setCreateUserId(userService.getCurrentUser().getId())
-                    .setLoadSiteName(siteMapper.selectByPrimaryKey(settlePriceDto.getLoadSiteId()).getSiteName())
-                    .setUnloadSiteName(siteMapper.selectByPrimaryKey(settlePriceDto.getUnloadSiteId()).getSiteName())
-                    .setTruckTypeName(truckTypeMapper.getById(settlePriceDto.getTruckTypeId()).getTypeName());
+                    .setCreateUserId(currentUser == null ? null : currentUser.getId())
+                    .setLoadSiteName(loadSite == null ? null : loadSite.getSiteName())
+                    .setUnloadSiteName(unloadSite == null ? null : unloadSite.getSiteName())
+                    .setTruckTypeName(truckType == null ? null : truckType.getTypeName());
             int result = settlePriceMapper.insertSelective(settlePrice);
             if (result > 0) {
-                flag = true;
                 //结算里程
                 CreateSettleMileageDto settleMileageDto = new CreateSettleMileageDto();
                 BeanUtils.copyProperties(settlePrice, settleMileageDto);
@@ -132,10 +139,11 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
         if (settlePrice == null) {
             return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "结算信息不存在");
         }
+        UserInfo currentUser = userService.getCurrentUser();
         settlePrice
                 .setEnable(false)
                 .setModifyTime(new Date())
-                .setModifyUserId(userService.getCurrentUser().getId());
+                .setModifyUserId(currentUser == null ? null : currentUser.getId());
         int result = settlePriceMapper.updateByPrimaryKeySelective(settlePrice);
         if (result > 0) {
             return ServiceResult.toResult("删除成功");
@@ -167,20 +175,23 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
                 .setUnloadSiteId(settlePrice.getUnloadSiteId());
         if (!customerContract.getType().equals(ProductType.CHICKEN)) {
             queryDto.setTruckTypeId(settlePrice.getTruckTypeId());
+        }else {
+            queryDto.setTruckTypeId(0);
         }
+        UserInfo currentUser = userService.getCurrentUser();
         List<CustomerContractSettlePrice> prices = settlePriceMapper.getByCriteria(queryDto);
         if (!CollectionUtils.isEmpty(prices)) {
-            for (CustomerContractSettlePrice price : prices) {
+            CustomerContractSettlePrice price = prices.get(0);
                 price.setHistoryFlag(true)
+                        .setInvalidTime(new Date())
                         .setModifyTime(new Date())
-                        .setModifyUserId(userService.getCurrentUser().getId());
+                        .setModifyUserId(currentUser == null ? null : currentUser.getId());
                 settlePriceMapper.updateByPrimaryKeySelective(price);
-            }
         }
         BeanUtils.copyProperties(priceDto, settlePrice);
         settlePrice
                 .setMileage(priceDto.getSettlePrice())
-                .setCreateUserId(userService.getCurrentUser().getId())
+                .setCreateUserId(currentUser == null ? null : currentUser.getId())
                 .setCreateTime(new Date());
         int result = settlePriceMapper.insertSelective(settlePrice);
         if (result > 0) {

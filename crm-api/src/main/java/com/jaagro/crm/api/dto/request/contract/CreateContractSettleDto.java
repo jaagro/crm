@@ -15,6 +15,7 @@ import java.io.Serializable;
 @Data
 @Accessors(chain = true)
 public class CreateContractSettleDto implements Serializable {
+    private static final long serialVersionUID = 2368344814835416448L;
     private Integer contractId;
 
     private CreateContractOilPriceDto oilPriceDto;

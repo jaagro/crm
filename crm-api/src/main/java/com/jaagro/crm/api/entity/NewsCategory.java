@@ -1,4 +1,4 @@
-package com.jaagro.crm.biz.entity;
+package com.jaagro.crm.api.entity;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

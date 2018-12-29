@@ -15,6 +15,7 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class CreateTruckTeamContractDto implements Serializable {
+    private static final long serialVersionUID = 4773938326501732602L;
     /**
      * 关联车队表ID
      */

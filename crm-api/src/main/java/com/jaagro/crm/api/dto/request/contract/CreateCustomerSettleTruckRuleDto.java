@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 @Data
 public class CreateCustomerSettleTruckRuleDto implements Serializable {
 
+    private static final long serialVersionUID = 5354577687025380525L;
     /**
      * 客户合同id
      */

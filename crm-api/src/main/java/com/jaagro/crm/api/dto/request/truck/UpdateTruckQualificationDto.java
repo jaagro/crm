@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Data
 @Accessors(chain = true)
 public class UpdateTruckQualificationDto implements Serializable {
+    private static final long serialVersionUID = -27456897942571380L;
     /**
      * 资质证照主键id
      */

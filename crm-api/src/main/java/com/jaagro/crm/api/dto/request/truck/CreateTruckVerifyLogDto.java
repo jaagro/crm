@@ -3,12 +3,15 @@ package com.jaagro.crm.api.dto.request.truck;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
+
 /**
  * @author baiyiran
  */
 @Data
 @Accessors(chain = true)
-public class CreateTruckVerifyLogDto {
+public class CreateTruckVerifyLogDto implements Serializable {
+    private static final long serialVersionUID = 3625482014727155528L;
     /**
      * 验证状态(1-司机车辆车队信息 2-资质证照 3-合同)
      */

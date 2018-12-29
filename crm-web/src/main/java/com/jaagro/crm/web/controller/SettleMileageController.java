@@ -56,8 +56,8 @@ public class SettleMileageController {
      * @return
      */
     @ApiOperation("调整结算里程")
-    @PutMapping("/SettleMileage")
-    public BaseResponse SettleMileage(@RequestBody UpdateSettleMileageDto dto) {
+    @PutMapping("/settleMileage")
+    public BaseResponse settleMileage(@RequestBody UpdateSettleMileageDto dto) {
         if (StringUtils.isEmpty(dto.getId())) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "id不能为空");
         }
