@@ -2,6 +2,7 @@ package com.jaagro.crm.biz.service;
 
 import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.dto.base.GetCustomerUserDto;
+import com.jaagro.crm.api.dto.response.department.DepartmentReturnDto;
 import com.jaagro.utils.BaseResponse;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -66,5 +67,8 @@ public interface UserClientService {
      */
     @PostMapping("/getDownDepartment")
     List<Integer> getDownDepartment();
+
+    @PostMapping("/getAllDepartments")
+    List<DepartmentReturnDto> getAllDepartments();
 
 }

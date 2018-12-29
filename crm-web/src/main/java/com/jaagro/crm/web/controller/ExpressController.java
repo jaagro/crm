@@ -2,6 +2,7 @@ package com.jaagro.crm.web.controller;
 
 import com.jaagro.crm.api.dto.request.express.CreateExpressDto;
 import com.jaagro.crm.api.dto.request.express.QueryExpressDto;
+import com.jaagro.crm.api.dto.response.express.ExpressReturnDto;
 import com.jaagro.crm.api.service.ExpressService;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
@@ -31,7 +32,7 @@ public class ExpressController {
      * @Author gavin
      */
     @ApiOperation("智库直通车列表")
-    @PostMapping("/listExpressByCriteria")
+    @PostMapping("/express/listExpressByCriteria")
     public BaseResponse listExpressByCriteria(@RequestBody QueryExpressDto criteriaDto) {
         try {
             return BaseResponse.successInstance(expressService.listExpressByCriteria(criteriaDto));
@@ -65,4 +66,14 @@ public class ExpressController {
         }
         return BaseResponse.errorInstance("设为档案失败");
     }
+    @ApiOperation(value = "查看详情")
+    @GetMapping("/express/{id}")
+    public BaseResponse getNewsById(@PathVariable(value = "id") Integer id) {
+        ExpressReturnDto returnDto = expressService.getExpressById(id);
+        if (returnDto == null) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "id=" + id + "不存在");
+        }
+        return BaseResponse.successInstance(returnDto);
+    }
+
 }
