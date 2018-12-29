@@ -39,44 +39,4 @@ public class CreateContractOilPriceDto implements Serializable {
      * 失效时间
      */
     private Date invalidTime;
-
-    /**
-     * 是否为历史配制 0-否,1-是
-     */
-    private Boolean historyFlag;
-
-    /**
-     * 是否有效：1-有效 0-无效
-     */
-    private Boolean enable;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 创建人id
-     */
-    private Integer createUserId;
-
-    /**
-     * 创建人姓名
-     */
-    private String createUserName;
-
-    /**
-     * 更新时间
-     */
-    private Date modifyTime;
-
-    /**
-     * 更新人
-     */
-    private Integer modifyUserId;
-
-    /**
-     * 更新人姓名
-     */
-    private String modifyUserName;
 }

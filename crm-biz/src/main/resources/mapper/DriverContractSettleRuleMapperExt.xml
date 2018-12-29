@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.jaagro.crm.biz.mapper.DriverContractSettleRuleMapperExt">
-    <select id="listDriverContractSettleRuleByCondition" resultMap="BaseResultMap" parameterType="com.jaagro.crm.api.dto.request.contract.DriverContractSettleCondition">
+    <resultMap id="ResultMap" type="com.jaagro.crm.api.dto.response.truck.ListDriverContractSettleDto">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="truck_type_id" property="truckTypeId" jdbcType="INTEGER"/>
+        <result column="truck_type_name" property="truckTypeName" jdbcType="VARCHAR"/>
+        <result column="start_mileage" property="startMileage" jdbcType="DECIMAL"/>
+        <result column="begin_mileage" property="beginMileage" jdbcType="DECIMAL"/>
+        <result column="begin_price" property="beginPrice" jdbcType="DECIMAL"/>
+        <result column="mileage_price" property="mileagePrice" jdbcType="DECIMAL"/>
+        <result column="end_mileage" property="endMileage" jdbcType="DECIMAL"/>
+        <result column="min_settle_mileage" property="minSettleMileage" jdbcType="DECIMAL"/>
+        <result column="min_settle_weight" property="minSettleWeight" jdbcType="DECIMAL"/>
+        <result column="pricing_method" property="pricingMethod" jdbcType="INTEGER"/>
+        <result column="effective_time" property="effectiveTime" jdbcType="TIMESTAMP"/>
+        <result column="invalid_time" property="invalidTime" jdbcType="TIMESTAMP"/>
+        <result column="history_flag" property="historyFlag" jdbcType="TINYINT"/>
+        <collection property="createDriverContractSettleSectionDto" column="id"
+                    select="com.jaagro.crm.biz.mapper.DriverContractSettleSectionRuleMapperExt.listDriverContractSettleRuleBySettleRuleId">
+        </collection>
+    </resultMap>
+    <select id="listDriverContractSettleRuleByCondition" resultMap="BaseResultMap"
+            parameterType="com.jaagro.crm.api.dto.request.contract.DriverContractSettleCondition">
         select
         <include refid="Base_Column_List"/>
         from driver_contract_settle_rule
@@ -10,24 +30,55 @@
             and truck_team_contract_id=#{truckTeamContractId}
         </if>
         <if test="truckTypeId!=null">
-           and truck_type_id=#{truckTypeId}
+            and truck_type_id=#{truckTypeId}
         </if>
-        <if test="pricingMethodFlag == 1">
-           and pricing_method=#{pricingMethod}
+        <if test="flag == 1">
+            <if test="pricingMethod!=null">
+                and pricing_method=#{pricingMethod}
+            </if>
         </if>
-        <if test="pricingMethodFlag == 2">
-           and pricing_method in (2 ,3)
+        <if test="flag == 2">
+            and pricing_method in (2 ,3)
         </if>
-        ORDER BY invalid_time desc LIMIT 1
+        ORDER BY create_time desc LIMIT 1
     </select>
     <select id="selectEffectiveOne" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM driver_contract_settle_rule
         WHERE truck_team_contract_id = #{truckTeamContractId}
+        and enable=1
         and truck_type_id = #{truckTypeId}
         and effective_time &lt;= #{doneDate}
         and invalid_time &gt; #{doneDate}
         order by create_time limit 1;
+    </select>
+    <select id="listTruckTeamContractPriceCondition" resultMap="ResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM driver_contract_settle_rule
+        WHERE enable=1
+        <if test="flag == 1">
+            <if test="truckTeamContractId!=null">
+                and truck_team_contract_id=#{truckTeamContractId}
+            </if>
+        </if>
+        <if test="flag == 2">
+            <if test="truckTeamContractId!=null">
+                and truck_team_contract_id=#{truckTeamContractId}
+            </if>
+            <if test="truckTypeId!=null">
+                and truck_type_id=#{truckTypeId}
+            </if>
+            <if test="pricingMethod!=null">
+                and pricing_method=#{pricingMethod}
+            </if>
+        </if>
+        <if test="flag == 3">
+            <if test="contractSettleId!=null">
+                and id=#{contractSettleId}
+            </if>
+            order by create_time desc LIMIT 1
+        </if>
     </select>
 </mapper>

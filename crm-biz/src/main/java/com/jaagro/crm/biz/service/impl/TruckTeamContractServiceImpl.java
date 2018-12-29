@@ -6,9 +6,11 @@ import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.constant.ContractStatus;
 import com.jaagro.crm.api.constant.GoodsType;
+import com.jaagro.crm.api.constant.PricingMethod;
 import com.jaagro.crm.api.dto.request.contract.*;
 import com.jaagro.crm.api.dto.request.truck.*;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractQualificationDto;
+import com.jaagro.crm.api.dto.response.truck.ListDriverContractSettleDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTeamContractDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
 import com.jaagro.crm.api.dto.response.truck.TruckTeamContractReturnDto;
@@ -22,6 +24,7 @@ import com.jaagro.crm.biz.mapper.*;
 import com.jaagro.crm.biz.service.OssSignUrlClientService;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,9 +99,9 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
             }
         }
         //创建运力合同报价
-//        if (null != dto.getCreateDriverContractSettleDto()) {
-//            truckTeamContractService.createTruckTeamContractPrice(dto, currentUser.getId(), truckTeamContract.getId());
-//        }
+        if (null != dto.getCreateDriverContractSettleDto()) {
+            truckTeamContractService.createTruckTeamContractPrice(dto, currentUser.getId(), truckTeamContract.getId());
+        }
         return ServiceResult.toResult("合同创建成功");
     }
 
@@ -228,6 +231,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
      * @author @Gao.
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void createTruckTeamContractPrice(CreateTruckTeamContractDto dto, Integer userId, Integer contractId) {
         if (null != dto.getCreateDriverContractSettleDto()) {
             CreateDriverContractSettleDto driverContractSettleDto = dto.getCreateDriverContractSettleDto();
@@ -257,14 +261,14 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                 boolean flag = (GoodsType.SOW.equals(Integer.parseInt(truckType.getProductName())) || GoodsType.BOAR.equals(Integer.parseInt(truckType.getProductName()))
                         || GoodsType.PIGLET.equals(Integer.parseInt(truckType.getProductName())) || GoodsType.LIVE_PIG.equals(Integer.parseInt(truckType.getProductName())));
                 if (flag) {
-                    driverContractSettleCondition.setPricingMethodFlag(2);
+                    driverContractSettleCondition.setFlag(2);
                     DriverContractSettleRule driverContractSettleRule = driverContractSettleRuleMapper.listDriverContractSettleRuleByCondition(driverContractSettleCondition);
                     if (null != driverContractSettleRule) {
                         if (driverContractSettleDto.getPricingMethod().equals(driverContractSettleRule.getPricingMethod())) {
                             //按照区间里程单价 或者按照起步价
                             contractCapacitySettle(dto, driverContractSettleCondition, driverContractSettleDto, driverContractSettleParam);
                         } else {
-                            throw new NullPointerException("当前已经产生了一种类型的报价");
+                            throw new NullPointerException("当前货物类型只能选择一种报价方式");
                         }
                     } else {
                         //按照区间里程单价 或者按照起步价
@@ -288,29 +292,29 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     private void contractCapacitySettle(CreateTruckTeamContractDto dto, DriverContractSettleCondition driverContractSettleCondition,
                                         CreateDriverContractSettleDto driverContractSettleDto, DriverContractSettleParam driverContractSettleParam) {
         driverContractSettleCondition
-                .setPricingMethodFlag(1)
+                .setFlag(1)
                 .setPricingMethod(driverContractSettleDto.getPricingMethod());
         DriverContractSettleRule driverContractSettleRule = driverContractSettleRuleMapper.listDriverContractSettleRuleByCondition(driverContractSettleCondition);
         // 1-按区间重量单价
-        if (1 == driverContractSettleDto.getPricingMethod()) {
+        if (PricingMethod.SECTION_WEIGHT.equals(driverContractSettleDto.getPricingMethod())) {
             driverContractSettleParam
                     .setUnit(1)
-                    .setType(2)
-                    .setPricingMethod(1)
+                    .setType(1)
+                    .setPricingMethod(PricingMethod.SECTION_WEIGHT)
                     .setMinSettleWeight(driverContractSettleDto.getMinSettleWeight());
         }
         //2-按区间里程单价
-        if (2 == driverContractSettleDto.getPricingMethod()) {
+        if (PricingMethod.SECTION_MILEAGE.equals(driverContractSettleDto.getPricingMethod())) {
             driverContractSettleParam
                     .setType(1)
                     .setUnit(2)
-                    .setPricingMethod(2)
+                    .setPricingMethod(PricingMethod.SECTION_MILEAGE)
                     .setMinSettleMileage(driverContractSettleDto.getMinSettleMileage());
         }
         //3-按照起步价
-        if (3 == driverContractSettleDto.getPricingMethod()) {
+        if (PricingMethod.BEGIN_WEIGHT.equals(driverContractSettleDto.getPricingMethod())) {
             driverContractSettleParam
-                    .setPricingMethod(3)
+                    .setPricingMethod(PricingMethod.BEGIN_WEIGHT)
                     .setBeginMileage(driverContractSettleDto.getBeginMileage())
                     .setBeginPrice(driverContractSettleDto.getBeginPrice())
                     .setMileagePrice(driverContractSettleDto.getMileagePrice());
@@ -320,20 +324,27 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                     .setEffectiveTime(dto.getStartDate())
                     .setInvalidTime(dto.getEndDate());
             if (judgeExpired(dto.getEndDate())) {
-                throw new NullPointerException("合同截止日期小于当前时间");
+                throw new NullPointerException("合同截止日期应当小于当前时间");
             }
             saveDriverContractSettle(driverContractSettleDto, driverContractSettleParam, null);
         } else {
-            if (driverContractSettleDto.getPricingMethod().equals(driverContractSettleRule.getPricingMethod())) {
+            TruckTeamContract truckTeamContract = truckTeamContractMapper.selectByPrimaryKey(driverContractSettleRule.getTruckTeamContractId());
+            if (truckTeamContract.getEndDate() != null) {
+                if (judgeExpired(truckTeamContract.getEndDate())) {
+                    throw new NullPointerException("当前合同已经过期了");
+                }
+            }
+            boolean flag = (driverContractSettleDto.getPricingMethod().equals(driverContractSettleRule.getPricingMethod())
+                    && driverContractSettleDto.getTruckTypeId().equals(driverContractSettleRule.getTruckTypeId()));
+            if (flag) {
                 driverContractSettleParam
                         .setEffectiveTime(new Date())
                         .setTruckTeamContractId(driverContractSettleRule.getTruckTeamContractId())
                         .setInvalidTime(driverContractSettleRule.getInvalidTime());
-                TruckTeamContract truckTeamContract = truckTeamContractMapper.selectByPrimaryKey(driverContractSettleRule.getTruckTeamContractId());
-                if (judgeExpired(truckTeamContract.getEndDate())) {
-                    throw new NullPointerException("合同已经过期了");
-                }
+
                 saveDriverContractSettle(driverContractSettleDto, driverContractSettleParam, driverContractSettleRule.getId());
+            } else {
+                log.info("O contractCapacitySettle :The current vehicle type already exists in the record!");
             }
         }
     }
@@ -389,5 +400,14 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                 driverContractSettleSectionRuleMapper.insertSelective(driverContractSettleSectionRule);
             }
         }
+    }
+
+    /**
+     * @param condition
+     * @return
+     */
+    @Override
+    public List<ListDriverContractSettleDto> listTruckTeamContractPrice(DriverContractSettleCondition condition) {
+        return driverContractSettleRuleMapper.listTruckTeamContractPriceCondition(condition);
     }
 }

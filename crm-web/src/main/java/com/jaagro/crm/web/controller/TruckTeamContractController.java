@@ -18,7 +18,6 @@ import java.util.Map;
 
 /**
  * @author liqiangping
- *
  */
 @RestController
 @Api(value = "truckTeamContract", description = "车队合同管理", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -115,4 +114,9 @@ public class TruckTeamContractController {
         return BaseResponse.service(result);
     }
 
+    @ApiOperation("合同报价列表")
+    @PostMapping("/listTruckTeamContractPrice")
+    public BaseResponse listTruckTeamContractPrice(@RequestBody ListTruckTeamContractCriteriaDto criteriaDto) {
+        return BaseResponse.service(null);
+    }
 }

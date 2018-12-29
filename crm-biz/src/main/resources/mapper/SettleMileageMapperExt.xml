@@ -13,4 +13,23 @@
             </foreach>
         </if>
     </select>
+    <select id="listByCriteria" parameterType="com.jaagro.crm.api.dto.request.contract.listSettleMileageCriteriaDto"
+            resultType="com.jaagro.crm.api.dto.response.contract.ReturnSettleMileageDto">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM settle_mileage
+        WHERE enable = 1
+        <if test="deptName != null and deptName != ''">
+            <![CDATA[AND department_name like concat(#{deptName},'%') ]]>
+        </if>
+        <if test="deptId != null">
+            AND department_id = #{deptId}
+        </if>
+        <if test="departIds != null and departIds.size() > 0">
+            and department_id in
+            <foreach collection="departIds" open="(" separator="," close=")" item="did">
+                ${did}
+            </foreach>
+        </if>
+    </select>
 </mapper>
