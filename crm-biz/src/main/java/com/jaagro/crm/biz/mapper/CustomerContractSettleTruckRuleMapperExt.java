@@ -3,6 +3,7 @@ package com.jaagro.crm.biz.mapper;
 import com.jaagro.crm.api.dto.request.contract.QuerySettleRuleDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnCustomerSettleTruckRuleDto;
 import com.jaagro.crm.biz.entity.CustomerContractSettleTruckRule;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
