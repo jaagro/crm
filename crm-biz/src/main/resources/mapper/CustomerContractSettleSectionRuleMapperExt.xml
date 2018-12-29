@@ -22,4 +22,19 @@
         where customer_contract_settle_rule_id = #{ruleId}
         AND enable = 1
     </select>
+    <select id="getPriceByMileageAndContractId" resultType="java.math.BigDecimal">
+        SELECT
+        ccssr.settle_price
+        FROM
+        customer_contract_settle_section_rule ccssr
+        LEFT JOIN customer_contract_settle_rule ccsr ON ccssr.customer_contract_settle_rule_id = ccsr.id
+        AND ccssr.customer_contract_id = ccsr.customer_contract_id
+        WHERE
+        ccssr.customer_contract_id = #{customerContractId}
+        AND #{mileage} &gt; ccssr.`start`
+        AND #{mileage} &lt;= ccssr.`end`
+        AND ccssr.type = 1
+        AND ccssr.`enable` = 1
+        AND ccsr.history_flag = 0;
+    </select>
 </mapper>
