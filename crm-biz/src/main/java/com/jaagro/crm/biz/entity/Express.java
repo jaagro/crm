@@ -12,7 +12,7 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-public class Express implements Serializable{
+public class Express implements Serializable {
     private static final long serialVersionUID = -1100310077988226748L;
     /**
      * 智能直通车id

@@ -12,7 +12,7 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-public class Dictionary implements Serializable{
+public class Dictionary implements Serializable {
     private static final long serialVersionUID = -2089983202544204443L;
     /**
      * 通用字典表id
@@ -35,7 +35,7 @@ public class Dictionary implements Serializable{
     private Integer displayOrder;
 
     /**
-     * 
+     *
      */
     private String category;
 
@@ -53,29 +53,5 @@ public class Dictionary implements Serializable{
      * 创建时间
      */
     private Date createTime;
-
-    /**
-     * 通用字典表id
-     * @return id 通用字典表id
-     */
-    public Integer getId() {
-        return id;
-    }
-
-    /**
-     * 通用字典表id
-     * @param id 通用字典表id
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    /**
-     * 类型英文名
-     * @return type 类型英文名
-     */
-    public String getType() {
-        return type;
-    }
 
 }
