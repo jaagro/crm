@@ -5,10 +5,13 @@ import com.jaagro.crm.api.dto.request.contract.CreateCustomerSettleRuleDto;
 import com.jaagro.crm.api.dto.request.contract.CreateCustomerSettleSectionRuleDto;
 import com.jaagro.crm.api.dto.request.contract.CreateCustomerSettleTruckRuleDto;
 import com.jaagro.crm.api.dto.request.contract.QuerySettleRuleDto;
+import com.jaagro.crm.api.dto.request.customer.CreateContractOilPriceDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnCustomerSettleRuleDto;
+import com.jaagro.crm.api.service.ContractOilPriceService;
 import com.jaagro.crm.api.service.CtmContractSettleSectionRuleService;
 import com.jaagro.crm.api.service.CtmContractSettleTruckService;
 import com.jaagro.crm.api.service.CustomerContractSettleRuleService;
+import com.jaagro.crm.biz.entity.ContractOilPrice;
 import com.jaagro.crm.biz.entity.CustomerContract;
 import com.jaagro.crm.biz.entity.CustomerContractSettleRule;
 import com.jaagro.crm.biz.mapper.CustomerContractMapperExt;
@@ -41,6 +44,8 @@ public class CustomerContractSettleRuleServiceImpl implements CustomerContractSe
     private CtmContractSettleSectionRuleService settleSectionRuleService;
     @Autowired
     private CustomerContractMapperExt contractMapperExt;
+    @Autowired
+    private ContractOilPriceService contractOilPriceService;
 
     /**
      * 创建结算配制
@@ -50,7 +55,32 @@ public class CustomerContractSettleRuleServiceImpl implements CustomerContractSe
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Boolean createSettleRule(CreateCustomerSettleRuleDto settleRuleDto) {
+    public Boolean createSettleRule(CreateCustomerSettleRuleDto settleRuleDto,CreateContractOilPriceDto oilPriceDto) {
+        Boolean oilPrice = contractOilPriceService.createOilPrice(oilPriceDto);
+        if (oilPrice != null && oilPrice){
+            return createCustomerSettleRule(settleRuleDto);
+        }
+        return Boolean.FALSE;
+    }
+
+    /**
+     * 根据合同id获得结算
+     *
+     * @param contractId
+     * @return
+     */
+    @Override
+    public ReturnCustomerSettleRuleDto getByContractId(Integer contractId) {
+        ReturnCustomerSettleRuleDto ruleDto = settleRuleMapperExt.getByContractId(contractId);
+        if (ruleDto != null) {
+            ruleDto
+                    .setSectionRuleDtoList(settleSectionRuleService.listByRuleId(ruleDto.getId()))
+                    .setTruckRuleDtoList(settleTruckService.listByRuleId(ruleDto.getId()));
+        }
+        return ruleDto;
+    }
+
+    private Boolean createCustomerSettleRule(CreateCustomerSettleRuleDto settleRuleDto){
         Boolean flag = false;
         if (StringUtils.isEmpty(settleRuleDto.getCustomerContractId())) {
             throw new RuntimeException("createSettleRule 创建结算配制合同id不能为空");
@@ -129,22 +159,4 @@ public class CustomerContractSettleRuleServiceImpl implements CustomerContractSe
         }
         return flag;
     }
-
-    /**
-     * 根据合同id获得结算
-     *
-     * @param contractId
-     * @return
-     */
-    @Override
-    public ReturnCustomerSettleRuleDto getByContractId(Integer contractId) {
-        ReturnCustomerSettleRuleDto ruleDto = settleRuleMapperExt.getByContractId(contractId);
-        if (ruleDto != null) {
-            ruleDto
-                    .setSectionRuleDtoList(settleSectionRuleService.listByRuleId(ruleDto.getId()))
-                    .setTruckRuleDtoList(settleTruckService.listByRuleId(ruleDto.getId()));
-        }
-        return ruleDto;
-    }
-
 }

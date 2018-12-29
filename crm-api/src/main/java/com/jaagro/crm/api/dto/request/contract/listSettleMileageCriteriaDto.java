@@ -14,6 +14,7 @@ import java.util.List;
 @Accessors(chain = true)
 public class listSettleMileageCriteriaDto implements Serializable {
 
+    private static final long serialVersionUID = -3587400740130870369L;
     /**
      * 当前页
      */

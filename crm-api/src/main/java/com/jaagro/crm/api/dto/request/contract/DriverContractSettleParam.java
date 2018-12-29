@@ -14,6 +14,7 @@ import java.util.Date;
 @Accessors(chain = true)
 public class DriverContractSettleParam implements Serializable {
 
+    private static final long serialVersionUID = -7288538034155057030L;
     /**
      * 车队合同id
      */

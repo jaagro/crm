@@ -1,5 +1,6 @@
 package com.jaagro.crm.biz.service.impl;
 
+import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.constant.ContractType;
 import com.jaagro.crm.api.dto.request.customer.CreateContractOilPriceDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractOilPriceDto;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -40,6 +42,7 @@ public class ContractOilPriceServiceImpl implements ContractOilPriceService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean createOilPrice(CreateContractOilPriceDto createContractOilPriceDto) {
         Boolean flag = false;
         if (StringUtils.isEmpty(createContractOilPriceDto.getContractId())) {
@@ -62,17 +65,17 @@ public class ContractOilPriceServiceImpl implements ContractOilPriceService {
         //查询是否存在历史记录
         CustomerContract customerContract = contractMapperExt.selectByPrimaryKey(createContractOilPriceDto.getContractId());
         List<ContractOilPrice> oilPriceList = oilPriceMapperExt.listByContractIdAndType(createContractOilPriceDto.getContractId(), createContractOilPriceDto.getContractType());
+        UserInfo currentUser = userService.getCurrentUser();
         if (!CollectionUtils.isEmpty(oilPriceList)) {
-            for (ContractOilPrice price : oilPriceList) {
-                //将已存在的记录设置为历史 && 截止日期设置为当前日期
-                price
-                        .setInvalidTime(new Date())
-                        .setHistoryFlag(true)
-                        .setModifyUserId(userService.getCurrentUser().getId())
-                        .setModifyTime(new Date())
-                        .setModifyUserName(userService.getCurrentUser().getName());
-                oilPriceMapperExt.updateByPrimaryKeySelective(price);
-            }
+            ContractOilPrice price = oilPriceList.get(0);
+            //将已存在的记录设置为历史 && 截止日期设置为当前日期
+            price
+                    .setInvalidTime(new Date())
+                    .setHistoryFlag(true)
+                    .setModifyUserId(currentUser == null ? null : currentUser.getId())
+                    .setModifyTime(new Date())
+                    .setModifyUserName(currentUser == null ? null : currentUser.getName());
+            oilPriceMapperExt.updateByPrimaryKeySelective(price);
             //若有历史纪录 ==将新纪录的开始日期设置为当前日期
             oilPrice
                     .setEffectiveTime(new Date());
@@ -90,9 +93,9 @@ public class ContractOilPriceServiceImpl implements ContractOilPriceService {
             oilPrice
                     .setContractType(ContractType.CUSTOMER)
                     .setInvalidTime(customerContract.getEndDate())
-                    .setCreateUserId(userService.getCurrentUser().getId())
+                    .setCreateUserId(currentUser == null ? null : currentUser.getId())
                     .setCreateTime(new Date())
-                    .setCreateUserName(userService.getCurrentUser().getName());
+                    .setCreateUserName(currentUser == null ? null : currentUser.getName());
             int result = oilPriceMapperExt.insertSelective(oilPrice);
             if (result > 0) {
                 flag = true;

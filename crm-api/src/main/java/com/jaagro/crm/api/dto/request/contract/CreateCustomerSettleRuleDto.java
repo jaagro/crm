@@ -18,6 +18,7 @@ import java.util.List;
 @Data
 public class CreateCustomerSettleRuleDto implements Serializable {
 
+    private static final long serialVersionUID = 9017841818530494766L;
     /**
      * 合同id
      */
