@@ -44,4 +44,12 @@ public interface CustomerContractSettlePriceService {
      * @return
      */
     Map<String, Object> updateSettlePrice(UpdateCustomerContractSettlePriceDto priceDto);
+
+    /**
+     * 根据主键id查询历史记录
+     *
+     * @param priceId
+     * @return
+     */
+    List<ReturnCustomerSettlePriceDto> listCustomerContractSettlePriceHistory(Integer priceId);
 }

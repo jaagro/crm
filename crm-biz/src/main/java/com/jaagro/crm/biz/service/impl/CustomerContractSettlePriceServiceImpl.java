@@ -189,4 +189,25 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
         return ServiceResult.error("修改失败");
     }
 
+    /**
+     * 根据主键id查询历史记录
+     *
+     * @param priceId
+     * @return
+     */
+    @Override
+    public List<ReturnCustomerSettlePriceDto> listCustomerContractSettlePriceHistory(Integer priceId) {
+        CustomerContractSettlePrice settlePrice = settlePriceMapper.selectByPrimaryKey(priceId);
+        if (settlePrice == null) {
+            return null;
+        }
+        QueryCustomerContractSettlePriceDto dto = new QueryCustomerContractSettlePriceDto();
+        dto
+                .setCustomerContractId(settlePrice.getCustomerContractId())
+                .setTruckTypeId(settlePrice.getTruckTypeId())
+                .setLoadSiteId(settlePrice.getLoadSiteId())
+                .setUnloadSiteId(settlePrice.getUnloadSiteId());
+        return settlePriceMapper.listCustomerContractSettlePriceHistory(dto);
+    }
+
 }

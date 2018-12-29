@@ -565,6 +565,18 @@ public class ContractController {
         return BaseResponse.service(settlePriceService.updateSettlePrice(priceDto));
     }
 
+    /**
+     * 合同结算信息
+     *
+     * @param priceDtoList
+     * @return
+     */
+    @ApiOperation("修改结算单价时查询历史纪录列表")
+    @PostMapping("/listCustomerContractSettlePriceHistory/{priceId}")
+    public BaseResponse listCustomerContractSettlePriceHistory(@PathVariable("priceId") Integer priceId) {
+        return BaseResponse.successInstance(settlePriceService.listCustomerContractSettlePriceHistory(priceId));
+    }
+
     //--------------------------------------------------------合同结算配制-----------------------------------------------------------
 
     /**
@@ -606,5 +618,6 @@ public class ContractController {
         }
         return BaseResponse.successInstance("新增成功");
     }
+
 
 }

@@ -34,4 +34,12 @@ public interface CustomerContractSettlePriceMapperExt extends CustomerContractSe
      * @return
      */
     List<ReturnCustomerSettlePriceDto> listByContractId(Integer contractId);
+
+    /**
+     * 根据主键id查询历史记录
+     *
+     * @param priceId
+     * @return
+     */
+    List<ReturnCustomerSettlePriceDto> listCustomerContractSettlePriceHistory(QueryCustomerContractSettlePriceDto dto);
 }

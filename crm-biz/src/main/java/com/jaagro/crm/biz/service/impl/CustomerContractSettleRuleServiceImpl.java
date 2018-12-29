@@ -107,7 +107,6 @@ public class CustomerContractSettleRuleServiceImpl implements CustomerContractSe
                     sectionRuleDto
                             .setCustomerContractId(settleRuleDto.getCustomerContractId())
                             .setCustomerContractSettleRuleId(settleRule.getId());
-                    //存疑!!!
                     Boolean sectionResult = settleSectionRuleService.createSectionRule(sectionRuleDto);
                     if (!sectionResult) {
                         throw new RuntimeException("createSectionRule 创建里程区间失败");
@@ -120,7 +119,6 @@ public class CustomerContractSettleRuleServiceImpl implements CustomerContractSe
                     truckRuleDto
                             .setCustomerContractId(settleRule.getCustomerContractId())
                             .setCustomerContractSettleRuleId(settleRule.getId());
-                    //存疑!!!
                     Boolean truckResult = settleTruckService.createSettleTruck(truckRuleDto);
                     if (!truckResult) {
                         throw new RuntimeException("createSectionRule 创建车辆配制失败");
