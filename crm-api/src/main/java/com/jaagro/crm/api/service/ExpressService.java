@@ -1,6 +1,7 @@
 package com.jaagro.crm.api.service;
 
 import com.github.pagehelper.PageInfo;
+import com.jaagro.crm.api.dto.request.express.CreateExpressDto;
 import com.jaagro.crm.api.dto.request.express.QueryExpressDto;
 import com.jaagro.crm.api.entity.Express;
 
@@ -12,10 +13,11 @@ import com.jaagro.crm.api.entity.Express;
 public interface ExpressService {
     /**
      * 创建智库直通车
-     * @param express
+     * @param createExpressDto
+     * @author yj
      * @return
      */
-    boolean createExpress(Express express);
+    boolean createExpress(CreateExpressDto createExpressDto);
 
 
 
@@ -33,4 +35,12 @@ public interface ExpressService {
      * @return
      */
     PageInfo listExpressByCriteria(QueryExpressDto criteriaDto);
+
+    /**
+     * 设为档案
+     * @author yj
+     * @param id
+     * @return
+     */
+    boolean toDocument(Integer id);
 }

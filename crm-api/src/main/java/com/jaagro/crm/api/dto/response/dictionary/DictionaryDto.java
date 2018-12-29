@@ -1,4 +1,4 @@
-package com.jaagro.crm.biz.entity;
+package com.jaagro.crm.api.dto.response.dictionary;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -7,13 +7,16 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * 字典
+ *
  * @author yj
- * @since 20181229
+ * @since 2018/12/29
  */
 @Data
 @Accessors(chain = true)
-public class Dictionary implements Serializable {
-    private static final long serialVersionUID = -2089983202544204443L;
+public class DictionaryDto implements Serializable {
+    private static final long serialVersionUID = -7999030913570322690L;
+
     /**
      * 通用字典表id
      */
@@ -40,7 +43,7 @@ public class Dictionary implements Serializable {
     private String category;
 
     /**
-     * 所属类别中文名
+     * 所属的类别中文名
      */
     private String categoryName;
 
@@ -53,5 +56,4 @@ public class Dictionary implements Serializable {
      * 创建时间
      */
     private Date createTime;
-
 }

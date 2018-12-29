@@ -3,7 +3,9 @@ package com.jaagro.crm.biz.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.constant.UserInfo;
+import com.jaagro.crm.api.constant.ToDocment;
 import com.jaagro.crm.api.constant.UserType;
+import com.jaagro.crm.api.dto.request.express.CreateExpressDto;
 import com.jaagro.crm.api.dto.request.express.QueryExpressDto;
 import com.jaagro.crm.api.dto.response.express.ExpressReturnDto;
 import com.jaagro.crm.api.dto.response.news.NewsReturnDto;
@@ -12,6 +14,7 @@ import com.jaagro.crm.api.service.ExpressService;
 import com.jaagro.crm.biz.mapper.ExpressMapperExt;
 import com.jaagro.crm.biz.service.OssSignUrlClientService;
 import com.jaagro.crm.biz.service.UserClientService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -44,22 +47,25 @@ public class ExpressServiceImpl implements ExpressService {
     /**
      * 创建智库直通车
      *
-     * @param express
+     * @param createExpressDto
      * @return
      */
     @Override
-    public boolean createExpress(Express express) {
-
-        UserInfo currentUser = currentUserService.getCurrentUser();
-        express.setCreateTime(new Date())
-                .setCreateUserId(currentUser == null ? null : currentUser.getId())
-                .setEnable(true);
-
-        Integer effectedNum = expressMapperExt.insertSelective(express);
-        if (effectedNum < 1) {
-            return false;
+    public boolean createExpress(CreateExpressDto createExpressDto) {
+        if (createExpressDto != null){
+            Express express = new Express();
+            BeanUtils.copyProperties(createExpressDto,express);
+            UserInfo currentUser = currentUserService.getCurrentUser();
+            express.setCreateTime(new Date())
+                    .setCreateUserId(currentUser == null ? null : currentUser.getId())
+                    .setEnable(true);
+            Integer effectedNum = expressMapperExt.insertSelective(express);
+            if (effectedNum < 1) {
+                return false;
+            }
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**
@@ -114,6 +120,30 @@ public class ExpressServiceImpl implements ExpressService {
 //            newsReturnDtoList.forEach(newsReturnDto -> convertImageUrl(newsReturnDto));
         }
         return new PageInfo<>(returnDtoList);
+    }
+
+    /**
+     * 设为档案
+     *
+     * @param id
+     * @return
+     * @author yj
+     */
+    @Override
+    public boolean toDocument(Integer id) {
+        Express express = expressMapperExt.selectByPrimaryKey(id);
+        if (express == null){
+            throw new RuntimeException("id="+id+"不存在");
+        }
+        UserInfo currentUser = currentUserService.getCurrentUser();
+        express.setToDocument(ToDocment.TRUE)
+                .setModifyTime(new Date())
+                .setModifyUserId(currentUser == null ? null : currentUser.getId());
+        int effective = expressMapperExt.updateByPrimaryKeySelective(express);
+        if(effective == 1){
+            return true;
+        }
+        return false;
     }
 
 
