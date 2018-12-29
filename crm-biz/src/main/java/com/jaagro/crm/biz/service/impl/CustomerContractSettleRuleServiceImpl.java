@@ -1,18 +1,23 @@
 package com.jaagro.crm.biz.service.impl;
 
-import com.jaagro.crm.api.dto.request.contract.CreateCustomerSettleSectionRuleDto;
+import com.jaagro.crm.api.constant.ProductType;
 import com.jaagro.crm.api.dto.request.contract.CreateCustomerSettleRuleDto;
+import com.jaagro.crm.api.dto.request.contract.CreateCustomerSettleSectionRuleDto;
 import com.jaagro.crm.api.dto.request.contract.CreateCustomerSettleTruckRuleDto;
+import com.jaagro.crm.api.dto.request.contract.QuerySettleRuleDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnCustomerSettleRuleDto;
 import com.jaagro.crm.api.service.CtmContractSettleSectionRuleService;
 import com.jaagro.crm.api.service.CtmContractSettleTruckService;
 import com.jaagro.crm.api.service.CustomerContractSettleRuleService;
+import com.jaagro.crm.biz.entity.CustomerContract;
 import com.jaagro.crm.biz.entity.CustomerContractSettleRule;
+import com.jaagro.crm.biz.mapper.CustomerContractMapperExt;
 import com.jaagro.crm.biz.mapper.CustomerContractSettleRuleMapperExt;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -34,6 +39,8 @@ public class CustomerContractSettleRuleServiceImpl implements CustomerContractSe
     private CtmContractSettleTruckService settleTruckService;
     @Autowired
     private CtmContractSettleSectionRuleService settleSectionRuleService;
+    @Autowired
+    private CustomerContractMapperExt contractMapperExt;
 
     /**
      * 创建结算配制
@@ -42,22 +49,53 @@ public class CustomerContractSettleRuleServiceImpl implements CustomerContractSe
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean createSettleRule(CreateCustomerSettleRuleDto settleRuleDto) {
         Boolean flag = false;
         if (StringUtils.isEmpty(settleRuleDto.getCustomerContractId())) {
-            log.error("createSettleRule 创建结算配制合同id不能为空");
-            return flag;
+            throw new RuntimeException("createSettleRule 创建结算配制合同id不能为空");
         }
         if (StringUtils.isEmpty(settleRuleDto.getStartMileage())) {
-            log.error("createSettleRule 创建结算配制起始里程不能为空");
-            return flag;
+            throw new RuntimeException("createSettleRule 创建结算配制起始里程不能为空");
         }
         if (StringUtils.isEmpty(settleRuleDto.getEndMileage())) {
-            log.error("createSettleRule 创建结算配制结束里程不能为空");
-            return flag;
+            throw new RuntimeException("createSettleRule 创建结算配制结束里程不能为空");
         }
         CustomerContractSettleRule settleRule = new CustomerContractSettleRule();
         BeanUtils.copyProperties(settleRuleDto, settleRule);
+        //货物类型为毛鸡
+        CustomerContract customerContract = contractMapperExt.selectByPrimaryKey(settleRuleDto.getCustomerContractId());
+        if (customerContract == null) {
+            throw new RuntimeException("createSettleRule 创建结算配制合同不存在");
+        }
+        if (customerContract.getType().equals(ProductType.CHICKEN)) {
+            if (CollectionUtils.isEmpty(settleRuleDto.getTruckRuleDtoList())) {
+                throw new RuntimeException("毛鸡类型的合同里程区间配制不能为空");
+            }
+        }
+        //查询是否存在纪录
+        ReturnCustomerSettleRuleDto ruleDto = settleRuleMapperExt.getByContractId(settleRuleDto.getCustomerContractId());
+        if (ruleDto != null) {
+            CustomerContractSettleRule rule = new CustomerContractSettleRule();
+            BeanUtils.copyProperties(ruleDto, rule);
+            //将已存在的记录设置为历史 && 截止日期设置为当前日期
+            rule
+                    .setInvalidTime(new Date())
+                    .setHistoryFlag(true)
+                    .setModifyTime(new Date())
+                    .setModifyUserId(userService.getCurrentUser().getId());
+            settleRuleMapperExt.updateByPrimaryKeySelective(rule);
+            //若有历史纪录 ==将新纪录的开始日期设置为当前日期
+            settleRule
+                    .setEffectiveTime(new Date())
+                    .setInvalidTime(customerContract.getEndDate());
+        } else {
+            //若无历史纪录 ==将新纪录的开始日期设置为合同的生效日期
+            settleRule
+                    .setEffectiveTime(customerContract.getStartDate())
+                    .setInvalidTime(customerContract.getEndDate());
+        }
+        //将新纪录新增
         settleRule
                 .setCreateUserId(userService.getCurrentUser().getId())
                 .setCreateTime(new Date());
@@ -69,11 +107,9 @@ public class CustomerContractSettleRuleServiceImpl implements CustomerContractSe
                     sectionRuleDto
                             .setCustomerContractId(settleRuleDto.getCustomerContractId())
                             .setCustomerContractSettleRuleId(settleRule.getId());
-                    //存疑!!!
                     Boolean sectionResult = settleSectionRuleService.createSectionRule(sectionRuleDto);
                     if (!sectionResult) {
-                        log.error("createSectionRule 创建里程区间失败");
-                        return flag;
+                        throw new RuntimeException("createSectionRule 创建里程区间失败");
                     }
                 }
             }
@@ -83,11 +119,9 @@ public class CustomerContractSettleRuleServiceImpl implements CustomerContractSe
                     truckRuleDto
                             .setCustomerContractId(settleRule.getCustomerContractId())
                             .setCustomerContractSettleRuleId(settleRule.getId());
-                    //存疑!!!
                     Boolean truckResult = settleTruckService.createSettleTruck(truckRuleDto);
                     if (!truckResult) {
-                        log.error("createSectionRule 创建车辆配制失败");
-                        return flag;
+                        throw new RuntimeException("createSectionRule 创建车辆配制失败");
                     }
                 }
             }

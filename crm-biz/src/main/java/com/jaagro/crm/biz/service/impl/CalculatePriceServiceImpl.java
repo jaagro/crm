@@ -5,12 +5,7 @@ import com.jaagro.crm.api.constant.ProductType;
 import com.jaagro.crm.api.dto.request.contract.CalculatePaymentDto;
 import com.jaagro.crm.api.dto.request.contract.QuerySettleRuleDto;
 import com.jaagro.crm.api.service.CalculatePriceService;
-import com.jaagro.crm.biz.entity.SettleMileage;
-import com.jaagro.crm.biz.entity.CustomerContractSettlePrice;
-import com.jaagro.crm.biz.entity.CustomerContractSettleSectionRule;
-import com.jaagro.crm.biz.entity.CustomerContractSettleTruckRule;
-import com.jaagro.crm.biz.entity.DriverContractSettleRule;
-import com.jaagro.crm.biz.entity.DriverContractSettleSectionRule;
+import com.jaagro.crm.biz.entity.*;
 import com.jaagro.crm.biz.mapper.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +40,9 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
     @Autowired
     private SettleMileageMapperExt settleMileageMapperExt;
 
+    @Autowired
+    private CustomerContractMapperExt customerContractMapperExt;
+
     /**
      * 与客户结算的计算
      *
@@ -54,8 +52,20 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
     @Override
     public List<Map<Integer, BigDecimal>> calculatePaymentFromCustomer(List<CalculatePaymentDto> dtoList) {
         List<Map<Integer, BigDecimal>> returnList = new ArrayList<>();
+        if (CollectionUtils.isEmpty(dtoList)){
+            log.info("O calculatePaymentFromCustomer dtoList isEmpty");
+            return returnList;
+        }
+        log.info("O calculatePaymentFromCustomer begin *****************");
         for (CalculatePaymentDto calculatePaymentDto : dtoList) {
             Integer contractid = calculatePaymentDto.getCustomerContractId();
+            CustomerContract customerContract =  customerContractMapperExt.selectByPrimaryKey(contractid);
+            if(customerContract ==null)
+            {
+                log.info("O calculatePaymentFromCustomer contractid"+contractid+" invalid");
+                continue;
+            }
+
             Map<Integer, BigDecimal> map = new HashMap<>();
             BigDecimal paymentMoney ;
             BigDecimal unitPrice ;
@@ -70,6 +80,7 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
 
                 //毛鸡结算
                 case 1:
+                    log.info("O calculatePaymentFromCustomer 毛鸡结算 begin");
                     paymentMoney = new BigDecimal(0.00);
                     actualMileage = new BigDecimal(0.00);
 
@@ -149,10 +160,12 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
                         map.put(calculatePaymentDto.getWaybillId(), paymentMoney);
                     }
                     returnList.add(map);
+                    log.info("O calculatePaymentFromCustomer 毛鸡结算 end");
                     break;
                 //饲料结算
                 case 2:
-
+                    log.info("O calculatePaymentFromCustomer 饲料结算 begin");
+                    paymentMoney = new BigDecimal(0.00);
                     //根据合同id、装货地Id,卸货地id、车型id和运单完成时间获取结算单价(元/吨)
                     unitPrice = new BigDecimal(0.00);
                     actualMileage = new BigDecimal(0.00);
@@ -191,16 +204,20 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
                         //当实际装载量 < 最小装载量时，结算单价=原结算单价*常用结算量 / 最小装载量；最小装载量设置为零时不限最小装载量
                         compare = calculatePaymentDto.getUnloadWeight().compareTo(minLoadWeight);
                         if (compare == -1) {
-                            unitPrice = unitPrice.multiply(normalWeight.divide(minLoadWeight));
+                            unitPrice = unitPrice.multiply(normalWeight).divide(minLoadWeight,6,BigDecimal.ROUND_HALF_UP);
+
                         }
                     }
                     //结算金额 = 结算重量（吨）✕ 结算单价（元/吨）
-                    paymentMoney = calculatePaymentDto.getUnloadWeight().multiply(unitPrice).setScale(2,BigDecimal.ROUND_HALF_UP);;
+                    paymentMoney = calculatePaymentDto.getUnloadWeight().multiply(unitPrice).setScale(2,BigDecimal.ROUND_HALF_UP);
                     map.put(calculatePaymentDto.getWaybillId(), paymentMoney);
                     returnList.add(map);
+                    log.info("O calculatePaymentFromCustomer 饲料结算 end");
                     break;
                 //仔猪结算
                 case 5:
+                    log.info("O calculatePaymentFromCustomer 仔猪结算 begin");
+                    paymentMoney = new BigDecimal(0.00);
                     //根据合同id、装货地Id,卸货地id获取实际公里数
                     actualMileage = new BigDecimal(40.00);
                     //根据合同Id,车型id和运单完成时间获取车型的价格基数,因为不同的车型结算单价不同
@@ -227,10 +244,13 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
                     paymentMoney = actualMileage.multiply(new BigDecimal(calculatePaymentDto.getUnloadQuantity())).multiply(unitPrice).setScale(2,BigDecimal.ROUND_HALF_UP);
                     map.put(calculatePaymentDto.getWaybillId(), paymentMoney);
                     returnList.add(map);
+                    log.info("O calculatePaymentFromCustomer 仔猪结算 end");
                     break;
 
                 //生猪(商品猪)结算
                 case 6:case 3: case 4:
+                    log.info("O calculatePaymentFromCustomer 生猪(商品猪)结算 begin");
+                    paymentMoney = new BigDecimal(0.00);
                     //根据合同id、装货地Id,卸货地id获取实际里程数:一装多卸时取最大里程作为实际里程数
                     actualMileage = new BigDecimal(0.00);
                     contractSettlePriceList = customerContractSettlePriceMapperExt.getSectionWeightPrice(contractid, calculatePaymentDto.getDoneDate(), calculatePaymentDto.getSiteDtoList());
@@ -262,16 +282,17 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
                     unitPrice = new BigDecimal(0.00);
                     for (CustomerContractSettlePrice customerContractSettlePrice : contractSettlePriceList) {
                         if(calculatePaymentDto.getTruckTypeId().equals(customerContractSettlePrice.getTruckTypeId())) {
-                            if (actualMileage.compareTo(customerContractSettlePrice.getMileage()) == 0) {
+
                                 unitPrice = customerContractSettlePrice.getSettlePrice();
                                 break;
-                            }
+
                         }
                     }
                     //结算金额=里程数（公里）✕ 结算单价（元/公里
                     paymentMoney = actualMileage.multiply(unitPrice).setScale(2,BigDecimal.ROUND_HALF_UP);;
                     map.put(calculatePaymentDto.getWaybillId(), paymentMoney);
                     returnList.add(map);
+                    log.info("O calculatePaymentFromCustomer 生猪(商品猪)结算 end");
                     break;
                 default:
                     System.out.println("没有匹配的货物类型");break;
@@ -279,6 +300,7 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
             }
 
         }
+        log.info("O calculatePaymentFromCustomer end *****************");
         return returnList;
     }
 
@@ -302,7 +324,7 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
                 log.warn("O calculatePaymentToDriver settleMileageList isEmpty calculatePaymentDto={}",calculatePaymentDto);
                 continue;
             }
-            if (settleMileageList.size() > calculatePaymentDto.getSiteDtoList().size()){
+            if (settleMileageList.size() < calculatePaymentDto.getSiteDtoList().size()){
                 log.warn("O calculatePaymentToDriver settleMileage is not enough calculatePaymentDto={}",calculatePaymentDto);
                 continue;
             }
@@ -378,5 +400,21 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
             }
         }
         return result;
+    }
+
+    /**
+     * 根据客户装卸货地实际里程获取结算单价
+     *
+     * @param mileage
+     * @param customerContractId
+     * @return
+     */
+    @Override
+    public BigDecimal calculatePriceFromMileageSection(Integer customerContractId,BigDecimal mileage) {
+        BigDecimal price = customerContractSettleSectionRuleMapperExt.getPriceByMileageAndContractId(customerContractId,mileage);
+        if (price == null){
+            throw new RuntimeException("未能查询到该里程的报价");
+        }
+        return price;
     }
 }

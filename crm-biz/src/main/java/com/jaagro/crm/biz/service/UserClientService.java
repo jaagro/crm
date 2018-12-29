@@ -6,6 +6,7 @@ import com.jaagro.utils.BaseResponse;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -28,7 +29,6 @@ public interface UserClientService {
 
     /**
      * 获取用户id
-     *
      * @return
      */
     @GetMapping("/getNextUserId")
@@ -36,7 +36,6 @@ public interface UserClientService {
 
     /**
      * 根据手机号查询客户用户
-     *
      * @param phoneNumber
      * @return
      */
@@ -45,7 +44,6 @@ public interface UserClientService {
 
     /**
      * 根据客户关联id查询
-     *
      * @param relevanceId
      * @return
      */
@@ -60,5 +58,13 @@ public interface UserClientService {
      */
     @GetMapping("/getGlobalUser/{userId}")
     BaseResponse<UserInfo> getGlobalUser(@PathVariable("userId") int userId);
+
+    /**
+     * 获取当前token可查询的数据范围 -- 依据部门id
+     *
+     * @return
+     */
+    @PostMapping("/getDownDepartment")
+    List<Integer> getDownDepartment();
 
 }

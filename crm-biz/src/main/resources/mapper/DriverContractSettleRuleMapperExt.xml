@@ -49,6 +49,7 @@
         <include refid="Base_Column_List"/>
         FROM driver_contract_settle_rule
         WHERE truck_team_contract_id = #{truckTeamContractId}
+        and enable=1
         and truck_type_id = #{truckTypeId}
         and effective_time &lt;= #{doneDate}
         and invalid_time &gt; #{doneDate}

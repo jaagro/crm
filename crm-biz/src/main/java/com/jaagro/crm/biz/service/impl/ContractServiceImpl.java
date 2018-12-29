@@ -99,62 +99,6 @@ public class ContractServiceImpl implements ContractService {
                 contractQualificationService.createQuation(qualificationDto);
             }
         }
-        //创建 结算基础信息(存在历史)
-        if (!CollectionUtils.isEmpty(dto.getSettlePriceDtoList())) {
-            for (CreateCustomerSettlePriceDto settlePriceDtos : dto.getSettlePriceDtoList()) {
-                if (StringUtils.isEmpty(settlePriceDtos.getLoadSiteId())) {
-                    throw new RuntimeException("合同报价装货地不能为空");
-                }
-                if (StringUtils.isEmpty(settlePriceDtos.getUnloadSiteId())) {
-                    throw new RuntimeException("合同报价卸货地不能为空");
-                }
-                if (StringUtils.isEmpty(settlePriceDtos.getTruckTypeId())) {
-                    throw new RuntimeException("合同报价车型不能为空");
-                }
-                settlePriceDtos
-                        .setCustomerContractId(customerContract.getId())
-                        .setEffectiveTime(customerContract.getStartDate())
-                        .setInvalidTime(customerContract.getEndDate());
-                Boolean result = settlePriceService.createCustomerSettlePrice(settlePriceDtos);
-                if (!result) {
-                    throw new RuntimeException("创建合同报价失败");
-                }
-            }
-        }
-        //创建 油价设置(存在历史)
-        if (dto.getOilPriceDto() != null) {
-            CreateContractOilPriceDto oilPriceDto = dto.getOilPriceDto();
-            if (StringUtils.isEmpty(oilPriceDto.getPrice())) {
-                throw new RuntimeException("油价配制价格不能为空");
-            }
-            oilPriceDto
-                    .setContractId(customerContract.getId())
-                    .setContractType(ContractType.CUSTOMER)
-                    .setEffectiveTime(customerContract.getStartDate())
-                    .setInvalidTime(customerContract.getEndDate());
-            Boolean result = oilPriceService.createOilPrice(oilPriceDto);
-            if (!result) {
-                throw new RuntimeException("创建合同油价配制失败");
-            }
-        }
-        //创建 结算配制(存在历史)
-        if (dto.getSettleRuleDto() != null) {
-            CreateCustomerSettleRuleDto settleRuleDto = dto.getSettleRuleDto();
-            //货物类型为毛鸡
-            if (customerContract.getType().equals(ProductType.CHICKEN)) {
-                if (CollectionUtils.isEmpty(settleRuleDto.getTruckRuleDtoList())) {
-                    throw new RuntimeException("毛鸡类型的合同里程区间配制不能为空");
-                }
-            }
-            settleRuleDto
-                    .setEffectiveTime(customerContract.getStartDate())
-                    .setInvalidTime(customerContract.getEndDate())
-                    .setCustomerContractId(customerContract.getId());
-            Boolean result = settleRuleService.createSettleRule(settleRuleDto);
-            if (!result) {
-                throw new RuntimeException("创建合同里程区间配制失败");
-            }
-        }
         return ServiceResult.toResult("合同创建成功");
     }
 
