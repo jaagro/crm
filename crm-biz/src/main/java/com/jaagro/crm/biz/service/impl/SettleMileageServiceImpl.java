@@ -1,17 +1,27 @@
 package com.jaagro.crm.biz.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.dto.request.contract.CreateSettleMileageDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnSettleMileageDto;
+import com.jaagro.crm.api.dto.request.contract.listSettleMileageCriteriaDto;
 import com.jaagro.crm.api.service.SettleMileageService;
+import com.jaagro.crm.biz.entity.Customer;
+import com.jaagro.crm.biz.entity.CustomerContract;
 import com.jaagro.crm.biz.entity.CustomerSite;
 import com.jaagro.crm.biz.entity.SettleMileage;
+import com.jaagro.crm.biz.mapper.CustomerContractMapperExt;
+import com.jaagro.crm.biz.mapper.CustomerMapperExt;
 import com.jaagro.crm.biz.mapper.CustomerSiteMapperExt;
 import com.jaagro.crm.biz.mapper.SettleMileageMapperExt;
 import com.jaagro.crm.biz.service.DriverClientService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author baiyiran
@@ -28,6 +38,10 @@ public class SettleMileageServiceImpl implements SettleMileageService {
     private CustomerSiteMapperExt siteMapperExt;
     @Autowired
     private DriverClientService deptService;
+    @Autowired
+    private CustomerContractMapperExt contractMapperExt;
+    @Autowired
+    private CustomerMapperExt customerMapperExt;
 
     /**
      * 创建结算里程
@@ -56,5 +70,29 @@ public class SettleMileageServiceImpl implements SettleMileageService {
             return flag;
         }
         return flag;
+    }
+
+    /**
+     * 分页查询结算里程
+     *
+     * @param dto
+     * @return
+     */
+    @Override
+    public PageInfo listByCriteria(listSettleMileageCriteriaDto dto) {
+        PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
+        List<ReturnSettleMileageDto> settleMileageDtoList = settleMileageMapperExt.listByCriteria(dto);
+        if (!CollectionUtils.isEmpty(settleMileageDtoList)) {
+            for (ReturnSettleMileageDto settleMileageDto : settleMileageDtoList) {
+                CustomerContract customerContract = contractMapperExt.selectByPrimaryKey(settleMileageDto.getCustomerContractId());
+                if (customerContract != null) {
+                    Customer customer = customerMapperExt.selectByPrimaryKey(customerContract.getCustomerId());
+                    if (customer != null) {
+                        settleMileageDto.setCompanyName(customer.getCustomerName());
+                    }
+                }
+            }
+        }
+        return new PageInfo<>(settleMileageDtoList);
     }
 }
