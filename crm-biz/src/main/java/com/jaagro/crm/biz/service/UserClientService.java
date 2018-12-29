@@ -28,6 +28,7 @@ public interface UserClientService {
 
     /**
      * 获取用户id
+     *
      * @return
      */
     @GetMapping("/getNextUserId")
@@ -35,6 +36,7 @@ public interface UserClientService {
 
     /**
      * 根据手机号查询客户用户
+     *
      * @param phoneNumber
      * @return
      */
@@ -43,10 +45,20 @@ public interface UserClientService {
 
     /**
      * 根据客户关联id查询
+     *
      * @param relevanceId
      * @return
      */
     @GetMapping("/getCustomerUserByRelevanceId/{relevanceId}")
     BaseResponse<GetCustomerUserDto> getCustomerUserByRelevanceId(@PathVariable("relevanceId") Integer relevanceId);
+
+    /**
+     * 根据userId获取对应的用户数据
+     *
+     * @param userId
+     * @return
+     */
+    @GetMapping("/getGlobalUser/{userId}")
+    BaseResponse<UserInfo> getGlobalUser(@PathVariable("userId") int userId);
 
 }

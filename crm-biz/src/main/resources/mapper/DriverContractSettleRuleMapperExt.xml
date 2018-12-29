@@ -3,6 +3,7 @@
 <mapper namespace="com.jaagro.crm.biz.mapper.DriverContractSettleRuleMapperExt">
     <resultMap id="ResultMap" type="com.jaagro.crm.api.dto.response.truck.ListDriverContractSettleDto">
         <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="truck_team_contract_id" property="truckTeamContractId" jdbcType="INTEGER" />
         <result column="truck_type_id" property="truckTypeId" jdbcType="INTEGER"/>
         <result column="truck_type_name" property="truckTypeName" jdbcType="VARCHAR"/>
         <result column="start_mileage" property="startMileage" jdbcType="DECIMAL"/>
@@ -16,6 +17,7 @@
         <result column="effective_time" property="effectiveTime" jdbcType="TIMESTAMP"/>
         <result column="invalid_time" property="invalidTime" jdbcType="TIMESTAMP"/>
         <result column="history_flag" property="historyFlag" jdbcType="TINYINT"/>
+        <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
         <collection property="createDriverContractSettleSectionDto" column="id"
                     select="com.jaagro.crm.biz.mapper.DriverContractSettleSectionRuleMapperExt.listDriverContractSettleRuleBySettleRuleId">
         </collection>
@@ -58,11 +60,17 @@
         FROM driver_contract_settle_rule
         WHERE enable=1
         <if test="flag == 1">
+            and history_flag=0
             <if test="truckTeamContractId!=null">
                 and truck_team_contract_id=#{truckTeamContractId}
             </if>
         </if>
         <if test="flag == 2">
+            <if test="contractSettleId!=null">
+                and id=#{contractSettleId}
+            </if>
+        </if>
+        <if test="flag == 3">
             <if test="truckTeamContractId!=null">
                 and truck_team_contract_id=#{truckTeamContractId}
             </if>
@@ -73,11 +81,7 @@
                 and pricing_method=#{pricingMethod}
             </if>
         </if>
-        <if test="flag == 3">
-            <if test="contractSettleId!=null">
-                and id=#{contractSettleId}
-            </if>
-            order by create_time desc LIMIT 1
-        </if>
+
+
     </select>
 </mapper>
