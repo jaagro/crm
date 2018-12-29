@@ -35,6 +35,6 @@
         AND #{mileage} &lt;= ccssr.`end`
         AND ccssr.type = 1
         AND ccssr.`enable` = 1
-        AND ccsr.history_flag = 0;
+        AND ccsr.history_flag = 0
     </select>
 </mapper>
