@@ -2,6 +2,7 @@ package com.jaagro.crm.api.service;
 
 import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.dto.request.express.QueryExpressDto;
+import com.jaagro.crm.api.dto.response.express.ExpressReturnDto;
 import com.jaagro.crm.api.entity.Express;
 
 /**
@@ -24,7 +25,7 @@ public interface ExpressService {
      * @param id
      * @return
      */
-    Express getExpressById(Integer id);
+    ExpressReturnDto getExpressById(Integer id);
 
 
     /**

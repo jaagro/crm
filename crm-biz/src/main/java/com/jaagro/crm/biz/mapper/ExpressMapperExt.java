@@ -20,4 +20,7 @@ public interface ExpressMapperExt extends ExpressMapper {
      * @return
      */
     List<ExpressReturnDto> listByCriteria(QueryExpressDto criteriaDto);
+
+
+//    ExpressReturnDto getExpressById(Integer id);
 }

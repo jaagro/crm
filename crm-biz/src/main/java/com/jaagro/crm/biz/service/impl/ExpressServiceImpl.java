@@ -1,10 +1,12 @@
 package com.jaagro.crm.biz.service.impl;
 
+import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.constant.UserType;
 import com.jaagro.crm.api.dto.request.express.QueryExpressDto;
+import com.jaagro.crm.api.dto.response.department.DepartmentReturnDto;
 import com.jaagro.crm.api.dto.response.express.ExpressReturnDto;
 import com.jaagro.crm.api.dto.response.news.NewsReturnDto;
 import com.jaagro.crm.api.entity.Express;
@@ -12,6 +14,8 @@ import com.jaagro.crm.api.service.ExpressService;
 import com.jaagro.crm.biz.mapper.ExpressMapperExt;
 import com.jaagro.crm.biz.service.OssSignUrlClientService;
 import com.jaagro.crm.biz.service.UserClientService;
+import com.jaagro.crm.biz.utils.UrlPathUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -21,6 +25,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * 新闻管理
@@ -38,8 +43,7 @@ public class ExpressServiceImpl implements ExpressService {
     private CurrentUserService currentUserService;
     @Autowired
     private UserClientService userClientService;
-    @Autowired
-    private OssSignUrlClientService ossSignUrlClientService;
+
 
     /**
      * 创建智库直通车
@@ -69,13 +73,18 @@ public class ExpressServiceImpl implements ExpressService {
      * @return
      */
     @Override
-    public Express getExpressById(Integer id) {
-        Express returnDto = expressMapperExt.selectByPrimaryKey(id);
+    public ExpressReturnDto getExpressById(Integer id) {
+        Express express = expressMapperExt.selectByPrimaryKey(id);
+        ExpressReturnDto returnDto = new ExpressReturnDto();
+        BeanUtils.copyProperties(express,returnDto);
         if (returnDto != null) {
-//            convertImageUrl(newsReturnDto);
-            List<NewsReturnDto> list = new ArrayList<>();
-//            list.add(newsReturnDto);
-//            putUserInfo(list);
+            convertImageUrl(returnDto);
+            Set<Integer> userIdSet = new HashSet<>();
+            userIdSet.add(returnDto.getCreateUserId());
+            List<UserInfo> userInfoList = userClientService.listUserInfo(new ArrayList<>(userIdSet), UserType.EMPLOYEE);
+            if(!CollectionUtils.isEmpty(userInfoList)) {
+                returnDto.setCreateUserName(userInfoList.get(0).getName());
+            }
         }
         return returnDto;
     }
@@ -94,88 +103,50 @@ public class ExpressServiceImpl implements ExpressService {
         List<ExpressReturnDto> returnDtoList = expressMapperExt.listByCriteria(criteriaDto);
         if (!CollectionUtils.isEmpty(returnDtoList)) {
             Set<Integer> userIdSet = new HashSet<>();
-            returnDtoList.forEach(newsReturnDto -> {
-                if (newsReturnDto.getCreateUserId() != null) {
-                    userIdSet.add(newsReturnDto.getCreateUserId());
+            returnDtoList.forEach(returnDto -> {
+                if (returnDto.getCreateUserId() != null) {
+                    userIdSet.add(returnDto.getCreateUserId());
                 }
             });
             if (!CollectionUtils.isEmpty(userIdSet)) {
                 List<UserInfo> userInfoList = userClientService.listUserInfo(new ArrayList<>(userIdSet), UserType.EMPLOYEE);
+
                 if (!CollectionUtils.isEmpty(userInfoList)) {
+                    List<DepartmentReturnDto> departmentReturnDtos = userClientService.getAllDepartments();
+
                     for (ExpressReturnDto returnDto : returnDtoList) {
-                        for (UserInfo userInfo : userInfoList) {
-                            if (returnDto.getCreateUserId().equals(userInfo.getId())) {
-                                returnDto.setCreateUserName(userInfo.getName());
+
+                        UserInfo userInfo =  userInfoList.stream().filter(c ->c.getId().equals(returnDto.getCreateUserId())).collect(Collectors.toList()).get(0);
+
+                        if(userInfo!=null){
+                            returnDto.setCreateUserName(userInfo.getName());
+                            DepartmentReturnDto departmentReturnDto = departmentReturnDtos.stream().filter(c -> c.getId().equals(userInfo.getDepartmentId())).collect(Collectors.toList()).get(0);
+                            if (null != departmentReturnDto) {
+                                returnDto.setDepartmentName(departmentReturnDto.getDepartmentName());
                             }
                         }
                     }
                 }
             }
-//            newsReturnDtoList.forEach(newsReturnDto -> convertImageUrl(newsReturnDto));
         }
         return new PageInfo<>(returnDtoList);
     }
 
-
-    private String getAbstractImageUrl(String relativeImageUrl) {
-        if (StringUtils.hasText(relativeImageUrl)) {
-            String[] strArray = {relativeImageUrl};
-            List<URL> urls = ossSignUrlClientService.listSignedUrl(strArray);
-            if (!CollectionUtils.isEmpty(urls)) {
-                return urls.get(0).toString();
+    private  void  convertImageUrl(ExpressReturnDto express) {
+        if (express != null) {
+            if (StringUtils.hasText(express.getAttachUrl())) {
+                express.setAttachUrl(UrlPathUtil.getAbstractImageUrl(express.getAttachUrl()));
             }
-        }
-        return null;
-    }
-
-    private void convertImageUrl(NewsReturnDto newsReturnDto) {
-        if (newsReturnDto != null) {
-            if (StringUtils.hasText(newsReturnDto.getImageUrl())) {
-                newsReturnDto.setImageUrl(getAbstractImageUrl(newsReturnDto.getImageUrl()));
-            }
-            String content = newsReturnDto.getContent();
+            String content = express.getContent();
             if (StringUtils.hasText(content)) {
-                // 获取新闻主体内容中所有的相对路径
-                List<String> imgStr = getImgUrl(content);
-                // 替换新闻主体内容中所有的相对路径改为绝对路径
-                content = replaceImageUrl(imgStr, content);
-                newsReturnDto.setContent(content);
+                // 获取主体内容中所有的相对路径
+                List<String> imgStr = UrlPathUtil.getImgUrl(content);
+                // 替换主体内容中所有的相对路径改为绝对路径
+                content = UrlPathUtil.replaceImageUrl(imgStr, content);
+                express.setContent(content);
             }
         }
     }
 
-    private String replaceImageUrl(List<String> imgStr, String content) {
-        if (!CollectionUtils.isEmpty(imgStr) && StringUtils.hasText(content)) {
-            for (String imgUrl : imgStr) {
-                String abstractImgUrl = getAbstractImageUrl(imgUrl);
-                content = content.replace(imgUrl, abstractImgUrl);
-            }
-        }
-        return content;
-    }
-
-    /**
-     * @param htmlStr
-     * @return
-     */
-    private static List<String> getImgUrl(String htmlStr) {
-        List<String> pics = new ArrayList<>();
-        String img;
-        Pattern p_image;
-        Matcher m_image;
-        String regEx_img = "<.*img.*src\\s*=\\s*(.*?)[^>]*?>";
-        p_image = Pattern.compile(regEx_img, Pattern.CASE_INSENSITIVE);
-        m_image = p_image.matcher(htmlStr);
-        while (m_image.find()) {
-            // 得到<img />数据
-            img = m_image.group();
-            // 匹配<img>中的src数据
-            Matcher m = Pattern.compile("src\\s*=\\s*\"?(.*?)(\"|>|\\s+)").matcher(img);
-            while (m.find()) {
-                pics.add(m.group(1));
-            }
-        }
-        return pics;
-    }
 
 }
