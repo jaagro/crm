@@ -37,21 +37,21 @@ public class ExpressController {
         try {
             return BaseResponse.successInstance(expressService.listExpressByCriteria(criteriaDto));
         } catch (Exception e) {
-            log.error("listExpressByCriteria error criteriaDto="+criteriaDto,e);
+            log.error("listExpressByCriteria error criteriaDto=" + criteriaDto, e);
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询智库直通车失败" + e.getMessage());
         }
     }
 
     /**
-     * @author yj
      * @param createExpressDto
      * @return
+     * @author yj
      */
     @ApiOperation("智库直通车发布")
     @PostMapping("/express")
-    public BaseResponse createExpress(@RequestBody CreateExpressDto createExpressDto){
+    public BaseResponse createExpress(@RequestBody CreateExpressDto createExpressDto) {
         boolean result = expressService.createExpress(createExpressDto);
-        if (result){
+        if (result) {
             return BaseResponse.successInstance("智库直通车发布成功");
         }
         return BaseResponse.errorInstance("智库直通车发布失败");
@@ -59,16 +59,22 @@ public class ExpressController {
 
     @ApiOperation("设为档案")
     @PutMapping("/express/{id}")
-    public BaseResponse modifyExpress(@PathVariable("id") Integer id){
+    public BaseResponse modifyExpress(@PathVariable("id") Integer id) {
         boolean result = expressService.toDocument(id);
-        if (result){
+        if (result) {
             return BaseResponse.successInstance("设为档案成功");
         }
         return BaseResponse.errorInstance("设为档案失败");
     }
+
+    /**
+     * @Author gavin
+     * @param id
+     * @return
+     */
     @ApiOperation(value = "查看详情")
-    @GetMapping("/express/{id}")
-    public BaseResponse getNewsById(@PathVariable(value = "id") Integer id) {
+    @GetMapping("/getExpressById/{id}")
+    public BaseResponse getExpressById(@PathVariable(value = "id") Integer id) {
         ExpressReturnDto returnDto = expressService.getExpressById(id);
         if (returnDto == null) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "id=" + id + "不存在");

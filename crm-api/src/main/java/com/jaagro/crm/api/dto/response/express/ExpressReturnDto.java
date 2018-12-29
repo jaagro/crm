@@ -16,7 +16,8 @@ import java.util.Date;
 @Accessors(chain = true)
 public class ExpressReturnDto implements Serializable{
 
-    private static final long serialVersionUID = -2131819709317524408L;
+
+    private static final long serialVersionUID = -7874407299264466014L;
     /**
      * 智库直通车id
      */
