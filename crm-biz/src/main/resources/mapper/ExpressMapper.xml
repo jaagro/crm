@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jaagro.crm.biz.mapper.ExpressMapper" >
+<mapper namespace="com.jaagro.crm.biz.mapper.ExpressMapperExt" >
   <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.Express" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="title" property="title" jdbcType="VARCHAR" />
@@ -75,7 +75,8 @@
     delete from express
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.Express" >
+  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.Express" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
     insert into express (id, title, content, 
       category_id, child_category_id, attach_url, 
       to_document, tags, publish_time, 
@@ -87,7 +88,8 @@
       #{enable,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, 
       #{modifyTime,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.Express" >
+  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.Express" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
     insert into express
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
