@@ -25,5 +25,11 @@
         <if test="deptId != null">
             AND department_id = #{deptId}
         </if>
+        <if test="departIds != null and departIds.size() > 0">
+            and department_id in
+            <foreach collection="departIds" open="(" separator="," close=")" item="did">
+                ${did}
+            </foreach>
+        </if>
     </select>
 </mapper>

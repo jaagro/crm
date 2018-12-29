@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author baiyiran
@@ -32,4 +33,9 @@ public class listSettleMileageCriteriaDto implements Serializable {
      * 项目部名称
      */
     private String deptName;
+
+    /**
+     * 登陆人所在部门和下属所有部门
+     */
+    private List<Integer> departIds;
 }
