@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Data
 @Accessors(chain = true)
 public class UpdateDriverDto implements Serializable {
+    private static final long serialVersionUID = -1448511684450443077L;
     /**
      * 司机id
      */

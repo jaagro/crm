@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Data
 @Accessors(chain = true)
 public class CreateTruckTeamBankcardDto implements Serializable {
+    private static final long serialVersionUID = -1219965403638788336L;
     /**
      * 车队银行表ID
      */

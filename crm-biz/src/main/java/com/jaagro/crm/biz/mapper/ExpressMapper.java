@@ -1,7 +1,7 @@
 package com.jaagro.crm.biz.mapper;
 
-import com.jaagro.crm.biz.entity.Express;
-import com.jaagro.crm.biz.entity.ExpressExample;
+import com.jaagro.crm.api.entity.Express;
+import com.jaagro.crm.api.entity.ExpressExample;
 import java.util.List;
 
 public interface ExpressMapper {

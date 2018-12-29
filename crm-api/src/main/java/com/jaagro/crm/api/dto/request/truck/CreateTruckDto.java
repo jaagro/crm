@@ -14,6 +14,7 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class CreateTruckDto implements Serializable {
+    private static final long serialVersionUID = -4707792704248775366L;
     /**
      * 主键车辆表ID
      */

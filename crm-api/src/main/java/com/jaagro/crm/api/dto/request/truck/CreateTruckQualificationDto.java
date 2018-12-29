@@ -13,7 +13,7 @@ import java.io.Serializable;
 public class CreateTruckQualificationDto implements Serializable {
 
 
-
+    private static final long serialVersionUID = -330858386217983480L;
     /**
      * 资质类型(1-工商执照 2-身份证正面 3-身份证反面 4-......)
      */

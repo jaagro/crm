@@ -13,6 +13,7 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class UpdateTruckTeamContractDto implements Serializable {
+    private static final long serialVersionUID = -1078819521276160892L;
     /**
      * 主键车队合同表ID
      */
