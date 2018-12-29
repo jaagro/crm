@@ -3,6 +3,7 @@ package com.jaagro.crm.api.dto.request.contract;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -10,8 +11,9 @@ import java.math.BigDecimal;
  */
 @Data
 @Accessors(chain = true)
-public class CreateDriverContractSettleSectionDto {
+public class CreateDriverContractSettleSectionDto implements Serializable{
 
+    private static final long serialVersionUID = -1542749376562527303L;
     /**
      * 区间起始(不包含)
      */

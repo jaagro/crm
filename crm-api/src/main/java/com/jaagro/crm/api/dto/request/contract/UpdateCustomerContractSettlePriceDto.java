@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 @Accessors(chain = true)
 public class UpdateCustomerContractSettlePriceDto implements Serializable {
 
+    private static final long serialVersionUID = 1687640354272806707L;
     /**
      * 客户合同结算基础信息主表id
      */

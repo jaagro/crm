@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 @Data
 @Accessors(chain = true)
 public class CreateSettleMileageDto implements Serializable {
+    private static final long serialVersionUID = 6897014485949379057L;
     /**
      * 客户合同id
      */

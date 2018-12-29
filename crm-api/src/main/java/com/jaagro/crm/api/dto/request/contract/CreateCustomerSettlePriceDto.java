@@ -17,6 +17,7 @@ import java.util.Date;
 @Accessors(chain = true)
 public class CreateCustomerSettlePriceDto implements Serializable {
 
+    private static final long serialVersionUID = -1016837702157001590L;
     /**
      * 客户合同合同id
      */
