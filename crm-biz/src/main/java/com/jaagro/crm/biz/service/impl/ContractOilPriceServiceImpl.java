@@ -58,21 +58,30 @@ public class ContractOilPriceServiceImpl implements ContractOilPriceService {
             log.error("createOilPrice 创建油价配制失效时间不能为空");
             return flag;
         }
+        ContractOilPrice oilPrice = new ContractOilPrice();
         //查询是否存在历史记录
+        CustomerContract customerContract = contractMapperExt.selectByPrimaryKey(createContractOilPriceDto.getContractId());
         List<ContractOilPrice> oilPriceList = oilPriceMapperExt.listByContractIdAndType(createContractOilPriceDto.getContractId(), createContractOilPriceDto.getContractType());
         if (!CollectionUtils.isEmpty(oilPriceList)) {
             for (ContractOilPrice price : oilPriceList) {
+                //将已存在的记录设置为历史 && 截止日期设置为当前日期
                 price
+                        .setInvalidTime(new Date())
                         .setHistoryFlag(true)
                         .setModifyUserId(userService.getCurrentUser().getId())
                         .setModifyTime(new Date())
                         .setModifyUserName(userService.getCurrentUser().getName());
                 oilPriceMapperExt.updateByPrimaryKeySelective(price);
             }
+            //若有历史纪录 ==将新纪录的开始日期设置为当前日期
+            oilPrice
+                    .setEffectiveTime(new Date());
+        } else {
+            //若无历史纪录 ==将新纪录的开始日期设置为合同的生效日期
+            oilPrice
+                    .setEffectiveTime(customerContract.getStartDate());
         }
-        ContractOilPrice oilPrice = new ContractOilPrice();
         BeanUtils.copyProperties(createContractOilPriceDto, oilPrice);
-        CustomerContract customerContract = contractMapperExt.selectByPrimaryKey(createContractOilPriceDto.getContractId());
         if (customerContract == null) {
             log.error("createOilPrice 创建油价配制合同不存在");
             return flag;
@@ -80,7 +89,6 @@ public class ContractOilPriceServiceImpl implements ContractOilPriceService {
         if (createContractOilPriceDto != null) {
             oilPrice
                     .setContractType(ContractType.CUSTOMER)
-                    .setEffectiveTime(customerContract.getStartDate())
                     .setInvalidTime(customerContract.getEndDate())
                     .setCreateUserId(userService.getCurrentUser().getId())
                     .setCreateTime(new Date())
