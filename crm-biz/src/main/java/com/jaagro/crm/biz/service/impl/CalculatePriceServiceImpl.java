@@ -302,7 +302,7 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
                 log.warn("O calculatePaymentToDriver settleMileageList isEmpty calculatePaymentDto={}",calculatePaymentDto);
                 continue;
             }
-            if (settleMileageList.size() > calculatePaymentDto.getSiteDtoList().size()){
+            if (settleMileageList.size() < calculatePaymentDto.getSiteDtoList().size()){
                 log.warn("O calculatePaymentToDriver settleMileage is not enough calculatePaymentDto={}",calculatePaymentDto);
                 continue;
             }
@@ -378,5 +378,21 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
             }
         }
         return result;
+    }
+
+    /**
+     * 根据客户装卸货地实际里程获取结算单价
+     *
+     * @param mileage
+     * @param customerContractId
+     * @return
+     */
+    @Override
+    public BigDecimal calculatePriceFromMileageSection(Integer customerContractId,BigDecimal mileage) {
+        BigDecimal price = customerContractSettleSectionRuleMapperExt.getPriceByMileageAndContractId(customerContractId,mileage);
+        if (price == null){
+            throw new RuntimeException("未能查询到该里程的报价");
+        }
+        return price;
     }
 }
