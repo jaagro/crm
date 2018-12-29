@@ -82,9 +82,9 @@ public class TestController {
        // truckTeamContractService.createTruckTeamContractPrice(dto, 1, 1);
         DriverContractSettleCondition driverContractSettleCondition = new DriverContractSettleCondition();
         driverContractSettleCondition.setTruckTeamContractId(1).setTruckTypeId(8).setPricingMethod(2).setFlag(2);
-        List<ListDriverContractSettleDto> listDriverContractSettleDtos = truckTeamContractService.listTruckTeamContractPrice(driverContractSettleCondition);
-        System.out.println(listDriverContractSettleDtos.toString());
-        return BaseResponse.successInstance(listDriverContractSettleDtos);
+       // List<ListDriverContractSettleDto> listDriverContractSettleDtos = truckTeamContractService.listTruckTeamContractPrice(driverContractSettleCondition);
+        //System.out.println(listDriverContractSettleDtos.toString());
+        return BaseResponse.successInstance(null);
 
     }
 

@@ -1,10 +1,12 @@
 package com.jaagro.crm.api.service;
 
+import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.dto.request.contract.DriverContractSettleCondition;
 import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContractDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckTeamContractCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamContractDto;
 import com.jaagro.crm.api.dto.response.truck.ListDriverContractSettleDto;
+import com.jaagro.crm.api.dto.response.truck.ListDriverContractSettlelInfoDto;
 
 import java.util.List;
 import java.util.Map;
@@ -72,9 +74,26 @@ public interface TruckTeamContractService {
     void createTruckTeamContractPrice(CreateTruckTeamContractDto dto, Integer userId, Integer contractId);
 
     /**
+     * 运力合同报价列表
      *
      * @param condition
      * @return
      */
-    List<ListDriverContractSettleDto> listTruckTeamContractPrice(DriverContractSettleCondition condition);
+    List<ListDriverContractSettlelInfoDto> listTruckTeamContractPrice(DriverContractSettleCondition condition);
+
+    /**
+     * 运力合同报价详情
+     *
+     * @param condition
+     * @return
+     */
+    List<ListDriverContractSettleDto> listTruckTeamContractPriceDetails(DriverContractSettleCondition condition);
+
+    /**
+     * 当前车辆类型所有的报价历史记录
+     *
+     * @param condition
+     * @return
+     */
+    PageInfo<ListDriverContractSettleDto> listTruckTeamContractPriceHistoryDetails(DriverContractSettleCondition condition);
 }

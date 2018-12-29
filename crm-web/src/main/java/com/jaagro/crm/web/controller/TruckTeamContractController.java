@@ -1,19 +1,35 @@
 package com.jaagro.crm.web.controller;
 
+import com.github.pagehelper.PageInfo;
+import com.jaagro.constant.UserInfo;
+import com.jaagro.crm.api.dto.request.contract.CreateDriverContractSettleSectionDto;
+import com.jaagro.crm.api.dto.request.contract.DriverContractSettleCondition;
 import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContractDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckTeamContractCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamContractDto;
+import com.jaagro.crm.api.dto.response.truck.ListDriverContractSettleDto;
+import com.jaagro.crm.api.dto.response.truck.TruckTeamContractPriceHistoryDto;
 import com.jaagro.crm.api.service.TruckTeamContractService;
+import com.jaagro.crm.biz.entity.TruckTeam;
+import com.jaagro.crm.biz.entity.TruckTeamContract;
+import com.jaagro.crm.biz.mapper.TruckMapperExt;
 import com.jaagro.crm.biz.mapper.TruckTeamContractMapperExt;
+import com.jaagro.crm.biz.mapper.TruckTeamMapperExt;
+import com.jaagro.crm.biz.mapper.TruckTypeMapperExt;
+import com.jaagro.crm.biz.service.UserClientService;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,6 +44,11 @@ public class TruckTeamContractController {
 
     @Autowired
     private TruckTeamContractMapperExt truckTeamContractMapper;
+    @Autowired
+    private TruckTeamMapperExt truckTeamMapper;
+    @Autowired
+    private UserClientService userClientService;
+
 
     /**
      * 新增合同
@@ -116,7 +137,50 @@ public class TruckTeamContractController {
 
     @ApiOperation("合同报价列表")
     @PostMapping("/listTruckTeamContractPrice")
-    public BaseResponse listTruckTeamContractPrice(@RequestBody ListTruckTeamContractCriteriaDto criteriaDto) {
-        return BaseResponse.service(null);
+    public BaseResponse listTruckTeamContractPrice(@RequestBody DriverContractSettleCondition condition) {
+        return BaseResponse.successInstance(truckTeamContractService.listTruckTeamContractPrice(condition));
+    }
+
+    @ApiOperation("合同报价列表")
+    @PostMapping("/listTruckTeamContractPriceDetails")
+    public BaseResponse listTruckTeamContractPriceDetails(@RequestBody DriverContractSettleCondition condition) {
+        return BaseResponse.successInstance(truckTeamContractService.listTruckTeamContractPriceDetails(condition));
+    }
+
+    @ApiOperation("合同报价历史列表")
+    @PostMapping("/listTruckTeamContractPriceHistoryDetails")
+    public BaseResponse listTruckTeamContractPriceHistoryDetails(@RequestBody DriverContractSettleCondition condition) {
+        TruckTeamContract truckTeamContract = null;
+        TruckTeam truckTeam = null;
+        PageInfo<ListDriverContractSettleDto> listDriverContractSettleDtoPageInfo = truckTeamContractService.listTruckTeamContractPriceHistoryDetails(condition);
+        List<ListDriverContractSettleDto> listDriverContractSettleDtos = null;
+        List<TruckTeamContractPriceHistoryDto> truckTeamContractPriceHistoryDtos = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(listDriverContractSettleDtoPageInfo.getList())) {
+            listDriverContractSettleDtos = listDriverContractSettleDtoPageInfo.getList();
+        }
+        for (ListDriverContractSettleDto listDriverContractSettleDto : listDriverContractSettleDtos) {
+            TruckTeamContractPriceHistoryDto truckTeamContractPriceHistoryDto = new TruckTeamContractPriceHistoryDto();
+            if (truckTeamContract == null) {
+                truckTeamContract = truckTeamContractMapper.selectByPrimaryKey(listDriverContractSettleDto.getTruckTeamContractId());
+
+            }
+            if (truckTeam == null) {
+                truckTeam = truckTeamMapper.selectByPrimaryKey(truckTeamContract.getTruckTeamId());
+            }
+            BaseResponse<UserInfo> globalUser = userClientService.getGlobalUser(listDriverContractSettleDto.getCreateUserId());
+            UserInfo userInfo = null;
+            if (globalUser.getData() != null) {
+                userInfo = globalUser.getData();
+            }
+            BeanUtils.copyProperties(listDriverContractSettleDto, truckTeamContractPriceHistoryDto);
+            truckTeamContractPriceHistoryDto
+                    .setCreateUserName(userInfo.getName() == null ? null : userInfo.getName());
+            List<CreateDriverContractSettleSectionDto> createDriverContractSettleSectionDto = listDriverContractSettleDto.getCreateDriverContractSettleSectionDto();
+            if (!CollectionUtils.isEmpty(createDriverContractSettleSectionDto)) {
+                truckTeamContractPriceHistoryDto.setCreateDriverContractSettleSectionDto(createDriverContractSettleSectionDto);
+            }
+            truckTeamContractPriceHistoryDtos.add(truckTeamContractPriceHistoryDto);
+        }
+        return BaseResponse.successInstance(null);
     }
 }

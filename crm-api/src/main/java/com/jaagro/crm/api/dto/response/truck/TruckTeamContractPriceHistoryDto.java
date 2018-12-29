@@ -14,35 +14,23 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
-public class ListDriverContractSettleDto implements Serializable {
-
+public class TruckTeamContractPriceHistoryDto implements Serializable {
     /**
-     * 合同运力结算配置表 id
+     * 车队名称
      */
-    private Integer id;
-    /**
-     * 合同id
-     */
-    private Integer truckTeamContractId;
-
-    /**
-     * 车辆类型id
-     */
-    private Integer truckTypeId;
-
+    private String truckTeamName;
     /**
      * 车辆类型名称
      */
     private String truckTypeName;
     /**
-     * 是否记为历史
+     * 车辆类型
      */
-    private Integer historyFlag;
+    private Integer teamType;
     /**
      *
      */
     private Integer pricingMethod;
-
     /**
      * 生效时间
      */
@@ -52,12 +40,6 @@ public class ListDriverContractSettleDto implements Serializable {
      * 失效时间
      */
     private Date invalidTime;
-
-    /**
-     * 创建人id
-     */
-    private Integer createUserId;
-
 
     //----------------区间里程-------------
 
@@ -96,4 +78,11 @@ public class ListDriverContractSettleDto implements Serializable {
      * 里程单价(元/公里)
      */
     private BigDecimal mileagePrice;
+
+    /**
+     * 操作人
+     */
+    private String createUserName;
+
+
 }

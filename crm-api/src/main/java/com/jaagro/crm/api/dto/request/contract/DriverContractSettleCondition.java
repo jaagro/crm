@@ -3,6 +3,8 @@ package com.jaagro.crm.api.dto.request.contract;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -11,6 +13,16 @@ import java.io.Serializable;
 @Data
 @Accessors(chain = true)
 public class DriverContractSettleCondition implements Serializable {
+
+    /**
+     * 当前页
+     */
+    private Integer pageNum;
+
+    /**
+     * 每页的数量
+     */
+    private int pageSize;
 
     /**
      * 车队合同id
