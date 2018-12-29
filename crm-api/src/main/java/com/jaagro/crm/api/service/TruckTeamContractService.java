@@ -7,6 +7,7 @@ import com.jaagro.crm.api.dto.request.truck.ListTruckTeamContractCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamContractDto;
 import com.jaagro.crm.api.dto.response.truck.ListDriverContractSettleDto;
 import com.jaagro.crm.api.dto.response.truck.ListDriverContractSettlelInfoDto;
+import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
 
 import java.util.List;
 import java.util.Map;
@@ -96,4 +97,20 @@ public interface TruckTeamContractService {
      * @return
      */
     PageInfo<ListDriverContractSettleDto> listTruckTeamContractPriceHistoryDetails(DriverContractSettleCondition condition);
+
+    /**
+     * 根据条件查询某一类车型
+     *
+     * @param goodType
+     * @return
+     */
+    List<ListTruckTypeDto> listTruckTeamTypeByGoodType(Integer goodType);
+
+    /**
+     * 逻辑删除某一个类的车型
+     *
+     * @param condition
+     */
+    void deleteTeamContractPrice(DriverContractSettleCondition condition);
+
 }

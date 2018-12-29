@@ -1,4 +1,4 @@
-package com.jaagro.crm.api.dto.response.truck;
+package com.jaagro.crm.web.vo.contract;
 
 import com.jaagro.crm.api.dto.request.contract.CreateDriverContractSettleSectionDto;
 import lombok.Data;
@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
-public class TruckTeamContractPriceHistoryDto implements Serializable {
+public class TruckTeamContractPriceHistoryVo implements Serializable {
     /**
      * 车队名称
      */

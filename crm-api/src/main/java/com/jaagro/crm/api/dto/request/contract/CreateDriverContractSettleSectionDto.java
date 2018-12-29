@@ -11,7 +11,10 @@ import java.math.BigDecimal;
 @Data
 @Accessors(chain = true)
 public class CreateDriverContractSettleSectionDto {
-
+    /**
+     * 主键id
+     */
+    private Integer id;
     /**
      * 区间起始(不包含)
      */

@@ -477,4 +477,41 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
         condition.setFlag(3);
         return new PageInfo(driverContractSettleRuleMapper.listTruckTeamContractPriceCondition(condition));
     }
+
+    /**
+     * 逻辑删除某一个类的车型
+     *
+     * @param condition
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteTeamContractPrice(DriverContractSettleCondition condition) {
+        condition.setFlag(3);
+        List<ListDriverContractSettleDto> listDriverContractSettleDtos = driverContractSettleRuleMapper.listTruckTeamContractPriceCondition(condition);
+        List<Integer> driverContractSettleIds = new ArrayList<>();
+        List<Integer> driverContractSettleSectionIds = new ArrayList<>();
+        for (ListDriverContractSettleDto listDriverContractSettleDto : listDriverContractSettleDtos) {
+            driverContractSettleIds.add(listDriverContractSettleDto.getId());
+            if (!CollectionUtils.isEmpty(listDriverContractSettleDto.getCreateDriverContractSettleSectionDto())) {
+                List<CreateDriverContractSettleSectionDto> createDriverContractSettleSectionDto = listDriverContractSettleDto.getCreateDriverContractSettleSectionDto();
+                for (CreateDriverContractSettleSectionDto driverContractSettleSectionDto : createDriverContractSettleSectionDto) {
+                    driverContractSettleSectionIds.add(driverContractSettleSectionDto.getId());
+                }
+            }
+        }
+        //批量逻辑删除
+        driverContractSettleRuleMapper.deleteDriverContractSettleById(driverContractSettleIds);
+        driverContractSettleSectionRuleMapper.deleteDriverContractSettleSectionById(driverContractSettleSectionIds);
+    }
+
+    /**
+     * 根据条件查询某一类车型
+     *
+     * @param goodType
+     * @return
+     */
+    @Override
+    public List<ListTruckTypeDto> listTruckTeamTypeByGoodType(Integer goodType) {
+        return truckTypeMapper.listAll(String.valueOf(goodType));
+    }
 }
