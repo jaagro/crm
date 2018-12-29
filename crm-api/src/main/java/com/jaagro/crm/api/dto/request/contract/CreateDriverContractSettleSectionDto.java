@@ -11,9 +11,13 @@ import java.math.BigDecimal;
  */
 @Data
 @Accessors(chain = true)
-public class CreateDriverContractSettleSectionDto implements Serializable{
+public class CreateDriverContractSettleSectionDto implements Serializable {
 
     private static final long serialVersionUID = -1542749376562527303L;
+    /**
+     *
+     */
+    private Integer id;
     /**
      * 区间起始(不包含)
      */
