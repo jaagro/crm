@@ -331,7 +331,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                     .setContractId(driverContractSettleParam.getTruckTeamContractId())
                     .setEffectiveTime(driverContractSettleParam.getEffectiveTime())
                     .setInvalidTime(driverContractSettleParam.getInvalidTime())
-                    .setPrice(driverContractSettleDto.getOilPrice());
+                    .setPrice(driverContractSettleDto.getOilPrice() == null ? null : driverContractSettleDto.getOilPrice());
             contractOilPriceService.createOilPrice(createContractOilPriceDto);
             //插入合同报价相关表
             saveDriverContractSettle(driverContractSettleDto, driverContractSettleParam, null);
@@ -520,7 +520,6 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
 
     /**
      * 获取最新的油价
-     *
      *
      * @return
      */

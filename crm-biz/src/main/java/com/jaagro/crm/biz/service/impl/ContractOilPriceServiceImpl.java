@@ -7,9 +7,12 @@ import com.jaagro.crm.api.dto.response.contract.ReturnContractOilPriceDto;
 import com.jaagro.crm.api.service.ContractOilPriceService;
 import com.jaagro.crm.biz.entity.ContractOilPrice;
 import com.jaagro.crm.biz.entity.CustomerContract;
+import com.jaagro.crm.biz.entity.TruckTeamContract;
 import com.jaagro.crm.biz.mapper.ContractOilPriceMapperExt;
 import com.jaagro.crm.biz.mapper.CustomerContractMapperExt;
+import com.jaagro.crm.biz.mapper.TruckTeamContractMapperExt;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.ObjectUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +37,8 @@ public class ContractOilPriceServiceImpl implements ContractOilPriceService {
     private CurrentUserService userService;
     @Autowired
     private CustomerContractMapperExt contractMapperExt;
+    @Autowired
+    private TruckTeamContractMapperExt truckTeamContractMapper;
 
     /**
      * 创建油价配制
@@ -63,7 +68,15 @@ public class ContractOilPriceServiceImpl implements ContractOilPriceService {
         }
         ContractOilPrice oilPrice = new ContractOilPrice();
         //查询是否存在历史记录
-        CustomerContract customerContract = contractMapperExt.selectByPrimaryKey(createContractOilPriceDto.getContractId());
+        CustomerContract customerContract = null;
+        if (ContractType.CUSTOMER.equals(createContractOilPriceDto.getContractType())) {
+            customerContract = contractMapperExt.selectByPrimaryKey(createContractOilPriceDto.getContractId());
+
+        }
+        TruckTeamContract truckTeamContract = null;
+        if (ContractType.DRIVER.equals(createContractOilPriceDto.getContractType())) {
+            truckTeamContract = truckTeamContractMapper.selectByPrimaryKey(createContractOilPriceDto.getContractId());
+        }
         List<ContractOilPrice> oilPriceList = oilPriceMapperExt.listByContractIdAndType(createContractOilPriceDto.getContractId(), createContractOilPriceDto.getContractType());
         UserInfo currentUser = userService.getCurrentUser();
         if (!CollectionUtils.isEmpty(oilPriceList)) {
@@ -82,16 +95,22 @@ public class ContractOilPriceServiceImpl implements ContractOilPriceService {
         } else {
             //若无历史纪录 ==将新纪录的开始日期设置为合同的生效日期
             oilPrice
-                    .setEffectiveTime(customerContract.getStartDate());
+                    .setEffectiveTime(ContractType.CUSTOMER.equals(createContractOilPriceDto.getContractType())
+                            ? customerContract.getStartDate() : truckTeamContract.getStartDate());
         }
         BeanUtils.copyProperties(createContractOilPriceDto, oilPrice);
-        if (customerContract == null) {
+        if (ContractType.CUSTOMER.equals(createContractOilPriceDto.getContractType()) && customerContract == null) {
+            log.error("createOilPrice 创建油价配制合同不存在");
+            return flag;
+        }
+        if (ContractType.DRIVER.equals(createContractOilPriceDto.getContractType()) && truckTeamContract == null) {
             log.error("createOilPrice 创建油价配制合同不存在");
             return flag;
         }
         if (createContractOilPriceDto != null) {
             oilPrice
-                    .setInvalidTime(customerContract.getEndDate())
+                    .setInvalidTime(ContractType.CUSTOMER.equals(createContractOilPriceDto.getContractType())
+                            ? customerContract.getEndDate() : truckTeamContract.getEndDate())
                     .setCreateUserId(currentUser == null ? null : currentUser.getId())
                     .setCreateTime(new Date())
                     .setCreateUserName(currentUser == null ? null : currentUser.getName());
