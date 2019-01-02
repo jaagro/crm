@@ -2,12 +2,12 @@ package com.jaagro.crm.web.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.jaagro.constant.UserInfo;
-import com.jaagro.crm.api.dto.request.contract.CreateDriverContractSettleSectionDto;
-import com.jaagro.crm.api.dto.request.contract.DriverContractSettleCondition;
+import com.jaagro.crm.api.dto.request.contract.*;
 import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContractDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckTeamContractCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamContractDto;
 import com.jaagro.crm.api.dto.response.truck.ListDriverContractSettleDto;
+import com.jaagro.crm.biz.service.impl.CurrentUserService;
 import com.jaagro.crm.web.vo.contract.TruckTeamContractPriceHistoryVo;
 import com.jaagro.crm.api.service.TruckTeamContractService;
 import com.jaagro.crm.biz.entity.TruckTeam;
@@ -46,6 +46,8 @@ public class TruckTeamContractController {
     private TruckTeamMapperExt truckTeamMapper;
     @Autowired
     private UserClientService userClientService;
+    @Autowired
+    private CurrentUserService currentUserService;
 
 
     /**
@@ -146,8 +148,8 @@ public class TruckTeamContractController {
     }
 
     @ApiOperation("查询车型")
-    @PostMapping("/listTruckTeamTypeByGoodType")
-    public BaseResponse listTruckTeamTypeByGoodType(@RequestBody Integer goodType) {
+    @GetMapping("/listTruckTeamTypeByGoodType/{goodType}")
+    public BaseResponse listTruckTeamTypeByGoodType(@PathVariable Integer goodType) {
         return BaseResponse.successInstance(truckTeamContractService.listTruckTeamTypeByGoodType(goodType));
     }
 
@@ -158,6 +160,19 @@ public class TruckTeamContractController {
         return BaseResponse.successInstance(ResponseStatusCode.OPERATION_SUCCESS);
     }
 
+    @ApiOperation("合同报价新增更新")
+    @PostMapping("/updateTeamContractPrice")
+    public BaseResponse updateTeamContractPrice(@RequestBody CreateDriverContractSettleDto createDriverContractSettleDto) {
+        truckTeamContractService.createTruckTeamContractPrice(createDriverContractSettleDto);
+        return BaseResponse.successInstance(ResponseStatusCode.OPERATION_SUCCESS);
+    }
+
+    @ApiOperation("最新油价")
+    @PostMapping("/getNewOilPrice")
+    public BaseResponse getNewOilPrice(@RequestBody ContractOilPriceCondition condition) {
+        GetContractOilPriceDto newOilPrice = truckTeamContractService.getNewOilPrice(condition);
+        return BaseResponse.successInstance(newOilPrice);
+    }
 
     @ApiOperation("合同报价历史列表")
     @PostMapping("/listTruckTeamContractPriceHistoryDetails")
