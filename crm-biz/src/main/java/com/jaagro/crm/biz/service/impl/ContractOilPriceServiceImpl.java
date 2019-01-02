@@ -91,7 +91,6 @@ public class ContractOilPriceServiceImpl implements ContractOilPriceService {
         }
         if (createContractOilPriceDto != null) {
             oilPrice
-                    .setContractType(ContractType.CUSTOMER)
                     .setInvalidTime(customerContract.getEndDate())
                     .setCreateUserId(currentUser == null ? null : currentUser.getId())
                     .setCreateTime(new Date())
