@@ -2,11 +2,14 @@ package com.jaagro.crm.web.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.jaagro.constant.UserInfo;
+import com.jaagro.crm.api.constant.ContractType;
 import com.jaagro.crm.api.dto.request.contract.*;
+import com.jaagro.crm.api.dto.request.customer.CreateContractOilPriceDto;
 import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContractDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckTeamContractCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamContractDto;
 import com.jaagro.crm.api.dto.response.truck.ListDriverContractSettleDto;
+import com.jaagro.crm.api.service.ContractOilPriceService;
 import com.jaagro.crm.biz.service.impl.CurrentUserService;
 import com.jaagro.crm.web.vo.contract.TruckTeamContractPriceHistoryVo;
 import com.jaagro.crm.api.service.TruckTeamContractService;
@@ -46,6 +49,9 @@ public class TruckTeamContractController {
     private TruckTeamMapperExt truckTeamMapper;
     @Autowired
     private UserClientService userClientService;
+    @Autowired
+    private ContractOilPriceService contractOilPriceService;
+
 
     /**
      * 新增合同
@@ -171,6 +177,15 @@ public class TruckTeamContractController {
         return BaseResponse.successInstance(newOilPrice);
     }
 
+    @ApiOperation("更新油价")
+    @PostMapping("/updateOilPrice")
+    public BaseResponse updateOilPrice(@RequestBody CreateContractOilPriceDto createContractOilPriceDto) {
+        //插入油价
+        createContractOilPriceDto
+                .setContractType(ContractType.DRIVER);
+        contractOilPriceService.createOilPrice(createContractOilPriceDto);
+        return BaseResponse.successInstance(ResponseStatusCode.OPERATION_SUCCESS);
+    }
     @ApiOperation("合同报价历史列表")
     @PostMapping("/listTruckTeamContractPriceHistoryDetails")
     public BaseResponse listTruckTeamContractPriceHistoryDetails(@RequestBody DriverContractSettleCondition condition) {
