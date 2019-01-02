@@ -528,9 +528,6 @@ public class ContractController {
                 if (StringUtils.isEmpty(priceDto.getUnloadSiteId())) {
                     return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同报价卸货地不能为空");
                 }
-                if (StringUtils.isEmpty(priceDto.getTruckTypeId())) {
-                    return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同报价车型不能为空");
-                }
                 Boolean result = settlePriceService.createCustomerSettlePrice(priceDto);
                 if (!result) {
                     return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "创建合同报价失败");
