@@ -104,10 +104,6 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                 this.contractQualificationService.createQuation(qualificationDto);
             }
         }
-        //创建运力合同报价
-//        if (dto.getCreateDriverContractSettleDto() != null) {
-//            truckTeamContractService.createTruckTeamContractPrice(dto, currentUser.getId(), truckTeamContract.getId());
-//        }
         return ServiceResult.toResult(truckTeamContract.getId());
     }
 
@@ -525,11 +521,15 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     /**
      * 获取最新的油价
      *
+     * 
      * @return
      */
     @Override
     public GetContractOilPriceDto getNewOilPrice(ContractOilPriceCondition condition) {
-        ReturnContractOilPriceDto contractIdAndType = contractOilPriceMapper.getByContractIdAndType(condition.getContractId(), condition.getContractType());
+        ReturnContractOilPriceDto contractIdAndType = null;
+        if (condition.getContractId() != null && condition.getContractType() != null) {
+            contractIdAndType = contractOilPriceMapper.getByContractIdAndType(condition.getContractId(), condition.getContractType());
+        }
         BaseResponse<UserInfo> globalUser = userClientService.getGlobalUser(contractIdAndType.getCreateUserId());
         GetContractOilPriceDto contractOilPriceDto = new GetContractOilPriceDto();
         if (contractIdAndType != null) {
