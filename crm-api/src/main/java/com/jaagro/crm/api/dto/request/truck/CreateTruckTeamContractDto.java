@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -50,11 +51,4 @@ public class CreateTruckTeamContractDto implements Serializable {
      * 合同资质证件照
      */
     private List<CreateContractQualificationDto> qualificationDtoList;
-
-    /**
-     * 创建运力合同报价
-     */
-    private CreateDriverContractSettleDto createDriverContractSettleDto;
-
-
 }

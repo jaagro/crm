@@ -3,23 +3,23 @@ package com.jaagro.crm.biz.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.constant.UserInfo;
-import com.jaagro.crm.api.constant.AuditStatus;
-import com.jaagro.crm.api.constant.ContractStatus;
-import com.jaagro.crm.api.constant.GoodsType;
-import com.jaagro.crm.api.constant.PricingMethod;
+import com.jaagro.crm.api.constant.*;
 import com.jaagro.crm.api.dto.request.contract.*;
+import com.jaagro.crm.api.dto.request.customer.CreateContractOilPriceDto;
 import com.jaagro.crm.api.dto.request.truck.*;
+import com.jaagro.crm.api.dto.response.contract.ReturnContractOilPriceDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractQualificationDto;
 import com.jaagro.crm.api.dto.response.truck.*;
+import com.jaagro.crm.api.service.ContractOilPriceService;
 import com.jaagro.crm.api.service.ContractQualificationService;
 import com.jaagro.crm.api.service.TruckTeamContractService;
 import com.jaagro.crm.biz.entity.*;
 import com.jaagro.crm.biz.mapper.*;
 import com.jaagro.crm.biz.service.OssSignUrlClientService;
+import com.jaagro.crm.biz.service.UserClientService;
+import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -65,6 +65,15 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     private DriverContractSettleRuleMapperExt driverContractSettleRuleMapper;
     @Autowired
     private DriverContractSettleSectionRuleMapperExt driverContractSettleSectionRuleMapper;
+    @Autowired
+    private ContractOilPriceService contractOilPriceService;
+    @Autowired
+    private ContractOilPriceMapperExt contractOilPriceMapper;
+    @Autowired
+    private UserClientService userClientService;
+    @Autowired
+    private CurrentUserService currentUserService;
+
 
     /**
      * 创建车队合同
@@ -93,11 +102,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                 this.contractQualificationService.createQuation(qualificationDto);
             }
         }
-        //创建运力合同报价
-        if (null != dto.getCreateDriverContractSettleDto()) {
-            truckTeamContractService.createTruckTeamContractPrice(dto, currentUser.getId(), truckTeamContract.getId());
-        }
-        return ServiceResult.toResult("合同创建成功");
+        return ServiceResult.toResult(truckTeamContract.getId());
     }
 
     /**
@@ -222,53 +227,50 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     /**
      * 创建车队合同报价
      *
-     * @param dto
      * @author @Gao.
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void createTruckTeamContractPrice(CreateTruckTeamContractDto dto, Integer userId, Integer contractId) {
-        if (null != dto.getCreateDriverContractSettleDto()) {
-            CreateDriverContractSettleDto driverContractSettleDto = dto.getCreateDriverContractSettleDto();
-            if (null != driverContractSettleDto.getTruckTypeId()) {
-                ListTruckTypeDto truckType = truckTypeMapper.getById(driverContractSettleDto.getTruckTypeId());
-                DriverContractSettleCondition driverContractSettleCondition = new DriverContractSettleCondition();
-                driverContractSettleCondition
-                        .setTruckTeamContractId(contractId)
-                        .setTruckTypeId(driverContractSettleDto.getTruckTypeId());
-                DriverContractSettleParam driverContractSettleParam = new DriverContractSettleParam();
-                driverContractSettleParam
-                        .setTruckTeamContractId(contractId)
-                        .setCreateUserId(userId)
-                        .setTruckTypeId(driverContractSettleDto.getTruckTypeId())
-                        .setTruckTypeName(truckType.getTypeName());
-                //鸡车类型
-                if (GoodsType.CHICKEN.equals(Integer.parseInt(truckType.getProductName()))) {
-                    //按照区间里程单价
-                    contractCapacitySettle(dto, driverContractSettleCondition, driverContractSettleDto, driverContractSettleParam);
-                }
-                //饲料类型
-                if (GoodsType.FODDER.equals(Integer.parseInt(truckType.getProductName()))) {
-                    //按照区间重量单价
-                    contractCapacitySettle(dto, driverContractSettleCondition, driverContractSettleDto, driverContractSettleParam);
-                }
-                //仔猪 生猪类型
-                boolean flag = (GoodsType.SOW.equals(Integer.parseInt(truckType.getProductName())) || GoodsType.BOAR.equals(Integer.parseInt(truckType.getProductName()))
-                        || GoodsType.PIGLET.equals(Integer.parseInt(truckType.getProductName())) || GoodsType.LIVE_PIG.equals(Integer.parseInt(truckType.getProductName())));
-                if (flag) {
-                    driverContractSettleCondition.setFlag(2);
-                    DriverContractSettleRule driverContractSettleRule = driverContractSettleRuleMapper.listDriverContractSettleRuleByCondition(driverContractSettleCondition);
-                    if (null != driverContractSettleRule) {
-                        if (driverContractSettleDto.getPricingMethod().equals(driverContractSettleRule.getPricingMethod())) {
-                            //按照区间里程单价 或者按照起步价
-                            contractCapacitySettle(dto, driverContractSettleCondition, driverContractSettleDto, driverContractSettleParam);
-                        } else {
-                            throw new NullPointerException("当前货物类型只能选择一种报价方式");
-                        }
-                    } else {
+    public void createTruckTeamContractPrice(CreateDriverContractSettleDto driverContractSettleDto) {
+        UserInfo currentUser = currentUserService.getCurrentUser();
+        if (null != driverContractSettleDto.getTruckTypeId()) {
+            ListTruckTypeDto truckType = truckTypeMapper.getById(driverContractSettleDto.getTruckTypeId());
+            DriverContractSettleCondition driverContractSettleCondition = new DriverContractSettleCondition();
+            driverContractSettleCondition
+                    .setTruckTeamContractId(driverContractSettleDto.getContractId() == null ? null : driverContractSettleDto.getContractId())
+                    .setTruckTypeId(driverContractSettleDto.getTruckTypeId());
+            DriverContractSettleParam driverContractSettleParam = new DriverContractSettleParam();
+            driverContractSettleParam
+                    .setTruckTeamContractId(driverContractSettleDto.getContractId() == null ? null : driverContractSettleDto.getContractId())
+                    .setCreateUserId(currentUser.getId())
+                    .setTruckTypeId(driverContractSettleDto.getTruckTypeId())
+                    .setTruckTypeName(truckType.getTypeName());
+            //鸡车类型
+            if (GoodsType.CHICKEN.equals(Integer.parseInt(truckType.getProductName()))) {
+                //按照区间里程单价
+                contractCapacitySettle(driverContractSettleCondition, driverContractSettleDto, driverContractSettleParam);
+            }
+            //饲料类型
+            if (GoodsType.FODDER.equals(Integer.parseInt(truckType.getProductName()))) {
+                //按照区间重量单价
+                contractCapacitySettle(driverContractSettleCondition, driverContractSettleDto, driverContractSettleParam);
+            }
+            //仔猪 生猪类型
+            boolean flag = (GoodsType.SOW.equals(Integer.parseInt(truckType.getProductName())) || GoodsType.BOAR.equals(Integer.parseInt(truckType.getProductName()))
+                    || GoodsType.PIGLET.equals(Integer.parseInt(truckType.getProductName())) || GoodsType.LIVE_PIG.equals(Integer.parseInt(truckType.getProductName())));
+            if (flag) {
+                driverContractSettleCondition.setFlag(2);
+                DriverContractSettleRule driverContractSettleRule = driverContractSettleRuleMapper.listDriverContractSettleRuleByCondition(driverContractSettleCondition);
+                if (null != driverContractSettleRule) {
+                    if (driverContractSettleDto.getPricingMethod().equals(driverContractSettleRule.getPricingMethod())) {
                         //按照区间里程单价 或者按照起步价
-                        contractCapacitySettle(dto, driverContractSettleCondition, driverContractSettleDto, driverContractSettleParam);
+                        contractCapacitySettle(driverContractSettleCondition, driverContractSettleDto, driverContractSettleParam);
+                    } else {
+                        throw new NullPointerException("当前货物类型只能选择一种报价方式");
                     }
+                } else {
+                    //按照区间里程单价 或者按照起步价
+                    contractCapacitySettle(driverContractSettleCondition, driverContractSettleDto, driverContractSettleParam);
                 }
             }
         }
@@ -277,14 +279,13 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     /**
      * 1-按区间重量单价,2-按区间里程单价,3-按照起步价
      *
-     * @param dto
      * @param driverContractSettleCondition
      * @param driverContractSettleDto
      * @param driverContractSettleParam
      * @author @Gao.
      */
 
-    private void contractCapacitySettle(CreateTruckTeamContractDto dto, DriverContractSettleCondition driverContractSettleCondition,
+    private void contractCapacitySettle(DriverContractSettleCondition driverContractSettleCondition,
                                         CreateDriverContractSettleDto driverContractSettleDto, DriverContractSettleParam driverContractSettleParam) {
         driverContractSettleCondition
                 .setFlag(1)
@@ -316,12 +317,14 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
         }
         if (null == driverContractSettleRule) {
             driverContractSettleParam
-                    .setEffectiveTime(dto.getStartDate())
-                    .setInvalidTime(dto.getEndDate());
-            if (judgeExpired(dto.getEndDate())) {
+                    .setEffectiveTime(driverContractSettleDto.getStartDate())
+                    .setInvalidTime(driverContractSettleDto.getEndDate());
+            if (judgeExpired(driverContractSettleDto.getEndDate())) {
                 throw new NullPointerException("合同截止日期应当小于当前时间");
             }
+            //插入合同报价相关表
             saveDriverContractSettle(driverContractSettleDto, driverContractSettleParam, null);
+
         } else {
             TruckTeamContract truckTeamContract = truckTeamContractMapper.selectByPrimaryKey(driverContractSettleRule.getTruckTeamContractId());
             if (truckTeamContract.getEndDate() != null) {
@@ -502,6 +505,31 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
         //批量逻辑删除
         driverContractSettleRuleMapper.deleteDriverContractSettleById(driverContractSettleIds);
         driverContractSettleSectionRuleMapper.deleteDriverContractSettleSectionById(driverContractSettleSectionIds);
+    }
+
+    /**
+     * 获取最新的油价
+     *
+     * @return
+     */
+    @Override
+    public GetContractOilPriceDto getNewOilPrice(ContractOilPriceCondition condition) {
+        ReturnContractOilPriceDto contractIdAndType = null;
+        if (condition.getContractId() != null && condition.getContractType() != null) {
+            contractIdAndType = contractOilPriceMapper.getByContractIdAndType(condition.getContractId(), condition.getContractType());
+        }
+        BaseResponse<UserInfo> globalUser = userClientService.getGlobalUser(contractIdAndType.getCreateUserId());
+        GetContractOilPriceDto contractOilPriceDto = new GetContractOilPriceDto();
+        if (contractIdAndType != null) {
+            if (globalUser.getData() != null) {
+                contractOilPriceDto
+                        .setCreateUserName(globalUser.getData().getName());
+            }
+            contractOilPriceDto
+                    .setOilPrice(contractIdAndType.getPrice())
+                    .setCreateTime(contractIdAndType.getCreateTime());
+        }
+        return contractOilPriceDto;
     }
 
     /**

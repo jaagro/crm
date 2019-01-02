@@ -52,23 +52,22 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
     @Override
     public List<Map<Integer, BigDecimal>> calculatePaymentFromCustomer(List<CalculatePaymentDto> dtoList) {
         List<Map<Integer, BigDecimal>> returnList = new ArrayList<>();
-        if (CollectionUtils.isEmpty(dtoList)){
+        if (CollectionUtils.isEmpty(dtoList)) {
             log.info("O calculatePaymentFromCustomer dtoList isEmpty");
             return returnList;
         }
         log.info("O calculatePaymentFromCustomer begin *****************");
         for (CalculatePaymentDto calculatePaymentDto : dtoList) {
             Integer contractid = calculatePaymentDto.getCustomerContractId();
-            CustomerContract customerContract =  customerContractMapperExt.selectByPrimaryKey(contractid);
-            if(customerContract ==null)
-            {
-                log.info("O calculatePaymentFromCustomer contractid"+contractid+" invalid");
+            CustomerContract customerContract = customerContractMapperExt.selectByPrimaryKey(contractid);
+            if (customerContract == null) {
+                log.info("O calculatePaymentFromCustomer contractid" + contractid + " invalid");
                 continue;
             }
 
             Map<Integer, BigDecimal> map = new HashMap<>();
-            BigDecimal paymentMoney ;
-            BigDecimal unitPrice ;
+            BigDecimal paymentMoney;
+            BigDecimal unitPrice;
             BigDecimal actualMileage;
             BigDecimal minLoadWeight = new BigDecimal(0.00);
             List<CustomerContractSettlePrice> contractSettlePriceList;
@@ -169,14 +168,14 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
                     contractSettlePriceList = customerContractSettlePriceMapperExt.getSectionWeightPrice(contractid, calculatePaymentDto.getDoneDate(), calculatePaymentDto.getSiteDtoList());
 
                     for (CustomerContractSettlePrice customerContractSettlePrice : contractSettlePriceList) {
-                        if(calculatePaymentDto.getTruckTypeId().equals(customerContractSettlePrice.getTruckTypeId())) {
+                        if (calculatePaymentDto.getTruckTypeId().equals(customerContractSettlePrice.getTruckTypeId())) {
                             if (customerContractSettlePrice.getMileage() != null && customerContractSettlePrice.getMileage().compareTo(actualMileage) == 1) {
                                 actualMileage = customerContractSettlePrice.getMileage();
                             }
                         }
                     }
                     for (CustomerContractSettlePrice customerContractSettlePrice : contractSettlePriceList) {
-                        if(calculatePaymentDto.getTruckTypeId().equals(customerContractSettlePrice.getTruckTypeId())) {
+                        if (calculatePaymentDto.getTruckTypeId().equals(customerContractSettlePrice.getTruckTypeId())) {
                             if (actualMileage.compareTo(customerContractSettlePrice.getMileage()) == 0) {
                                 unitPrice = customerContractSettlePrice.getSettlePrice();
                                 break;
@@ -222,14 +221,14 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
                     contractSettlePriceList = customerContractSettlePriceMapperExt.getSectionWeightPrice(contractid, calculatePaymentDto.getDoneDate(), calculatePaymentDto.getSiteDtoList());
 
                     for (CustomerContractSettlePrice customerContractSettlePrice : contractSettlePriceList) {
-                        if(calculatePaymentDto.getTruckTypeId().equals(customerContractSettlePrice.getTruckTypeId())) {
+                        if (calculatePaymentDto.getTruckTypeId().equals(customerContractSettlePrice.getTruckTypeId())) {
                             if (customerContractSettlePrice.getMileage() != null && customerContractSettlePrice.getMileage().compareTo(actualMileage) == 1) {
                                 actualMileage = customerContractSettlePrice.getMileage();
                             }
                         }
                     }
                     for (CustomerContractSettlePrice customerContractSettlePrice : contractSettlePriceList) {
-                        if(calculatePaymentDto.getTruckTypeId().equals(customerContractSettlePrice.getTruckTypeId())) {
+                        if (calculatePaymentDto.getTruckTypeId().equals(customerContractSettlePrice.getTruckTypeId())) {
                             if (actualMileage.compareTo(customerContractSettlePrice.getMileage()) == 0) {
                                 unitPrice = customerContractSettlePrice.getSettlePrice();
                                 break;
@@ -238,14 +237,16 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
                     }
 
                     //结算金额=里程数（公里）✕ 数量（头）✕ 结算基数（元/头/公里）
-                    paymentMoney = actualMileage.multiply(new BigDecimal(calculatePaymentDto.getUnloadQuantity())).multiply(unitPrice).setScale(2,BigDecimal.ROUND_HALF_UP);
+                    paymentMoney = actualMileage.multiply(new BigDecimal(calculatePaymentDto.getUnloadQuantity())).multiply(unitPrice).setScale(2, BigDecimal.ROUND_HALF_UP);
                     map.put(calculatePaymentDto.getWaybillId(), paymentMoney);
                     returnList.add(map);
                     log.info("O calculatePaymentFromCustomer 仔猪结算 end");
                     break;
 
                 //生猪(商品猪)结算
-                case 6:case 3: case 4:
+                case 6:
+                case 3:
+                case 4:
                     log.info("O calculatePaymentFromCustomer 生猪(商品猪)结算 begin");
                     paymentMoney = new BigDecimal(0.00);
                     //根据合同id、装货地Id,卸货地id获取实际里程数:一装多卸时取最大里程作为实际里程数
@@ -253,7 +254,7 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
                     contractSettlePriceList = customerContractSettlePriceMapperExt.getSectionWeightPrice(contractid, calculatePaymentDto.getDoneDate(), calculatePaymentDto.getSiteDtoList());
 
                     for (CustomerContractSettlePrice customerContractSettlePrice : contractSettlePriceList) {
-                        if(calculatePaymentDto.getTruckTypeId().equals(customerContractSettlePrice.getTruckTypeId())) {
+                        if (calculatePaymentDto.getTruckTypeId().equals(customerContractSettlePrice.getTruckTypeId())) {
                             if (customerContractSettlePrice.getMileage() != null && customerContractSettlePrice.getMileage().compareTo(actualMileage) == 1) {
                                 actualMileage = customerContractSettlePrice.getMileage();
                             }
@@ -278,10 +279,10 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
                     //根据合同Id,车型id和运单完成时间获取车型的价格基数,因为不同的车型结算单价不同
                     unitPrice = new BigDecimal(0.00);
                     for (CustomerContractSettlePrice customerContractSettlePrice : contractSettlePriceList) {
-                        if(calculatePaymentDto.getTruckTypeId().equals(customerContractSettlePrice.getTruckTypeId())) {
+                        if (calculatePaymentDto.getTruckTypeId().equals(customerContractSettlePrice.getTruckTypeId())) {
 
-                                unitPrice = customerContractSettlePrice.getSettlePrice();
-                                break;
+                            unitPrice = customerContractSettlePrice.getSettlePrice();
+                            break;
 
                         }
                     }
@@ -292,7 +293,8 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
                     log.info("O calculatePaymentFromCustomer 生猪(商品猪)结算 end");
                     break;
                 default:
-                    System.out.println("没有匹配的货物类型");break;
+                    System.out.println("没有匹配的货物类型");
+                    break;
 
             }
 
@@ -310,88 +312,88 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
     @Override
     public List<Map<Integer, BigDecimal>> calculatePaymentToDriver(List<CalculatePaymentDto> dtoList) {
         List<Map<Integer, BigDecimal>> result = new ArrayList<>();
-        if (CollectionUtils.isEmpty(dtoList)){
+        if (CollectionUtils.isEmpty(dtoList)) {
             log.info("O calculatePaymentToDriver dtoList isEmpty");
             return result;
         }
         for (CalculatePaymentDto calculatePaymentDto : dtoList) {
             // 1 获取合同装卸货地里程,一装多卸取最远里程
             List<SettleMileage> settleMileageList = settleMileageMapperExt.getSettleMileageList(calculatePaymentDto.getCustomerContractId(), calculatePaymentDto.getSiteDtoList());
-            if (CollectionUtils.isEmpty(settleMileageList)){
-                log.warn("O calculatePaymentToDriver settleMileageList isEmpty calculatePaymentDto={}",calculatePaymentDto);
+            if (CollectionUtils.isEmpty(settleMileageList)) {
+                log.warn("O calculatePaymentToDriver settleMileageList isEmpty calculatePaymentDto={}", calculatePaymentDto);
                 continue;
             }
-            if (settleMileageList.size() < calculatePaymentDto.getSiteDtoList().size()){
-                log.warn("O calculatePaymentToDriver settleMileage is not enough calculatePaymentDto={}",calculatePaymentDto);
+            if (settleMileageList.size() < calculatePaymentDto.getSiteDtoList().size()) {
+                log.warn("O calculatePaymentToDriver settleMileage is not enough calculatePaymentDto={}", calculatePaymentDto);
                 continue;
             }
             // 结算里程
             BigDecimal mileage = new BigDecimal("0");
-            for (SettleMileage settleMileage : settleMileageList){
+            for (SettleMileage settleMileage : settleMileageList) {
                 BigDecimal driverSettleMileage = settleMileage.getDriverSettleMileage();
-                if (driverSettleMileage != null && driverSettleMileage.compareTo(mileage) == 1){
+                if (driverSettleMileage != null && driverSettleMileage.compareTo(mileage) == 1) {
                     mileage = driverSettleMileage;
                 }
             }
             // 获取司机合同结算配制信息
-            DriverContractSettleRule driverContractSettleRule = driverContractSettleRuleMapperExt.selectEffectiveOne(calculatePaymentDto.getTruckTeamContractId(),calculatePaymentDto.getTruckTypeId(),calculatePaymentDto.getDoneDate());
+            DriverContractSettleRule driverContractSettleRule = driverContractSettleRuleMapperExt.selectEffectiveOne(calculatePaymentDto.getTruckTeamContractId(), calculatePaymentDto.getTruckTypeId(), calculatePaymentDto.getDoneDate());
             if (driverContractSettleRule == null) {
                 log.warn("O calculatePaymentToDriver driverContractSettleRule isNull calculatePaymentDto={}", calculatePaymentDto);
                 continue;
             }
             // 当司机里程小于最小结算里程,以最小结算里程计算
-            if (driverContractSettleRule.getMinSettleMileage() != null && mileage.compareTo(driverContractSettleRule.getMinSettleMileage()) < 0){
+            if (driverContractSettleRule.getMinSettleMileage() != null && mileage.compareTo(driverContractSettleRule.getMinSettleMileage()) < 0) {
                 mileage = driverContractSettleRule.getMinSettleMileage();
             }
             // 按区间重量单价,按区间里程单价
-            if (!driverContractSettleRule.getPricingMethod().equals(PricingMethod.BEGIN_WEIGHT)){
+            if (!driverContractSettleRule.getPricingMethod().equals(PricingMethod.BEGIN_WEIGHT)) {
                 // 获取里程区间
                 DriverContractSettleSectionRule effectiveSection = null;
                 List<DriverContractSettleSectionRule> settleSectionRuleList = driverContractSettleSectionRuleMapperExt.listByDriverContractSettleRuleId(driverContractSettleRule.getId());
-                if (CollectionUtils.isEmpty(settleSectionRuleList)){
-                    log.warn("O calculatePaymentToDriver settleSectionRuleList isEmpty calculatePaymentDto={}",calculatePaymentDto);
+                if (CollectionUtils.isEmpty(settleSectionRuleList)) {
+                    log.warn("O calculatePaymentToDriver settleSectionRuleList isEmpty calculatePaymentDto={}", calculatePaymentDto);
                     continue;
                 }
-                for (DriverContractSettleSectionRule driverContractSettleSectionRule : settleSectionRuleList){
-                    if (mileage.compareTo(driverContractSettleSectionRule.getStart()) == 1 && mileage.compareTo(driverContractSettleSectionRule.getEnd()) <= 0){
+                for (DriverContractSettleSectionRule driverContractSettleSectionRule : settleSectionRuleList) {
+                    if (mileage.compareTo(driverContractSettleSectionRule.getStart()) == 1 && mileage.compareTo(driverContractSettleSectionRule.getEnd()) <= 0) {
                         effectiveSection = driverContractSettleSectionRule;
                     }
                 }
                 // 饲料结算(结算金额 = 结算重量（吨）✕ 区间重量单价（元/吨）最小结算重量：实际重量数小于最小重量时，按最小重量结算。)
-                if (ProductType.FODDER.equals(calculatePaymentDto.getProductType())){
+                if (ProductType.FODDER.equals(calculatePaymentDto.getProductType())) {
                     BigDecimal settleWeight = calculatePaymentDto.getUnloadWeight();
-                    if (calculatePaymentDto.getUnloadWeight() != null && effectiveSection.getSettlePrice() != null){
-                        if (settleWeight.compareTo(driverContractSettleRule.getMinSettleWeight()) < 0){
+                    if (calculatePaymentDto.getUnloadWeight() != null && effectiveSection.getSettlePrice() != null) {
+                        if (settleWeight.compareTo(driverContractSettleRule.getMinSettleWeight()) < 0) {
                             settleWeight = driverContractSettleRule.getMinSettleWeight();
                         }
-                        BigDecimal settlePrice = settleWeight.multiply(effectiveSection.getSettlePrice()).setScale(2,BigDecimal.ROUND_HALF_UP);
+                        BigDecimal settlePrice = settleWeight.multiply(effectiveSection.getSettlePrice()).setScale(2, BigDecimal.ROUND_HALF_UP);
                         Map<Integer, BigDecimal> settlePriceMap = new HashMap<>(2);
-                        settlePriceMap.put(calculatePaymentDto.getWaybillId(),settlePrice);
+                        settlePriceMap.put(calculatePaymentDto.getWaybillId(), settlePrice);
                         result.add(settlePriceMap);
                     }
-                }else{
+                } else {
                     // 毛鸡/仔猪/生猪结算(结算金额 = 里程（公里）✕ 区间里程单价（元/公里）,最小结算里程：实际里程数小于最小里程时，按最小里程结算。)
-                    BigDecimal settlePrice = mileage.multiply(effectiveSection.getSettlePrice()).setScale(2,BigDecimal.ROUND_HALF_UP);
+                    BigDecimal settlePrice = mileage.multiply(effectiveSection.getSettlePrice()).setScale(2, BigDecimal.ROUND_HALF_UP);
                     Map<Integer, BigDecimal> settlePriceMap = new HashMap<>(2);
-                    settlePriceMap.put(calculatePaymentDto.getWaybillId(),settlePrice);
+                    settlePriceMap.put(calculatePaymentDto.getWaybillId(), settlePrice);
                     result.add(settlePriceMap);
                 }
-            // 按起步里程+里程单价,结算金额 = 起步价（元）+ 结算单价 ✕（实际里程 - 起小里程）
-            }else {
-                if (driverContractSettleRule.getBeginMileage() != null && mileage.compareTo(driverContractSettleRule.getBeginMileage()) < 0){
+                // 按起步里程+里程单价,结算金额 = 起步价（元）+ 结算单价 ✕（实际里程 - 起小里程）
+            } else {
+                if (driverContractSettleRule.getBeginMileage() != null && mileage.compareTo(driverContractSettleRule.getBeginMileage()) < 0) {
                     BigDecimal settlePrice = driverContractSettleRule.getBeginPrice();
                     Map<Integer, BigDecimal> settlePriceMap = new HashMap<>(2);
-                    settlePriceMap.put(calculatePaymentDto.getWaybillId(),settlePrice);
+                    settlePriceMap.put(calculatePaymentDto.getWaybillId(), settlePrice);
                     result.add(settlePriceMap);
-                }else {
-                    if (driverContractSettleRule.getBeginPrice() != null && driverContractSettleRule.getBeginMileage() != null && driverContractSettleRule.getMileagePrice() != null){
-                        BigDecimal settlePrice = driverContractSettleRule.getBeginPrice().add(mileage.subtract(driverContractSettleRule.getBeginMileage()).multiply(driverContractSettleRule.getMileagePrice())).setScale(2,BigDecimal.ROUND_HALF_UP);
+                } else {
+                    if (driverContractSettleRule.getBeginPrice() != null && driverContractSettleRule.getBeginMileage() != null && driverContractSettleRule.getMileagePrice() != null) {
+                        BigDecimal settlePrice = driverContractSettleRule.getBeginPrice().add(mileage.subtract(driverContractSettleRule.getBeginMileage()).multiply(driverContractSettleRule.getMileagePrice())).setScale(2, BigDecimal.ROUND_HALF_UP);
                         Map<Integer, BigDecimal> settlePriceMap = new HashMap<>(2);
-                        settlePriceMap.put(calculatePaymentDto.getWaybillId(),settlePrice);
+                        settlePriceMap.put(calculatePaymentDto.getWaybillId(), settlePrice);
                         result.add(settlePriceMap);
-                    }else {
-                       log.warn("O calculatePaymentToDriver driverContractSettleRule value is not enough,calculatePaymentDto={}",calculatePaymentDto);
-                       continue;
+                    } else {
+                        log.warn("O calculatePaymentToDriver driverContractSettleRule value is not enough,calculatePaymentDto={}", calculatePaymentDto);
+                        continue;
                     }
                 }
             }
@@ -407,9 +409,9 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
      * @return
      */
     @Override
-    public BigDecimal calculatePriceFromMileageSection(Integer customerContractId,BigDecimal mileage) {
-        BigDecimal price = customerContractSettleSectionRuleMapperExt.getPriceByMileageAndContractId(customerContractId,mileage);
-        if (price == null){
+    public BigDecimal calculatePriceFromMileageSection(Integer customerContractId, BigDecimal mileage) {
+        BigDecimal price = customerContractSettleSectionRuleMapperExt.getPriceByMileageAndContractId(customerContractId, mileage);
+        if (price == null) {
             throw new RuntimeException("未能查询到该里程的报价");
         }
         return price;

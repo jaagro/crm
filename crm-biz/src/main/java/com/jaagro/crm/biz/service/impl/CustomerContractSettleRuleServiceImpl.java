@@ -4,18 +4,17 @@ import com.jaagro.crm.api.constant.ProductType;
 import com.jaagro.crm.api.dto.request.contract.CreateCustomerSettleRuleDto;
 import com.jaagro.crm.api.dto.request.contract.CreateCustomerSettleSectionRuleDto;
 import com.jaagro.crm.api.dto.request.contract.CreateCustomerSettleTruckRuleDto;
-import com.jaagro.crm.api.dto.request.contract.QuerySettleRuleDto;
 import com.jaagro.crm.api.dto.request.customer.CreateContractOilPriceDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnCustomerSettleRuleDto;
 import com.jaagro.crm.api.service.ContractOilPriceService;
 import com.jaagro.crm.api.service.CtmContractSettleSectionRuleService;
 import com.jaagro.crm.api.service.CtmContractSettleTruckService;
 import com.jaagro.crm.api.service.CustomerContractSettleRuleService;
-import com.jaagro.crm.biz.entity.ContractOilPrice;
 import com.jaagro.crm.biz.entity.CustomerContract;
 import com.jaagro.crm.biz.entity.CustomerContractSettleRule;
 import com.jaagro.crm.biz.mapper.CustomerContractMapperExt;
 import com.jaagro.crm.biz.mapper.CustomerContractSettleRuleMapperExt;
+import com.jaagro.crm.biz.mapper.TruckTypeMapperExt;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +45,8 @@ public class CustomerContractSettleRuleServiceImpl implements CustomerContractSe
     private CustomerContractMapperExt contractMapperExt;
     @Autowired
     private ContractOilPriceService contractOilPriceService;
+    @Autowired
+    private TruckTypeMapperExt truckTypeMapperExt;
 
     /**
      * 创建结算配制
@@ -55,9 +56,9 @@ public class CustomerContractSettleRuleServiceImpl implements CustomerContractSe
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Boolean createSettleRule(CreateCustomerSettleRuleDto settleRuleDto,CreateContractOilPriceDto oilPriceDto) {
+    public Boolean createSettleRule(CreateCustomerSettleRuleDto settleRuleDto, CreateContractOilPriceDto oilPriceDto) {
         Boolean oilPrice = contractOilPriceService.createOilPrice(oilPriceDto);
-        if (oilPrice != null && oilPrice){
+        if (oilPrice != null && oilPrice) {
             return createCustomerSettleRule(settleRuleDto);
         }
         return Boolean.FALSE;
@@ -80,16 +81,10 @@ public class CustomerContractSettleRuleServiceImpl implements CustomerContractSe
         return ruleDto;
     }
 
-    private Boolean createCustomerSettleRule(CreateCustomerSettleRuleDto settleRuleDto){
+    private Boolean createCustomerSettleRule(CreateCustomerSettleRuleDto settleRuleDto) {
         Boolean flag = false;
         if (StringUtils.isEmpty(settleRuleDto.getCustomerContractId())) {
             throw new RuntimeException("createSettleRule 创建结算配制合同id不能为空");
-        }
-        if (StringUtils.isEmpty(settleRuleDto.getStartMileage())) {
-            throw new RuntimeException("createSettleRule 创建结算配制起始里程不能为空");
-        }
-        if (StringUtils.isEmpty(settleRuleDto.getEndMileage())) {
-            throw new RuntimeException("createSettleRule 创建结算配制结束里程不能为空");
         }
         CustomerContractSettleRule settleRule = new CustomerContractSettleRule();
         BeanUtils.copyProperties(settleRuleDto, settleRule);
@@ -99,7 +94,7 @@ public class CustomerContractSettleRuleServiceImpl implements CustomerContractSe
             throw new RuntimeException("createSettleRule 创建结算配制合同不存在");
         }
         if (customerContract.getType().equals(ProductType.CHICKEN)) {
-            if (CollectionUtils.isEmpty(settleRuleDto.getTruckRuleDtoList())) {
+            if (CollectionUtils.isEmpty(settleRuleDto.getSectionRuleDtoList())) {
                 throw new RuntimeException("毛鸡类型的合同里程区间配制不能为空");
             }
         }
@@ -147,6 +142,7 @@ public class CustomerContractSettleRuleServiceImpl implements CustomerContractSe
             if (!CollectionUtils.isEmpty(settleRuleDto.getTruckRuleDtoList())) {
                 for (CreateCustomerSettleTruckRuleDto truckRuleDto : settleRuleDto.getTruckRuleDtoList()) {
                     truckRuleDto
+                            .setTruckTypeName(truckTypeMapperExt.selectByPrimaryKey(truckRuleDto.getTruckTypeId()).getTypeName())
                             .setCustomerContractId(settleRule.getCustomerContractId())
                             .setCustomerContractSettleRuleId(settleRule.getId());
                     Boolean truckResult = settleTruckService.createSettleTruck(truckRuleDto);

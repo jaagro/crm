@@ -599,12 +599,14 @@ public class ContractController {
         }
         //油价
         CreateContractOilPriceDto oilPriceDto = settleDto.getOilPriceDto();
-        oilPriceDto.setContractId(settleDto.getContractId());
+        oilPriceDto
+                .setContractId(settleDto.getContractId())
+                .setContractType(ContractType.CUSTOMER);
         //结算配置
         CreateCustomerSettleRuleDto ruleDto = settleDto.getRuleDto();
         ruleDto.setCustomerContractId(settleDto.getContractId());
         try {
-            Boolean ruleResult = settleRuleService.createSettleRule(ruleDto,oilPriceDto);
+            Boolean ruleResult = settleRuleService.createSettleRule(ruleDto, oilPriceDto);
             if (!ruleResult) {
                 return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "创建合同结算配置失败");
             }

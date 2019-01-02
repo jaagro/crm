@@ -1,7 +1,10 @@
 package com.jaagro.crm.api.service;
 
 import com.github.pagehelper.PageInfo;
+import com.jaagro.crm.api.dto.request.contract.ContractOilPriceCondition;
+import com.jaagro.crm.api.dto.request.contract.CreateDriverContractSettleDto;
 import com.jaagro.crm.api.dto.request.contract.DriverContractSettleCondition;
+import com.jaagro.crm.api.dto.request.contract.GetContractOilPriceDto;
 import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContractDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckTeamContractCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamContractDto;
@@ -72,7 +75,7 @@ public interface TruckTeamContractService {
     /**
      * 创建车队合同报价
      */
-    void createTruckTeamContractPrice(CreateTruckTeamContractDto dto, Integer userId, Integer contractId);
+    void createTruckTeamContractPrice(CreateDriverContractSettleDto createDriverContractSettleDto);
 
     /**
      * 运力合同报价列表
@@ -112,5 +115,13 @@ public interface TruckTeamContractService {
      * @param condition
      */
     void deleteTeamContractPrice(DriverContractSettleCondition condition);
+
+    /**
+     * 获取最新的油价
+     *
+     * @return
+     */
+    GetContractOilPriceDto getNewOilPrice(ContractOilPriceCondition condition);
+
 
 }

@@ -99,7 +99,7 @@ public class ContractServiceImpl implements ContractService {
                 contractQualificationService.createQuation(qualificationDto);
             }
         }
-        return ServiceResult.toResult("合同创建成功");
+        return ServiceResult.toResult(customerContract.getId());
     }
 
     @CacheEvict(cacheNames = "customer", allEntries = true)
