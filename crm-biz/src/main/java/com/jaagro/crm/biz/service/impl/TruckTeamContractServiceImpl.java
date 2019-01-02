@@ -521,7 +521,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     /**
      * 获取最新的油价
      *
-     * 
+     *
      * @return
      */
     @Override
