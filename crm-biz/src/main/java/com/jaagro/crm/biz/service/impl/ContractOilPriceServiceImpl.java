@@ -58,14 +58,6 @@ public class ContractOilPriceServiceImpl implements ContractOilPriceService {
             log.error("createOilPrice 创建油价配制合同类型不能为空");
             return flag;
         }
-        if (StringUtils.isEmpty(createContractOilPriceDto.getEffectiveTime())) {
-            log.error("createOilPrice 创建油价配制起始时间不能为空");
-            return flag;
-        }
-        if (StringUtils.isEmpty(createContractOilPriceDto.getInvalidTime())) {
-            log.error("createOilPrice 创建油价配制失效时间不能为空");
-            return flag;
-        }
         ContractOilPrice oilPrice = new ContractOilPrice();
         //查询是否存在历史记录
         CustomerContract customerContract = null;
@@ -79,6 +71,7 @@ public class ContractOilPriceServiceImpl implements ContractOilPriceService {
         }
         List<ContractOilPrice> oilPriceList = oilPriceMapperExt.listByContractIdAndType(createContractOilPriceDto.getContractId(), createContractOilPriceDto.getContractType());
         UserInfo currentUser = userService.getCurrentUser();
+        BeanUtils.copyProperties(createContractOilPriceDto, oilPrice);
         if (!CollectionUtils.isEmpty(oilPriceList)) {
             ContractOilPrice price = oilPriceList.get(0);
             //将已存在的记录设置为历史 && 截止日期设置为当前日期
@@ -98,7 +91,6 @@ public class ContractOilPriceServiceImpl implements ContractOilPriceService {
                     .setEffectiveTime(ContractType.CUSTOMER.equals(createContractOilPriceDto.getContractType())
                             ? customerContract.getStartDate() : truckTeamContract.getStartDate());
         }
-        BeanUtils.copyProperties(createContractOilPriceDto, oilPrice);
         if (ContractType.CUSTOMER.equals(createContractOilPriceDto.getContractType()) && customerContract == null) {
             log.error("createOilPrice 创建油价配制合同不存在");
             return flag;

@@ -86,12 +86,6 @@ public class CustomerContractSettleRuleServiceImpl implements CustomerContractSe
         if (StringUtils.isEmpty(settleRuleDto.getCustomerContractId())) {
             throw new RuntimeException("createSettleRule 创建结算配制合同id不能为空");
         }
-        if (StringUtils.isEmpty(settleRuleDto.getStartMileage())) {
-            throw new RuntimeException("createSettleRule 创建结算配制起始里程不能为空");
-        }
-        if (StringUtils.isEmpty(settleRuleDto.getEndMileage())) {
-            throw new RuntimeException("createSettleRule 创建结算配制结束里程不能为空");
-        }
         CustomerContractSettleRule settleRule = new CustomerContractSettleRule();
         BeanUtils.copyProperties(settleRuleDto, settleRule);
         //货物类型为毛鸡
@@ -100,7 +94,7 @@ public class CustomerContractSettleRuleServiceImpl implements CustomerContractSe
             throw new RuntimeException("createSettleRule 创建结算配制合同不存在");
         }
         if (customerContract.getType().equals(ProductType.CHICKEN)) {
-            if (CollectionUtils.isEmpty(settleRuleDto.getTruckRuleDtoList())) {
+            if (CollectionUtils.isEmpty(settleRuleDto.getSectionRuleDtoList())) {
                 throw new RuntimeException("毛鸡类型的合同里程区间配制不能为空");
             }
         }
