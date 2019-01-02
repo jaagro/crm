@@ -46,9 +46,6 @@ public class TruckTeamContractController {
     private TruckTeamMapperExt truckTeamMapper;
     @Autowired
     private UserClientService userClientService;
-    @Autowired
-    private CurrentUserService currentUserService;
-
 
     /**
      * 新增合同

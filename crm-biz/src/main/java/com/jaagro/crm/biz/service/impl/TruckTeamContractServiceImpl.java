@@ -104,10 +104,6 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                 this.contractQualificationService.createQuation(qualificationDto);
             }
         }
-        //创建运力合同报价
-//        if (dto.getCreateDriverContractSettleDto() != null) {
-//            truckTeamContractService.createTruckTeamContractPrice(dto, currentUser.getId(), truckTeamContract.getId());
-//        }
         return ServiceResult.toResult(truckTeamContract.getId());
     }
 
@@ -329,14 +325,14 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                 throw new NullPointerException("合同截止日期应当小于当前时间");
             }
             //插入油价
-            CreateContractOilPriceDto createContractOilPriceDto = new CreateContractOilPriceDto();
-            createContractOilPriceDto
-                    .setContractType(ContractType.DRIVER)
-                    .setContractId(driverContractSettleParam.getTruckTeamContractId())
-                    .setEffectiveTime(driverContractSettleParam.getEffectiveTime())
-                    .setInvalidTime(driverContractSettleParam.getInvalidTime())
-                    .setPrice(driverContractSettleDto.getOilPrice());
-            contractOilPriceService.createOilPrice(createContractOilPriceDto);
+//            CreateContractOilPriceDto createContractOilPriceDto = new CreateContractOilPriceDto();
+//            createContractOilPriceDto
+//                    .setContractType(ContractType.DRIVER)
+//                    .setContractId(driverContractSettleParam.getTruckTeamContractId())
+//                    .setEffectiveTime(driverContractSettleParam.getEffectiveTime())
+//                    .setInvalidTime(driverContractSettleParam.getInvalidTime())
+//                    .setPrice(driverContractSettleDto.getOilPrice() == null ? null : driverContractSettleDto.getOilPrice());
+//            contractOilPriceService.createOilPrice(createContractOilPriceDto);
             //插入合同报价相关表
             saveDriverContractSettle(driverContractSettleDto, driverContractSettleParam, null);
 
@@ -529,7 +525,10 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
      */
     @Override
     public GetContractOilPriceDto getNewOilPrice(ContractOilPriceCondition condition) {
-        ReturnContractOilPriceDto contractIdAndType = contractOilPriceMapper.getByContractIdAndType(condition.getContractId(), condition.getContractType());
+        ReturnContractOilPriceDto contractIdAndType = null;
+        if (condition.getContractId() != null && condition.getContractType() != null) {
+            contractIdAndType = contractOilPriceMapper.getByContractIdAndType(condition.getContractId(), condition.getContractType());
+        }
         BaseResponse<UserInfo> globalUser = userClientService.getGlobalUser(contractIdAndType.getCreateUserId());
         GetContractOilPriceDto contractOilPriceDto = new GetContractOilPriceDto();
         if (contractIdAndType != null) {

@@ -15,7 +15,6 @@ import java.util.List;
 @Accessors(chain = true)
 public class CreateDriverContractSettleDto implements Serializable {
 
-
     private static final long serialVersionUID = 2328859250127634282L;
 
     /**

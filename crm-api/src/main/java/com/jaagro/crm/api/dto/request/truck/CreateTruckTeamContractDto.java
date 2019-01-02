@@ -51,11 +51,4 @@ public class CreateTruckTeamContractDto implements Serializable {
      * 合同资质证件照
      */
     private List<CreateContractQualificationDto> qualificationDtoList;
-
-    /**
-     * 创建运力合同报价
-     */
-    private CreateDriverContractSettleDto createDriverContractSettleDto;
-
-
 }
