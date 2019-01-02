@@ -2,7 +2,6 @@ package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.api.dto.request.express.QueryExpressDto;
 import com.jaagro.crm.api.dto.response.express.ExpressReturnDto;
-import com.jaagro.crm.api.entity.Express;
 
 import java.util.List;
 
@@ -22,5 +21,4 @@ public interface ExpressMapperExt extends ExpressMapper {
     List<ExpressReturnDto> listByCriteria(QueryExpressDto criteriaDto);
 
 
-//    ExpressReturnDto getExpressById(Integer id);
 }

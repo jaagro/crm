@@ -1,7 +1,5 @@
 package com.jaagro.crm.api.dto.response.express;
 
-import com.jaagro.constant.UserInfo;
-import com.jaagro.crm.api.dto.response.news.NewsCategoryReturnDto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

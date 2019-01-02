@@ -1,5 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jaagro.crm.biz.mapper.ExpressMapperExt" >
-
+<mapper namespace="com.jaagro.crm.biz.mapper.ExpressMapperExt">
+    <select id="listByCriteria" resultType="com.jaagro.crm.api.dto.response.express.ExpressReturnDto">
+        select
+        <include refid="Base_Column_List"/>
+        from express t
+        <where>
+            enable=1
+            <![CDATA[
+                <if test="tags != null and tags !=''">
+                    and (t.tags like concat('%',#{tags},'%') )>
+                </if>
+                <if test="categoryId != null and categoryId !=''">
+                    and categoryId = #{categoryId}
+                </if>
+                <if test="strDate==oneday">
+                  and publish_time > DATE_ADD(NOW(),INTERVAL -1 DAY)
+                </if>
+                <if test="strDate==twoday">
+                  and publish_time > DATE_ADD(NOW(),INTERVAL -2 DAY)
+                </if>
+                <if test="strDate==oneweek">
+                  and publish_time > DATE_ADD(NOW(),INTERVAL -7 DAY)
+                </if>
+                <if test="strDate==onemonth">
+                  and publish_time > DATE_ADD(NOW(),INTERVAL -30 DAY)
+                </if>
+                <if test="strDate==threeweek">
+                  and publish_time > DATE_ADD(NOW(),INTERVAL -90 DAY)
+                </if>
+            ]]>
+        </where>
+    </select>
 </mapper>
