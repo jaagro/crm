@@ -91,7 +91,9 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
         Map<String, Object> result = new HashMap<>();
         result.put(ServiceKey.success.name(), Boolean.FALSE);
         if (!existMessage){
-            throw new RuntimeException("验证码不正确");
+            result.put(ServiceKey.success.name(),Boolean.FALSE);
+            result.put(ServiceKey.msg.name(),"验证码不正确");
+            return result;
         }
         SocialDriverRegisterPurpose socialDriverRegisterPurpose = socialDriverRegisterPurposeMapperExt.selectByPhoneNumber(phoneNumber);
         if (socialDriverRegisterPurpose != null) {

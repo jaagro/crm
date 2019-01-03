@@ -69,9 +69,7 @@ public class CustomerRegisterPurposeServiceImpl implements CustomerRegisterPurpo
         Map<String,Object> result = new HashMap<>(3);
         boolean existMessage = verificationCodeClientService.existMessage(phoneNumber, verificationCode);
         if (!existMessage) {
-            result.put(ServiceKey.success.name(),Boolean.FALSE);
-            result.put(ServiceKey.msg.name(),"验证码不正确");
-            return result;
+            throw new RuntimeException("验证码不正确");
         }
         result.put(ServiceKey.success.name(),Boolean.FALSE);
         CustomerRegisterPurpose customerRegisterPurpose = customerRegisterPurposeMapperExt.selectByPhoneNumber(phoneNumber);
