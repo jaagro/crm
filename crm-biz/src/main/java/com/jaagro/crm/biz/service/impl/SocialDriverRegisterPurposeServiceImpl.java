@@ -91,10 +91,11 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
         Map<String, Object> result = new HashMap<>();
         result.put(ServiceKey.success.name(), Boolean.FALSE);
         if (!existMessage){
-            result.put(ServiceKey.success.name(),Boolean.FALSE);
+            result.put("verifyCodeResult",Boolean.FALSE);
             result.put(ServiceKey.msg.name(),"验证码不正确");
             return result;
         }
+        result.put("verifyCodeResult",Boolean.TRUE);
         SocialDriverRegisterPurpose socialDriverRegisterPurpose = socialDriverRegisterPurposeMapperExt.selectByPhoneNumber(phoneNumber);
         if (socialDriverRegisterPurpose != null) {
             judgeSocialDriver(socialDriverRegisterPurpose,result);
