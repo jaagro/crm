@@ -101,6 +101,17 @@ public class CreateTruckDto implements Serializable {
     private String notes;
 
     /**
+     * 百公里油耗
+     */
+    private BigDecimal fuelConsumption;
+
+    /**
+     * 车辆类型
+     * 常量--TruckVehicleType
+     */
+    private Integer vehicleType;
+
+    /**
      * 车辆资质列表
      */
     private List<UpdateTruckQualificationDto> truckQualifications;
