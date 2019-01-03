@@ -110,6 +110,7 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
                 .setId(nextUserId);
         socialDriverRegisterPurposeMapperExt.insertSelective(socialDriverRegisterPurpose);
         result.put(ServiceKey.success.name(), Boolean.TRUE);
+        result.put("userType","");
         return result;
     }
 

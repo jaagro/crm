@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 客户注册意向管理
@@ -42,10 +43,10 @@ public class CustomerRegisterPurposeController {
 
     @PostMapping("/customerRegister")
     @ApiOperation("创建客户")
-    public BaseResponse<Integer> createCustomerRegisterByPhoneNumber(@RequestParam("phoneNumber") String phoneNumber, @RequestParam("verificationCode") String verificationCode) {
+    public BaseResponse<Map<String,Object>> createCustomerRegisterByPhoneNumber(@RequestParam("phoneNumber") String phoneNumber, @RequestParam("verificationCode") String verificationCode) {
         log.info("O createCustomerRegisterByPhoneNumber phoneNumber={},verificationCode={}", phoneNumber, verificationCode);
-        Integer id = customerRegisterPurposeService.createCustomerRegisterByPhoneNumber(phoneNumber, verificationCode);
-        return BaseResponse.successInstance(id);
+        Map<String,Object> result = customerRegisterPurposeService.createCustomerRegisterByPhoneNumber(phoneNumber, verificationCode);
+        return BaseResponse.successInstance(result);
     }
 
     @GetMapping("/customerRegisterPurpose/{id}")
