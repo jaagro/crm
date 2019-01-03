@@ -89,13 +89,13 @@ public class CustomerRegisterPurposeServiceImpl implements CustomerRegisterPurpo
             if (customerUserDto != null) {
                 if (CustomerUserType.LOAD_SITE.equals(customerUserDto.getCustomerType())){
                     result.put("userType",UserType.LOAD_SITE);
-                    result.put(ServiceKey.msg.name(),"该手机号已注册为装货地客户");
+                    result.put(ServiceKey.msg.name(),"该手机号已注册为装货地客户,请直接登录");
                 }else if (CustomerUserType.UNLOAD_SITE.equals(customerUserDto.getCustomerType())){
                     result.put("userType",UserType.UNLOAD_SITE);
-                    result.put(ServiceKey.msg.name(),"该手机号已注册为卸货地客户");
+                    result.put(ServiceKey.msg.name(),"该手机号已注册为卸货地客户,请直接登录");
                 }else {
                     result.put("userType", UserType.CUSTOMER);
-                    result.put(ServiceKey.msg.name(),"该手机号已注册为正式客户");
+                    result.put(ServiceKey.msg.name(),"该手机号已注册为正式客户,请直接登录");
                 }
                 return result;
             }

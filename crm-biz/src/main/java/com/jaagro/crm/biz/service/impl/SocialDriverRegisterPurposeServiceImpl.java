@@ -231,7 +231,7 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
             DriverReturnDto driverReturnDto = response.getData();
             if (driverReturnDto != null) {
                 result.put("userType",UserType.DRIVER);
-                result.put(ServiceKey.msg.name(), "该手机号已注册为正式司机");
+                result.put(ServiceKey.msg.name(), "该手机号已注册为正式司机,请直接登录");
             }
         }
     }
