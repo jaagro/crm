@@ -189,8 +189,10 @@ public class ContractServiceImpl implements ContractService {
             for (ReturnCustomerSettlePriceDto settlePriceDto : settlePriceDtoList) {
                 settlePriceDto
                         .setLoadSiteName(siteMapperExt.selectByPrimaryKey(settlePriceDto.getLoadSiteId()).getSiteName())
-                        .setUnloadSiteName(siteMapperExt.selectByPrimaryKey(settlePriceDto.getUnloadSiteId()).getSiteName())
-                        .setTruckTypeName(truckTypeMapperExt.selectByPrimaryKey(settlePriceDto.getTruckTypeId()).getTypeName());
+                        .setUnloadSiteName(siteMapperExt.selectByPrimaryKey(settlePriceDto.getUnloadSiteId()).getSiteName());
+                if (!StringUtils.isEmpty(settlePriceDto.getTruckTypeId())) {
+                    settlePriceDto.setTruckTypeName(truckTypeMapperExt.selectByPrimaryKey(settlePriceDto.getTruckTypeId()).getTypeName());
+                }
             }
             contractDto.setSettlePriceDtoList(settlePriceDtoList);
         }
