@@ -123,4 +123,14 @@ public class Truck implements Serializable {
      * 行驶证号码
      */
     private String drivingPermit;
+
+    /**
+     * 百公里油耗
+     */
+    private BigDecimal fuelConsumption;
+
+    /**
+     * 车辆类型
+     */
+    private Integer vehicleType;
 }
