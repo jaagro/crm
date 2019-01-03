@@ -20,8 +20,6 @@ import com.jaagro.crm.biz.service.UserClientService;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -324,15 +322,6 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
             if (judgeExpired(driverContractSettleDto.getEndDate())) {
                 throw new NullPointerException("合同截止日期应当小于当前时间");
             }
-            //插入油价
-            CreateContractOilPriceDto createContractOilPriceDto = new CreateContractOilPriceDto();
-            createContractOilPriceDto
-                    .setContractType(ContractType.DRIVER)
-                    .setContractId(driverContractSettleParam.getTruckTeamContractId())
-                    .setEffectiveTime(driverContractSettleParam.getEffectiveTime())
-                    .setInvalidTime(driverContractSettleParam.getInvalidTime())
-                    .setPrice(driverContractSettleDto.getOilPrice() == null ? null : driverContractSettleDto.getOilPrice());
-            contractOilPriceService.createOilPrice(createContractOilPriceDto);
             //插入合同报价相关表
             saveDriverContractSettle(driverContractSettleDto, driverContractSettleParam, null);
 
