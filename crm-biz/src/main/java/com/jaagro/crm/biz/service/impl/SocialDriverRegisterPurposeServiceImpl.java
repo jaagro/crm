@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.constant.Constants;
+import com.jaagro.crm.api.constant.UserType;
 import com.jaagro.crm.api.dto.request.socialDriver.ListDriverRegisterPurposeCriteriaDto;
 import com.jaagro.crm.api.dto.request.socialDriver.UpdateSocialDriverRegisterPurposeDto;
 import com.jaagro.crm.api.dto.response.socialDriverRegister.SocialDriverRegisterPurposeDto;
@@ -85,21 +86,22 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
      * @param verificationCode
      */
     @Override
-    public Integer createSocialDriverByPhoneNumber(String phoneNumber,String verificationCode) {
+    public Map<String,Object> createSocialDriverByPhoneNumber(String phoneNumber,String verificationCode) {
         boolean existMessage = verificationCodeClientService.existMessage(phoneNumber, verificationCode);
+        Map<String, Object> result = new HashMap<>();
+        result.put(ServiceKey.success.name(), Boolean.FALSE);
         if (!existMessage){
             throw new RuntimeException("验证码不正确");
         }
         SocialDriverRegisterPurpose socialDriverRegisterPurpose = socialDriverRegisterPurposeMapperExt.selectByPhoneNumber(phoneNumber);
         if (socialDriverRegisterPurpose != null) {
-            throw new RuntimeException("该手机号已注册");
+            judgeSocialDriver(socialDriverRegisterPurpose,result);
+            return result;
         }
         BaseResponse<DriverReturnDto> response = driverClientService.getByPhoneNumber(phoneNumber);
-        if (ResponseStatusCode.OPERATION_SUCCESS.getCode() == response.getStatusCode()) {
-            DriverReturnDto driverReturnDto = response.getData();
-            if (driverReturnDto != null) {
-                throw new RuntimeException("该手机号已注册");
-            }
+        judgeDriverResponse(response,result);
+        if (result.containsKey("userType")){
+            return result;
         }
         int nextUserId = userClientService.getNextUserId();
         socialDriverRegisterPurpose = new SocialDriverRegisterPurpose();
@@ -107,7 +109,8 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
                 .setCreateTime(new Date())
                 .setId(nextUserId);
         socialDriverRegisterPurposeMapperExt.insertSelective(socialDriverRegisterPurpose);
-        return socialDriverRegisterPurpose.getId();
+        result.put(ServiceKey.success.name(), Boolean.TRUE);
+        return result;
     }
 
     /**
@@ -125,18 +128,13 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
         result.put(ServiceKey.success.name(), Boolean.FALSE);
         SocialDriverRegisterPurpose socialDriverRegisterPurpose = socialDriverRegisterPurposeMapperExt.selectByPhoneNumber(phoneNumber);
         if (socialDriverRegisterPurpose != null) {
-            result.put(ServiceKey.status.name(), ResponseStatusCode.QUERY_DATA_ERROR.getCode());
-            result.put(ServiceKey.msg.name(), "该手机号已注册");
+            judgeSocialDriver(socialDriverRegisterPurpose,result);
             return result;
         }
         BaseResponse<DriverReturnDto> response = driverClientService.getByPhoneNumber(phoneNumber);
-        if (ResponseStatusCode.OPERATION_SUCCESS.getCode() == response.getStatusCode()) {
-            DriverReturnDto driverReturnDto = response.getData();
-            if (driverReturnDto != null) {
-                result.put(ServiceKey.status.name(), ResponseStatusCode.QUERY_DATA_ERROR.getCode());
-                result.put(ServiceKey.msg.name(), "该手机号已注册为正式司机");
-                return result;
-            }
+        judgeDriverResponse(response,result);
+        if (result.containsKey("userType")){
+            return result;
         }
         sendSMS(phoneNumber);
         result.put(ServiceKey.success.name(), Boolean.TRUE);
@@ -215,5 +213,25 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
             return socialDriverRegisterPurposeDto;
         }
         return null;
+    }
+
+    private void judgeSocialDriver(SocialDriverRegisterPurpose socialDriverRegisterPurpose,Map<String,Object> result){
+        if (socialDriverRegisterPurpose.getUploadFlag() != null && socialDriverRegisterPurpose.getUploadFlag()){
+            result.put("userType",UserType.VISITOR_DRIVER_U);
+            result.put(ServiceKey.msg.name(), "该手机号已加入平台");
+        }else {
+            result.put("userType",UserType.VISITOR_DRIVER_P);
+            result.put(ServiceKey.msg.name(), "该手机号已注册");
+        }
+    }
+
+    private void judgeDriverResponse(BaseResponse<DriverReturnDto> response,Map<String,Object> result){
+        if (ResponseStatusCode.OPERATION_SUCCESS.getCode() == response.getStatusCode()) {
+            DriverReturnDto driverReturnDto = response.getData();
+            if (driverReturnDto != null) {
+                result.put("userType",UserType.DRIVER);
+                result.put(ServiceKey.msg.name(), "该手机号已注册为正式司机");
+            }
+        }
     }
 }
