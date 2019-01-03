@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 社会司机注册意向管理
@@ -44,15 +45,15 @@ public class SocialDriverRegisterPurposeController {
     @ApiOperation("注册登录发送验证码")
     @Deprecated
     public BaseResponse registerSendSMS(@RequestParam("phoneNumber") String phoneNumber) {
-        return BaseResponse.service(socialDriverRegisterPurposeService.registerSendSMS(phoneNumber));
+        return BaseResponse.successInstance(socialDriverRegisterPurposeService.registerSendSMS(phoneNumber));
     }
 
     @PostMapping("/socialDriver")
     @ApiOperation("创建社会司机")
-    public BaseResponse<Integer> createSocialDriverByPhoneNumber(@RequestParam("phoneNumber") String phoneNumber,@RequestParam("verificationCode") String verificationCode) {
+    public BaseResponse<Map<String,Object>> createSocialDriverByPhoneNumber(@RequestParam("phoneNumber") String phoneNumber,@RequestParam("verificationCode") String verificationCode) {
         log.info("O createSocialDriverByPhoneNumber phoneNumber={},verificationCode={}",phoneNumber,verificationCode);
-        Integer id = socialDriverRegisterPurposeService.createSocialDriverByPhoneNumber(phoneNumber,verificationCode);
-        return BaseResponse.successInstance(id);
+        Map<String,Object> result = socialDriverRegisterPurposeService.createSocialDriverByPhoneNumber(phoneNumber,verificationCode);
+        return BaseResponse.successInstance(result);
     }
 
     @GetMapping("/socialDriverRegisterPurpose/{id}")
