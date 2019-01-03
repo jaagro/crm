@@ -97,14 +97,16 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
             }
             CustomerSite loadSite = siteMapper.selectByPrimaryKey(settlePriceDto.getLoadSiteId());
             CustomerSite unloadSite = siteMapper.selectByPrimaryKey(settlePriceDto.getUnloadSiteId());
-            ListTruckTypeDto truckType = truckTypeMapper.getById(settlePriceDto.getTruckTypeId());
+            if (!StringUtils.isEmpty(settlePriceDto.getTruckTypeId())) {
+                ListTruckTypeDto truckType = truckTypeMapper.getById(settlePriceDto.getTruckTypeId());
+                settlePrice.setTruckTypeName(truckType == null ? null : truckType.getTypeName());
+            }
             settlePrice
                     .setCreateTime(new Date())
                     .setInvalidTime(customerContract.getEndDate())
                     .setCreateUserId(currentUser == null ? null : currentUser.getId())
                     .setLoadSiteName(loadSite == null ? null : loadSite.getSiteName())
-                    .setUnloadSiteName(unloadSite == null ? null : unloadSite.getSiteName())
-                    .setTruckTypeName(truckType == null ? null : truckType.getTypeName());
+                    .setUnloadSiteName(unloadSite == null ? null : unloadSite.getSiteName());
             int result = settlePriceMapper.insertSelective(settlePrice);
             if (result > 0) {
                 //结算里程
@@ -175,18 +177,18 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
                 .setUnloadSiteId(settlePrice.getUnloadSiteId());
         if (!customerContract.getType().equals(ProductType.CHICKEN)) {
             queryDto.setTruckTypeId(settlePrice.getTruckTypeId());
-        }else {
+        } else {
             queryDto.setTruckTypeId(0);
         }
         UserInfo currentUser = userService.getCurrentUser();
         List<CustomerContractSettlePrice> prices = settlePriceMapper.getByCriteria(queryDto);
         if (!CollectionUtils.isEmpty(prices)) {
             CustomerContractSettlePrice price = prices.get(0);
-                price.setHistoryFlag(true)
-                        .setInvalidTime(new Date())
-                        .setModifyTime(new Date())
-                        .setModifyUserId(currentUser == null ? null : currentUser.getId());
-                settlePriceMapper.updateByPrimaryKeySelective(price);
+            price.setHistoryFlag(true)
+                    .setInvalidTime(new Date())
+                    .setModifyTime(new Date())
+                    .setModifyUserId(currentUser == null ? null : currentUser.getId());
+            settlePriceMapper.updateByPrimaryKeySelective(price);
         }
         BeanUtils.copyProperties(priceDto, settlePrice);
         settlePrice

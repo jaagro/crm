@@ -4,14 +4,18 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.constant.ContractType;
-import com.jaagro.crm.api.constant.ProductType;
-import com.jaagro.crm.api.dto.request.contract.*;
-import com.jaagro.crm.api.dto.request.customer.CreateContractOilPriceDto;
+import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
+import com.jaagro.crm.api.dto.request.contract.CreateContractQualificationDto;
+import com.jaagro.crm.api.dto.request.contract.ListContractCriteriaDto;
+import com.jaagro.crm.api.dto.request.contract.UpdateContractDto;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto;
-import com.jaagro.crm.api.dto.response.contract.*;
+import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnContractQualificationDto;
+import com.jaagro.crm.api.dto.response.contract.ReturnCustomerSettlePriceDto;
 import com.jaagro.crm.api.service.*;
 import com.jaagro.crm.biz.entity.Customer;
 import com.jaagro.crm.biz.entity.CustomerContract;
+import com.jaagro.crm.biz.entity.TruckType;
 import com.jaagro.crm.biz.mapper.*;
 import com.jaagro.crm.biz.service.OssSignUrlClientService;
 import com.jaagro.utils.ResponseStatusCode;
@@ -189,8 +193,13 @@ public class ContractServiceImpl implements ContractService {
             for (ReturnCustomerSettlePriceDto settlePriceDto : settlePriceDtoList) {
                 settlePriceDto
                         .setLoadSiteName(siteMapperExt.selectByPrimaryKey(settlePriceDto.getLoadSiteId()).getSiteName())
-                        .setUnloadSiteName(siteMapperExt.selectByPrimaryKey(settlePriceDto.getUnloadSiteId()).getSiteName())
-                        .setTruckTypeName(truckTypeMapperExt.selectByPrimaryKey(settlePriceDto.getTruckTypeId()).getTypeName());
+                        .setUnloadSiteName(siteMapperExt.selectByPrimaryKey(settlePriceDto.getUnloadSiteId()).getSiteName());
+                if (!StringUtils.isEmpty(settlePriceDto.getTruckTypeId())) {
+                    TruckType truckType = truckTypeMapperExt.selectByPrimaryKey(settlePriceDto.getTruckTypeId());
+                    if (truckType != null) {
+                        settlePriceDto.setTruckTypeName(truckType.getTypeName());
+                    }
+                }
             }
             contractDto.setSettlePriceDtoList(settlePriceDtoList);
         }

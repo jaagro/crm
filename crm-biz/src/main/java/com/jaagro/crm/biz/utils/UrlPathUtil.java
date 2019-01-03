@@ -21,8 +21,12 @@ public class UrlPathUtil {
 
     private static Pattern pattern = Pattern.compile("src\\s*=\\s*\"?(.*?)(\"|>|\\s+)");
 
-    @Autowired
     private static OssSignUrlClientService ossSignUrlClientService;
+
+    @Autowired
+    public void initsetOssSignUrlClientService(OssSignUrlClientService ossSignUrlClientService) {
+        UrlPathUtil.ossSignUrlClientService = ossSignUrlClientService;
+    }
 
     public static String getAbstractImageUrl(String relativeImageUrl) {
         if (StringUtils.hasText(relativeImageUrl)) {

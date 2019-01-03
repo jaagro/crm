@@ -24,252 +24,277 @@
         <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER"/>
         <result column="create_user_id" property="createUserId" jdbcType="INTEGER"/>
         <result column="driving_permit" property="drivingPermit" jdbcType="VARCHAR"/>
+        <result column="fuel_consumption" property="fuelConsumption" jdbcType="DECIMAL" />
+        <result column="vehicle_type" property="vehicleType" jdbcType="INTEGER" />
     </resultMap>
 
-    <sql id="Base_Column_List">
-    id, truck_team_id, truck_number, vehicle_brand, truck_type_id, capacity, maximum_load, 
-    truck_weight, province, city, county, buy_time, expiry_date, expiry_annual, business_permit, 
-    notes, truck_status, modify_time, create_time, modify_user_id, create_user_id, driving_permit
+    <sql id="Base_Column_List" >
+    id, truck_team_id, truck_number, vehicle_brand, truck_type_id, capacity, maximum_load,
+    truck_weight, province, city, county, buy_time, expiry_date, expiry_annual, business_permit,
+    notes, truck_status, modify_time, create_time, modify_user_id, create_user_id, driving_permit,
+    fuel_consumption, vehicle_type
   </sql>
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
         select
-        <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List" />
         from truck
         where id = #{id,jdbcType=INTEGER}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from truck
     where id = #{id,jdbcType=INTEGER}
   </delete>
     <insert id="insert" parameterType="com.jaagro.crm.biz.entity.Truck" useGeneratedKeys="true" keyProperty="id"
-            keyColumn="id">
-    insert into truck (id, truck_team_id, truck_number, 
-      vehicle_brand, truck_type_id, capacity, 
-      maximum_load, truck_weight, province, 
-      city, county, buy_time, 
-      expiry_date, expiry_annual, business_permit, 
-      notes, truck_status, modify_time, 
-      create_time, modify_user_id, create_user_id, driving_permit
+            keyColumn="id" >
+    insert into truck (id, truck_team_id, truck_number,
+      vehicle_brand, truck_type_id, capacity,
+      maximum_load, truck_weight, province,
+      city, county, buy_time,
+      expiry_date, expiry_annual, business_permit,
+      notes, truck_status, modify_time,
+      create_time, modify_user_id, create_user_id,
+      driving_permit, fuel_consumption, vehicle_type
       )
-    values (#{id,jdbcType=INTEGER}, #{truckTeamId,jdbcType=INTEGER}, #{truckNumber,jdbcType=VARCHAR}, 
-      #{vehicleBrand,jdbcType=VARCHAR}, #{truckTypeId,jdbcType=INTEGER}, #{capacity,jdbcType=DECIMAL}, 
-      #{maximumLoad,jdbcType=INTEGER}, #{truckWeight,jdbcType=DECIMAL}, #{province,jdbcType=VARCHAR}, 
-      #{city,jdbcType=VARCHAR}, #{county,jdbcType=VARCHAR}, #{buyTime,jdbcType=TIMESTAMP}, 
-      #{expiryDate,jdbcType=TIMESTAMP}, #{expiryAnnual,jdbcType=TIMESTAMP}, #{businessPermit,jdbcType=VARCHAR}, 
-      #{notes,jdbcType=VARCHAR}, #{truckStatus,jdbcType=INTEGER}, #{modifyTime,jdbcType=TIMESTAMP}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, #{drivingPermit,jdbcType=VARCHAR}
+    values (#{id,jdbcType=INTEGER}, #{truckTeamId,jdbcType=INTEGER}, #{truckNumber,jdbcType=VARCHAR},
+      #{vehicleBrand,jdbcType=VARCHAR}, #{truckTypeId,jdbcType=INTEGER}, #{capacity,jdbcType=DECIMAL},
+      #{maximumLoad,jdbcType=INTEGER}, #{truckWeight,jdbcType=DECIMAL}, #{province,jdbcType=VARCHAR},
+      #{city,jdbcType=VARCHAR}, #{county,jdbcType=VARCHAR}, #{buyTime,jdbcType=TIMESTAMP},
+      #{expiryDate,jdbcType=TIMESTAMP}, #{expiryAnnual,jdbcType=TIMESTAMP}, #{businessPermit,jdbcType=VARCHAR},
+      #{notes,jdbcType=VARCHAR}, #{truckStatus,jdbcType=INTEGER}, #{modifyTime,jdbcType=TIMESTAMP},
+      #{createTime,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER},
+      #{drivingPermit,jdbcType=VARCHAR}, #{fuelConsumption,jdbcType=DECIMAL}, #{vehicleType,jdbcType=INTEGER}
       )
   </insert>
-    <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.Truck" useGeneratedKeys="true"
-            keyProperty="id" keyColumn="id">
+    <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.Truck" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id" >
         insert into truck
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
                 id,
             </if>
-            <if test="truckTeamId != null">
+            <if test="truckTeamId != null" >
                 truck_team_id,
             </if>
-            <if test="truckNumber != null">
+            <if test="truckNumber != null" >
                 truck_number,
             </if>
-            <if test="vehicleBrand != null">
+            <if test="vehicleBrand != null" >
                 vehicle_brand,
             </if>
-            <if test="truckTypeId != null">
+            <if test="truckTypeId != null" >
                 truck_type_id,
             </if>
-            <if test="capacity != null">
+            <if test="capacity != null" >
                 capacity,
             </if>
-            <if test="maximumLoad != null">
+            <if test="maximumLoad != null" >
                 maximum_load,
             </if>
-            <if test="truckWeight != null">
+            <if test="truckWeight != null" >
                 truck_weight,
             </if>
-            <if test="province != null">
+            <if test="province != null" >
                 province,
             </if>
-            <if test="city != null">
+            <if test="city != null" >
                 city,
             </if>
-            <if test="county != null">
+            <if test="county != null" >
                 county,
             </if>
-            <if test="buyTime != null">
+            <if test="buyTime != null" >
                 buy_time,
             </if>
-            <if test="expiryDate != null">
+            <if test="expiryDate != null" >
                 expiry_date,
             </if>
-            <if test="expiryAnnual != null">
+            <if test="expiryAnnual != null" >
                 expiry_annual,
             </if>
-            <if test="businessPermit != null">
+            <if test="businessPermit != null" >
                 business_permit,
             </if>
-            <if test="notes != null">
+            <if test="notes != null" >
                 notes,
             </if>
-            <if test="truckStatus != null">
+            <if test="truckStatus != null" >
                 truck_status,
             </if>
-            <if test="modifyTime != null">
+            <if test="modifyTime != null" >
                 modify_time,
             </if>
-            <if test="createTime != null">
+            <if test="createTime != null" >
                 create_time,
             </if>
-            <if test="modifyUserId != null">
+            <if test="modifyUserId != null" >
                 modify_user_id,
             </if>
-            <if test="createUserId != null">
+            <if test="createUserId != null" >
                 create_user_id,
             </if>
-            <if test="drivingPermit != null">
+            <if test="drivingPermit != null" >
                 driving_permit,
             </if>
+            <if test="fuelConsumption != null" >
+                fuel_consumption,
+            </if>
+            <if test="vehicleType != null" >
+                vehicle_type,
+            </if>
         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
                 #{id,jdbcType=INTEGER},
             </if>
-            <if test="truckTeamId != null">
+            <if test="truckTeamId != null" >
                 #{truckTeamId,jdbcType=INTEGER},
             </if>
-            <if test="truckNumber != null">
+            <if test="truckNumber != null" >
                 #{truckNumber,jdbcType=VARCHAR},
             </if>
-            <if test="vehicleBrand != null">
+            <if test="vehicleBrand != null" >
                 #{vehicleBrand,jdbcType=VARCHAR},
             </if>
-            <if test="truckTypeId != null">
+            <if test="truckTypeId != null" >
                 #{truckTypeId,jdbcType=INTEGER},
             </if>
-            <if test="capacity != null">
+            <if test="capacity != null" >
                 #{capacity,jdbcType=DECIMAL},
             </if>
-            <if test="maximumLoad != null">
+            <if test="maximumLoad != null" >
                 #{maximumLoad,jdbcType=INTEGER},
             </if>
-            <if test="truckWeight != null">
+            <if test="truckWeight != null" >
                 #{truckWeight,jdbcType=DECIMAL},
             </if>
-            <if test="province != null">
+            <if test="province != null" >
                 #{province,jdbcType=VARCHAR},
             </if>
-            <if test="city != null">
+            <if test="city != null" >
                 #{city,jdbcType=VARCHAR},
             </if>
-            <if test="county != null">
+            <if test="county != null" >
                 #{county,jdbcType=VARCHAR},
             </if>
-            <if test="buyTime != null">
+            <if test="buyTime != null" >
                 #{buyTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="expiryDate != null">
+            <if test="expiryDate != null" >
                 #{expiryDate,jdbcType=TIMESTAMP},
             </if>
-            <if test="expiryAnnual != null">
+            <if test="expiryAnnual != null" >
                 #{expiryAnnual,jdbcType=TIMESTAMP},
             </if>
-            <if test="businessPermit != null">
+            <if test="businessPermit != null" >
                 #{businessPermit,jdbcType=VARCHAR},
             </if>
-            <if test="notes != null">
+            <if test="notes != null" >
                 #{notes,jdbcType=VARCHAR},
             </if>
-            <if test="truckStatus != null">
+            <if test="truckStatus != null" >
                 #{truckStatus,jdbcType=INTEGER},
             </if>
-            <if test="modifyTime != null">
+            <if test="modifyTime != null" >
                 #{modifyTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="createTime != null">
+            <if test="createTime != null" >
                 #{createTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="modifyUserId != null">
+            <if test="modifyUserId != null" >
                 #{modifyUserId,jdbcType=INTEGER},
             </if>
-            <if test="createUserId != null">
+            <if test="createUserId != null" >
                 #{createUserId,jdbcType=INTEGER},
             </if>
-            <if test="drivingPermit != null">
+            <if test="drivingPermit != null" >
                 #{drivingPermit,jdbcType=VARCHAR},
+            </if>
+            <if test="fuelConsumption != null" >
+                #{fuelConsumption,jdbcType=DECIMAL},
+            </if>
+            <if test="vehicleType != null" >
+                #{vehicleType,jdbcType=INTEGER},
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.Truck">
+    <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.Truck" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id" >
         update truck
-        <set>
-            <if test="truckTeamId != null">
+        <set >
+            <if test="truckTeamId != null" >
                 truck_team_id = #{truckTeamId,jdbcType=INTEGER},
             </if>
-            <if test="truckNumber != null">
+            <if test="truckNumber != null" >
                 truck_number = #{truckNumber,jdbcType=VARCHAR},
             </if>
-            <if test="vehicleBrand != null">
+            <if test="vehicleBrand != null" >
                 vehicle_brand = #{vehicleBrand,jdbcType=VARCHAR},
             </if>
-            <if test="truckTypeId != null">
+            <if test="truckTypeId != null" >
                 truck_type_id = #{truckTypeId,jdbcType=INTEGER},
             </if>
-            <if test="capacity != null">
+            <if test="capacity != null" >
                 capacity = #{capacity,jdbcType=DECIMAL},
             </if>
-            <if test="maximumLoad != null">
+            <if test="maximumLoad != null" >
                 maximum_load = #{maximumLoad,jdbcType=INTEGER},
             </if>
-            <if test="truckWeight != null">
+            <if test="truckWeight != null" >
                 truck_weight = #{truckWeight,jdbcType=DECIMAL},
             </if>
-            <if test="province != null">
+            <if test="province != null" >
                 province = #{province,jdbcType=VARCHAR},
             </if>
-            <if test="city != null">
+            <if test="city != null" >
                 city = #{city,jdbcType=VARCHAR},
             </if>
-            <if test="county != null">
+            <if test="county != null" >
                 county = #{county,jdbcType=VARCHAR},
             </if>
-            <if test="buyTime != null">
+            <if test="buyTime != null" >
                 buy_time = #{buyTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="expiryDate != null">
+            <if test="expiryDate != null" >
                 expiry_date = #{expiryDate,jdbcType=TIMESTAMP},
             </if>
-            <if test="expiryAnnual != null">
+            <if test="expiryAnnual != null" >
                 expiry_annual = #{expiryAnnual,jdbcType=TIMESTAMP},
             </if>
-            <if test="businessPermit != null">
+            <if test="businessPermit != null" >
                 business_permit = #{businessPermit,jdbcType=VARCHAR},
             </if>
-            <if test="notes != null">
+            <if test="notes != null" >
                 notes = #{notes,jdbcType=VARCHAR},
             </if>
-            <if test="truckStatus != null">
+            <if test="truckStatus != null" >
                 truck_status = #{truckStatus,jdbcType=INTEGER},
             </if>
-            <if test="modifyTime != null">
+            <if test="modifyTime != null" >
                 modify_time = #{modifyTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="createTime != null">
+            <if test="createTime != null" >
                 create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="modifyUserId != null">
+            <if test="modifyUserId != null" >
                 modify_user_id = #{modifyUserId,jdbcType=INTEGER},
             </if>
-            <if test="createUserId != null">
+            <if test="createUserId != null" >
                 create_user_id = #{createUserId,jdbcType=INTEGER},
             </if>
-            <if test="drivingPermit != null">
+            <if test="drivingPermit != null" >
                 driving_permit = #{drivingPermit,jdbcType=VARCHAR},
+            </if>
+            <if test="fuelConsumption != null" >
+                fuel_consumption = #{fuelConsumption,jdbcType=DECIMAL},
+            </if>
+            <if test="vehicleType != null" >
+                vehicle_type = #{vehicleType,jdbcType=INTEGER},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.Truck">
+    <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.Truck" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id" >
     update truck
     set truck_team_id = #{truckTeamId,jdbcType=INTEGER},
       truck_number = #{truckNumber,jdbcType=VARCHAR},
@@ -290,8 +315,10 @@
       modify_time = #{modifyTime,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       modify_user_id = #{modifyUserId,jdbcType=INTEGER},
-      create_user_id = #{createUserId,jdbcType=INTEGER}
-      driving_permit = #{drivingPermit,jdbcType=VARCHAR}
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      driving_permit = #{drivingPermit,jdbcType=VARCHAR},
+      fuel_consumption = #{fuelConsumption,jdbcType=DECIMAL},
+      vehicle_type = #{vehicleType,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
