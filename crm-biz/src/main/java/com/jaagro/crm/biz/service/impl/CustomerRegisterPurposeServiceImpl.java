@@ -77,7 +77,7 @@ public class CustomerRegisterPurposeServiceImpl implements CustomerRegisterPurpo
                 result.put("userType", UserType.VISITOR_CUSTOMER_U);
                 result.put(ServiceKey.msg.name(),"该手机号已填写基本信息");
             }else {
-                result.put("userType", UserType.VISITOR_CUSTOMER_U);
+                result.put("userType", UserType.VISITOR_DRIVER_P);
                 result.put(ServiceKey.msg.name(),"该手机号已注册");
             }
             return result;
