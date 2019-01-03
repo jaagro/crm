@@ -1,19 +1,23 @@
 package com.jaagro.crm.api.constant;
 
 /**
- * 客户类型
- *
- * @author liqiangping
+ * 用于判断customerUser的类型
+ * @author tony
  */
 public final class CustomerType {
 
     /**
-     * 个体客户
+     * 签约客户
      */
-    public static final Integer PERSON_CUSTOMER = 1;
+    public final static Integer CUSTOMER = 1;
 
     /**
-     * 企业客户
+     * 装货地客户
      */
-    public static final Integer BUSINESS_CUSTOMER = 2;
+    public final static Integer LOAD_SITE = 2;
+
+    /**
+     * 卸货地客户
+     */
+    public final static Integer UNLOAD_SITE = 3;
 }

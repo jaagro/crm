@@ -3,6 +3,7 @@ package com.jaagro.crm.biz.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.constant.UserInfo;
+import com.jaagro.crm.api.constant.CustomerType;
 import com.jaagro.crm.api.constant.UserType;
 import com.jaagro.crm.api.dto.base.GetCustomerUserDto;
 import com.jaagro.crm.api.dto.request.customerRegister.ListCustomerRegisterPurposeCriteriaDto;
@@ -77,7 +78,7 @@ public class CustomerRegisterPurposeServiceImpl implements CustomerRegisterPurpo
                 result.put("userType", UserType.VISITOR_CUSTOMER_U);
                 result.put(ServiceKey.msg.name(),"该手机号已填写基本信息");
             }else {
-                result.put("userType", UserType.VISITOR_DRIVER_P);
+                result.put("userType", UserType.VISITOR_CUSTOMER_P);
                 result.put(ServiceKey.msg.name(),"该手机号已注册");
             }
             return result;
@@ -86,8 +87,17 @@ public class CustomerRegisterPurposeServiceImpl implements CustomerRegisterPurpo
         if (ResponseStatusCode.OPERATION_SUCCESS.getCode() == response.getStatusCode()) {
             GetCustomerUserDto customerUserDto = response.getData();
             if (customerUserDto != null) {
-                result.put("userType", UserType.CUSTOMER);
-                result.put(ServiceKey.msg.name(),"该手机号已注册为正式客户");
+                if (CustomerType.LOAD_SITE.equals(customerUserDto.getCustomerType())){
+                    result.put("userType",UserType.LOAD_SITE);
+                    result.put(ServiceKey.msg.name(),"该手机号已注册为装货地客户");
+                }else if (CustomerType.UNLOAD_SITE.equals(customerUserDto.getCustomerType())){
+                    result.put("userType",UserType.UNLOAD_SITE);
+                    result.put(ServiceKey.msg.name(),"该手机号已注册为卸货地客户");
+                }else {
+                    result.put("userType", UserType.CUSTOMER);
+                    result.put(ServiceKey.msg.name(),"该手机号已注册为正式客户");
+                }
+                return result;
             }
         }
         int nextUserId = userClientService.getNextUserId();
