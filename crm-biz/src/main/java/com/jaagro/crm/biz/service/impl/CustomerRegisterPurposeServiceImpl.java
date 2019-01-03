@@ -66,11 +66,13 @@ public class CustomerRegisterPurposeServiceImpl implements CustomerRegisterPurpo
      */
     @Override
     public Map<String,Object> createCustomerRegisterByPhoneNumber(String phoneNumber, String verificationCode) {
+        Map<String,Object> result = new HashMap<>(3);
         boolean existMessage = verificationCodeClientService.existMessage(phoneNumber, verificationCode);
         if (!existMessage) {
-            throw new RuntimeException("验证码不正确");
+            result.put(ServiceKey.success.name(),Boolean.FALSE);
+            result.put(ServiceKey.msg.name(),"验证码不正确");
+            return result;
         }
-        Map<String,Object> result = new HashMap<>(3);
         result.put(ServiceKey.success.name(),Boolean.FALSE);
         CustomerRegisterPurpose customerRegisterPurpose = customerRegisterPurposeMapperExt.selectByPhoneNumber(phoneNumber);
         if (customerRegisterPurpose != null) {
