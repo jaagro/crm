@@ -91,8 +91,11 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
         Map<String, Object> result = new HashMap<>();
         result.put(ServiceKey.success.name(), Boolean.FALSE);
         if (!existMessage){
-            throw new RuntimeException("验证码不正确");
+            result.put("verifyCodeResult",Boolean.FALSE);
+            result.put(ServiceKey.msg.name(),"验证码不正确");
+            return result;
         }
+        result.put("verifyCodeResult",Boolean.TRUE);
         SocialDriverRegisterPurpose socialDriverRegisterPurpose = socialDriverRegisterPurposeMapperExt.selectByPhoneNumber(phoneNumber);
         if (socialDriverRegisterPurpose != null) {
             judgeSocialDriver(socialDriverRegisterPurpose,result);
@@ -231,7 +234,7 @@ public class SocialDriverRegisterPurposeServiceImpl implements SocialDriverRegis
             DriverReturnDto driverReturnDto = response.getData();
             if (driverReturnDto != null) {
                 result.put("userType",UserType.DRIVER);
-                result.put(ServiceKey.msg.name(), "该手机号已注册为正式司机");
+                result.put(ServiceKey.msg.name(), "该手机号已注册为正式司机,请直接登录");
             }
         }
     }

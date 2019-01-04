@@ -66,11 +66,11 @@ public class CustomerRegisterPurposeServiceImpl implements CustomerRegisterPurpo
      */
     @Override
     public Map<String,Object> createCustomerRegisterByPhoneNumber(String phoneNumber, String verificationCode) {
+        Map<String,Object> result = new HashMap<>(3);
         boolean existMessage = verificationCodeClientService.existMessage(phoneNumber, verificationCode);
         if (!existMessage) {
             throw new RuntimeException("验证码不正确");
         }
-        Map<String,Object> result = new HashMap<>(3);
         result.put(ServiceKey.success.name(),Boolean.FALSE);
         CustomerRegisterPurpose customerRegisterPurpose = customerRegisterPurposeMapperExt.selectByPhoneNumber(phoneNumber);
         if (customerRegisterPurpose != null) {
@@ -89,13 +89,13 @@ public class CustomerRegisterPurposeServiceImpl implements CustomerRegisterPurpo
             if (customerUserDto != null) {
                 if (CustomerUserType.LOAD_SITE.equals(customerUserDto.getCustomerType())){
                     result.put("userType",UserType.LOAD_SITE);
-                    result.put(ServiceKey.msg.name(),"该手机号已注册为装货地客户");
+                    result.put(ServiceKey.msg.name(),"该手机号已注册为装货地客户,请直接登录");
                 }else if (CustomerUserType.UNLOAD_SITE.equals(customerUserDto.getCustomerType())){
                     result.put("userType",UserType.UNLOAD_SITE);
-                    result.put(ServiceKey.msg.name(),"该手机号已注册为卸货地客户");
+                    result.put(ServiceKey.msg.name(),"该手机号已注册为卸货地客户,请直接登录");
                 }else {
                     result.put("userType", UserType.CUSTOMER);
-                    result.put(ServiceKey.msg.name(),"该手机号已注册为正式客户");
+                    result.put(ServiceKey.msg.name(),"该手机号已注册为正式客户,请直接登录");
                 }
                 return result;
             }
