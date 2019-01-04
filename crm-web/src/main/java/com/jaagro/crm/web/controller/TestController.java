@@ -1,9 +1,13 @@
 package com.jaagro.crm.web.controller;
 
 import com.jaagro.constant.UserInfo;
+import com.jaagro.crm.api.dto.request.contract.DriverContractSettleCondition;
 import com.jaagro.crm.api.dto.request.message.CreateMessageDto;
+import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContractDto;
 import com.jaagro.crm.api.dto.response.truck.DriverReturnDto;
 import com.jaagro.crm.api.dto.response.truck.GetTruckDto;
+import com.jaagro.crm.api.dto.response.truck.ListDriverContractSettleDto;
+import com.jaagro.crm.api.service.TruckTeamContractService;
 import com.jaagro.crm.biz.mapper.TruckMapper;
 import com.jaagro.crm.biz.mapper.TruckMapperExt;
 import com.jaagro.crm.biz.schedule.CertificateOverdueNoticeService;
@@ -16,6 +20,8 @@ import com.jaagro.utils.BaseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,6 +50,8 @@ public class TestController {
     DriverClientService driverClientService;
     @Autowired
     MessageClientService messageClientService;
+    @Autowired
+    TruckTeamContractService truckTeamContractService;
 
     @GetMapping("/test")
     public UserInfo getToken() {
@@ -68,11 +76,16 @@ public class TestController {
     }
 
 
-    @GetMapping("/test3")
+    @PostMapping("/test3")
     public BaseResponse test3() {
-        
-        certificateOverdueNoticeService.certificateOverdueNoticeBySystem();
-        return null;
+//        certificateOverdueNoticeService.certificateOverdueNoticeBySystem();
+       // truckTeamContractService.createTruckTeamContractPrice(dto, 1, 1);
+        DriverContractSettleCondition driverContractSettleCondition = new DriverContractSettleCondition();
+        driverContractSettleCondition.setTruckTeamContractId(1).setTruckTypeId(8).setPricingMethod(2).setFlag(2);
+       // List<ListDriverContractSettleDto> listDriverContractSettleDtos = truckTeamContractService.listTruckTeamContractPrice(driverContractSettleCondition);
+        //System.out.println(listDriverContractSettleDtos.toString());
+        return BaseResponse.successInstance(null);
+
     }
 
 }

@@ -12,6 +12,7 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class CustomerQualification implements Serializable {
+    private static final long serialVersionUID = 5556428701705401013L;
     /**
      * 客户资质证照主键id
      */

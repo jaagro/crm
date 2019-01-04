@@ -13,6 +13,7 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class Truck implements Serializable {
+    private static final long serialVersionUID = 5535445682132319591L;
     /**
      * 主键车辆表ID
      */
@@ -122,4 +123,14 @@ public class Truck implements Serializable {
      * 行驶证号码
      */
     private String drivingPermit;
+
+    /**
+     * 百公里油耗
+     */
+    private BigDecimal fuelConsumption;
+
+    /**
+     * 车辆类型
+     */
+    private Integer vehicleType;
 }

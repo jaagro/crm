@@ -9,32 +9,30 @@ import com.jaagro.crm.api.dto.request.news.ListNewsCriteriaDto;
 import com.jaagro.crm.api.dto.request.news.UpdateNewsDto;
 import com.jaagro.crm.api.dto.response.news.NewsReturnDto;
 import com.jaagro.crm.biz.entity.News;
-import com.jaagro.crm.biz.entity.NewsCategory;
+import com.jaagro.crm.api.entity.NewsCategory;
 import com.jaagro.crm.biz.mapper.NewsCategoryMapperExt;
 import com.jaagro.crm.biz.mapper.NewsMapperExt;
-import com.jaagro.crm.biz.service.NewsService;
-import com.jaagro.crm.biz.service.AuthClientService;
+import com.jaagro.crm.api.service.NewsService;
 import com.jaagro.crm.biz.service.OssSignUrlClientService;
 import com.jaagro.crm.biz.service.UserClientService;
+import com.jaagro.crm.biz.utils.UrlPathUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.net.URL;
+
 import java.util.*;
+
 
 /**
  * 新闻管理
+ *
  * @author yj
  * @since 2018/11/16
  */
 @Service
-@CacheConfig(keyGenerator = "wiselyKeyGenerator", cacheNames = "news")
 public class NewsServiceImpl implements NewsService {
     @Autowired
     private NewsMapperExt newsMapperExt;
@@ -46,6 +44,7 @@ public class NewsServiceImpl implements NewsService {
     private UserClientService userClientService;
     @Autowired
     private OssSignUrlClientService ossSignUrlClientService;
+
     /**
      * 创建新闻
      *
@@ -53,10 +52,9 @@ public class NewsServiceImpl implements NewsService {
      * @return
      */
     @Override
-    @CacheEvict(cacheNames = "news", allEntries = true)
     public boolean createNews(CreateNewsDto createNewsDto) {
         News news = new News();
-        BeanUtils.copyProperties(createNewsDto,news);
+        BeanUtils.copyProperties(createNewsDto, news);
         UserInfo currentUser = currentUserService.getCurrentUser();
         news.setCreateTime(new Date())
                 .setCreateUserId(currentUser == null ? null : currentUser.getId())
@@ -66,7 +64,7 @@ public class NewsServiceImpl implements NewsService {
         Integer categoryId = getCategoryIdByCategory(createNewsDto.getCategory());
         news.setCategoryId(categoryId);
         Integer effectedNum = newsMapperExt.insertSelective(news);
-        if (effectedNum < 1){
+        if (effectedNum < 1) {
             return false;
         }
         return true;
@@ -78,21 +76,20 @@ public class NewsServiceImpl implements NewsService {
      * @return
      */
     @Override
-    @Cacheable
     public List<NewsCategory> getAllNewsCategory() {
         return newsCategoryMapperExt.selectAll();
     }
 
     /**
      * 编辑新闻
+     *
      * @param updateNewsDto
      * @return
      */
     @Override
-    @CacheEvict(cacheNames = "news", allEntries = true)
     public boolean updateNews(UpdateNewsDto updateNewsDto) {
         News news = new News();
-        BeanUtils.copyProperties(updateNewsDto,news);
+        BeanUtils.copyProperties(updateNewsDto, news);
         UserInfo currentUser = currentUserService.getCurrentUser();
         news.setModifyTime(new Date())
                 .setModifyUserId(currentUser == null ? null : currentUser.getId());
@@ -100,7 +97,7 @@ public class NewsServiceImpl implements NewsService {
         Integer categoryId = getCategoryIdByCategory(updateNewsDto.getCategory());
         news.setCategoryId(categoryId);
         Integer effectedNum = newsMapperExt.updateByPrimaryKeySelective(news);
-        if (effectedNum < 1){
+        if (effectedNum < 1) {
             return false;
         }
         return true;
@@ -113,10 +110,9 @@ public class NewsServiceImpl implements NewsService {
      * @return
      */
     @Override
-    @Cacheable
     public NewsReturnDto getNewsById(Integer id) {
         NewsReturnDto newsReturnDto = newsMapperExt.selectById(id);
-        if (newsReturnDto != null){
+        if (newsReturnDto != null) {
             convertImageUrl(newsReturnDto);
             List<NewsReturnDto> list = new ArrayList<>();
             list.add(newsReturnDto);
@@ -132,10 +128,9 @@ public class NewsServiceImpl implements NewsService {
      * @return
      */
     @Override
-    @CacheEvict(cacheNames = "news", allEntries = true)
     public boolean deleteNews(Integer id) {
         Integer effectedNum = newsMapperExt.disableNews(id);
-        if (effectedNum < 1){
+        if (effectedNum < 1) {
             return false;
         }
         return true;
@@ -148,19 +143,18 @@ public class NewsServiceImpl implements NewsService {
      * @return
      */
     @Override
-    @Cacheable
     public PageInfo listByCriteria(ListNewsCriteriaDto listNewsCriteriaDto) {
         Integer category = listNewsCriteriaDto.getCategory();
-        if (category != null && category > 0){
+        if (category != null && category > 0) {
             List<NewsCategory> newsCategoryList = newsCategoryMapperExt.listByCategory(category);
-            if (CollectionUtils.isEmpty(newsCategoryList)){
+            if (CollectionUtils.isEmpty(newsCategoryList)) {
                 throw new RuntimeException("未查到该类别的新闻");
             }
             listNewsCriteriaDto.setCategoryId(newsCategoryList.get(0).getId());
         }
-        PageHelper.startPage(listNewsCriteriaDto.getPageNum(),listNewsCriteriaDto.getPageSize());
+        PageHelper.startPage(listNewsCriteriaDto.getPageNum(), listNewsCriteriaDto.getPageSize());
         List<NewsReturnDto> newsReturnDtoList = newsMapperExt.listByCriteria(listNewsCriteriaDto);
-        if (!CollectionUtils.isEmpty(newsReturnDtoList)){
+        if (!CollectionUtils.isEmpty(newsReturnDtoList)) {
             putUserInfo(newsReturnDtoList);
             newsReturnDtoList.forEach(newsReturnDto -> convertImageUrl(newsReturnDto));
         }
@@ -168,15 +162,19 @@ public class NewsServiceImpl implements NewsService {
     }
 
     private void putUserInfo(List<NewsReturnDto> newsReturnDtoList) {
-        if (!CollectionUtils.isEmpty(newsReturnDtoList)){
+        if (!CollectionUtils.isEmpty(newsReturnDtoList)) {
             Set<Integer> userIdSet = new HashSet<>();
-            newsReturnDtoList.forEach(newsReturnDto ->{if (newsReturnDto.getCreateUserId() != null){userIdSet.add(newsReturnDto.getCreateUserId());}});
-            if (!CollectionUtils.isEmpty(userIdSet)){
+            newsReturnDtoList.forEach(newsReturnDto -> {
+                if (newsReturnDto.getCreateUserId() != null) {
+                    userIdSet.add(newsReturnDto.getCreateUserId());
+                }
+            });
+            if (!CollectionUtils.isEmpty(userIdSet)) {
                 List<UserInfo> userInfoList = userClientService.listUserInfo(new ArrayList<>(userIdSet), UserType.EMPLOYEE);
-                if (!CollectionUtils.isEmpty(userInfoList)){
-                    for (NewsReturnDto newsReturnDto : newsReturnDtoList){
-                        for (UserInfo userInfo : userInfoList){
-                            if (newsReturnDto.getCreateUserId().equals(userInfo.getId())){
+                if (!CollectionUtils.isEmpty(userInfoList)) {
+                    for (NewsReturnDto newsReturnDto : newsReturnDtoList) {
+                        for (UserInfo userInfo : userInfoList) {
+                            if (newsReturnDto.getCreateUserId().equals(userInfo.getId())) {
                                 newsReturnDto.setUserInfo(userInfo);
                             }
                         }
@@ -187,9 +185,9 @@ public class NewsServiceImpl implements NewsService {
     }
 
     private Integer getCategoryIdByCategory(Integer category) {
-        if (category != null && category > 0){
+        if (category != null && category > 0) {
             List<NewsCategory> newsCategoryList = newsCategoryMapperExt.listByCategory(category);
-            if (CollectionUtils.isEmpty(newsCategoryList)){
+            if (CollectionUtils.isEmpty(newsCategoryList)) {
                 throw new RuntimeException("未查到该类别的新闻");
             }
             return newsCategoryList.get(0).getId();
@@ -197,26 +195,66 @@ public class NewsServiceImpl implements NewsService {
         return null;
     }
 
-    private String getAbstractImageUrl(String relativeImageUrl){
-        if (StringUtils.hasText(relativeImageUrl)){
-            String[] strArray = {relativeImageUrl};
-            List<URL> urls = ossSignUrlClientService.listSignedUrl(strArray);
-            if (!CollectionUtils.isEmpty(urls)){
-                return urls.get(0).toString();
+//    private String getAbstractImageUrl(String relativeImageUrl) {
+//        if (StringUtils.hasText(relativeImageUrl)) {
+//            String[] strArray = {relativeImageUrl};
+//            List<URL> urls = ossSignUrlClientService.listSignedUrl(strArray);
+//            if (!CollectionUtils.isEmpty(urls)) {
+//                return urls.get(0).toString();
+//            }
+//        }
+//        return null;
+//    }
+
+    private void convertImageUrl(NewsReturnDto newsReturnDto) {
+        if (newsReturnDto != null) {
+            if (StringUtils.hasText(newsReturnDto.getImageUrl())) {
+                newsReturnDto.setImageUrl(UrlPathUtil.getAbstractImageUrl(newsReturnDto.getImageUrl()));
+            }
+            String content = newsReturnDto.getContent();
+            if (StringUtils.hasText(content)){
+                // 获取新闻主体内容中所有的相对路径
+                List<String> imgStr = UrlPathUtil.getImgUrl(content);
+                // 替换新闻主体内容中所有的相对路径改为绝对路径
+                content = UrlPathUtil.replaceImageUrl(imgStr,content);
+                newsReturnDto.setContent(content);
             }
         }
-        return null;
     }
 
-    private void convertImageUrl(NewsReturnDto newsReturnDto){
-        if (newsReturnDto != null){
-            if (StringUtils.hasText(newsReturnDto.getImageUrl())){
-                newsReturnDto.setImageUrl(getAbstractImageUrl(newsReturnDto.getImageUrl()));
-            }
-            if(StringUtils.hasText(newsReturnDto.getContent())){
-                // TODO 截取新闻主体内容内图片路径转换成绝对路径
-            }
-        }
-    }
+//    private String replaceImageUrl(List<String> imgStr, String content) {
+//        if (!CollectionUtils.isEmpty(imgStr) && StringUtils.hasText(content)){
+//            for (String imgUrl : imgStr){
+//                String abstractImgUrl = UrlPathUtil.getAbstractImageUrl(imgUrl);
+//                content = content.replace(imgUrl,abstractImgUrl);
+//            }
+//        }
+//        return content;
+//    }
+
+//    /**
+//     *
+//     * @param htmlStr
+//     * @return
+//     */
+//    private static List<String> getImgUrl(String htmlStr) {
+//        List<String> pics = new ArrayList<>();
+//        String img ;
+//        Pattern p_image;
+//        Matcher m_image;
+//        String regEx_img = "<.*img.*src\\s*=\\s*(.*?)[^>]*?>";
+//        p_image = Pattern.compile(regEx_img, Pattern.CASE_INSENSITIVE);
+//        m_image = p_image.matcher(htmlStr);
+//        while (m_image.find()) {
+//            // 得到<img />数据
+//            img = m_image.group();
+//            // 匹配<img>中的src数据
+//            Matcher m = Pattern.compile("src\\s*=\\s*\"?(.*?)(\"|>|\\s+)").matcher(img);
+//            while (m.find()) {
+//                pics.add(m.group(1));
+//            }
+//        }
+//        return pics;
+//    }
 
 }

@@ -13,6 +13,7 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class News implements Serializable{
+    private static final long serialVersionUID = 2816263314598913141L;
     /**
      * 新闻表id
      */

@@ -1,6 +1,7 @@
 package com.jaagro.crm.biz.service;
 
 import com.jaagro.constant.UserInfo;
+import com.jaagro.utils.BaseResponse;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,4 +22,13 @@ public interface AuthClientService {
      */
     @PostMapping("/getUserByToken")
     UserInfo getUserByToken(@RequestParam("token") String token);
+
+    /**
+     * 是登陆失效
+     * @param token
+     * @param userId
+     * @return
+     */
+    @GetMapping("/invalidateToken")
+    BaseResponse invalidateToken(@RequestParam("token") String token, @RequestParam("userId") String userId);
 }

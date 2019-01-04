@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jaagro.crm.biz.mapper.CustomerContractMapperExt">
-
     <resultMap id="DetailInfo" type="com.jaagro.crm.api.dto.response.contract.ReturnContractDto">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="customer_id" property="customerId" jdbcType="INTEGER"/>
@@ -14,8 +13,6 @@
         <result column="context" property="context" jdbcType="VARCHAR"/>
         <result column="contract_number" property="contractNumber" jdbcType="VARCHAR"/>
         <result column="remark" property="remark" jdbcType="VARCHAR"/>
-        <collection property="prices" column="id"
-                    select="com.jaagro.crm.biz.mapper.CustomerContractPriceMapperExt.getByContractId"></collection>
         <collection property="qualifications" column="id"
                     select="com.jaagro.crm.biz.mapper.ContractQualificationMapperExt.listQualificationByContractId"></collection>
     </resultMap>

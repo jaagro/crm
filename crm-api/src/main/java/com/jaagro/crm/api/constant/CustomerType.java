@@ -2,8 +2,8 @@ package com.jaagro.crm.api.constant;
 
 /**
  * 客户类型
- *
- * @author liqiangping
+ * @author yj
+ * @since 2019/1/3
  */
 public final class CustomerType {
 

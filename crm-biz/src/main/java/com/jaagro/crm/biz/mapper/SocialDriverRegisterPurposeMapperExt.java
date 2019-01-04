@@ -1,7 +1,7 @@
 package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.api.dto.request.socialDriver.ListDriverRegisterPurposeCriteriaDto;
-import com.jaagro.crm.api.dto.response.socialDriver.SocialDriverRegisterPurposeDto;
+import com.jaagro.crm.api.dto.response.socialDriverRegister.SocialDriverRegisterPurposeDto;
 import com.jaagro.crm.biz.entity.SocialDriverRegisterPurpose;
 import org.apache.ibatis.annotations.Param;
 

@@ -125,6 +125,16 @@ public class GetTruckDto implements Serializable {
     private Integer createUserId;
 
     /**
+     * 百公里油耗
+     */
+    private BigDecimal fuelConsumption;
+
+    /**
+     * 车辆类型
+     */
+    private Integer vehicleType;
+
+    /**
      * 司机列表
      */
     private List<DriverReturnDto> drivers;

@@ -103,5 +103,6 @@
         and relevance_type =#{relevanceType}
         and certificate_type =#{certificateType}
         and certificate_status != 3
+        and certificate_type != 80
     </select>
 </mapper>

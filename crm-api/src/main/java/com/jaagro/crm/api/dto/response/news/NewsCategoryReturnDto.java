@@ -13,6 +13,7 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class NewsCategoryReturnDto implements Serializable{
+    private static final long serialVersionUID = 6769008464841034551L;
     /**
      * 新闻类别字典表id
      */

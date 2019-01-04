@@ -5,13 +5,17 @@ import com.jaagro.crm.api.constant.AccountType;
 import com.jaagro.crm.api.constant.AccountUserType;
 import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.constant.CertificateType;
+import com.jaagro.crm.api.dto.base.GetCustomerUserDto;
 import com.jaagro.crm.api.dto.request.customer.CreateQualificationVerifyLogDto;
 import com.jaagro.crm.api.dto.response.truck.DriverReturnDto;
 import com.jaagro.crm.api.service.AccountService;
 import com.jaagro.crm.api.service.QualificationVerifyLogService;
 import com.jaagro.crm.biz.entity.*;
 import com.jaagro.crm.biz.mapper.*;
+import com.jaagro.crm.biz.service.AuthClientService;
 import com.jaagro.crm.biz.service.DriverClientService;
+import com.jaagro.crm.biz.service.UserClientService;
+import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.BeanUtils;
@@ -54,6 +58,15 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
     private TruckMapperExt truckMapper;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private UserClientService userClientService;
+    @Autowired
+    private AuthClientService authClientService;
+    @Autowired
+    private CustomerRegisterPurposeMapperExt customerRegisterPurposeMapperExt;
+    @Autowired
+    private SocialDriverRegisterPurposeMapperExt socialDriverRegisterPurposeMapperExt;
+
     /**
      * 新增审核记录
      *
@@ -99,7 +112,9 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                                         .setModifyUserId(currentUserId);
                                 this.customerMapper.updateByPrimaryKeySelective(customer);
                                 // 创建账户 add by yj 20181025
-                                accountService.createAccount(customer.getId(), AccountUserType.CUSTOMER, AccountType.CASH,currentUserId);
+                                accountService.createAccount(customer.getId(), AccountUserType.CUSTOMER, AccountType.CASH, currentUserId);
+                                // 如果有游客客户则使游客客户登录失效 add by yj 20181217
+                                invalidVisitorCustomerToken(customer.getId());
                                 break;
                             }
                         }
@@ -117,7 +132,9 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                                         .setModifyUserId(this.userService.getCurrentUser().getId());
                                 this.customerMapper.updateByPrimaryKeySelective(customer);
                                 // 创建账户 add by yj 20181025
-                                accountService.createAccount(customer.getId(),AccountUserType.CUSTOMER,AccountType.CASH,currentUserId);
+                                accountService.createAccount(customer.getId(), AccountUserType.CUSTOMER, AccountType.CASH, currentUserId);
+                                // 如果有游客客户则使游客客户登录失效 add by yj 20181217
+                                invalidVisitorCustomerToken(customer.getId());
                                 break;
                             }
                         }
@@ -131,13 +148,13 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
             case 2:
                 TruckQualification truckQualification = truckQualificationMapper.selectByPrimaryKey(dto.getReferencesId());
                 if (truckQualification == null) {
-                    return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队资质证不存在");
+                    return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质证不存在");
                 }
                 UserInfo currentUser = userService.getCurrentUser();
                 Integer currentUserId = currentUser == null ? null : currentUser.getId();
                 //司机资质审核
                 if (!StringUtils.isEmpty(truckQualification.getDriverId())) {
-                    DriverReturnDto driverReturnDto = driverClientService.getDriverReturnObject(truckQualification.getDriverId());
+                    DriverReturnDto driverReturnDto = driverClientService.getDriverByIdFeign(truckQualification.getDriverId());
                     if (driverReturnDto == null) {
                         return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "司机不存在");
                     }
@@ -154,7 +171,9 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                                 //若司机7、8、9、10、11身份证正面、身份证反面、驾驶证正面、驾驶证反面、道路运输从业资格证 审核均通过，则修改司机为审核通过
                                 driverClientService.updateDriverStatusFeign(driverReturnDto.getId());
                                 // 创建账户 add by yj 20181025
-                                accountService.createAccount(driverReturnDto.getId(),AccountUserType.DRIVER,AccountType.CASH,currentUserId);
+                                accountService.createAccount(driverReturnDto.getId(), AccountUserType.DRIVER, AccountType.CASH, currentUserId);
+                                // 如果有游客司机则使游客司机登录失效 add by yj 20181217
+                                invalidVisitorDriverToken(driverReturnDto.getPhoneNumber());
                                 break;
                             }
                             break;
@@ -295,5 +314,24 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
         verifyLog.setAuditor(this.userService.getCurrentUser().getId());
         this.verifyLogMapper.insertSelective(verifyLog);
         return ServiceResult.toResult("审核成功");
+    }
+
+    private void invalidVisitorCustomerToken(Integer customerId){
+        BaseResponse<GetCustomerUserDto> response = userClientService.getCustomerUserByRelevanceId(customerId);
+        if (ResponseStatusCode.OPERATION_SUCCESS.getCode() == response.getStatusCode()){
+            if (response.getData() != null){
+                CustomerRegisterPurpose customerRegisterPurpose = customerRegisterPurposeMapperExt.selectByPhoneNumber(response.getData().getPhoneNumber());
+                if (customerRegisterPurpose != null){
+                    authClientService.invalidateToken(null,customerRegisterPurpose.getId().toString());
+                }
+            }
+        }
+    }
+
+    private void invalidVisitorDriverToken(String phoneNumber){
+        SocialDriverRegisterPurpose socialDriverRegisterPurpose = socialDriverRegisterPurposeMapperExt.selectByPhoneNumber(phoneNumber);
+        if (socialDriverRegisterPurpose != null){
+            authClientService.invalidateToken(null,socialDriverRegisterPurpose.getId().toString());
+        }
     }
 }

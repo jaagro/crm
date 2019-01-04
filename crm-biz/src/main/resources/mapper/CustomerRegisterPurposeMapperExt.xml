@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jaagro.crm.biz.mapper.CustomerRegisterPurposeMapperExt">
+    <select id="selectByPhoneNumber" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM customer_register_purpose
+        WHERE
+        phone_number = #{phoneNumber,jdbcType=VARCHAR}
+    </select>
+    <select id="listByCriteria"
+            parameterType="com.jaagro.crm.api.dto.request.customerRegister.ListCustomerRegisterPurposeCriteriaDto"
+            resultType="com.jaagro.crm.api.dto.response.customerRegister.CustomerRegisterPurposeDto">
+        SELECT id, name, phone_number, customer_type, goods_type, city, detail_address,
+        (CASE WHEN upload_time is NULL THEN create_time ELSE upload_time END) upload_time, notes
+        FROM customer_register_purpose
+        WHERE 1 = 1
+        <if test="name != null and name !=''">
+            <![CDATA[and (name like concat(#{name},'%') )]]>
+        </if>
+    </select>
+</mapper>

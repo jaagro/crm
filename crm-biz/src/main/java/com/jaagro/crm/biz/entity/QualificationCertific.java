@@ -11,6 +11,7 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class QualificationCertific implements Serializable {
+    private static final long serialVersionUID = -8084983478640563773L;
     /**
      * 客户资质证照主键id
      */

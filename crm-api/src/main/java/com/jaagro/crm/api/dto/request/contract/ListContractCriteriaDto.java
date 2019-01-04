@@ -12,6 +12,7 @@ import java.io.Serializable;
 @Accessors(chain = true)
 public class ListContractCriteriaDto implements Serializable {
 
+    private static final long serialVersionUID = -2518378905883744370L;
     /**
      * 当前页
      */

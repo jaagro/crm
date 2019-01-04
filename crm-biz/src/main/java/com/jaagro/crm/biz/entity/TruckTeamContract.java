@@ -12,6 +12,7 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class TruckTeamContract implements Serializable {
+    private static final long serialVersionUID = -1553939985741704500L;
     /**
      * 主键车队合同表ID
      */

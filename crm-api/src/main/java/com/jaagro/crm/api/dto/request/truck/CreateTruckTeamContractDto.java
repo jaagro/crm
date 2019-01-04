@@ -1,10 +1,12 @@
 package com.jaagro.crm.api.dto.request.truck;
 
 import com.jaagro.crm.api.dto.request.contract.CreateContractQualificationDto;
+import com.jaagro.crm.api.dto.request.contract.CreateDriverContractSettleDto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +16,7 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class CreateTruckTeamContractDto implements Serializable {
+    private static final long serialVersionUID = 4773938326501732602L;
     /**
      * 关联车队表ID
      */
@@ -45,13 +48,7 @@ public class CreateTruckTeamContractDto implements Serializable {
     private String notes;
 
     /**
-     * 合同报价
-     */
-    private List<CreateTruckTeamContractPriceDto> contractPriceDtoList;
-
-    /**
      * 合同资质证件照
      */
     private List<CreateContractQualificationDto> qualificationDtoList;
-
 }

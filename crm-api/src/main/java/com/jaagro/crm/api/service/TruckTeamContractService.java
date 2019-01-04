@@ -1,8 +1,16 @@
 package com.jaagro.crm.api.service;
 
+import com.github.pagehelper.PageInfo;
+import com.jaagro.crm.api.dto.request.contract.ContractOilPriceCondition;
+import com.jaagro.crm.api.dto.request.contract.CreateDriverContractSettleDto;
+import com.jaagro.crm.api.dto.request.contract.DriverContractSettleCondition;
+import com.jaagro.crm.api.dto.request.contract.GetContractOilPriceDto;
 import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContractDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckTeamContractCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamContractDto;
+import com.jaagro.crm.api.dto.response.truck.ListDriverContractSettleDto;
+import com.jaagro.crm.api.dto.response.truck.ListDriverContractSettlelInfoDto;
+import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
 
 import java.util.List;
 import java.util.Map;
@@ -63,4 +71,57 @@ public interface TruckTeamContractService {
      * @return
      */
     Map<String, Object> disableContract(Integer id);
+
+    /**
+     * 创建车队合同报价
+     */
+    void createTruckTeamContractPrice(CreateDriverContractSettleDto createDriverContractSettleDto);
+
+    /**
+     * 运力合同报价列表
+     *
+     * @param condition
+     * @return
+     */
+    List<ListDriverContractSettlelInfoDto> listTruckTeamContractPrice(DriverContractSettleCondition condition);
+
+    /**
+     * 运力合同报价详情
+     *
+     * @param condition
+     * @return
+     */
+    List<ListDriverContractSettleDto> listTruckTeamContractPriceDetails(DriverContractSettleCondition condition);
+
+    /**
+     * 当前车辆类型所有的报价历史记录
+     *
+     * @param condition
+     * @return
+     */
+    PageInfo<ListDriverContractSettleDto> listTruckTeamContractPriceHistoryDetails(DriverContractSettleCondition condition);
+
+    /**
+     * 根据条件查询某一类车型
+     *
+     * @param goodType
+     * @return
+     */
+    List<ListTruckTypeDto> listTruckTeamTypeByGoodType(Integer goodType);
+
+    /**
+     * 逻辑删除某一个类的车型
+     *
+     * @param condition
+     */
+    void deleteTeamContractPrice(DriverContractSettleCondition condition);
+
+    /**
+     * 获取最新的油价
+     *
+     * @return
+     */
+    GetContractOilPriceDto getNewOilPrice(ContractOilPriceCondition condition);
+
+
 }
