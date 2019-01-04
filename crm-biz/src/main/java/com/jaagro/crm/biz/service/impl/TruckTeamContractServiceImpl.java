@@ -315,10 +315,10 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                     .setMileagePrice(driverContractSettleDto.getMileagePrice());
         }
         if (null == driverContractSettleRule) {
-            TruckTeamContract truckTeamContract = truckTeamContractMapper.selectByPrimaryKey(driverContractSettleRule.getTruckTeamContractId());
+            TruckTeamContract truckTeamContract = truckTeamContractMapper.selectByPrimaryKey(driverContractSettleDto.getContractId());
             driverContractSettleParam
-                    .setEffectiveTime(driverContractSettleDto.getStartDate())
-                    .setInvalidTime(driverContractSettleDto.getEndDate());
+                    .setEffectiveTime(truckTeamContract.getStartDate())
+                    .setInvalidTime(truckTeamContract.getEndDate());
             if (judgeExpired(truckTeamContract.getEndDate())) {
                 throw new NullPointerException("当前合同已经过期了");
             }
