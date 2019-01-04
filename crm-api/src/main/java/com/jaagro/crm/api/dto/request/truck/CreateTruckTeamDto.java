@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Data
 @Accessors(chain = true)
 public class CreateTruckTeamDto implements Serializable {
+    private static final long serialVersionUID = 8626025285525011449L;
     /**
      * 车队名称
      */

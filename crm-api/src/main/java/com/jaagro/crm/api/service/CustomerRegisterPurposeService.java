@@ -5,6 +5,8 @@ import com.jaagro.crm.api.dto.request.customerRegister.ListCustomerRegisterPurpo
 import com.jaagro.crm.api.dto.request.customerRegister.UpdateCustomerRegisterPurposeDto;
 import com.jaagro.crm.api.dto.response.customerRegister.CustomerRegisterPurposeDto;
 
+import java.util.Map;
+
 /**
  * 客户注册意向管理
  *
@@ -27,7 +29,7 @@ public interface CustomerRegisterPurposeService {
      * @param verificationCode
      * @return
      */
-    Integer createCustomerRegisterByPhoneNumber(String phoneNumber, String verificationCode);
+    Map<String,Object> createCustomerRegisterByPhoneNumber(String phoneNumber, String verificationCode);
 
     /**
      * 根据id查询客户注册意向

@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Data
 @Accessors(chain = true)
 public class ListTruckQualificationCriteriaDto implements Serializable {
+    private static final long serialVersionUID = -128570102815998334L;
     private Integer pageNum;
     private Integer pageSize;
     private Integer truckTeamId;

@@ -1,8 +1,6 @@
 package com.jaagro.crm.biz.mapper;
 
-import com.jaagro.crm.biz.entity.NewsCategory;
-
-import java.util.List;
+import com.jaagro.crm.api.entity.NewsCategory;
 
 public interface NewsCategoryMapper {
 

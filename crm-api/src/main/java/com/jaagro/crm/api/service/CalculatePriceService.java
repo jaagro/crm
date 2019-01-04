@@ -27,4 +27,12 @@ public interface CalculatePriceService {
      * @return
      */
     List<Map<Integer,BigDecimal>> calculatePaymentToDriver(List<CalculatePaymentDto> dtoList);
+
+    /**
+     * 根据客户装卸货地实际里程获取结算单价
+     * @param mileage
+     * @param customerContractId
+     * @return
+     */
+    BigDecimal calculatePriceFromMileageSection(Integer customerContractId,BigDecimal mileage);
 }

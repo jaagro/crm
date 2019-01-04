@@ -12,6 +12,7 @@ import java.io.Serializable;
 @Accessors(chain = true)
 public class UpdateTruckTeamDto implements Serializable {
 
+    private static final long serialVersionUID = -3999953776870346939L;
     /**
      * id
      */

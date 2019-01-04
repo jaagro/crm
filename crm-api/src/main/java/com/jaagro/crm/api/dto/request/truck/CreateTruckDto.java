@@ -14,6 +14,7 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class CreateTruckDto implements Serializable {
+    private static final long serialVersionUID = -4707792704248775366L;
     /**
      * 主键车辆表ID
      */
@@ -98,6 +99,17 @@ public class CreateTruckDto implements Serializable {
      * 备注信息
      */
     private String notes;
+
+    /**
+     * 百公里油耗
+     */
+    private BigDecimal fuelConsumption;
+
+    /**
+     * 车辆类型
+     * 常量--TruckVehicleType
+     */
+    private Integer vehicleType;
 
     /**
      * 车辆资质列表

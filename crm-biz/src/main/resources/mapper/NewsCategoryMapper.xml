@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.jaagro.crm.biz.mapper.NewsCategoryMapperExt" >
-  <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.NewsCategory" >
+  <resultMap id="BaseResultMap" type="com.jaagro.crm.api.entity.NewsCategory" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="type" property="type" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
@@ -21,14 +21,14 @@
     delete from news_category
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.NewsCategory" useGeneratedKeys="true" keyProperty="id"
+  <insert id="insert" parameterType="com.jaagro.crm.api.entity.NewsCategory" useGeneratedKeys="true" keyProperty="id"
           keyColumn="id">
     insert into news_category (id, type, name, 
       category, create_time)
     values (#{id,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
       #{category,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.NewsCategory" useGeneratedKeys="true" keyProperty="id"
+  <insert id="insertSelective" parameterType="com.jaagro.crm.api.entity.NewsCategory" useGeneratedKeys="true" keyProperty="id"
           keyColumn="id">
     insert into news_category
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -66,7 +66,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.NewsCategory" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.api.entity.NewsCategory" >
     update news_category
     <set >
       <if test="type != null" >
@@ -84,7 +84,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.NewsCategory" >
+  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.api.entity.NewsCategory" >
     update news_category
     set type = #{type,jdbcType=INTEGER},
       name = #{name,jdbcType=VARCHAR},

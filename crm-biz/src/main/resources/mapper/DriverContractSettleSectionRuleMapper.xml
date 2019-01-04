@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jaagro.crm.biz.mapper.DriverContractSettleSectionRuleMapperExt" >
+  <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.DriverContractSettleSectionRule" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="truck_team_contract_id" property="truckTeamContractId" jdbcType="INTEGER" />
+    <result column="driver_contract_settle_rule_id" property="driverContractSettleRuleId" jdbcType="INTEGER" />
+    <result column="start" property="start" jdbcType="DECIMAL" />
+    <result column="end" property="end" jdbcType="DECIMAL" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="settle_price" property="settlePrice" jdbcType="DECIMAL" />
+    <result column="unit" property="unit" jdbcType="INTEGER" />
+    <result column="enable" property="enable" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, truck_team_contract_id, driver_contract_settle_rule_id, start, end, type, settle_price, 
+    unit, enable, create_time, create_user_id, modify_time, modify_user_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from driver_contract_settle_section_rule
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from driver_contract_settle_section_rule
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.DriverContractSettleSectionRule" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
+    insert into driver_contract_settle_section_rule (id, truck_team_contract_id, driver_contract_settle_rule_id, 
+      start, end, type, settle_price, 
+      unit, enable, create_time, 
+      create_user_id, modify_time, modify_user_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{truckTeamContractId,jdbcType=INTEGER}, #{driverContractSettleRuleId,jdbcType=INTEGER}, 
+      #{start,jdbcType=DECIMAL}, #{end,jdbcType=DECIMAL}, #{type,jdbcType=INTEGER}, #{settlePrice,jdbcType=DECIMAL}, 
+      #{unit,jdbcType=INTEGER}, #{enable,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createUserId,jdbcType=INTEGER}, #{modifyTime,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.DriverContractSettleSectionRule" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
+    insert into driver_contract_settle_section_rule
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="truckTeamContractId != null" >
+        truck_team_contract_id,
+      </if>
+      <if test="driverContractSettleRuleId != null" >
+        driver_contract_settle_rule_id,
+      </if>
+      <if test="start != null" >
+        start,
+      </if>
+      <if test="end != null" >
+        end,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="settlePrice != null" >
+        settle_price,
+      </if>
+      <if test="unit != null" >
+        unit,
+      </if>
+      <if test="enable != null" >
+        enable,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+      <if test="modifyUserId != null" >
+        modify_user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="truckTeamContractId != null" >
+        #{truckTeamContractId,jdbcType=INTEGER},
+      </if>
+      <if test="driverContractSettleRuleId != null" >
+        #{driverContractSettleRuleId,jdbcType=INTEGER},
+      </if>
+      <if test="start != null" >
+        #{start,jdbcType=DECIMAL},
+      </if>
+      <if test="end != null" >
+        #{end,jdbcType=DECIMAL},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="settlePrice != null" >
+        #{settlePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=INTEGER},
+      </if>
+      <if test="enable != null" >
+        #{enable,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyUserId != null" >
+        #{modifyUserId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.DriverContractSettleSectionRule" >
+    update driver_contract_settle_section_rule
+    <set >
+      <if test="truckTeamContractId != null" >
+        truck_team_contract_id = #{truckTeamContractId,jdbcType=INTEGER},
+      </if>
+      <if test="driverContractSettleRuleId != null" >
+        driver_contract_settle_rule_id = #{driverContractSettleRuleId,jdbcType=INTEGER},
+      </if>
+      <if test="start != null" >
+        start = #{start,jdbcType=DECIMAL},
+      </if>
+      <if test="end != null" >
+        end = #{end,jdbcType=DECIMAL},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="settlePrice != null" >
+        settle_price = #{settlePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="unit != null" >
+        unit = #{unit,jdbcType=INTEGER},
+      </if>
+      <if test="enable != null" >
+        enable = #{enable,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyUserId != null" >
+        modify_user_id = #{modifyUserId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.DriverContractSettleSectionRule" >
+    update driver_contract_settle_section_rule
+    set truck_team_contract_id = #{truckTeamContractId,jdbcType=INTEGER},
+      driver_contract_settle_rule_id = #{driverContractSettleRuleId,jdbcType=INTEGER},
+      start = #{start,jdbcType=DECIMAL},
+      end = #{end,jdbcType=DECIMAL},
+      type = #{type,jdbcType=INTEGER},
+      settle_price = #{settlePrice,jdbcType=DECIMAL},
+      unit = #{unit,jdbcType=INTEGER},
+      enable = #{enable,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      modify_user_id = #{modifyUserId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

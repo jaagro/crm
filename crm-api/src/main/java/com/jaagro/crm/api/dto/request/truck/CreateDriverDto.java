@@ -13,6 +13,7 @@ import java.util.List;
 @Accessors(chain = true)
 public class CreateDriverDto implements Serializable {
 
+    private static final long serialVersionUID = -4926643204203507318L;
     /**
      * 司机id
      */

@@ -3,9 +3,11 @@ package com.jaagro.crm.web.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.constant.AuditStatus;
+import com.jaagro.crm.api.constant.ContractType;
 import com.jaagro.crm.api.constant.WeChatCustomerType;
 import com.jaagro.crm.api.dto.base.GetCustomerUserDto;
 import com.jaagro.crm.api.dto.request.contract.*;
+import com.jaagro.crm.api.dto.request.customer.CreateContractOilPriceDto;
 import com.jaagro.crm.api.dto.request.customer.CreateQualificationVerifyLogDto;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto;
 import com.jaagro.crm.api.dto.request.customer.ShowSiteDto;
@@ -28,6 +30,7 @@ import io.swagger.annotations.ApiOperation;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,6 +73,12 @@ public class ContractController {
     private CurrentUserService currentUserService;
     @Autowired
     private CustomerSiteService siteService;
+    @Autowired
+    private CustomerContractSettlePriceService settlePriceService;
+    @Autowired
+    private ContractOilPriceService oilPriceService;
+    @Autowired
+    private CustomerContractSettleRuleService settleRuleService;
 
     /**
      * 合同新增
@@ -204,7 +213,7 @@ public class ContractController {
                 }
                 return BaseResponse.successInstance(result);
             }
-        }else{
+        } else {
             return BaseResponse.errorInstance("获取当前用户失败");
         }
         return BaseResponse.errorInstance("获取当前用户失败");
@@ -499,4 +508,111 @@ public class ContractController {
     public ShowCustomerContractDto getShowCustomerContractById(@PathVariable("id") Integer id) {
         return customerContractMapper.getShowCustomerContractById(id);
     }
+
+    //--------------------------------------------------------合同结算信息-----------------------------------------------------------
+
+    /**
+     * 合同报价新增
+     *
+     * @param priceDtoList
+     * @return
+     */
+    @ApiOperation("合同结算信息新增")
+    @PostMapping("/customerContractSettlePrice")
+    public BaseResponse createCustomerContractSettlePrice(@RequestBody List<CreateCustomerSettlePriceDto> priceDtoList) {
+        if (!CollectionUtils.isEmpty(priceDtoList)) {
+            for (CreateCustomerSettlePriceDto priceDto : priceDtoList) {
+                if (StringUtils.isEmpty(priceDto.getCustomerContractId())) {
+                    return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同id不能为空");
+                }
+                if (StringUtils.isEmpty(priceDto.getUnloadSiteId())) {
+                    return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同报价卸货地不能为空");
+                }
+                Boolean result = settlePriceService.createCustomerSettlePrice(priceDto);
+                if (!result) {
+                    return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "创建合同报价失败");
+                }
+            }
+            return BaseResponse.successInstance("创建合同结算成功");
+        }
+        return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同报价不能为空");
+    }
+
+    /**
+     * 删除结算信息
+     *
+     * @param priceId
+     * @return
+     */
+    @ApiOperation("合同结算信息删除")
+    @DeleteMapping("/customerContractSettlePrice/{priceId}")
+    public BaseResponse<Map<String, Object>> createCustomerContractSettleRule(@PathVariable("priceId") Integer priceId) {
+        return BaseResponse.service(settlePriceService.disableSettlePrice(priceId));
+    }
+
+    /**
+     * 修改结算信息
+     *
+     * @param priceDto
+     * @return
+     */
+    @ApiOperation("合同结算信息修改")
+    @PutMapping("/customerContractSettlePrice")
+    public BaseResponse<Map<String, Object>> customerContractSettlePrice(@RequestBody UpdateCustomerContractSettlePriceDto priceDto) {
+        return BaseResponse.service(settlePriceService.updateSettlePrice(priceDto));
+    }
+
+    /**
+     * 合同结算信息
+     *
+     * @param priceId
+     * @return
+     */
+    @ApiOperation("修改结算单价时查询历史纪录列表")
+    @PostMapping("/listCustomerContractSettlePriceHistory/{priceId}")
+    public BaseResponse listCustomerContractSettlePriceHistory(@PathVariable("priceId") Integer priceId) {
+        return BaseResponse.successInstance(settlePriceService.listCustomerContractSettlePriceHistory(priceId));
+    }
+
+    //--------------------------------------------------------合同结算配制-----------------------------------------------------------
+
+    /**
+     * 合同结算配制新增
+     *
+     * @param settleDto
+     * @return
+     */
+    @ApiOperation("合同结算配制新增")
+    @PostMapping("/customerContractSettleRule")
+    public BaseResponse<String> createCustomerContractSettleRule(@RequestBody CreateContractSettleDto settleDto) {
+        if (StringUtils.isEmpty(settleDto.getContractId())) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同id不能为空");
+        }
+        if (settleDto.getOilPriceDto() == null) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同油价不能为空");
+        }
+        if (settleDto.getRuleDto() == null) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同结算配制不能为空");
+        }
+        //油价
+        CreateContractOilPriceDto oilPriceDto = settleDto.getOilPriceDto();
+        oilPriceDto
+                .setContractId(settleDto.getContractId())
+                .setContractType(ContractType.CUSTOMER);
+        //结算配置
+        CreateCustomerSettleRuleDto ruleDto = settleDto.getRuleDto();
+        ruleDto.setCustomerContractId(settleDto.getContractId());
+        try {
+            Boolean ruleResult = settleRuleService.createSettleRule(ruleDto, oilPriceDto);
+            if (!ruleResult) {
+                return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "创建合同结算配置失败");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), ex.getMessage());
+        }
+        return BaseResponse.successInstance("新增成功");
+    }
+
+
 }

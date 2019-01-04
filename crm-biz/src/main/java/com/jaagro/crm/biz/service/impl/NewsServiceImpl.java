@@ -9,22 +9,22 @@ import com.jaagro.crm.api.dto.request.news.ListNewsCriteriaDto;
 import com.jaagro.crm.api.dto.request.news.UpdateNewsDto;
 import com.jaagro.crm.api.dto.response.news.NewsReturnDto;
 import com.jaagro.crm.biz.entity.News;
-import com.jaagro.crm.biz.entity.NewsCategory;
+import com.jaagro.crm.api.entity.NewsCategory;
 import com.jaagro.crm.biz.mapper.NewsCategoryMapperExt;
 import com.jaagro.crm.biz.mapper.NewsMapperExt;
-import com.jaagro.crm.biz.service.NewsService;
+import com.jaagro.crm.api.service.NewsService;
 import com.jaagro.crm.biz.service.OssSignUrlClientService;
 import com.jaagro.crm.biz.service.UserClientService;
+import com.jaagro.crm.biz.utils.UrlPathUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.net.URL;
+
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 /**
  * 新闻管理
@@ -195,66 +195,66 @@ public class NewsServiceImpl implements NewsService {
         return null;
     }
 
-    private String getAbstractImageUrl(String relativeImageUrl) {
-        if (StringUtils.hasText(relativeImageUrl)) {
-            String[] strArray = {relativeImageUrl};
-            List<URL> urls = ossSignUrlClientService.listSignedUrl(strArray);
-            if (!CollectionUtils.isEmpty(urls)) {
-                return urls.get(0).toString();
-            }
-        }
-        return null;
-    }
+//    private String getAbstractImageUrl(String relativeImageUrl) {
+//        if (StringUtils.hasText(relativeImageUrl)) {
+//            String[] strArray = {relativeImageUrl};
+//            List<URL> urls = ossSignUrlClientService.listSignedUrl(strArray);
+//            if (!CollectionUtils.isEmpty(urls)) {
+//                return urls.get(0).toString();
+//            }
+//        }
+//        return null;
+//    }
 
     private void convertImageUrl(NewsReturnDto newsReturnDto) {
         if (newsReturnDto != null) {
             if (StringUtils.hasText(newsReturnDto.getImageUrl())) {
-                newsReturnDto.setImageUrl(getAbstractImageUrl(newsReturnDto.getImageUrl()));
+                newsReturnDto.setImageUrl(UrlPathUtil.getAbstractImageUrl(newsReturnDto.getImageUrl()));
             }
             String content = newsReturnDto.getContent();
             if (StringUtils.hasText(content)){
                 // 获取新闻主体内容中所有的相对路径
-                List<String> imgStr = getImgUrl(content);
+                List<String> imgStr = UrlPathUtil.getImgUrl(content);
                 // 替换新闻主体内容中所有的相对路径改为绝对路径
-                content = replaceImageUrl(imgStr,content);
+                content = UrlPathUtil.replaceImageUrl(imgStr,content);
                 newsReturnDto.setContent(content);
             }
         }
     }
 
-    private String replaceImageUrl(List<String> imgStr, String content) {
-        if (!CollectionUtils.isEmpty(imgStr) && StringUtils.hasText(content)){
-            for (String imgUrl : imgStr){
-                String abstractImgUrl = getAbstractImageUrl(imgUrl);
-                content = content.replace(imgUrl,abstractImgUrl);
-            }
-        }
-        return content;
-    }
+//    private String replaceImageUrl(List<String> imgStr, String content) {
+//        if (!CollectionUtils.isEmpty(imgStr) && StringUtils.hasText(content)){
+//            for (String imgUrl : imgStr){
+//                String abstractImgUrl = UrlPathUtil.getAbstractImageUrl(imgUrl);
+//                content = content.replace(imgUrl,abstractImgUrl);
+//            }
+//        }
+//        return content;
+//    }
 
-    /**
-     *
-     * @param htmlStr
-     * @return
-     */
-    private static List<String> getImgUrl(String htmlStr) {
-        List<String> pics = new ArrayList<>();
-        String img ;
-        Pattern p_image;
-        Matcher m_image;
-        String regEx_img = "<.*img.*src\\s*=\\s*(.*?)[^>]*?>";
-        p_image = Pattern.compile(regEx_img, Pattern.CASE_INSENSITIVE);
-        m_image = p_image.matcher(htmlStr);
-        while (m_image.find()) {
-            // 得到<img />数据
-            img = m_image.group();
-            // 匹配<img>中的src数据
-            Matcher m = Pattern.compile("src\\s*=\\s*\"?(.*?)(\"|>|\\s+)").matcher(img);
-            while (m.find()) {
-                pics.add(m.group(1));
-            }
-        }
-        return pics;
-    }
-    
+//    /**
+//     *
+//     * @param htmlStr
+//     * @return
+//     */
+//    private static List<String> getImgUrl(String htmlStr) {
+//        List<String> pics = new ArrayList<>();
+//        String img ;
+//        Pattern p_image;
+//        Matcher m_image;
+//        String regEx_img = "<.*img.*src\\s*=\\s*(.*?)[^>]*?>";
+//        p_image = Pattern.compile(regEx_img, Pattern.CASE_INSENSITIVE);
+//        m_image = p_image.matcher(htmlStr);
+//        while (m_image.find()) {
+//            // 得到<img />数据
+//            img = m_image.group();
+//            // 匹配<img>中的src数据
+//            Matcher m = Pattern.compile("src\\s*=\\s*\"?(.*?)(\"|>|\\s+)").matcher(img);
+//            while (m.find()) {
+//                pics.add(m.group(1));
+//            }
+//        }
+//        return pics;
+//    }
+
 }

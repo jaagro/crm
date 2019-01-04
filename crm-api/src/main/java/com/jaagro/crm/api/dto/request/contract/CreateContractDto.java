@@ -14,6 +14,7 @@ import java.util.List;
 @Accessors(chain = true)
 public class CreateContractDto implements Serializable {
 
+    private static final long serialVersionUID = 2729052832985945646L;
     /**
      * 客户ID
      */
@@ -65,12 +66,8 @@ public class CreateContractDto implements Serializable {
     private String remark;
 
     /**
-     * 报价
-     */
-    private List<CreateContractPriceDto> price;
-
-    /**
      * 合同资质证件照
      */
     private List<CreateContractQualificationDto> qualificationDtos;
+
 }

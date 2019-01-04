@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class CreateListTruckQualificationDto implements Serializable {
+    private static final long serialVersionUID = 152952809080167650L;
     private Integer truckTeamId;
     private Integer truckId;
     private Integer driverId;

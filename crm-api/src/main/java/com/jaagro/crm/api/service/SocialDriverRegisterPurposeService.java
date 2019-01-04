@@ -37,7 +37,7 @@ public interface SocialDriverRegisterPurposeService {
      * @param verificationCode
      * @return
      */
-    Integer createSocialDriverByPhoneNumber(String phoneNumber,String verificationCode);
+    Map<String,Object> createSocialDriverByPhoneNumber(String phoneNumber,String verificationCode);
 
     /**
      * 注册发送验证码
