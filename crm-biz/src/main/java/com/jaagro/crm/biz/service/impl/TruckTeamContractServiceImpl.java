@@ -508,7 +508,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                     listDriverContractSettlelInfo4.add(listDriverContractSettlelInfoDto);
                     count4++;
                     List<ListTruckTypeDto> listTruckTypeDtos = truckTypeMapper.listAll(truckType.getProductName());
-                    if (count3.equals(listTruckTypeDtos.size())) {
+                    if (count4.equals(listTruckTypeDtos.size())) {
                         listDriverContractSettleInfoFlagDto4.setFlag(true);
                     }
                 }
