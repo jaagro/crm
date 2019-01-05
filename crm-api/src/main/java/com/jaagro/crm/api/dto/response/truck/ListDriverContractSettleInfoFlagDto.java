@@ -18,5 +18,5 @@ public class ListDriverContractSettleInfoFlagDto implements Serializable {
      */
     private boolean flag;
 
-    private List<ListDriverContractSettlelInfoDto> driverContractSettlelInfoDtos = new ArrayList<>();
+    private List<ListDriverContractSettleInfoDto> driverContractSettleInfoDtos = new ArrayList<>();
 }

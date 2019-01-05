@@ -11,7 +11,7 @@ import java.math.BigDecimal;
  */
 @Data
 @Accessors(chain = true)
-public class ListDriverContractSettlelInfoDto implements Serializable {
+public class ListDriverContractSettleInfoDto implements Serializable {
     /**
      * 合同运力结算配置表 id
      */

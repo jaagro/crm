@@ -11,7 +11,6 @@ import com.jaagro.crm.api.dto.request.truck.ListTruckTeamContractCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamContractDto;
 import com.jaagro.crm.api.dto.response.truck.ListDriverContractSettleDto;
 import com.jaagro.crm.api.dto.response.truck.ListDriverContractSettleInfoFlagDto;
-import com.jaagro.crm.api.dto.response.truck.ListDriverContractSettlelInfoDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
 
 import java.util.List;
