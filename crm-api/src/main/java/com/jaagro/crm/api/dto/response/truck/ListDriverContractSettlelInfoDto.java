@@ -58,4 +58,9 @@ public class ListDriverContractSettlelInfoDto implements Serializable {
      * 车辆类型id
      */
     private Integer truckTypeId;
+
+    /**
+     *
+     */
+    private boolean flag;
 }
