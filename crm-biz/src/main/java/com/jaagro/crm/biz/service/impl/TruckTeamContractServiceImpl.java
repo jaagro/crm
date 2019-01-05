@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.constant.*;
 import com.jaagro.crm.api.dto.request.contract.*;
+import com.jaagro.crm.api.dto.request.customer.CreateContractOilPriceDto;
 import com.jaagro.crm.api.dto.request.truck.*;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractOilPriceDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractQualificationDto;
