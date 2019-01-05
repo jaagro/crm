@@ -420,11 +420,11 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
         List<ListDriverContractSettlelInfoDto> listDriverContractSettlelInfo2 = new ArrayList<>();
         List<ListDriverContractSettlelInfoDto> listDriverContractSettlelInfo3 = new ArrayList<>();
         List<ListDriverContractSettlelInfoDto> listDriverContractSettlelInfo4 = new ArrayList<>();
+        List<ListDriverContractSettleInfoFlagDto> listDriverContractSettleInfoFlagDtos = new ArrayList<>();
         ListDriverContractSettleInfoFlagDto listDriverContractSettleInfoFlagDto1 = new ListDriverContractSettleInfoFlagDto();
         ListDriverContractSettleInfoFlagDto listDriverContractSettleInfoFlagDto2 = new ListDriverContractSettleInfoFlagDto();
         ListDriverContractSettleInfoFlagDto listDriverContractSettleInfoFlagDto3 = new ListDriverContractSettleInfoFlagDto();
         ListDriverContractSettleInfoFlagDto listDriverContractSettleInfoFlagDto4 = new ListDriverContractSettleInfoFlagDto();
-        List<ListDriverContractSettleInfoFlagDto> listDriverContractSettleInfoFlagDtos = new ArrayList<>();
         for (ListDriverContractSettleDto listDriverContractSettleDto : listDriverContractSettleDtos) {
             TruckType truckType = truckTypeMapper.selectByPrimaryKey(listDriverContractSettleDto.getTruckTypeId());
             ListDriverContractSettlelInfoDto listDriverContractSettlelInfoDto = new ListDriverContractSettlelInfoDto();
