@@ -417,7 +417,8 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
             ListDriverContractSettlelInfoDto listDriverContractSettlelInfoDto = new ListDriverContractSettlelInfoDto();
             listDriverContractSettlelInfoDto
                     .setTruckTypeName(truckType.getTypeName())
-                    .setContractSettleId(listDriverContractSettleDto.getId());
+                    .setContractSettleId(listDriverContractSettleDto.getId())
+                    .setTruckTypeId(listDriverContractSettleDto.getTruckTypeId());
             //按区间重量
             List<CreateDriverContractSettleSectionDto> createDriverContractSettleSectionDto =
                     listDriverContractSettleDto.getCreateDriverContractSettleSectionDto() == null ? null : listDriverContractSettleDto.getCreateDriverContractSettleSectionDto();
