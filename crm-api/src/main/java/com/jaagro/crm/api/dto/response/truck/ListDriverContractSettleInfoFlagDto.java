@@ -14,7 +14,7 @@ import java.util.List;
 @Accessors(chain = true)
 public class ListDriverContractSettleInfoFlagDto implements Serializable {
     /**
-     *
+     * 用于区分该类型已经全部显示
      */
     private boolean flag;
 
