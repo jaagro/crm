@@ -5,6 +5,7 @@ import com.jaagro.crm.api.dto.request.contract.ContractOilPriceCondition;
 import com.jaagro.crm.api.dto.request.contract.CreateDriverContractSettleDto;
 import com.jaagro.crm.api.dto.request.contract.DriverContractSettleCondition;
 import com.jaagro.crm.api.dto.request.contract.GetContractOilPriceDto;
+import com.jaagro.crm.api.dto.request.customer.CreateContractOilPriceDto;
 import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContractDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckTeamContractCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamContractDto;
@@ -123,5 +124,11 @@ public interface TruckTeamContractService {
      */
     GetContractOilPriceDto getNewOilPrice(ContractOilPriceCondition condition);
 
+    /**
+     * 更新油价
+     *
+     * @param createContractOilPriceDto
+     */
+    void updateOilPrice(CreateContractOilPriceDto createContractOilPriceDto);
 
 }

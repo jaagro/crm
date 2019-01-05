@@ -15,8 +15,4 @@ public class ContractOilPriceCondition implements Serializable {
      * 合同id
      */
     private Integer contractId;
-    /**
-     * 合同类型
-     */
-    private Integer contractType;
 }
