@@ -6,5 +6,6 @@
         FROM dictionary
         WHERE enable = 1
         AND category = #{category}
+        order by display_order asc
     </select>
 </mapper>
