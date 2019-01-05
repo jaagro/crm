@@ -409,13 +409,19 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
      * @author @Gao.
      */
     @Override
-    public List<ListDriverContractSettlelInfoDto> listTruckTeamContractPrice(DriverContractSettleCondition condition) {
+    public List<ListDriverContractSettleInfoFlagDto> listTruckTeamContractPrice(DriverContractSettleCondition condition) {
         Integer count1 = 0;
         Integer count2 = 0;
         Integer count3 = 0;
         condition.setFlag(1);
         List<ListDriverContractSettleDto> listDriverContractSettleDtos = driverContractSettleRuleMapper.listTruckTeamContractPriceCondition(condition);
-        List<ListDriverContractSettlelInfoDto> ListDriverContractSettlelInfo = new ArrayList<>();
+        List<ListDriverContractSettlelInfoDto> listDriverContractSettlelInfo1 = new ArrayList<>();
+        List<ListDriverContractSettlelInfoDto> listDriverContractSettlelInfo2 = new ArrayList<>();
+        List<ListDriverContractSettlelInfoDto> listDriverContractSettlelInfo3 = new ArrayList<>();
+        ListDriverContractSettleInfoFlagDto listDriverContractSettleInfoFlagDto1 = new ListDriverContractSettleInfoFlagDto();
+        ListDriverContractSettleInfoFlagDto listDriverContractSettleInfoFlagDto2 = new ListDriverContractSettleInfoFlagDto();
+        ListDriverContractSettleInfoFlagDto listDriverContractSettleInfoFlagDto3 = new ListDriverContractSettleInfoFlagDto();
+        List<ListDriverContractSettleInfoFlagDto> listDriverContractSettleInfoFlagDtos = new ArrayList<>();
         for (ListDriverContractSettleDto listDriverContractSettleDto : listDriverContractSettleDtos) {
             TruckType truckType = truckTypeMapper.selectByPrimaryKey(listDriverContractSettleDto.getTruckTypeId());
             ListDriverContractSettlelInfoDto listDriverContractSettlelInfoDto = new ListDriverContractSettlelInfoDto();
@@ -441,8 +447,9 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                 count1++;
                 List<ListTruckTypeDto> listTruckTypeDtos = truckTypeMapper.listAll(truckType.getProductName());
                 if (count1.equals(listTruckTypeDtos.size())) {
-                    listDriverContractSettlelInfoDto.setFlag(true);
+                    listDriverContractSettleInfoFlagDto1.setFlag(true);
                 }
+                listDriverContractSettlelInfo1.add(listDriverContractSettlelInfoDto);
             }
             if (GoodsType.CHICKEN.equals(Integer.parseInt(truckType.getProductName()))) {
                 // 按区间里程 羽鸡
@@ -458,10 +465,11 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                         count2++;
                         List<ListTruckTypeDto> listTruckTypeDtos = truckTypeMapper.listAll(truckType.getProductName());
                         if (count2.equals(listTruckTypeDtos.size())) {
-                            listDriverContractSettlelInfoDto.setFlag(true);
+                            listDriverContractSettleInfoFlagDto2.setFlag(true);
                         }
                     }
                 }
+                listDriverContractSettlelInfo2.add(listDriverContractSettlelInfoDto);
             }
             //仔猪 生猪类型
             boolean flag = (GoodsType.SOW.equals(Integer.parseInt(truckType.getProductName())) || GoodsType.BOAR.equals(Integer.parseInt(truckType.getProductName()))
@@ -488,12 +496,24 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                 count3++;
                 List<ListTruckTypeDto> listTruckTypeDtos = truckTypeMapper.listAll(truckType.getProductName());
                 if (count3.equals(listTruckTypeDtos.size())) {
-                    listDriverContractSettlelInfoDto.setFlag(true);
+                    listDriverContractSettleInfoFlagDto3.setFlag(true);
                 }
             }
-            ListDriverContractSettlelInfo.add(listDriverContractSettlelInfoDto);
+            listDriverContractSettlelInfo3.add(listDriverContractSettlelInfoDto);
         }
-        return ListDriverContractSettlelInfo;
+        listDriverContractSettleInfoFlagDto1
+                .setDriverContractSettlelInfoDtos(listDriverContractSettlelInfo1);
+        listDriverContractSettleInfoFlagDto2
+                .setDriverContractSettlelInfoDtos(listDriverContractSettlelInfo2);
+        listDriverContractSettleInfoFlagDto3
+                .setDriverContractSettlelInfoDtos(listDriverContractSettlelInfo3);
+        listDriverContractSettleInfoFlagDtos
+                .add(listDriverContractSettleInfoFlagDto1);
+        listDriverContractSettleInfoFlagDtos
+                .add(listDriverContractSettleInfoFlagDto2);
+        listDriverContractSettleInfoFlagDtos
+                .add(listDriverContractSettleInfoFlagDto3);
+        return listDriverContractSettleInfoFlagDtos;
     }
 
     /**
