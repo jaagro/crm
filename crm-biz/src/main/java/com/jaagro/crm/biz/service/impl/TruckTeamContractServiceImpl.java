@@ -471,7 +471,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                     listDriverContractSettlelInfoDto
                             .setPricingMethod(PricingMethod.BEGIN_WEIGHT)
                             .setBeginSettlePrice(listDriverContractSettleDto.getBeginPrice())
-                            .setMinSettleMileage(listDriverContractSettleDto.getMinSettleMileage());
+                            .setMinSettleMileage(listDriverContractSettleDto.getBeginMileage());
                 }
                 if (PricingMethod.SECTION_MILEAGE.equals(listDriverContractSettleDto.getPricingMethod())) {
                     if (!CollectionUtils.isEmpty(createDriverContractSettleSectionDto)) {
