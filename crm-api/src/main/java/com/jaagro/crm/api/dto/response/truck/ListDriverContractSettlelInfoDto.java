@@ -46,7 +46,7 @@ public class ListDriverContractSettlelInfoDto implements Serializable {
     private BigDecimal minSettleWeight;
 
     /**
-     *起步价
+     * 起步价
      */
     private BigDecimal beginSettlePrice;
 
@@ -54,4 +54,8 @@ public class ListDriverContractSettlelInfoDto implements Serializable {
      * 支付方式
      */
     private Integer pricingMethod;
+    /**
+     * 车辆类型id
+     */
+    private Integer truckTypeId;
 }

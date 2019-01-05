@@ -5,7 +5,6 @@ import com.github.pagehelper.PageInfo;
 import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.constant.*;
 import com.jaagro.crm.api.dto.request.contract.*;
-import com.jaagro.crm.api.dto.request.customer.CreateContractOilPriceDto;
 import com.jaagro.crm.api.dto.request.truck.*;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractOilPriceDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractQualificationDto;
@@ -316,11 +315,12 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                     .setMileagePrice(driverContractSettleDto.getMileagePrice());
         }
         if (null == driverContractSettleRule) {
+            TruckTeamContract truckTeamContract = truckTeamContractMapper.selectByPrimaryKey(driverContractSettleDto.getContractId());
             driverContractSettleParam
-                    .setEffectiveTime(driverContractSettleDto.getStartDate())
-                    .setInvalidTime(driverContractSettleDto.getEndDate());
-            if (judgeExpired(driverContractSettleDto.getEndDate())) {
-                throw new NullPointerException("合同截止日期应当小于当前时间");
+                    .setEffectiveTime(truckTeamContract.getStartDate())
+                    .setInvalidTime(truckTeamContract.getEndDate());
+            if (judgeExpired(truckTeamContract.getEndDate())) {
+                throw new NullPointerException("当前合同已经过期了");
             }
             //插入合同报价相关表
             saveDriverContractSettle(driverContractSettleDto, driverContractSettleParam, null);
@@ -417,7 +417,8 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
             ListDriverContractSettlelInfoDto listDriverContractSettlelInfoDto = new ListDriverContractSettlelInfoDto();
             listDriverContractSettlelInfoDto
                     .setTruckTypeName(truckType.getTypeName())
-                    .setContractSettleId(listDriverContractSettleDto.getId());
+                    .setContractSettleId(listDriverContractSettleDto.getId())
+                    .setTruckTypeId(listDriverContractSettleDto.getTruckTypeId());
             //按区间重量
             List<CreateDriverContractSettleSectionDto> createDriverContractSettleSectionDto =
                     listDriverContractSettleDto.getCreateDriverContractSettleSectionDto() == null ? null : listDriverContractSettleDto.getCreateDriverContractSettleSectionDto();
@@ -503,8 +504,12 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
             }
         }
         //批量逻辑删除
-        driverContractSettleRuleMapper.deleteDriverContractSettleById(driverContractSettleIds);
-        driverContractSettleSectionRuleMapper.deleteDriverContractSettleSectionById(driverContractSettleSectionIds);
+        if (!CollectionUtils.isEmpty(driverContractSettleIds)) {
+            driverContractSettleRuleMapper.deleteDriverContractSettleById(driverContractSettleIds);
+        }
+        if (!CollectionUtils.isEmpty(driverContractSettleSectionIds)) {
+            driverContractSettleSectionRuleMapper.deleteDriverContractSettleSectionById(driverContractSettleSectionIds);
+        }
     }
 
     /**

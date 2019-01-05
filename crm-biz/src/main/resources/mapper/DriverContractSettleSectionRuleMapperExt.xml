@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.jaagro.crm.biz.mapper.DriverContractSettleSectionRuleMapperExt">
     <resultMap id="ResultMap" type="com.jaagro.crm.api.dto.request.contract.CreateDriverContractSettleSectionDto">
-        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="id" property="id" jdbcType="INTEGER"/>
         <result column="start" property="start" jdbcType="DECIMAL"/>
         <result column="end" property="end" jdbcType="DECIMAL"/>
         <result column="type" property="type" jdbcType="INTEGER"/>
@@ -17,7 +17,7 @@
         and type = 1
     </select>
     <select id="listDriverContractSettleRuleBySettleRuleId" resultMap="ResultMap">
-        SELECT start,end,settle_price,type,unit
+        SELECT id,start,end,settle_price,unit
         FROM driver_contract_settle_section_rule
         WHERE 1=1
         and driver_contract_settle_rule_id = #{driverContractSettleRuleId}
