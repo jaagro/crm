@@ -413,14 +413,17 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
         Integer count1 = 0;
         Integer count2 = 0;
         Integer count3 = 0;
+        Integer count4 = 0;
         condition.setFlag(1);
         List<ListDriverContractSettleDto> listDriverContractSettleDtos = driverContractSettleRuleMapper.listTruckTeamContractPriceCondition(condition);
         List<ListDriverContractSettlelInfoDto> listDriverContractSettlelInfo1 = new ArrayList<>();
         List<ListDriverContractSettlelInfoDto> listDriverContractSettlelInfo2 = new ArrayList<>();
         List<ListDriverContractSettlelInfoDto> listDriverContractSettlelInfo3 = new ArrayList<>();
+        List<ListDriverContractSettlelInfoDto> listDriverContractSettlelInfo4 = new ArrayList<>();
         ListDriverContractSettleInfoFlagDto listDriverContractSettleInfoFlagDto1 = new ListDriverContractSettleInfoFlagDto();
         ListDriverContractSettleInfoFlagDto listDriverContractSettleInfoFlagDto2 = new ListDriverContractSettleInfoFlagDto();
         ListDriverContractSettleInfoFlagDto listDriverContractSettleInfoFlagDto3 = new ListDriverContractSettleInfoFlagDto();
+        ListDriverContractSettleInfoFlagDto listDriverContractSettleInfoFlagDto4 = new ListDriverContractSettleInfoFlagDto();
         List<ListDriverContractSettleInfoFlagDto> listDriverContractSettleInfoFlagDtos = new ArrayList<>();
         for (ListDriverContractSettleDto listDriverContractSettleDto : listDriverContractSettleDtos) {
             TruckType truckType = truckTypeMapper.selectByPrimaryKey(listDriverContractSettleDto.getTruckTypeId());
@@ -493,13 +496,24 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                                 .setMinSettleMileage(listDriverContractSettleDto.getMinSettleMileage());
                     }
                 }
-                count3++;
-                List<ListTruckTypeDto> listTruckTypeDtos = truckTypeMapper.listAll(truckType.getProductName());
-                if (count3.equals(listTruckTypeDtos.size())) {
-                    listDriverContractSettleInfoFlagDto3.setFlag(true);
+                //仔猪
+                if (GoodsType.PIGLET.equals(Integer.parseInt(truckType.getProductName()))) {
+                    listDriverContractSettlelInfo3.add(listDriverContractSettlelInfoDto);
+                    count3++;
+                    List<ListTruckTypeDto> listTruckTypeDtos = truckTypeMapper.listAll(truckType.getProductName());
+                    if (count3.equals(listTruckTypeDtos.size())) {
+                        listDriverContractSettleInfoFlagDto3.setFlag(true);
+                    }
+                } else {
+                    listDriverContractSettlelInfo4.add(listDriverContractSettlelInfoDto);
+                    count4++;
+                    List<ListTruckTypeDto> listTruckTypeDtos = truckTypeMapper.listAll(truckType.getProductName());
+                    if (count3.equals(listTruckTypeDtos.size())) {
+                        listDriverContractSettleInfoFlagDto4.setFlag(true);
+                    }
                 }
             }
-            listDriverContractSettlelInfo3.add(listDriverContractSettlelInfoDto);
+
         }
         listDriverContractSettleInfoFlagDto1
                 .setDriverContractSettlelInfoDtos(listDriverContractSettlelInfo1);
@@ -507,12 +521,16 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                 .setDriverContractSettlelInfoDtos(listDriverContractSettlelInfo2);
         listDriverContractSettleInfoFlagDto3
                 .setDriverContractSettlelInfoDtos(listDriverContractSettlelInfo3);
+        listDriverContractSettleInfoFlagDto4
+                .setDriverContractSettlelInfoDtos(listDriverContractSettlelInfo4);
         listDriverContractSettleInfoFlagDtos
                 .add(listDriverContractSettleInfoFlagDto1);
         listDriverContractSettleInfoFlagDtos
                 .add(listDriverContractSettleInfoFlagDto2);
         listDriverContractSettleInfoFlagDtos
                 .add(listDriverContractSettleInfoFlagDto3);
+        listDriverContractSettleInfoFlagDtos
+                .add(listDriverContractSettleInfoFlagDto4);
         return listDriverContractSettleInfoFlagDtos;
     }
 
