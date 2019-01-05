@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.constant.*;
 import com.jaagro.crm.api.dto.request.contract.*;
+import com.jaagro.crm.api.dto.request.customer.CreateContractOilPriceDto;
 import com.jaagro.crm.api.dto.request.truck.*;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractOilPriceDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractQualificationDto;
@@ -431,6 +432,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                             .setUnit(driverContractSettleSection.getUnit())
                             .setType(driverContractSettleSection.getType())
                             .setBeginSettlePrice(driverContractSettleSection.getSettlePrice());
+
                 }
             }
             //按区间里程
@@ -520,10 +522,13 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     @Override
     public GetContractOilPriceDto getNewOilPrice(ContractOilPriceCondition condition) {
         ReturnContractOilPriceDto contractIdAndType = null;
-        if (condition.getContractId() != null && condition.getContractType() != null) {
-            contractIdAndType = contractOilPriceMapper.getByContractIdAndType(condition.getContractId(), condition.getContractType());
+        if (condition.getContractId() != null) {
+            contractIdAndType = contractOilPriceMapper.getByContractIdAndType(condition.getContractId(), ContractType.DRIVER);
         }
-        BaseResponse<UserInfo> globalUser = userClientService.getGlobalUser(contractIdAndType.getCreateUserId());
+        BaseResponse<UserInfo> globalUser = null;
+        if (contractIdAndType != null) {
+            globalUser = userClientService.getGlobalUser(contractIdAndType.getCreateUserId());
+        }
         GetContractOilPriceDto contractOilPriceDto = new GetContractOilPriceDto();
         if (contractIdAndType != null) {
             if (globalUser.getData() != null) {
@@ -535,6 +540,25 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                     .setCreateTime(contractIdAndType.getCreateTime());
         }
         return contractOilPriceDto;
+    }
+
+    /**
+     * 更新油价
+     *
+     * @param createContractOilPriceDto
+     */
+    @Override
+    public void updateOilPrice(CreateContractOilPriceDto createContractOilPriceDto) {
+        TruckTeamContract truckTeamContract = truckTeamContractMapper.selectByPrimaryKey(createContractOilPriceDto.getContractId());
+        if (truckTeamContract != null) {
+            //插入油价
+            createContractOilPriceDto
+                    .setContractType(ContractType.DRIVER)
+                    .setEffectiveTime(truckTeamContract.getStartDate())
+                    .setInvalidTime(truckTeamContract.getEndDate())
+                    .setContractId(createContractOilPriceDto.getContractId());
+            contractOilPriceService.createOilPrice(createContractOilPriceDto);
+        }
     }
 
     /**
