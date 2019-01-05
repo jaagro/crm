@@ -504,8 +504,12 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
             }
         }
         //批量逻辑删除
-        driverContractSettleRuleMapper.deleteDriverContractSettleById(driverContractSettleIds);
-        driverContractSettleSectionRuleMapper.deleteDriverContractSettleSectionById(driverContractSettleSectionIds);
+        if (!CollectionUtils.isEmpty(driverContractSettleIds)) {
+            driverContractSettleRuleMapper.deleteDriverContractSettleById(driverContractSettleIds);
+        }
+        if (!CollectionUtils.isEmpty(driverContractSettleSectionIds)) {
+            driverContractSettleSectionRuleMapper.deleteDriverContractSettleSectionById(driverContractSettleSectionIds);
+        }
     }
 
     /**
