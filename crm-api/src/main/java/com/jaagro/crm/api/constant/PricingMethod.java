@@ -17,5 +17,5 @@ public final class PricingMethod {
     /**
      * 按起步里程+里程单价(仔猪/生猪)
      */
-    public static final Integer BEGIN_WEIGHT = 3;
+    public static final Integer BEGIN_MILEAGE = 3;
 }

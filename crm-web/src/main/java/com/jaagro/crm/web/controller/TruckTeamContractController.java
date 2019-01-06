@@ -142,10 +142,12 @@ public class TruckTeamContractController {
     @ApiOperation("合同报价列表")
     @PostMapping("/listTruckTeamContractPrice")
     public BaseResponse listTruckTeamContractPrice(@RequestBody DriverContractSettleCondition condition) {
-        return BaseResponse.successInstance(truckTeamContractService.listTruckTeamContractPrice(condition));
+        return BaseResponse.successInstance(truckTeamContractService.listDriverContractPrice(condition));
     }
 
-    @ApiOperation("合同报价列表")
+
+
+    @ApiOperation("合同报价明细")
     @PostMapping("/listTruckTeamContractPriceDetails")
     public BaseResponse listTruckTeamContractPriceDetails(@RequestBody DriverContractSettleCondition condition) {
         return BaseResponse.successInstance(truckTeamContractService.listTruckTeamContractPriceDetails(condition));

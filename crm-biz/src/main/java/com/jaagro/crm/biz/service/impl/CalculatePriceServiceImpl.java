@@ -346,7 +346,7 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
                 mileage = driverContractSettleRule.getMinSettleMileage();
             }
             // 按区间重量单价,按区间里程单价
-            if (!driverContractSettleRule.getPricingMethod().equals(PricingMethod.BEGIN_WEIGHT)) {
+            if (!driverContractSettleRule.getPricingMethod().equals(PricingMethod.BEGIN_MILEAGE)) {
                 // 获取里程区间
                 DriverContractSettleSectionRule effectiveSection = null;
                 List<DriverContractSettleSectionRule> settleSectionRuleList = driverContractSettleSectionRuleMapperExt.listByDriverContractSettleRuleId(driverContractSettleRule.getId());

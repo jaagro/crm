@@ -87,6 +87,13 @@ public interface TruckTeamContractService {
     List<ListDriverContractSettleInfoFlagDto> listTruckTeamContractPrice(DriverContractSettleCondition condition);
 
     /**
+     * 运力合同报价列表
+     * @param condition
+     * @return
+     */
+    ListDriverContractSettleInfoFlagDto listDriverContractPrice(DriverContractSettleCondition condition);
+
+    /**
      * 运力合同报价详情
      *
      * @param condition

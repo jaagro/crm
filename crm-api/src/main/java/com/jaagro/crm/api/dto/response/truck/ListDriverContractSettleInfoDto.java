@@ -58,5 +58,9 @@ public class ListDriverContractSettleInfoDto implements Serializable {
      * 车辆类型id
      */
     private Integer truckTypeId;
+    /**
+     * 起始里程(起步计价,公里为单位)
+     */
+    private BigDecimal beginMileage;
 
 }
