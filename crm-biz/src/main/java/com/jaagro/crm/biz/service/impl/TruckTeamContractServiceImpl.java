@@ -579,6 +579,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
         for (ListDriverContractSettleDto dto : driverContractSettleDtoList ){
             ListDriverContractSettleInfoDto driverContractSettleInfoDto = new ListDriverContractSettleInfoDto();
             BeanUtils.copyProperties(dto,driverContractSettleInfoDto);
+            driverContractSettleInfoDto.setContractSettleId(dto.getId());
             if (PricingMethod.BEGIN_MILEAGE.equals(dto.getPricingMethod())){
                 driverContractSettleInfoDto
                         .setBeginSettlePrice(dto.getBeginPrice());
