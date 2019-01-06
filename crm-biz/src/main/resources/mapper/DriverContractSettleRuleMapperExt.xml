@@ -103,7 +103,7 @@
         from driver_contract_settle_rule
         where enable=1
         AND  history_flag = 0
-        <if test="truckTeamContractId!=null">
+        <if test="truckTeamContractId != null">
             and truck_team_contract_id=#{truckTeamContractId}
         </if>
     </select>

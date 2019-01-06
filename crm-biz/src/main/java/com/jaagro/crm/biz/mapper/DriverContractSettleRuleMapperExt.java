@@ -55,5 +55,5 @@ public interface DriverContractSettleRuleMapperExt extends DriverContractSettleR
      * @param truckTeamContractId
      * @return
      */
-    List<ListDriverContractSettleDto> listByTruckTeamContractId(Integer truckTeamContractId);
+    List<ListDriverContractSettleDto> listByTruckTeamContractId(@Param("truckTeamContractId") Integer truckTeamContractId);
 }
