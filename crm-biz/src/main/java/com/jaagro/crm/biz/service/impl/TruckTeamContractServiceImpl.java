@@ -563,6 +563,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
         }else{
             listTruckTypeDtoList = truckTypeMapper.listAll(GoodsType.BOAR.toString());
         }
+        log.info("listTruckTypeDtoList={}",listTruckTypeDtoList);
         if (CollectionUtils.isEmpty(listTruckTypeDtoList)){
             throw new RuntimeException("找不到该业务类型下面的车型");
         }
