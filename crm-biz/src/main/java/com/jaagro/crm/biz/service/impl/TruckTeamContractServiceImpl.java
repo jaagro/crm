@@ -553,15 +553,16 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
         if(businessType == null){
             throw new RuntimeException("车队合同业务类型为空");
         }
+        log.info("businessType={}",businessType);
         List<ListTruckTypeDto> listTruckTypeDtoList;
         if (BusinessType.FODDER.equals(businessType)){
-            listTruckTypeDtoList = truckTypeMapper.listAll(GoodsType.FODDER.toString());
+            listTruckTypeDtoList = truckTypeMapper.listAll(String.valueOf(GoodsType.FODDER));
         }else if(BusinessType.CHICKEN.equals(businessType)){
-            listTruckTypeDtoList = truckTypeMapper.listAll(GoodsType.CHICKEN.toString());
+            listTruckTypeDtoList = truckTypeMapper.listAll(String.valueOf(GoodsType.CHICKEN));
         }else if(BusinessType.PIGLET.equals(businessType)){
-            listTruckTypeDtoList = truckTypeMapper.listAll(GoodsType.PIGLET.toString());
+            listTruckTypeDtoList = truckTypeMapper.listAll(String.valueOf(GoodsType.PIGLET));
         }else{
-            listTruckTypeDtoList = truckTypeMapper.listAll(GoodsType.BOAR.toString());
+            listTruckTypeDtoList = truckTypeMapper.listAll(String.valueOf(GoodsType.BOAR));
         }
         log.info("listTruckTypeDtoList={}",listTruckTypeDtoList);
         if (CollectionUtils.isEmpty(listTruckTypeDtoList)){

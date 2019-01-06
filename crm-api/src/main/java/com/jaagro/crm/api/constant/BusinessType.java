@@ -7,13 +7,13 @@ package com.jaagro.crm.api.constant;
  */
 public final class BusinessType {
     /**
-     * 饲料运输
-     */
-    public static final Integer FODDER = 1;
-    /**
      * 毛鸡运输
      */
-    public static final Integer CHICKEN = 2;
+    public static final Integer CHICKEN = 1;
+    /**
+     * 饲料运输
+     */
+    public static final Integer FODDER = 2;
     /**
      * 仔猪运输
      */
