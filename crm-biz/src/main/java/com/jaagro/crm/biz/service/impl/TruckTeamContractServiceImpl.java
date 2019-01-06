@@ -577,14 +577,15 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
         }
         List<ListDriverContractSettleInfoDto> driverContractSettleInfoDtoList = new ArrayList<>();
         for (ListDriverContractSettleDto dto : driverContractSettleDtoList ){
+            log.info("dto={}",dto);
             ListDriverContractSettleInfoDto driverContractSettleInfoDto = new ListDriverContractSettleInfoDto();
             BeanUtils.copyProperties(dto,driverContractSettleInfoDto);
             driverContractSettleInfoDto.setContractSettleId(dto.getId());
+            log.info("driverContractSettleInfoDto={}",driverContractSettleInfoDto);
             if (PricingMethod.BEGIN_MILEAGE.equals(dto.getPricingMethod())){
                 driverContractSettleInfoDto
                         .setBeginSettlePrice(dto.getBeginPrice());
             }else{
-                driverContractSettleInfoDto.setPricingMethod(PricingMethod.SECTION_WEIGHT);
                 List<CreateDriverContractSettleSectionDto> DriverContractSettleSectionDtoList = dto.getCreateDriverContractSettleSectionDto();
                 if (!CollectionUtils.isEmpty(DriverContractSettleSectionDtoList)){
                     CreateDriverContractSettleSectionDto driverContractSettleSectionDto = DriverContractSettleSectionDtoList.get(0);
