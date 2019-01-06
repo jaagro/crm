@@ -17,7 +17,7 @@
         and type = 1
     </select>
     <select id="listDriverContractSettleRuleBySettleRuleId" resultMap="ResultMap">
-        SELECT id,start,end,settle_price,unit
+        SELECT id,start,end,settle_price,type,unit
         FROM driver_contract_settle_section_rule
         WHERE 1=1
         and driver_contract_settle_rule_id = #{driverContractSettleRuleId}
