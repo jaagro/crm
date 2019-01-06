@@ -550,6 +550,9 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
             throw new RuntimeException("车队合同id="+condition.getTruckTeamContractId()+"不存在");
         }
         Integer businessType = truckTeamContract.getBussinessType();
+        if(businessType == null){
+            throw new RuntimeException("车队合同业务类型为空");
+        }
         List<ListTruckTypeDto> listTruckTypeDtoList;
         if (BusinessType.FODDER.equals(businessType)){
             listTruckTypeDtoList = truckTypeMapper.listAll(GoodsType.FODDER.toString());
