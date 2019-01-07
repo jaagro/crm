@@ -52,6 +52,7 @@ public class ExpressServiceImpl implements ExpressService {
         if (createExpressDto != null) {
             Express express = new Express();
             BeanUtils.copyProperties(createExpressDto, express);
+            express.setPublishTime(new Date());
             UserInfo currentUser = currentUserService.getCurrentUser();
             express.setCreateTime(new Date())
                     .setCreateUserId(currentUser == null ? null : currentUser.getId())

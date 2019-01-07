@@ -3,6 +3,8 @@ package com.jaagro.crm.biz.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.constant.UserInfo;
+import com.jaagro.crm.api.constant.CustomerUserType;
+import com.jaagro.crm.api.constant.UserType;
 import com.jaagro.crm.api.dto.base.GetCustomerUserDto;
 import com.jaagro.crm.api.dto.request.customerRegister.ListCustomerRegisterPurposeCriteriaDto;
 import com.jaagro.crm.api.dto.request.customerRegister.UpdateCustomerRegisterPurposeDto;
@@ -14,13 +16,16 @@ import com.jaagro.crm.biz.service.UserClientService;
 import com.jaagro.crm.biz.service.VerificationCodeClientService;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
+import com.jaagro.utils.ServiceKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 客户注册意向管理
@@ -60,20 +65,39 @@ public class CustomerRegisterPurposeServiceImpl implements CustomerRegisterPurpo
      * @return
      */
     @Override
-    public Integer createCustomerRegisterByPhoneNumber(String phoneNumber, String verificationCode) {
+    public Map<String,Object> createCustomerRegisterByPhoneNumber(String phoneNumber, String verificationCode) {
+        Map<String,Object> result = new HashMap<>(3);
         boolean existMessage = verificationCodeClientService.existMessage(phoneNumber, verificationCode);
         if (!existMessage) {
             throw new RuntimeException("验证码不正确");
         }
+        result.put(ServiceKey.success.name(),Boolean.FALSE);
         CustomerRegisterPurpose customerRegisterPurpose = customerRegisterPurposeMapperExt.selectByPhoneNumber(phoneNumber);
         if (customerRegisterPurpose != null) {
-            throw new RuntimeException("该手机号已注册");
+            if (customerRegisterPurpose.getUploadFlag() != null && customerRegisterPurpose.getUploadFlag()){
+                result.put("userType", UserType.VISITOR_CUSTOMER_U);
+                result.put(ServiceKey.msg.name(),"该手机号已填写基本信息");
+            }else {
+                result.put("userType", UserType.VISITOR_CUSTOMER_P);
+                result.put(ServiceKey.msg.name(),"该手机号已注册");
+            }
+            return result;
         }
         BaseResponse<GetCustomerUserDto> response = userClientService.getCustomerUserByPhoneNumber(phoneNumber);
         if (ResponseStatusCode.OPERATION_SUCCESS.getCode() == response.getStatusCode()) {
             GetCustomerUserDto customerUserDto = response.getData();
             if (customerUserDto != null) {
-                throw new RuntimeException("该手机号已注册");
+                if (CustomerUserType.LOAD_SITE.equals(customerUserDto.getCustomerType())){
+                    result.put("userType",UserType.LOAD_SITE);
+                    result.put(ServiceKey.msg.name(),"该手机号已注册为装货地客户,请直接登录");
+                }else if (CustomerUserType.UNLOAD_SITE.equals(customerUserDto.getCustomerType())){
+                    result.put("userType",UserType.UNLOAD_SITE);
+                    result.put(ServiceKey.msg.name(),"该手机号已注册为卸货地客户,请直接登录");
+                }else {
+                    result.put("userType", UserType.CUSTOMER);
+                    result.put(ServiceKey.msg.name(),"该手机号已注册为正式客户,请直接登录");
+                }
+                return result;
             }
         }
         int nextUserId = userClientService.getNextUserId();
@@ -82,7 +106,9 @@ public class CustomerRegisterPurposeServiceImpl implements CustomerRegisterPurpo
                 .setCreateTime(new Date())
                 .setId(nextUserId);
         customerRegisterPurposeMapperExt.insertSelective(customerRegisterPurpose);
-        return customerRegisterPurpose.getId();
+        result.put("userType","");
+        result.put(ServiceKey.success.name(),Boolean.TRUE);
+        return result;
     }
 
     /**

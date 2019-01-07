@@ -29,7 +29,7 @@ public class DictionaryController {
 
     @GetMapping("/listDictionaryByCategory")
     @ApiOperation(value = "根据类别查询字典列表")
-    public BaseResponse listDictionaryByCategory(@RequestParam("category") String category) {
+    public BaseResponse<List<DictionaryVo>> listDictionaryByCategory(@RequestParam("category") String category) {
         List<DictionaryDto> dictionaryDtoList = dictionaryService.listByCategory(category);
         if (CollectionUtils.isEmpty(dictionaryDtoList)) {
             return BaseResponse.queryDataEmpty();
@@ -40,6 +40,6 @@ public class DictionaryController {
             dictionaryVo.setDictionaryId(dictionaryDto.getId()).setDictionaryName(dictionaryDto.getTypeName());
             dictionaryVoList.add(dictionaryVo);
         });
-        return BaseResponse.successInstance(dictionaryDtoList);
+        return BaseResponse.successInstance(dictionaryVoList);
     }
 }

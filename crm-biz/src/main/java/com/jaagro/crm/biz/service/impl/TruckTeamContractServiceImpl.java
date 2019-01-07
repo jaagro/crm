@@ -116,7 +116,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
         TruckTeamContractReturnDto contractReturnDto = truckTeamContractMapper.getById(id);
         if (contractReturnDto.getQualificationDtoList().size() > 0) {
             for (ReturnContractQualificationDto qualificationDto : contractReturnDto.getQualificationDtoList()
-            ) {
+                    ) {
                 //替换资质证照地址
                 String[] strArray = {qualificationDto.getCertificateImageUrl()};
                 List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
@@ -194,7 +194,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
         List<ListTruckTeamContractDto> returnDtoList = this.truckTeamContractMapper.listByCriteria(criteriaDto);
         if (returnDtoList.size() > 0) {
             for (ListTruckTeamContractDto contractDto : returnDtoList
-            ) {
+                    ) {
                 TruckTeam truckTeam = this.truckTeamMapper.selectByPrimaryKey(contractDto.getTruckTeamId());
                 if (truckTeam != null) {
                     contractDto.setTruckTeamName(truckTeam.getTeamName());
@@ -308,19 +308,20 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                     .setMinSettleMileage(driverContractSettleDto.getMinSettleMileage());
         }
         //3-按照起步价
-        if (PricingMethod.BEGIN_WEIGHT.equals(driverContractSettleDto.getPricingMethod())) {
+        if (PricingMethod.BEGIN_MILEAGE.equals(driverContractSettleDto.getPricingMethod())) {
             driverContractSettleParam
-                    .setPricingMethod(PricingMethod.BEGIN_WEIGHT)
+                    .setPricingMethod(PricingMethod.BEGIN_MILEAGE)
                     .setBeginMileage(driverContractSettleDto.getBeginMileage())
                     .setBeginPrice(driverContractSettleDto.getBeginPrice())
                     .setMileagePrice(driverContractSettleDto.getMileagePrice());
         }
         if (null == driverContractSettleRule) {
+            TruckTeamContract truckTeamContract = truckTeamContractMapper.selectByPrimaryKey(driverContractSettleDto.getContractId());
             driverContractSettleParam
-                    .setEffectiveTime(driverContractSettleDto.getStartDate())
-                    .setInvalidTime(driverContractSettleDto.getEndDate());
-            if (judgeExpired(driverContractSettleDto.getEndDate())) {
-                throw new NullPointerException("合同截止日期应当小于当前时间");
+                    .setEffectiveTime(truckTeamContract.getStartDate())
+                    .setInvalidTime(truckTeamContract.getEndDate());
+            if (judgeExpired(truckTeamContract.getEndDate())) {
+                throw new NullPointerException("当前合同已经过期了");
             }
             //插入合同报价相关表
             saveDriverContractSettle(driverContractSettleDto, driverContractSettleParam, null);
@@ -408,52 +409,198 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
      * @author @Gao.
      */
     @Override
-    public List<ListDriverContractSettlelInfoDto> listTruckTeamContractPrice(DriverContractSettleCondition condition) {
+    public List<ListDriverContractSettleInfoFlagDto> listTruckTeamContractPrice(DriverContractSettleCondition condition) {
+        Integer count1 = 0;
+        Integer count2 = 0;
+        Integer count3 = 0;
+        Integer count4 = 0;
         condition.setFlag(1);
         List<ListDriverContractSettleDto> listDriverContractSettleDtos = driverContractSettleRuleMapper.listTruckTeamContractPriceCondition(condition);
-        List<ListDriverContractSettlelInfoDto> ListDriverContractSettlelInfo = new ArrayList<>();
+        List<ListDriverContractSettleInfoDto> listDriverContractSettleInfo1 = new ArrayList<>();
+        List<ListDriverContractSettleInfoDto> listDriverContractSettleInfo2 = new ArrayList<>();
+        List<ListDriverContractSettleInfoDto> listDriverContractSettleInfo3 = new ArrayList<>();
+        List<ListDriverContractSettleInfoDto> listDriverContractSettleInfo4 = new ArrayList<>();
+        List<ListDriverContractSettleInfoFlagDto> listDriverContractSettleInfoFlagDtos = new ArrayList<>();
+        ListDriverContractSettleInfoFlagDto listDriverContractSettleInfoFlagDto1 = new ListDriverContractSettleInfoFlagDto();
+        ListDriverContractSettleInfoFlagDto listDriverContractSettleInfoFlagDto2 = new ListDriverContractSettleInfoFlagDto();
+        ListDriverContractSettleInfoFlagDto listDriverContractSettleInfoFlagDto3 = new ListDriverContractSettleInfoFlagDto();
+        ListDriverContractSettleInfoFlagDto listDriverContractSettleInfoFlagDto4 = new ListDriverContractSettleInfoFlagDto();
+        if (CollectionUtils.isEmpty(listDriverContractSettleDtos)) {
+            return new ArrayList<>();
+        }
         for (ListDriverContractSettleDto listDriverContractSettleDto : listDriverContractSettleDtos) {
             TruckType truckType = truckTypeMapper.selectByPrimaryKey(listDriverContractSettleDto.getTruckTypeId());
-            ListDriverContractSettlelInfoDto listDriverContractSettlelInfoDto = new ListDriverContractSettlelInfoDto();
-            listDriverContractSettlelInfoDto
+            ListDriverContractSettleInfoDto listDriverContractSettleInfoDto = new ListDriverContractSettleInfoDto();
+            listDriverContractSettleInfoDto
                     .setTruckTypeName(truckType.getTypeName())
-                    .setContractSettleId(listDriverContractSettleDto.getId());
-            //按区间重量
-            List<CreateDriverContractSettleSectionDto> createDriverContractSettleSectionDto =
-                    listDriverContractSettleDto.getCreateDriverContractSettleSectionDto() == null ? null : listDriverContractSettleDto.getCreateDriverContractSettleSectionDto();
-            if (PricingMethod.SECTION_WEIGHT.equals(listDriverContractSettleDto.getPricingMethod())) {
-                if (!CollectionUtils.isEmpty(createDriverContractSettleSectionDto)) {
-                    CreateDriverContractSettleSectionDto driverContractSettleSection = createDriverContractSettleSectionDto.get(0);
-                    listDriverContractSettlelInfoDto
-                            .setPricingMethod(PricingMethod.SECTION_WEIGHT)
-                            .setMinSettleWeight(listDriverContractSettleDto.getMinSettleWeight())
-                            .setUnit(driverContractSettleSection.getUnit())
-                            .setType(driverContractSettleSection.getType())
-                            .setBeginSettlePrice(driverContractSettleSection.getSettlePrice());
+                    .setContractSettleId(listDriverContractSettleDto.getId())
+                    .setTruckTypeId(listDriverContractSettleDto.getTruckTypeId());
+            //按区间重量 饲料
+            List<CreateDriverContractSettleSectionDto> createDriverContractSettleSectionDto = listDriverContractSettleDto.getCreateDriverContractSettleSectionDto();
+            if (GoodsType.FODDER.equals(Integer.parseInt(truckType.getProductName()))) {
+                if (PricingMethod.SECTION_WEIGHT.equals(listDriverContractSettleDto.getPricingMethod())) {
+                    if (!CollectionUtils.isEmpty(createDriverContractSettleSectionDto)) {
+                        CreateDriverContractSettleSectionDto driverContractSettleSection = createDriverContractSettleSectionDto.get(0);
+                        listDriverContractSettleInfoDto
+                                .setPricingMethod(PricingMethod.SECTION_WEIGHT)
+                                .setMinSettleWeight(listDriverContractSettleDto.getMinSettleWeight())
+                                .setUnit(driverContractSettleSection.getUnit())
+                                .setType(driverContractSettleSection.getType())
+                                .setBeginSettlePrice(driverContractSettleSection.getSettlePrice());
+                    }
+                }
+                count1++;
+                List<ListTruckTypeDto> listTruckTypeDtos = truckTypeMapper.listAll(truckType.getProductName());
+                if (count1.equals(listTruckTypeDtos.size())) {
+                    listDriverContractSettleInfoFlagDto1.setFlag(true);
+                }
+                listDriverContractSettleInfo1.add(listDriverContractSettleInfoDto);
+            }
+            if (GoodsType.CHICKEN.equals(Integer.parseInt(truckType.getProductName()))) {
+                // 按区间里程 羽鸡
+                if (PricingMethod.SECTION_MILEAGE.equals(listDriverContractSettleDto.getPricingMethod())) {
+                    if (!CollectionUtils.isEmpty(createDriverContractSettleSectionDto)) {
+                        CreateDriverContractSettleSectionDto driverContractSettleSection = createDriverContractSettleSectionDto.get(0);
+                        listDriverContractSettleInfoDto
+                                .setPricingMethod(PricingMethod.SECTION_MILEAGE)
+                                .setUnit(driverContractSettleSection.getUnit())
+                                .setType(driverContractSettleSection.getType())
+                                .setBeginSettlePrice(driverContractSettleSection.getSettlePrice())
+                                .setMinSettleMileage(listDriverContractSettleDto.getMinSettleMileage());
+                        count2++;
+                        List<ListTruckTypeDto> listTruckTypeDtos = truckTypeMapper.listAll(truckType.getProductName());
+                        if (count2.equals(listTruckTypeDtos.size())) {
+                            listDriverContractSettleInfoFlagDto2.setFlag(true);
+                        }
+                    }
+                }
+                listDriverContractSettleInfo2.add(listDriverContractSettleInfoDto);
+            }
+            //仔猪 生猪类型
+            boolean flag = (GoodsType.SOW.equals(Integer.parseInt(truckType.getProductName())) || GoodsType.BOAR.equals(Integer.parseInt(truckType.getProductName()))
+                    || GoodsType.PIGLET.equals(Integer.parseInt(truckType.getProductName())) || GoodsType.LIVE_PIG.equals(Integer.parseInt(truckType.getProductName())));
+            if (flag) {
+                //按起步价
+                if (PricingMethod.BEGIN_MILEAGE.equals(listDriverContractSettleDto.getPricingMethod())) {
+                    listDriverContractSettleInfoDto
+                            .setPricingMethod(PricingMethod.BEGIN_MILEAGE)
+                            .setBeginSettlePrice(listDriverContractSettleDto.getBeginPrice())
+                            .setMinSettleMileage(listDriverContractSettleDto.getBeginMileage());
+                }
+                if (PricingMethod.SECTION_MILEAGE.equals(listDriverContractSettleDto.getPricingMethod())) {
+                    if (!CollectionUtils.isEmpty(createDriverContractSettleSectionDto)) {
+                        CreateDriverContractSettleSectionDto driverContractSettleSection = createDriverContractSettleSectionDto.get(0);
+                        listDriverContractSettleInfoDto
+                                .setPricingMethod(PricingMethod.SECTION_MILEAGE)
+                                .setUnit(driverContractSettleSection.getUnit())
+                                .setType(driverContractSettleSection.getType())
+                                .setBeginSettlePrice(driverContractSettleSection.getSettlePrice())
+                                .setMinSettleMileage(listDriverContractSettleDto.getMinSettleMileage());
+                    }
+                }
+                //仔猪
+                if (GoodsType.PIGLET.equals(Integer.parseInt(truckType.getProductName()))) {
+                    listDriverContractSettleInfo3.add(listDriverContractSettleInfoDto);
+                    count3++;
+                    List<ListTruckTypeDto> listTruckTypeDtos = truckTypeMapper.listAll(truckType.getProductName());
+                    if (count3.equals(listTruckTypeDtos.size())) {
+                        listDriverContractSettleInfoFlagDto3.setFlag(true);
+                    }
+                } else {
+                    listDriverContractSettleInfo4.add(listDriverContractSettleInfoDto);
+                    count4++;
+                    List<ListTruckTypeDto> listTruckTypeDtos = truckTypeMapper.listAll(truckType.getProductName());
+                    if (count4.equals(listTruckTypeDtos.size())) {
+                        listDriverContractSettleInfoFlagDto4.setFlag(true);
+                    }
                 }
             }
-            //按区间里程
-            if (PricingMethod.SECTION_MILEAGE.equals(listDriverContractSettleDto.getPricingMethod())) {
-                if (!CollectionUtils.isEmpty(createDriverContractSettleSectionDto)) {
-                    CreateDriverContractSettleSectionDto driverContractSettleSection = createDriverContractSettleSectionDto.get(0);
-                    listDriverContractSettlelInfoDto
-                            .setPricingMethod(PricingMethod.SECTION_MILEAGE)
-                            .setUnit(driverContractSettleSection.getUnit())
-                            .setType(driverContractSettleSection.getType())
-                            .setBeginSettlePrice(driverContractSettleSection.getSettlePrice())
-                            .setMinSettleMileage(listDriverContractSettleDto.getMinSettleMileage());
-                }
-            }
-            //按起步价
-            if (PricingMethod.BEGIN_WEIGHT.equals(listDriverContractSettleDto.getPricingMethod())) {
-                listDriverContractSettlelInfoDto
-                        .setPricingMethod(PricingMethod.BEGIN_WEIGHT)
-                        .setBeginSettlePrice(listDriverContractSettleDto.getBeginPrice())
-                        .setMinSettleMileage(listDriverContractSettleDto.getMinSettleMileage());
-            }
-            ListDriverContractSettlelInfo.add(listDriverContractSettlelInfoDto);
+
         }
-        return ListDriverContractSettlelInfo;
+        listDriverContractSettleInfoFlagDto1
+                .setDriverContractSettleInfoDtos(listDriverContractSettleInfo1);
+        listDriverContractSettleInfoFlagDto2
+                .setDriverContractSettleInfoDtos(listDriverContractSettleInfo2);
+        listDriverContractSettleInfoFlagDto3
+                .setDriverContractSettleInfoDtos(listDriverContractSettleInfo3);
+        listDriverContractSettleInfoFlagDto4
+                .setDriverContractSettleInfoDtos(listDriverContractSettleInfo4);
+        listDriverContractSettleInfoFlagDtos
+                .add(listDriverContractSettleInfoFlagDto1);
+        listDriverContractSettleInfoFlagDtos
+                .add(listDriverContractSettleInfoFlagDto2);
+        listDriverContractSettleInfoFlagDtos
+                .add(listDriverContractSettleInfoFlagDto3);
+        listDriverContractSettleInfoFlagDtos
+                .add(listDriverContractSettleInfoFlagDto4);
+        return listDriverContractSettleInfoFlagDtos;
+    }
+
+    /**
+     * 运力合同报价列表
+     *
+     * @param condition
+     * @return
+     */
+    @Override
+    public ListDriverContractSettleInfoFlagDto listDriverContractPrice(DriverContractSettleCondition condition) {
+        // 根据合同id获取货物类型
+        TruckTeamContract truckTeamContract = truckTeamContractMapper.selectByPrimaryKey(condition.getTruckTeamContractId());
+        if (truckTeamContract == null){
+            throw new RuntimeException("车队合同id="+condition.getTruckTeamContractId()+"不存在");
+        }
+        Integer businessType = truckTeamContract.getBussinessType();
+        if(businessType == null){
+            throw new RuntimeException("车队合同业务类型为空");
+        }
+        log.info("businessType={}",businessType);
+        List<ListTruckTypeDto> listTruckTypeDtoList;
+        if (BusinessType.FODDER.equals(businessType)){
+            listTruckTypeDtoList = truckTypeMapper.listAll(String.valueOf(GoodsType.FODDER));
+        }else if(BusinessType.CHICKEN.equals(businessType)){
+            listTruckTypeDtoList = truckTypeMapper.listAll(String.valueOf(GoodsType.CHICKEN));
+        }else if(BusinessType.PIGLET.equals(businessType)){
+            listTruckTypeDtoList = truckTypeMapper.listAll(String.valueOf(GoodsType.PIGLET));
+        }else{
+            listTruckTypeDtoList = truckTypeMapper.listAll(String.valueOf(GoodsType.BOAR));
+        }
+        log.info("listTruckTypeDtoList={}",listTruckTypeDtoList);
+        if (CollectionUtils.isEmpty(listTruckTypeDtoList)){
+            throw new RuntimeException("找不到该业务类型下面的车型");
+        }
+        List<ListDriverContractSettleDto> driverContractSettleDtoList = driverContractSettleRuleMapper.listByTruckTeamContractId(condition.getTruckTeamContractId());
+        if (CollectionUtils.isEmpty(driverContractSettleDtoList)){
+            return new ListDriverContractSettleInfoFlagDto();
+        }
+        ListDriverContractSettleInfoFlagDto driverContractSettleInfoFlagDto = new ListDriverContractSettleInfoFlagDto();
+        driverContractSettleInfoFlagDto.setFlag(false);
+        if (listTruckTypeDtoList.size() == driverContractSettleDtoList.size()){
+            driverContractSettleInfoFlagDto.setFlag(true);
+        }
+        List<ListDriverContractSettleInfoDto> driverContractSettleInfoDtoList = new ArrayList<>();
+        for (ListDriverContractSettleDto dto : driverContractSettleDtoList ){
+            log.info("dto={}",dto);
+            ListDriverContractSettleInfoDto driverContractSettleInfoDto = new ListDriverContractSettleInfoDto();
+            BeanUtils.copyProperties(dto,driverContractSettleInfoDto);
+            driverContractSettleInfoDto.setContractSettleId(dto.getId());
+            log.info("driverContractSettleInfoDto={}",driverContractSettleInfoDto);
+            if (PricingMethod.BEGIN_MILEAGE.equals(dto.getPricingMethod())){
+                driverContractSettleInfoDto
+                        .setBeginSettlePrice(dto.getBeginPrice());
+            }else{
+                List<CreateDriverContractSettleSectionDto> DriverContractSettleSectionDtoList = dto.getCreateDriverContractSettleSectionDto();
+                if (!CollectionUtils.isEmpty(DriverContractSettleSectionDtoList)){
+                    CreateDriverContractSettleSectionDto driverContractSettleSectionDto = DriverContractSettleSectionDtoList.get(0);
+                    driverContractSettleInfoDto
+                            .setUnit(driverContractSettleSectionDto.getUnit())
+                            .setType(driverContractSettleSectionDto.getType())
+                            .setBeginSettlePrice(driverContractSettleSectionDto.getSettlePrice());
+                }
+            }
+            driverContractSettleInfoDtoList.add(driverContractSettleInfoDto);
+        }
+        driverContractSettleInfoFlagDto.setDriverContractSettleInfoDtos(driverContractSettleInfoDtoList);
+        return driverContractSettleInfoFlagDto;
     }
 
     /**
@@ -503,8 +650,12 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
             }
         }
         //批量逻辑删除
-        driverContractSettleRuleMapper.deleteDriverContractSettleById(driverContractSettleIds);
-        driverContractSettleSectionRuleMapper.deleteDriverContractSettleSectionById(driverContractSettleSectionIds);
+        if (!CollectionUtils.isEmpty(driverContractSettleIds)) {
+            driverContractSettleRuleMapper.deleteDriverContractSettleById(driverContractSettleIds);
+        }
+        if (!CollectionUtils.isEmpty(driverContractSettleSectionIds)) {
+            driverContractSettleSectionRuleMapper.deleteDriverContractSettleSectionById(driverContractSettleSectionIds);
+        }
     }
 
     /**
@@ -515,10 +666,13 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     @Override
     public GetContractOilPriceDto getNewOilPrice(ContractOilPriceCondition condition) {
         ReturnContractOilPriceDto contractIdAndType = null;
-        if (condition.getContractId() != null && condition.getContractType() != null) {
-            contractIdAndType = contractOilPriceMapper.getByContractIdAndType(condition.getContractId(), condition.getContractType());
+        if (condition.getContractId() != null) {
+            contractIdAndType = contractOilPriceMapper.getByContractIdAndType(condition.getContractId(), ContractType.DRIVER);
         }
-        BaseResponse<UserInfo> globalUser = userClientService.getGlobalUser(contractIdAndType.getCreateUserId());
+        BaseResponse<UserInfo> globalUser = null;
+        if (contractIdAndType != null) {
+            globalUser = userClientService.getGlobalUser(contractIdAndType.getCreateUserId());
+        }
         GetContractOilPriceDto contractOilPriceDto = new GetContractOilPriceDto();
         if (contractIdAndType != null) {
             if (globalUser.getData() != null) {
@@ -530,6 +684,25 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                     .setCreateTime(contractIdAndType.getCreateTime());
         }
         return contractOilPriceDto;
+    }
+
+    /**
+     * 更新油价
+     *
+     * @param createContractOilPriceDto
+     */
+    @Override
+    public void updateOilPrice(CreateContractOilPriceDto createContractOilPriceDto) {
+        TruckTeamContract truckTeamContract = truckTeamContractMapper.selectByPrimaryKey(createContractOilPriceDto.getContractId());
+        if (truckTeamContract != null) {
+            //插入油价
+            createContractOilPriceDto
+                    .setContractType(ContractType.DRIVER)
+                    .setEffectiveTime(truckTeamContract.getStartDate())
+                    .setInvalidTime(truckTeamContract.getEndDate())
+                    .setContractId(createContractOilPriceDto.getContractId());
+            contractOilPriceService.createOilPrice(createContractOilPriceDto);
+        }
     }
 
     /**
