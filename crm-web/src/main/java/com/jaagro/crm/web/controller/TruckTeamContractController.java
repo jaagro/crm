@@ -146,7 +146,6 @@ public class TruckTeamContractController {
     }
 
 
-
     @ApiOperation("合同报价明细")
     @PostMapping("/listTruckTeamContractPriceDetails")
     public BaseResponse listTruckTeamContractPriceDetails(@RequestBody DriverContractSettleCondition condition) {
@@ -201,30 +200,35 @@ public class TruckTeamContractController {
         if (!CollectionUtils.isEmpty(listDriverContractSettleDtoPageInfo.getList())) {
             listDriverContractSettleDtos = listDriverContractSettleDtoPageInfo.getList();
         }
+        if (listDriverContractSettleDtos == null) {
+            throw new RuntimeException("当前没有合同报价历史记录");
+        }
         for (ListDriverContractSettleDto listDriverContractSettleDto : listDriverContractSettleDtos) {
-            TruckTeamContractPriceHistoryVo truckTeamContractPriceHistoryVo = new TruckTeamContractPriceHistoryVo();
-            if (truckTeamContract == null) {
-                truckTeamContract = truckTeamContractMapper.selectByPrimaryKey(listDriverContractSettleDto.getTruckTeamContractId());
+            if (listDriverContractSettleDto != null) {
+                TruckTeamContractPriceHistoryVo truckTeamContractPriceHistoryVo = new TruckTeamContractPriceHistoryVo();
+                if (truckTeamContract == null) {
+                    truckTeamContract = truckTeamContractMapper.selectByPrimaryKey(listDriverContractSettleDto.getTruckTeamContractId());
 
+                }
+                if (truckTeamContract != null && truckTeam == null) {
+                    truckTeam = truckTeamMapper.selectByPrimaryKey(truckTeamContract.getTruckTeamId());
+                }
+                BaseResponse<UserInfo> globalUser = userClientService.getGlobalUser(listDriverContractSettleDto.getCreateUserId());
+                UserInfo userInfo = null;
+                if (globalUser.getData() != null) {
+                    userInfo = globalUser.getData();
+                }
+                BeanUtils.copyProperties(listDriverContractSettleDto, truckTeamContractPriceHistoryVo);
+                truckTeamContractPriceHistoryVo
+                        .setTeamType(truckTeam.getTeamType() == null ? null : truckTeam.getTeamType())
+                        .setTruckTeamName(truckTeam.getTeamName() == null ? null : truckTeam.getTeamName())
+                        .setCreateUserName(userInfo.getName() == null ? null : userInfo.getName());
+                List<CreateDriverContractSettleSectionDto> createDriverContractSettleSectionDto = listDriverContractSettleDto.getCreateDriverContractSettleSectionDto();
+                if (!CollectionUtils.isEmpty(createDriverContractSettleSectionDto)) {
+                    truckTeamContractPriceHistoryVo.setCreateDriverContractSettleSectionDto(createDriverContractSettleSectionDto);
+                }
+                truckTeamContractPriceHistoryVos.add(truckTeamContractPriceHistoryVo);
             }
-            if (truckTeamContract != null && truckTeam == null) {
-                truckTeam = truckTeamMapper.selectByPrimaryKey(truckTeamContract.getTruckTeamId());
-            }
-            BaseResponse<UserInfo> globalUser = userClientService.getGlobalUser(listDriverContractSettleDto.getCreateUserId());
-            UserInfo userInfo = null;
-            if (globalUser.getData() != null) {
-                userInfo = globalUser.getData();
-            }
-            BeanUtils.copyProperties(listDriverContractSettleDto, truckTeamContractPriceHistoryVo);
-            truckTeamContractPriceHistoryVo
-                    .setTeamType(truckTeam.getTeamType() == null ? null : truckTeam.getTeamType())
-                    .setTruckTeamName(truckTeam.getTeamName() == null ? null : truckTeam.getTeamName())
-                    .setCreateUserName(userInfo.getName() == null ? null : userInfo.getName());
-            List<CreateDriverContractSettleSectionDto> createDriverContractSettleSectionDto = listDriverContractSettleDto.getCreateDriverContractSettleSectionDto();
-            if (!CollectionUtils.isEmpty(createDriverContractSettleSectionDto)) {
-                truckTeamContractPriceHistoryVo.setCreateDriverContractSettleSectionDto(createDriverContractSettleSectionDto);
-            }
-            truckTeamContractPriceHistoryVos.add(truckTeamContractPriceHistoryVo);
         }
         listDriverContractSettleDtoPageInfo.setList(truckTeamContractPriceHistoryVos);
         return BaseResponse.successInstance(listDriverContractSettleDtoPageInfo);
