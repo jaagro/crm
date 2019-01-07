@@ -116,7 +116,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
         TruckTeamContractReturnDto contractReturnDto = truckTeamContractMapper.getById(id);
         if (contractReturnDto.getQualificationDtoList().size() > 0) {
             for (ReturnContractQualificationDto qualificationDto : contractReturnDto.getQualificationDtoList()
-                    ) {
+            ) {
                 //替换资质证照地址
                 String[] strArray = {qualificationDto.getCertificateImageUrl()};
                 List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
@@ -194,7 +194,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
         List<ListTruckTeamContractDto> returnDtoList = this.truckTeamContractMapper.listByCriteria(criteriaDto);
         if (returnDtoList.size() > 0) {
             for (ListTruckTeamContractDto contractDto : returnDtoList
-                    ) {
+            ) {
                 TruckTeam truckTeam = this.truckTeamMapper.selectByPrimaryKey(contractDto.getTruckTeamId());
                 if (truckTeam != null) {
                     contractDto.setTruckTeamName(truckTeam.getTeamName());
@@ -546,50 +546,50 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     public ListDriverContractSettleInfoFlagDto listDriverContractPrice(DriverContractSettleCondition condition) {
         // 根据合同id获取货物类型
         TruckTeamContract truckTeamContract = truckTeamContractMapper.selectByPrimaryKey(condition.getTruckTeamContractId());
-        if (truckTeamContract == null){
-            throw new RuntimeException("车队合同id="+condition.getTruckTeamContractId()+"不存在");
+        if (truckTeamContract == null) {
+            throw new RuntimeException("车队合同id=" + condition.getTruckTeamContractId() + "不存在");
         }
         Integer businessType = truckTeamContract.getBussinessType();
-        if(businessType == null){
+        if (businessType == null) {
             throw new RuntimeException("车队合同业务类型为空");
         }
-        log.info("businessType={}",businessType);
+        log.info("businessType={}", businessType);
         List<ListTruckTypeDto> listTruckTypeDtoList;
-        if (BusinessType.FODDER.equals(businessType)){
+        if (BusinessType.FODDER.equals(businessType)) {
             listTruckTypeDtoList = truckTypeMapper.listAll(String.valueOf(GoodsType.FODDER));
-        }else if(BusinessType.CHICKEN.equals(businessType)){
+        } else if (BusinessType.CHICKEN.equals(businessType)) {
             listTruckTypeDtoList = truckTypeMapper.listAll(String.valueOf(GoodsType.CHICKEN));
-        }else if(BusinessType.PIGLET.equals(businessType)){
+        } else if (BusinessType.PIGLET.equals(businessType)) {
             listTruckTypeDtoList = truckTypeMapper.listAll(String.valueOf(GoodsType.PIGLET));
-        }else{
+        } else {
             listTruckTypeDtoList = truckTypeMapper.listAll(String.valueOf(GoodsType.BOAR));
         }
-        log.info("listTruckTypeDtoList={}",listTruckTypeDtoList);
-        if (CollectionUtils.isEmpty(listTruckTypeDtoList)){
+        log.info("listTruckTypeDtoList={}", listTruckTypeDtoList);
+        if (CollectionUtils.isEmpty(listTruckTypeDtoList)) {
             throw new RuntimeException("找不到该业务类型下面的车型");
         }
         List<ListDriverContractSettleDto> driverContractSettleDtoList = driverContractSettleRuleMapper.listByTruckTeamContractId(condition.getTruckTeamContractId());
-        if (CollectionUtils.isEmpty(driverContractSettleDtoList)){
+        if (CollectionUtils.isEmpty(driverContractSettleDtoList)) {
             return new ListDriverContractSettleInfoFlagDto();
         }
         ListDriverContractSettleInfoFlagDto driverContractSettleInfoFlagDto = new ListDriverContractSettleInfoFlagDto();
         driverContractSettleInfoFlagDto.setFlag(false);
-        if (listTruckTypeDtoList.size() == driverContractSettleDtoList.size()){
+        if (listTruckTypeDtoList.size() == driverContractSettleDtoList.size()) {
             driverContractSettleInfoFlagDto.setFlag(true);
         }
         List<ListDriverContractSettleInfoDto> driverContractSettleInfoDtoList = new ArrayList<>();
-        for (ListDriverContractSettleDto dto : driverContractSettleDtoList ){
-            log.info("dto={}",dto);
+        for (ListDriverContractSettleDto dto : driverContractSettleDtoList) {
+            log.info("dto={}", dto);
             ListDriverContractSettleInfoDto driverContractSettleInfoDto = new ListDriverContractSettleInfoDto();
-            BeanUtils.copyProperties(dto,driverContractSettleInfoDto);
+            BeanUtils.copyProperties(dto, driverContractSettleInfoDto);
             driverContractSettleInfoDto.setContractSettleId(dto.getId());
-            log.info("driverContractSettleInfoDto={}",driverContractSettleInfoDto);
-            if (PricingMethod.BEGIN_MILEAGE.equals(dto.getPricingMethod())){
+            log.info("driverContractSettleInfoDto={}", driverContractSettleInfoDto);
+            if (PricingMethod.BEGIN_MILEAGE.equals(dto.getPricingMethod())) {
                 driverContractSettleInfoDto
                         .setBeginSettlePrice(dto.getBeginPrice());
-            }else{
+            } else {
                 List<CreateDriverContractSettleSectionDto> DriverContractSettleSectionDtoList = dto.getCreateDriverContractSettleSectionDto();
-                if (!CollectionUtils.isEmpty(DriverContractSettleSectionDtoList)){
+                if (!CollectionUtils.isEmpty(DriverContractSettleSectionDtoList)) {
                     CreateDriverContractSettleSectionDto driverContractSettleSectionDto = DriverContractSettleSectionDtoList.get(0);
                     driverContractSettleInfoDto
                             .setUnit(driverContractSettleSectionDto.getUnit())
@@ -611,9 +611,14 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
      * @author @Gao.
      */
     @Override
-    public List<ListDriverContractSettleDto> listTruckTeamContractPriceDetails(DriverContractSettleCondition condition) {
+    public ListDriverContractSettleDto listTruckTeamContractPriceDetails(DriverContractSettleCondition condition) {
         condition.setFlag(2);
-        return driverContractSettleRuleMapper.listTruckTeamContractPriceCondition(condition);
+        List<ListDriverContractSettleDto> listDriverContractSettleDtos = driverContractSettleRuleMapper.listTruckTeamContractPriceCondition(condition);
+        ListDriverContractSettleDto listDriverContractSettle = null;
+        if (!CollectionUtils.isEmpty(listDriverContractSettleDtos)) {
+            listDriverContractSettle = listDriverContractSettleDtos.get(0);
+        }
+        return listDriverContractSettle;
     }
 
     /**
