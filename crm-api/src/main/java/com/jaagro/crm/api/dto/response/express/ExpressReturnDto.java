@@ -59,4 +59,9 @@ public class ExpressReturnDto implements Serializable{
      * 创建人部门名称
      */
     private String departmentName;
+
+    /**
+     * 标签查询字段
+     */
+    private String  tags;
 }
