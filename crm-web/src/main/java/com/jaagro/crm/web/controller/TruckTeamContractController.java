@@ -201,7 +201,7 @@ public class TruckTeamContractController {
             listDriverContractSettleDtos = listDriverContractSettleDtoPageInfo.getList();
         }
         if (listDriverContractSettleDtos == null) {
-            throw new RuntimeException("当前没有合同报价历史记录");
+            throw new RuntimeException("当前车类型没有运力合同报价历史记录");
         }
         for (ListDriverContractSettleDto listDriverContractSettleDto : listDriverContractSettleDtos) {
             if (listDriverContractSettleDto != null) {
