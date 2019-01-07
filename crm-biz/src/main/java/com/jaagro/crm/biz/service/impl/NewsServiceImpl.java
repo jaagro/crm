@@ -55,6 +55,9 @@ public class NewsServiceImpl implements NewsService {
     public boolean createNews(CreateNewsDto createNewsDto) {
         News news = new News();
         BeanUtils.copyProperties(createNewsDto, news);
+        // 内容里空格标签替换成空格,已跟前端约定
+        String content = createNewsDto.getContent().replace("&nbsp; "," ").replace("&nbsp;"," ");
+        news.setContent(content);
         UserInfo currentUser = currentUserService.getCurrentUser();
         news.setCreateTime(new Date())
                 .setCreateUserId(currentUser == null ? null : currentUser.getId())
@@ -90,6 +93,9 @@ public class NewsServiceImpl implements NewsService {
     public boolean updateNews(UpdateNewsDto updateNewsDto) {
         News news = new News();
         BeanUtils.copyProperties(updateNewsDto, news);
+        // 内容里空格标签替换成空格,已跟前端约定
+        String content = updateNewsDto.getContent().replace("&nbsp; "," ").replace("&nbsp;"," ");
+        news.setContent(content);
         UserInfo currentUser = currentUserService.getCurrentUser();
         news.setModifyTime(new Date())
                 .setModifyUserId(currentUser == null ? null : currentUser.getId());
