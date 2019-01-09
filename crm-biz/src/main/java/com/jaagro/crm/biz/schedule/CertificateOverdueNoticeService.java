@@ -168,6 +168,7 @@ public class CertificateOverdueNoticeService {
         for (DriverReturnDto driver : drivers) {
             Map<String, String> extraParam = new HashMap<>();
             extraParam.put("driverId", driver.getId().toString());
+            extraParam.put("needVoice", "n");
             regId = driver.getRegistrationId() == null ? null : driver.getRegistrationId();
             Map<String, Object> templateMap = new HashMap<>();
             templateMap.put("driver", driver.getName());
