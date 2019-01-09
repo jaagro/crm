@@ -29,7 +29,7 @@ public class TruckTeamContract implements Serializable {
     private String contractNumber;
 
     /**
-     * 业务类型(1 饲料运输 2 毛鸡运输 3 仔猪 4生猪)
+     * 业务类型(1 饲料运输 2 毛鸡运输 4 生猪运输 5 仔猪运输)
      */
     private Integer bussinessType;
 
