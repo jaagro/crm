@@ -20,7 +20,10 @@ public class ExpressReturnDto implements Serializable{
      * 智库直通车id
      */
     private Integer id;
-
+    /**
+     * 类别:1智库类；2直通车
+     */
+    private Integer categoryId;
     /**
      * 标题
      */

@@ -235,7 +235,7 @@ public class TruckTeamContractController {
         return BaseResponse.successInstance(listDriverContractSettleDtoPageInfo);
     }
     @ApiOperation("根据车队ID查询车队合同列表")
-    @PostMapping("/getTruckTeamContractByTruckTeamId/truckTeamId")
+    @PostMapping("/getTruckTeamContractByTruckTeamId/{truckTeamId}")
     public List<TruckTeamContractReturnDto> getTruckTeamContractByTruckTeamId(@PathVariable("truckTeamId") Integer truckTeamId) {
 
         return truckTeamContractService.getTruckTeamContractByTruckTeamId(truckTeamId);
