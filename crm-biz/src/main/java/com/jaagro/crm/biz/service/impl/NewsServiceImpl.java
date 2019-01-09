@@ -57,6 +57,9 @@ public class NewsServiceImpl implements NewsService {
         BeanUtils.copyProperties(createNewsDto, news);
         // 内容里空格标签替换成空格,已跟前端约定
         String content = createNewsDto.getContent().replace("&nbsp; "," ").replace("&nbsp;"," ");
+        if (content.length() > 13000){
+            throw new RuntimeException("亲,内容太长了");
+        }
         news.setContent(content);
         UserInfo currentUser = currentUserService.getCurrentUser();
         news.setCreateTime(new Date())

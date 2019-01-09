@@ -55,6 +55,9 @@ public class ExpressServiceImpl implements ExpressService {
             express.setPublishTime(new Date());
             // 内容里空格标签替换成空格,已跟前端约定
             String content = createExpressDto.getContent().replace("&nbsp; "," ").replace("&nbsp;"," ");
+            if (content.length() > 13000){
+                throw new RuntimeException("亲,内容太长了");
+            }
             express.setContent(content);
             UserInfo currentUser = currentUserService.getCurrentUser();
             express.setCreateTime(new Date())
