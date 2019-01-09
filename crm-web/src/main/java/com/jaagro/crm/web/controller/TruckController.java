@@ -3,10 +3,7 @@ package com.jaagro.crm.web.controller;
 import com.jaagro.crm.api.dto.request.truck.CreateTruckDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.QueryTruckDto;
-import com.jaagro.crm.api.dto.response.truck.ChangeTruckDto;
-import com.jaagro.crm.api.dto.response.truck.GetTruckDto;
-import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
-import com.jaagro.crm.api.dto.response.truck.TruckDto;
+import com.jaagro.crm.api.dto.response.truck.*;
 import com.jaagro.crm.api.service.TruckService;
 import com.jaagro.crm.biz.mapper.TruckMapperExt;
 import com.jaagro.crm.biz.mapper.TruckTeamMapperExt;
@@ -199,4 +196,12 @@ public class TruckController {
         return BaseResponse.successInstance(truckService.listTruckByTruckTeamId(truckTeamId));
     }
 
+    @GetMapping("/getByTruckNumber")
+    public BaseResponse<GetTruckDto> getByTruckNumber(@RequestParam("truckNumber") String truckNumber){
+        GetTruckDto truckDto = truckService.getByTruckNumber(truckNumber);
+        if (truckDto == null){
+            return BaseResponse.queryDataEmpty();
+        }
+        return BaseResponse.successInstance(truckDto);
+    }
 }

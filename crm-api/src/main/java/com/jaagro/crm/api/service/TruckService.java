@@ -133,4 +133,11 @@ public interface TruckService {
      * @return
      */
     List<ChangeTruckDto> listTruckByTruckTeamId(Integer truckTeamId);
+
+    /**
+     * 根据车牌号查询车辆
+     * @param truckNumber
+     * @return
+     */
+    GetTruckDto getByTruckNumber(String truckNumber);
 }
