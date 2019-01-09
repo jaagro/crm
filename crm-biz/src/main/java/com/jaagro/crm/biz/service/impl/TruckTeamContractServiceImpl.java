@@ -706,6 +706,20 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     }
 
     /**
+     * 根据车队ID查询车队合同列表
+     * Gavin 20190108
+     *
+     * @param truckTeamId
+     * @return
+     */
+    @Override
+    public List<TruckTeamContractReturnDto> getTruckTeamContractByTruckTeamId(Integer truckTeamId) {
+
+        List<TruckTeamContractReturnDto> teamContractReturnDtos =  truckTeamContractMapper.listByTruckTeamId(truckTeamId);
+       return teamContractReturnDtos;
+    }
+
+    /**
      * 根据条件查询某一类车型
      *
      * @param goodType

@@ -12,6 +12,7 @@ import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamContractDto;
 import com.jaagro.crm.api.dto.response.truck.ListDriverContractSettleDto;
 import com.jaagro.crm.api.dto.response.truck.ListDriverContractSettleInfoFlagDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
+import com.jaagro.crm.api.dto.response.truck.TruckTeamContractReturnDto;
 
 import java.util.List;
 import java.util.Map;
@@ -137,5 +138,13 @@ public interface TruckTeamContractService {
      * @param createContractOilPriceDto
      */
     void updateOilPrice(CreateContractOilPriceDto createContractOilPriceDto);
+
+    /**
+     * 根据车队ID查询车队合同列表
+     * Gavin 20190108
+     * @param truckTeamId
+     * @return
+     */
+    List<TruckTeamContractReturnDto> getTruckTeamContractByTruckTeamId(Integer truckTeamId);
 
 }

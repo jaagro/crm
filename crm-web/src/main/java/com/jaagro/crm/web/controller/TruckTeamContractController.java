@@ -9,6 +9,7 @@ import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContractDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckTeamContractCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamContractDto;
 import com.jaagro.crm.api.dto.response.truck.ListDriverContractSettleDto;
+import com.jaagro.crm.api.dto.response.truck.TruckTeamContractReturnDto;
 import com.jaagro.crm.api.service.ContractOilPriceService;
 import com.jaagro.crm.biz.mapper.TruckTeamContractMapper;
 import com.jaagro.crm.biz.service.impl.CurrentUserService;
@@ -228,5 +229,12 @@ public class TruckTeamContractController {
         }
         listDriverContractSettleDtoPageInfo.setList(truckTeamContractPriceHistoryVos);
         return BaseResponse.successInstance(listDriverContractSettleDtoPageInfo);
+    }
+    @ApiOperation("根据车队ID查询车队合同列表")
+    @PostMapping("/getTruckTeamContractByTruckTeamId/truckTeamId")
+    public List<TruckTeamContractReturnDto> getTruckTeamContractByTruckTeamId(@PathVariable("truckTeamId") Integer truckTeamId) {
+
+        return truckTeamContractService.getTruckTeamContractByTruckTeamId(truckTeamId);
+
     }
 }

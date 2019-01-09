@@ -33,7 +33,7 @@
         select
         <include refid="Base_Column_List"/>
         from truck_team_contract
-        where truck_team_id = #{truckTeamId,jdbcType=INTEGER}
+        where contract_status = 1 and  truck_team_id = #{truckTeamId,jdbcType=INTEGER}
     </select>
     <select id="listByCriteria" parameterType="com.jaagro.crm.api.dto.request.truck.ListTruckTeamContractCriteriaDto"
             resultMap="ReturnListInfo">
