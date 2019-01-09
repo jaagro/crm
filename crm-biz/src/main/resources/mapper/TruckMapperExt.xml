@@ -301,4 +301,10 @@
         and truck_status = 1
         order by create_time
     </select>
+    <select id="getDetailByTruckNumber" resultMap="DetailInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from truck
+        where truck_number = #{truckNumber}
+    </select>
 </mapper>

@@ -107,4 +107,11 @@ public interface TruckMapperExt extends TruckMapper {
      * @return
      */
     List<ChangeTruckDto> listTruckByTruckTeamId(@PathVariable("truckTeamId") Integer truckTeamId);
+
+    /**
+     * 根据车牌号查询明细
+     * @param truckNumber
+     * @return
+     */
+    GetTruckDto getDetailByTruckNumber(@Param("truckNumber") String truckNumber);
 }

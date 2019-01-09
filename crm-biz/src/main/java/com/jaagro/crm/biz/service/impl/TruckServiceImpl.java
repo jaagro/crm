@@ -487,4 +487,21 @@ public class TruckServiceImpl implements TruckService {
         }
         return truckDtoList;
     }
+
+    /**
+     * 根据车牌号查询车辆
+     *
+     * @param truckNumber
+     * @return
+     */
+    @Override
+    public GetTruckDto getByTruckNumber(String truckNumber) {
+        GetTruckDto getTruckDto = truckMapper.getDetailByTruckNumber(truckNumber);
+        if (getTruckDto != null){
+            List<DriverReturnDto> driverReturnDtoList = driverClientService.listByTruckId(getTruckDto.getId());
+            getTruckDto.setDrivers(driverReturnDtoList);
+            return getTruckDto;
+        }
+        return null;
+    }
 }
