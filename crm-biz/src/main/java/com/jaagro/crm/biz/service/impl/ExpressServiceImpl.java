@@ -54,7 +54,7 @@ public class ExpressServiceImpl implements ExpressService {
             BeanUtils.copyProperties(createExpressDto, express);
             express.setPublishTime(new Date());
             // 内容里空格标签替换成空格,已跟前端约定
-            String content = createExpressDto.getContent().replace("&nbsp; "," ").replace("&nbsp;"," ");
+            String content = createExpressDto.getContent();
             if (content.length() > 13000){
                 throw new RuntimeException("亲,内容太长了");
             }
