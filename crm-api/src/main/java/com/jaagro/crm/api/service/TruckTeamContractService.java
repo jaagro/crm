@@ -100,7 +100,7 @@ public interface TruckTeamContractService {
      * @param condition
      * @return
      */
-    List<ListDriverContractSettleDto> listTruckTeamContractPriceDetails(DriverContractSettleCondition condition);
+    ListDriverContractSettleDto listTruckTeamContractPriceDetails(DriverContractSettleCondition condition);
 
     /**
      * 当前车辆类型所有的报价历史记录

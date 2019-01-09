@@ -53,6 +53,9 @@ public class ExpressServiceImpl implements ExpressService {
             Express express = new Express();
             BeanUtils.copyProperties(createExpressDto, express);
             express.setPublishTime(new Date());
+            // 内容里空格标签替换成空格,已跟前端约定
+            String content = createExpressDto.getContent().replace("&nbsp; "," ").replace("&nbsp;"," ");
+            express.setContent(content);
             UserInfo currentUser = currentUserService.getCurrentUser();
             express.setCreateTime(new Date())
                     .setCreateUserId(currentUser == null ? null : currentUser.getId())
