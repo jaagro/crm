@@ -196,6 +196,7 @@ public class TruckController {
         return BaseResponse.successInstance(truckService.listTruckByTruckTeamId(truckTeamId));
     }
 
+    @ApiOperation("通过车牌号查询车辆")
     @GetMapping("/getByTruckNumber")
     public BaseResponse<GetTruckDto> getByTruckNumber(@RequestParam("truckNumber") String truckNumber){
         GetTruckDto truckDto = truckService.getByTruckNumber(truckNumber);

@@ -306,5 +306,6 @@
         <include refid="Base_Column_List"/>
         from truck
         where truck_number = #{truckNumber}
+        and truck_status = 1
     </select>
 </mapper>
