@@ -88,8 +88,13 @@ public class ExpressServiceImpl implements ExpressService {
             Set<Integer> userIdSet = new HashSet<>();
             userIdSet.add(returnDto.getCreateUserId());
             List<UserInfo> userInfoList = userClientService.listUserInfo(new ArrayList<>(userIdSet), UserType.EMPLOYEE);
+            List<DepartmentReturnDto> departmentReturnDtos = userClientService.getAllDepartments();
             if (!CollectionUtils.isEmpty(userInfoList)) {
                 returnDto.setCreateUserName(userInfoList.get(0).getName());
+                DepartmentReturnDto departmentReturnDto = departmentReturnDtos.stream().filter(c -> c.getId().equals(userInfoList.get(0).getDepartmentId())).collect(Collectors.toList()).get(0);
+                if (null != departmentReturnDto) {
+                    returnDto.setDepartmentName(departmentReturnDto.getDepartmentName());
+                }
             }
         }
         return returnDto;
