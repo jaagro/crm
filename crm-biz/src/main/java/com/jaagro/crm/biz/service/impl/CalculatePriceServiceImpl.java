@@ -89,35 +89,7 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
 
                     if (mileageList.size() >= calculatePaymentDto.getSiteDtoList().size()) {
 
-                        //按里程从大到小排序
-                        Collections.sort(mileageList, new Comparator<SettleMileage>() {
-                            @Override
-                            public int compare(SettleMileage o1, SettleMileage o2) {
-                                return o1.getCustomerSettleMileage().compareTo(o2.getCustomerSettleMileage());
-                            }
-                        });
-                        //取最大里程参与计算
-                        actualMileage = mileageList.get(0).getCustomerSettleMileage();
-
-                        for (SettleMileage settleMileage : mileageList) {
-                            if (settleMileage.getCustomerSettleMileage() != null && settleMileage.getCustomerSettleMileage().compareTo(actualMileage) == 1) {
-                                actualMileage = settleMileage.getCustomerSettleMileage();
-                            }
-                        }
-
-
-                        //根据合同id、实际公里数、和运单完成时间获取里程区间重量单价
                         unitPrice = new BigDecimal(0.00);
-
-                        querySettleRuleDto = new QuerySettleRuleDto();
-                        querySettleRuleDto.setCustomerContractId(contractId);
-                        querySettleRuleDto.setActualMileage(actualMileage);
-                        querySettleRuleDto.setDoneDate(calculatePaymentDto.getDoneDate());
-                        CustomerContractSettleSectionRule customerContractSettleSectionRule = customerContractSettleSectionRuleMapperExt.getSettleSectionRuleByCriteria(querySettleRuleDto);
-                        if (null != customerContractSettleSectionRule) {
-                            unitPrice = customerContractSettleSectionRule.getSettlePrice();
-                        }
-
                         //根据合同id、装货地Id,卸货地id和运单完成时间获取里程区间重量单价
                         actualMileage = new BigDecimal(0.00);
                         contractSettlePriceList = customerContractSettlePriceMapperExt.getSectionWeightPrice(contractId, calculatePaymentDto.getDoneDate(), calculatePaymentDto.getSiteDtoList());
