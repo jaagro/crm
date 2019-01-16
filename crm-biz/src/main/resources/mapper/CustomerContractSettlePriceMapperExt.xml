@@ -18,7 +18,8 @@
         SELECT
         <include refid="Base_Column_List"/>
         FROM customer_contract_settle_price
-        WHERE customer_contract_id = #{customerContractId}
+        WHERE enable = 1
+        and customer_contract_id = #{customerContractId}
         and #{doneDate} between effective_time and invalid_time
         <if test="siteDtoList !=null and siteDtoList.size() > 0">
             and
