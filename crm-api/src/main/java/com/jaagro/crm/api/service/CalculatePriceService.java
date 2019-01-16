@@ -35,4 +35,12 @@ public interface CalculatePriceService {
      * @return
      */
     BigDecimal calculatePriceFromMileageSection(Integer customerContractId,BigDecimal mileage);
+
+    /**
+     * 合同报价根据车型获取价格基数
+     * @param customerContractId
+     * @param truckTypeId
+     * @return
+     */
+    BigDecimal calculatePriceFromTruckRule(Integer customerContractId, Integer truckTypeId);
 }
