@@ -399,6 +399,22 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
         return price;
     }
 
+    /**
+     * 合同报价根据车型获取价格基数
+     *
+     * @param customerContractId
+     * @param truckTypeId
+     * @return
+     */
+    @Override
+    public BigDecimal calculatePriceFromTruckRule(Integer customerContractId, Integer truckTypeId) {
+        CustomerContractSettleTruckRule truckRule = customerContractSettleTruckRuleMapperExt.getLatestTruckRule(customerContractId,truckTypeId);
+        if (truckRule != null){
+            return truckRule.getPriceBase();
+        }
+        return null;
+    }
+
     private boolean checkContract(CalculatePaymentDto calculatePaymentDto) {
         if (calculatePaymentDto.getCustomerContractId() == null && calculatePaymentDto.getTruckTeamContractId() == null) {
             return false;
