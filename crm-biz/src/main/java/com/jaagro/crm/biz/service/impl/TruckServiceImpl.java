@@ -382,13 +382,14 @@ public class TruckServiceImpl implements TruckService {
         criteriaDto.setProvince(province);
         criteriaDto.setCity(city);
         criteriaDto.setCounty(county);
-
         List<ListTruckDto> truckList = truckMapper.listTruckForAssignWaybillByCriteria(criteriaDto);
+        log.info("listTrucksWithDrivers criteriaDto={},truckList={}",JSON.toJSONString(criteriaDto),JSON.toJSONString(truckList));
         if (!CollectionUtils.isEmpty(truckList)) {
             Iterator<ListTruckDto> truckIterator = truckList.iterator();
             while (truckIterator.hasNext()) {
                 ListTruckDto listTruckDto = truckIterator.next();
                 List<DriverReturnDto> drivers = driverClientService.listByTruckId(listTruckDto.getTruckId());
+                log.info("listTrucksWithDrivers criteriaDto={},truckId={}",JSON.toJSONString(criteriaDto),listTruckDto.getTruckId(),JSON.toJSONString(drivers));
                 if (CollectionUtils.isEmpty(drivers)) {
                     truckIterator.remove();
                     continue;
