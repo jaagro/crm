@@ -389,7 +389,7 @@ public class TruckServiceImpl implements TruckService {
             while (truckIterator.hasNext()) {
                 ListTruckDto listTruckDto = truckIterator.next();
                 List<DriverReturnDto> drivers = driverClientService.listByTruckId(listTruckDto.getTruckId());
-                log.info("listTrucksWithDrivers criteriaDto={},truckId={}",JSON.toJSONString(criteriaDto),listTruckDto.getTruckId(),JSON.toJSONString(drivers));
+                log.info("listTrucksWithDrivers criteriaDto={},truckId={},drivers={}",JSON.toJSONString(criteriaDto),listTruckDto.getTruckId(),JSON.toJSONString(drivers));
                 if (CollectionUtils.isEmpty(drivers)) {
                     truckIterator.remove();
                     continue;

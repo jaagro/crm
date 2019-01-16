@@ -63,4 +63,6 @@ public class CalculatePaymentController {
         log.info("O calculatePriceFromMileageSection customerContractId={},mileage={}",customerContractId,mileage);
         return BaseResponse.successInstance(calculatePriceService.calculatePriceFromMileageSection(customerContractId,mileage));
     }
+
+    
 }

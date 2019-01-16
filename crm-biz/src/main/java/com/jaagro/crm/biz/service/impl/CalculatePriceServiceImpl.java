@@ -341,6 +341,9 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
                 // 饲料结算(结算金额 = 结算重量（吨）✕ 区间重量单价（元/吨）最小结算重量：实际重量数小于最小重量时，按最小重量结算。)
                 if (ProductType.FODDER.equals(calculatePaymentDto.getProductType())) {
                     BigDecimal settleWeight = calculatePaymentDto.getUnloadWeight();
+                    if (effectiveSection == null){
+                        continue;
+                    }
                     if (calculatePaymentDto.getUnloadWeight() != null && effectiveSection.getSettlePrice() != null) {
                         if (settleWeight.compareTo(driverContractSettleRule.getMinSettleWeight()) < 0) {
                             settleWeight = driverContractSettleRule.getMinSettleWeight();
