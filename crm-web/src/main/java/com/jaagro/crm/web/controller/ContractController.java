@@ -409,10 +409,6 @@ public class ContractController {
             if (teamContract == null) {
                 return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队合同不存在");
             }
-            List<TruckTeamContractReturnDto> teamContractReturnDtos = this.truckTeamContractMapper.listByTruckTeamId(teamContract.getTruckTeamId());
-            if (teamContractReturnDtos.size() < 1) {
-                return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队没有相关合同");
-            }
         }
         ListContractQualificationCriteriaDto dto = new ListContractQualificationCriteriaDto();
         dto
