@@ -36,4 +36,11 @@ public interface SettleMileageService {
      * @return
      */
     Map<String, Object> updateSettleMileage(UpdateSettleMileageDto dto);
+
+    /**
+     * 根据结算信息id逻辑删除
+     *
+     * @param priceId
+     */
+    void disableByPriceId(Integer priceId);
 }

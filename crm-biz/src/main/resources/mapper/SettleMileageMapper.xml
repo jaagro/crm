@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.SettleMileage" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="customer_contract_id" property="customerContractId" jdbcType="INTEGER" />
+    <result column="customer_settle_price_id" property="customerSettlePriceId" jdbcType="INTEGER" />
     <result column="department_id" property="departmentId" jdbcType="INTEGER" />
     <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
     <result column="load_site_id" property="loadSiteId" jdbcType="INTEGER" />
@@ -20,15 +21,17 @@
     <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
     <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER" />
     <result column="modify_user_name" property="modifyUserName" jdbcType="VARCHAR" />
+    <result column="truck_type_id" property="truckTypeId" jdbcType="INTEGER" />
+    <result column="truck_type_name" property="truckTypeName" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, customer_contract_id, department_id, department_name, load_site_id, load_site_name, 
-    unload_site_id, unload_site_name, customer_settle_mileage, driver_settle_mileage, 
-    track_mileage, enable, create_time, create_user_id, create_user_name, modify_time, 
-    modify_user_id, modify_user_name
+    id, customer_contract_id, customer_settle_price_id, department_id, department_name,
+    load_site_id, load_site_name, unload_site_id, unload_site_name, customer_settle_mileage,
+    driver_settle_mileage, track_mileage, enable, create_time, create_user_id, create_user_name,
+    modify_time, modify_user_id, modify_user_name, truck_type_id, truck_type_name
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from settle_mileage
     where id = #{id,jdbcType=INTEGER}
@@ -38,24 +41,26 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.jaagro.crm.biz.entity.SettleMileage" useGeneratedKeys="true" keyProperty="id"
-          keyColumn="id">
-    insert into settle_mileage (id, customer_contract_id, department_id, 
-      department_name, load_site_id, load_site_name, 
-      unload_site_id, unload_site_name, customer_settle_mileage, 
-      driver_settle_mileage, track_mileage, enable, 
-      create_time, create_user_id, create_user_name, 
-      modify_time, modify_user_id, modify_user_name
-      )
-    values (#{id,jdbcType=INTEGER}, #{customerContractId,jdbcType=INTEGER}, #{departmentId,jdbcType=INTEGER}, 
-      #{departmentName,jdbcType=VARCHAR}, #{loadSiteId,jdbcType=INTEGER}, #{loadSiteName,jdbcType=VARCHAR}, 
-      #{unloadSiteId,jdbcType=INTEGER}, #{unloadSiteName,jdbcType=VARCHAR}, #{customerSettleMileage,jdbcType=DECIMAL}, 
-      #{driverSettleMileage,jdbcType=DECIMAL}, #{trackMileage,jdbcType=DECIMAL}, #{enable,jdbcType=TINYINT}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, 
-      #{modifyTime,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=INTEGER}, #{modifyUserName,jdbcType=VARCHAR}
-      )
+          keyColumn="id" >
+    insert into settle_mileage (id, customer_contract_id, customer_settle_price_id,
+      department_id, department_name, load_site_id,
+      load_site_name, unload_site_id, unload_site_name,
+      customer_settle_mileage, driver_settle_mileage,
+      track_mileage, enable, create_time,
+      create_user_id, create_user_name, modify_time,
+      modify_user_id, modify_user_name, truck_type_id,
+      truck_type_name)
+    values (#{id,jdbcType=INTEGER}, #{customerContractId,jdbcType=INTEGER}, #{customerSettlePriceId,jdbcType=INTEGER},
+      #{departmentId,jdbcType=INTEGER}, #{departmentName,jdbcType=VARCHAR}, #{loadSiteId,jdbcType=INTEGER},
+      #{loadSiteName,jdbcType=VARCHAR}, #{unloadSiteId,jdbcType=INTEGER}, #{unloadSiteName,jdbcType=VARCHAR},
+      #{customerSettleMileage,jdbcType=DECIMAL}, #{driverSettleMileage,jdbcType=DECIMAL},
+      #{trackMileage,jdbcType=DECIMAL}, #{enable,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP},
+      #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP},
+      #{modifyUserId,jdbcType=INTEGER}, #{modifyUserName,jdbcType=VARCHAR}, #{truckTypeId,jdbcType=INTEGER},
+      #{truckTypeName,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.SettleMileage" useGeneratedKeys="true" keyProperty="id"
-          keyColumn="id">
+          keyColumn="id" >
     insert into settle_mileage
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -63,6 +68,9 @@
       </if>
       <if test="customerContractId != null" >
         customer_contract_id,
+      </if>
+      <if test="customerSettlePriceId != null" >
+        customer_settle_price_id,
       </if>
       <if test="departmentId != null" >
         department_id,
@@ -112,6 +120,12 @@
       <if test="modifyUserName != null" >
         modify_user_name,
       </if>
+      <if test="truckTypeId != null" >
+        truck_type_id,
+      </if>
+      <if test="truckTypeName != null" >
+        truck_type_name,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -119,6 +133,9 @@
       </if>
       <if test="customerContractId != null" >
         #{customerContractId,jdbcType=INTEGER},
+      </if>
+      <if test="customerSettlePriceId != null" >
+        #{customerSettlePriceId,jdbcType=INTEGER},
       </if>
       <if test="departmentId != null" >
         #{departmentId,jdbcType=INTEGER},
@@ -168,13 +185,23 @@
       <if test="modifyUserName != null" >
         #{modifyUserName,jdbcType=VARCHAR},
       </if>
+      <if test="truckTypeId != null" >
+        #{truckTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="truckTypeName != null" >
+        #{truckTypeName,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.SettleMileage" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.SettleMileage" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id" >
     update settle_mileage
     <set >
       <if test="customerContractId != null" >
         customer_contract_id = #{customerContractId,jdbcType=INTEGER},
+      </if>
+      <if test="customerSettlePriceId != null" >
+        customer_settle_price_id = #{customerSettlePriceId,jdbcType=INTEGER},
       </if>
       <if test="departmentId != null" >
         department_id = #{departmentId,jdbcType=INTEGER},
@@ -224,12 +251,20 @@
       <if test="modifyUserName != null" >
         modify_user_name = #{modifyUserName,jdbcType=VARCHAR},
       </if>
+      <if test="truckTypeId != null" >
+        truck_type_id = #{truckTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="truckTypeName != null" >
+        truck_type_name = #{truckTypeName,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.SettleMileage" >
+  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.SettleMileage" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id" >
     update settle_mileage
     set customer_contract_id = #{customerContractId,jdbcType=INTEGER},
+      customer_settle_price_id = #{customerSettlePriceId,jdbcType=INTEGER},
       department_id = #{departmentId,jdbcType=INTEGER},
       department_name = #{departmentName,jdbcType=VARCHAR},
       load_site_id = #{loadSiteId,jdbcType=INTEGER},
@@ -245,7 +280,9 @@
       create_user_name = #{createUserName,jdbcType=VARCHAR},
       modify_time = #{modifyTime,jdbcType=TIMESTAMP},
       modify_user_id = #{modifyUserId,jdbcType=INTEGER},
-      modify_user_name = #{modifyUserName,jdbcType=VARCHAR}
+      modify_user_name = #{modifyUserName,jdbcType=VARCHAR},
+      truck_type_id = #{truckTypeId,jdbcType=INTEGER},
+      truck_type_name = #{truckTypeName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

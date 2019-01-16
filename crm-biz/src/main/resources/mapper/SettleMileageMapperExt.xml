@@ -32,4 +32,16 @@
             </foreach>
         </if>
     </select>
+    <select id="selectByCriteria" parameterType="com.jaagro.crm.biz.entity.SettleMileage"
+            resultType="java.lang.Integer">
+        select
+        count(1)
+        from
+        settle_mileage
+        where
+        enable = 1
+    </select>
+    <select id="disableBySettlePriceId" parameterType="java.lang.Integer">
+      update settle_mileage set enable = 0 where customer_settle_price_id = #{priceId}
+    </select>
 </mapper>

@@ -48,8 +48,6 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
     @Autowired
     private TruckTypeMapperExt truckTypeMapper;
     @Autowired
-    private SettleMileageService mileageService;
-    @Autowired
     private CustomerContractMapperExt contractMapperExt;
     @Autowired
     private SettleMileageService settleMileageService;
@@ -112,7 +110,9 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
                 //结算里程
                 CreateSettleMileageDto settleMileageDto = new CreateSettleMileageDto();
                 BeanUtils.copyProperties(settlePrice, settleMileageDto);
-                settleMileageDto.setCustomerSettleMileage(settlePriceDto.getMileage());
+                settleMileageDto
+                        .setCustomerSettlePriceId(settlePrice.getId())
+                        .setCustomerSettleMileage(settlePriceDto.getMileage());
                 flag = settleMileageService.createSettleMileage(settleMileageDto);
                 if (flag) {
                     return flag;
@@ -147,6 +147,8 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
                 .setModifyTime(new Date())
                 .setModifyUserId(currentUser == null ? null : currentUser.getId());
         int result = settlePriceMapper.updateByPrimaryKeySelective(settlePrice);
+        //将对应结算里程逻辑删除
+        settleMileageService.disableByPriceId(priceId);
         if (result > 0) {
             return ServiceResult.toResult("删除成功");
         }

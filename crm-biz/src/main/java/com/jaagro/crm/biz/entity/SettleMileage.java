@@ -21,6 +21,11 @@ public class SettleMileage implements Serializable {
     private Integer customerContractId;
 
     /**
+     * 客户合同结算信息id
+     */
+    private Integer customerSettlePriceId;
+
+    /**
      * 部门id
      */
     private Integer departmentId;
@@ -100,4 +105,13 @@ public class SettleMileage implements Serializable {
      */
     private String modifyUserName;
 
+    /**
+     * 车型表主键id
+     */
+    private Integer truckTypeId;
+
+    /**
+     * 车型名称：槽罐车。。。
+     */
+    private String truckTypeName;
 }

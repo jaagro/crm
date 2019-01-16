@@ -72,7 +72,13 @@ public class SettleMileageServiceImpl implements SettleMileageService {
                     .setDepartmentId(site.getDeptId())
                     .setDepartmentName(deptService.getDeptNameById(site.getDeptId()));
         }
-        int result = settleMileageMapperExt.insertSelective(settleMileage);
+        Integer countNum = settleMileageMapperExt.selectByCriteria(settleMileage);
+        int result;
+        if (countNum > 0) {
+            result = settleMileageMapperExt.updateByPrimaryKeySelective(settleMileage);
+        } else {
+            result = settleMileageMapperExt.insertSelective(settleMileage);
+        }
         if (result > 0) {
             flag = true;
             return flag;
@@ -132,5 +138,15 @@ public class SettleMileageServiceImpl implements SettleMileageService {
             return ServiceResult.toResult("修改成功");
         }
         return ServiceResult.error("修改失败");
+    }
+
+    /**
+     * 根据结算信息id逻辑删除
+     *
+     * @param priceId
+     */
+    @Override
+    public void disableByPriceId(Integer priceId) {
+        settleMileageMapperExt.disableBySettlePriceId(priceId);
     }
 }

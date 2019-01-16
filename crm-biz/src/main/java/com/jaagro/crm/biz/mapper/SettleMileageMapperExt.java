@@ -31,4 +31,19 @@ public interface SettleMileageMapperExt extends SettleMileageMapper {
      * @return
      */
     List<ReturnSettleMileageDto> listByCriteria(listSettleMileageCriteriaDto dto);
+
+    /**
+     * 根据装卸货地id，车型id判断是否存在
+     *
+     * @param settleMileage
+     * @return
+     */
+    Integer selectByCriteria(SettleMileage settleMileage);
+
+    /**
+     * 根据结算信息id逻辑删除
+     *
+     * @param priceId
+     */
+    void disableBySettlePriceId(@Param("priceId") Integer priceId);
 }
