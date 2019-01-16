@@ -117,7 +117,7 @@ public class TruckController {
 
     @ApiOperation("根据拉货类型查询车型列表")
     @GetMapping("/listTruckType/{productName}")
-    public BaseResponse listTruckTypeByProductName(@PathVariable(value = "productName") String productName) {
+    public BaseResponse<List<ListTruckTypeDto>> listTruckTypeByProductName(@PathVariable(value = "productName") String productName) {
         return BaseResponse.successInstance(truckService.listTruckType(productName));
     }
 
@@ -205,4 +205,5 @@ public class TruckController {
         }
         return BaseResponse.successInstance(truckDto);
     }
+
 }
