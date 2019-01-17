@@ -148,8 +148,8 @@ public class NewsController {
                     newsVo.setCreateUserName(userInfo == null ? null : userInfo.getName());
                     // 运力后台新闻列表不展示新闻内容为减少网络消耗设置为空
                     newsVo.setContent(null);
-                    newsVoList.add(newsVo);
                 }
+                newsVoList.add(newsVo);
             }
         }
         return newsVoList;
