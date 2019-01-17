@@ -49,6 +49,7 @@
         <if test="truckTypeId != null">
             and truck_type_id = #{truckTypeId}
         </if>
+        limit 1
     </select>
     <select id="disableBySettlePriceId" parameterType="java.lang.Integer">
       update settle_mileage set enable = 0 where customer_settle_price_id = #{priceId}
