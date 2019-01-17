@@ -69,13 +69,4 @@ public class CreateSettleMileageDto implements Serializable {
      */
     private BigDecimal trackMileage;
 
-    /**
-     * 车型表主键id
-     */
-    private Integer truckTypeId;
-
-    /**
-     * 车型名称：槽罐车。。。
-     */
-    private String truckTypeName;
 }

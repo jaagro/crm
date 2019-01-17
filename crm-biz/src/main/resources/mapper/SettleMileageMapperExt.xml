@@ -12,6 +12,7 @@
                 load_site_id = #{site.loadSiteId} and unload_site_id = #{site.unloadSiteId}
             </foreach>
         </if>
+        order by create_time desc
     </select>
     <select id="listByCriteria" parameterType="com.jaagro.crm.api.dto.request.contract.listSettleMileageCriteriaDto"
             resultType="com.jaagro.crm.api.dto.response.contract.ReturnSettleMileageDto">
@@ -31,6 +32,7 @@
                 ${did}
             </foreach>
         </if>
+        order by create_time desc
     </select>
     <select id="selectByCriteria" parameterType="com.jaagro.crm.biz.entity.SettleMileage"
             resultType="java.lang.Integer">
@@ -46,9 +48,7 @@
         <if test="unloadSiteId != null">
             and unload_site_id = #{unloadSiteId}
         </if>
-        <if test="truckTypeId != null">
-            and truck_type_id = #{truckTypeId}
-        </if>
+        order by create_time desc
         limit 1
     </select>
     <select id="disableBySettlePriceId" parameterType="java.lang.Integer">

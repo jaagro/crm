@@ -9,7 +9,8 @@ import java.util.Date;
 
 @Data
 @Accessors(chain = true)
-public class SettleMileage implements Serializable {
+public class SettleMileage implements Serializable{
+    private static final long serialVersionUID = 3423480159810976622L;
     /**
      * 结算里程表id
      */
@@ -46,7 +47,7 @@ public class SettleMileage implements Serializable {
     private String loadSiteName;
 
     /**
-     *
+     * 卸货地id
      */
     private Integer unloadSiteId;
 
@@ -105,13 +106,4 @@ public class SettleMileage implements Serializable {
      */
     private String modifyUserName;
 
-    /**
-     * 车型表主键id
-     */
-    private Integer truckTypeId;
-
-    /**
-     * 车型名称：槽罐车。。。
-     */
-    private String truckTypeName;
 }
