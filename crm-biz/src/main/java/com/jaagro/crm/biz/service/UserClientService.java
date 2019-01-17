@@ -71,4 +71,14 @@ public interface UserClientService {
     @PostMapping("/getAllDepartments")
     List<DepartmentReturnDto> getAllDepartments();
 
+    /**
+     * 获取用户信息
+     * @param key
+     * @param userType
+     * @param loginType
+     * @return
+     */
+    @GetMapping("/getUserInfo")
+    UserInfo getUserInfo(@RequestParam("key") Object key, @RequestParam("userType") String userType, @RequestParam("loginType") String loginType);
+
 }

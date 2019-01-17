@@ -42,4 +42,8 @@ public class QueryExpressDto implements Serializable {
      */
     private String strDate;
 
+    /**
+     * 创建人
+     */
+    private Integer createUserId;
 }

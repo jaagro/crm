@@ -3,6 +3,7 @@ package com.jaagro.crm.biz.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.constant.UserInfo;
+import com.jaagro.crm.api.constant.LoginType;
 import com.jaagro.crm.api.constant.ToDocment;
 import com.jaagro.crm.api.constant.UserType;
 import com.jaagro.crm.api.dto.request.express.CreateExpressDto;
@@ -14,8 +15,11 @@ import com.jaagro.crm.api.service.ExpressService;
 import com.jaagro.crm.biz.mapper.ExpressMapperExt;
 import com.jaagro.crm.biz.service.UserClientService;
 import com.jaagro.crm.biz.utils.UrlPathUtil;
+import com.jaagro.utils.ServiceKey;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -39,6 +43,9 @@ public class ExpressServiceImpl implements ExpressService {
     private CurrentUserService currentUserService;
     @Autowired
     private UserClientService userClientService;
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
+    private static final String QUERY_EXPRESS_PERSONS = "query_express_persons";
 
 
     /**
@@ -55,7 +62,7 @@ public class ExpressServiceImpl implements ExpressService {
             express.setPublishTime(new Date());
             // 内容里空格标签替换成空格,已跟前端约定
             String content = createExpressDto.getContent();
-            if (content.length() > 13000){
+            if (content.length() > 13000) {
                 throw new RuntimeException("亲,内容太长了");
             }
             express.setContent(content);
@@ -111,6 +118,13 @@ public class ExpressServiceImpl implements ExpressService {
     public PageInfo listExpressByCriteria(QueryExpressDto criteriaDto) {
 
         PageHelper.startPage(criteriaDto.getPageNum(), criteriaDto.getPageSize());
+        SetOperations<String, String> opsForSet = redisTemplate.opsForSet();
+        UserInfo currentUser = currentUserService.getCurrentUser();
+        String currentUserId = currentUser == null ? null : currentUser.getId().toString();
+        // 如果不在特权名单内只能查询自己创建的
+        if (!opsForSet.isMember(QUERY_EXPRESS_PERSONS,currentUserId)){
+            criteriaDto.setCreateUserId(Integer.parseInt(currentUserId));
+        }
         List<ExpressReturnDto> returnDtoList = expressMapperExt.listByCriteria(criteriaDto);
         if (!CollectionUtils.isEmpty(returnDtoList)) {
             Set<Integer> userIdSet = new HashSet<>();
@@ -165,6 +179,38 @@ public class ExpressServiceImpl implements ExpressService {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 新增查询所有智库直通车的人员
+     *
+     * @param phoneNumberList
+     * @return
+     */
+    @Override
+    public Map<String, Object> addQueryAllPerson(List<String> phoneNumberList) {
+        Map<String, Object> result = new HashMap<>();
+        result.put(ServiceKey.success.name(), Boolean.FALSE);
+        Integer successNum = 0;
+        Integer failNum = 0;
+        if (!CollectionUtils.isEmpty(phoneNumberList)) {
+            SetOperations<String, String> opsForSet = redisTemplate.opsForSet();
+            for (String phoneNumber : phoneNumberList) {
+                UserInfo userInfo = userClientService.getUserInfo(phoneNumber, UserType.EMPLOYEE, LoginType.PHONE_NUMBER);
+                if (userInfo != null) {
+                    opsForSet.add(QUERY_EXPRESS_PERSONS, userInfo.getId().toString());
+                    successNum += 1;
+                } else {
+                    failNum += 1;
+                }
+            }
+        }
+        if (successNum > 0){
+            result.put(ServiceKey.success.name(),Boolean.TRUE);
+        }
+        result.put("successNum",successNum);
+        result.put("failNum",failNum);
+        return result;
     }
 
     private void convertImageUrl(ExpressReturnDto express) {

@@ -7,9 +7,13 @@
         from express
         where
             enable=1
-                <if test="categoryId != null and categoryId !=''">
+                <if test="createUserId != null">
+                    and create_user_id = #{createUserId}
+                </if>
+                <if test="categoryId != null">
                     and category_Id = #{categoryId}
                 </if>
+
                 <if test="tags != null and tags != ''">
                     <![CDATA[and (tags like concat('%',#{tags},'%') )]]>
                 </if>
