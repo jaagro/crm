@@ -6,6 +6,9 @@ import com.jaagro.crm.api.dto.request.express.QueryExpressDto;
 import com.jaagro.crm.api.dto.response.express.ExpressReturnDto;
 import com.jaagro.crm.api.entity.Express;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * 智库直通车管理
  * @author gavin
@@ -44,4 +47,11 @@ public interface ExpressService {
      * @return
      */
     boolean toDocument(Integer id);
+
+    /**
+     * 新增查询所有智库直通车的人员
+     * @param phoneNumberList
+     * @return
+     */
+    Map<String,Object> addQueryAllPerson(List<String> phoneNumberList);
 }

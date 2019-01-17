@@ -324,6 +324,10 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
             if (driverContractSettleRule.getMinSettleMileage() != null && mileage.compareTo(driverContractSettleRule.getMinSettleMileage()) < 0) {
                 mileage = driverContractSettleRule.getMinSettleMileage();
             }
+            if (mileage.compareTo(BigDecimal.ZERO) == 0){
+                log.warn("O calculatePaymentToDriver mileage isZero calculatePaymentDto={}", calculatePaymentDto);
+                continue;
+            }
             // 按区间重量单价,按区间里程单价
             if (!driverContractSettleRule.getPricingMethod().equals(PricingMethod.BEGIN_MILEAGE)) {
                 // 获取里程区间
@@ -339,11 +343,12 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
                     }
                 }
                 // 饲料结算(结算金额 = 结算重量（吨）✕ 区间重量单价（元/吨）最小结算重量：实际重量数小于最小重量时，按最小重量结算。)
+                if (effectiveSection == null){
+                    log.warn("O calculatePaymentToDriver effectiveSection isEmpty calculatePaymentDto={}",calculatePaymentDto);
+                    continue;
+                }
                 if (ProductType.FODDER.equals(calculatePaymentDto.getProductType())) {
                     BigDecimal settleWeight = calculatePaymentDto.getUnloadWeight();
-                    if (effectiveSection == null){
-                        continue;
-                    }
                     if (calculatePaymentDto.getUnloadWeight() != null && effectiveSection.getSettlePrice() != null) {
                         if (settleWeight.compareTo(driverContractSettleRule.getMinSettleWeight()) < 0) {
                             settleWeight = driverContractSettleRule.getMinSettleWeight();

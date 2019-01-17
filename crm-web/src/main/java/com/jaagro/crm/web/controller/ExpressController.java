@@ -14,6 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author gavin
  * @since 20181229
@@ -83,4 +85,9 @@ public class ExpressController {
         return BaseResponse.successInstance(returnDto);
     }
 
+    @ApiOperation(value = "新增查询所有智库直通车的人员")
+    @PostMapping("/addQueryAllPerson")
+    public BaseResponse addQueryAllPerson(@RequestBody List<String> phoneNumberList){
+        return BaseResponse.service(expressService.addQueryAllPerson(phoneNumberList));
+    }
 }
