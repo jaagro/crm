@@ -41,13 +41,13 @@
         where
         enable = 1
         <if test="loadSiteId != null">
-            and load_site_id = #{loadSiteId};
+            and load_site_id = #{loadSiteId}
         </if>
         <if test="unloadSiteId != null">
-            and unload_site_id = #{unloadSiteId};
+            and unload_site_id = #{unloadSiteId}
         </if>
         <if test="truckTypeId != null">
-            and truck_type_id = #{truckTypeId};
+            and truck_type_id = #{truckTypeId}
         </if>
     </select>
     <select id="disableBySettlePriceId" parameterType="java.lang.Integer">
