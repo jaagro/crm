@@ -72,9 +72,10 @@ public class SettleMileageServiceImpl implements SettleMileageService {
                     .setDepartmentId(site.getDeptId())
                     .setDepartmentName(deptService.getDeptNameById(site.getDeptId()));
         }
-        Integer countNum = settleMileageMapperExt.selectByCriteria(settleMileage);
+        Integer settleId = settleMileageMapperExt.selectByCriteria(settleMileage);
         int result;
-        if (countNum > 0) {
+        if (settleId != null) {
+            settleMileage.setId(settleId);
             result = settleMileageMapperExt.updateByPrimaryKeySelective(settleMileage);
         } else {
             result = settleMileageMapperExt.insertSelective(settleMileage);

@@ -35,7 +35,7 @@
     <select id="selectByCriteria" parameterType="com.jaagro.crm.biz.entity.SettleMileage"
             resultType="java.lang.Integer">
         select
-        count(1)
+        id
         from
         settle_mileage
         where
