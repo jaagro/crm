@@ -30,7 +30,7 @@ public class UpdateTruckTeamContractDto implements Serializable {
     private String contractNumber;
 
     /**
-     * 业务类型(1 饲料运输 2 毛鸡运输 3 猪运输)
+     * 业务类型(1 饲料运输 2 毛鸡运输 3 母猪 4 公猪 5 仔猪 6 生猪)
      */
     private Integer bussinessType;
 

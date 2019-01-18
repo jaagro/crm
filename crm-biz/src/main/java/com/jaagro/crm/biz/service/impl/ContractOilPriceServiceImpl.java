@@ -126,4 +126,16 @@ public class ContractOilPriceServiceImpl implements ContractOilPriceService {
         return oilPriceMapperExt.getByContractIdAndType(contractId, contractType);
     }
 
+    /**
+     * 根据合同id和合同类型删除
+     *
+     * @param contractId   合同id
+     * @param contractType 合同类型
+     * @return
+     */
+    @Override
+    public Integer disableByContractIdAndType(Integer contractId, Integer contractType) {
+        return oilPriceMapperExt.disableByContractIdAndType(contractId,contractType);
+    }
+
 }

@@ -554,7 +554,7 @@ public class ContractController {
      * @param unloadSiteId
      * @return
      */
-    @ApiOperation("获取客户合同制定装卸货地实际里程")
+    @ApiOperation("获取客户合同指定装卸货地实际里程")
     @GetMapping("getMileageByParams")
     public BaseResponse<BigDecimal> getMileageByParams(@RequestParam("customerContractId") Integer customerContractId, @RequestParam("loadSiteId") Integer loadSiteId, @RequestParam("unloadSiteId") Integer unloadSiteId) {
         return BaseResponse.successInstance(settlePriceService.getMileageByParams(customerContractId,loadSiteId,unloadSiteId));

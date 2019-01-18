@@ -61,5 +61,6 @@
         AND customer_contract_id = #{customerContractId}
         AND load_site_id = #{loadSiteId}
         AND unload_site_id = #{unloadSiteId}
+        order by create_time desc limit 1
     </select>
 </mapper>

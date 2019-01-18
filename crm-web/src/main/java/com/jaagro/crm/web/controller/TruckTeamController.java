@@ -1,6 +1,5 @@
 package com.jaagro.crm.web.controller;
 
-import com.jaagro.crm.api.constant.ProductType;
 import com.jaagro.crm.api.dto.request.truck.*;
 import com.jaagro.crm.api.service.TruckService;
 import com.jaagro.crm.api.service.TruckTeamContactsService;

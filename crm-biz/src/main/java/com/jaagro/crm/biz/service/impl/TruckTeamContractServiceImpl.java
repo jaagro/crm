@@ -221,6 +221,13 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                     .setContractStatus(AuditStatus.STOP_COOPERATION);
             this.truckTeamContractMapper.updateByPrimaryKeySelective(contract);
         }
+        // 删除合同报价配置
+        DriverContractSettleCondition contractSettleCondition = new DriverContractSettleCondition();
+        contractSettleCondition.setFlag(3)
+                .setTruckTeamContractId(id);
+        deleteTeamContractPrice(contractSettleCondition);
+        // 删除油价
+        contractOilPriceService.disableByContractIdAndType(id,ContractType.DRIVER);
         return ServiceResult.toResult("删除成功");
     }
 
