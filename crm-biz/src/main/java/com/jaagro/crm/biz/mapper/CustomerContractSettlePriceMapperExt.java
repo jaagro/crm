@@ -6,6 +6,7 @@ import com.jaagro.crm.api.dto.response.contract.ReturnCustomerSettlePriceDto;
 import com.jaagro.crm.biz.entity.CustomerContractSettlePrice;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -38,8 +39,17 @@ public interface CustomerContractSettlePriceMapperExt extends CustomerContractSe
     /**
      * 根据主键id查询历史记录
      *
-     * @param priceId
+     * @param dto
      * @return
      */
     List<ReturnCustomerSettlePriceDto> listCustomerContractSettlePriceHistory(QueryCustomerContractSettlePriceDto dto);
+
+    /**
+     * 根据客户合同id,装货地id,卸货地id获取实际里程
+     * @param customerContractId
+     * @param loadSiteId
+     * @param unloadSiteId
+     * @return
+     */
+    BigDecimal getMileageByParams(@Param("customerContractId") Integer customerContractId, @Param("loadSiteId") Integer loadSiteId, @Param("unloadSiteId") Integer unloadSiteId);
 }

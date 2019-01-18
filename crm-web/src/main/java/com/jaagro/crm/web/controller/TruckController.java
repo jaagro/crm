@@ -3,10 +3,7 @@ package com.jaagro.crm.web.controller;
 import com.jaagro.crm.api.dto.request.truck.CreateTruckDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.QueryTruckDto;
-import com.jaagro.crm.api.dto.response.truck.ChangeTruckDto;
-import com.jaagro.crm.api.dto.response.truck.GetTruckDto;
-import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
-import com.jaagro.crm.api.dto.response.truck.TruckDto;
+import com.jaagro.crm.api.dto.response.truck.*;
 import com.jaagro.crm.api.service.TruckService;
 import com.jaagro.crm.biz.mapper.TruckMapperExt;
 import com.jaagro.crm.biz.mapper.TruckTeamMapperExt;
@@ -120,7 +117,7 @@ public class TruckController {
 
     @ApiOperation("根据拉货类型查询车型列表")
     @GetMapping("/listTruckType/{productName}")
-    public BaseResponse listTruckTypeByProductName(@PathVariable(value = "productName") String productName) {
+    public BaseResponse<List<ListTruckTypeDto>> listTruckTypeByProductName(@PathVariable(value = "productName") String productName) {
         return BaseResponse.successInstance(truckService.listTruckType(productName));
     }
 
@@ -197,6 +194,16 @@ public class TruckController {
     @GetMapping("/listTruckByTruckTeamId/{truckTeamId}")
     public BaseResponse<List<ChangeTruckDto>> listTruckByTruckTeamId(@PathVariable("truckTeamId") Integer truckTeamId) {
         return BaseResponse.successInstance(truckService.listTruckByTruckTeamId(truckTeamId));
+    }
+
+    @ApiOperation("通过车牌号查询车辆")
+    @GetMapping("/getByTruckNumber")
+    public BaseResponse<GetTruckDto> getByTruckNumber(@RequestParam("truckNumber") String truckNumber){
+        GetTruckDto truckDto = truckService.getByTruckNumber(truckNumber);
+        if (truckDto == null){
+            return BaseResponse.queryDataEmpty();
+        }
+        return BaseResponse.successInstance(truckDto);
     }
 
 }

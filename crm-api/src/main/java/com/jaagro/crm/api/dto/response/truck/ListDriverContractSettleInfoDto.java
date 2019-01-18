@@ -11,7 +11,7 @@ import java.math.BigDecimal;
  */
 @Data
 @Accessors(chain = true)
-public class ListDriverContractSettlelInfoDto implements Serializable {
+public class ListDriverContractSettleInfoDto implements Serializable {
     /**
      * 合同运力结算配置表 id
      */
@@ -46,7 +46,7 @@ public class ListDriverContractSettlelInfoDto implements Serializable {
     private BigDecimal minSettleWeight;
 
     /**
-     *起步价
+     * 起步价
      */
     private BigDecimal beginSettlePrice;
 
@@ -54,4 +54,13 @@ public class ListDriverContractSettlelInfoDto implements Serializable {
      * 支付方式
      */
     private Integer pricingMethod;
+    /**
+     * 车辆类型id
+     */
+    private Integer truckTypeId;
+    /**
+     * 起始里程(起步计价,公里为单位)
+     */
+    private BigDecimal beginMileage;
+
 }

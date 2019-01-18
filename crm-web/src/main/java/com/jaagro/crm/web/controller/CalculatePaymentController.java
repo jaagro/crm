@@ -54,6 +54,7 @@ public class CalculatePaymentController {
 
     /**
      * 根据客户装卸货地实际里程获取结算单价
+     * @param customerContractId
      * @param mileage
      * @return 结算金额
      */
@@ -63,4 +64,18 @@ public class CalculatePaymentController {
         log.info("O calculatePriceFromMileageSection customerContractId={},mileage={}",customerContractId,mileage);
         return BaseResponse.successInstance(calculatePriceService.calculatePriceFromMileageSection(customerContractId,mileage));
     }
+
+    /**
+     * 合同报价根据车型获取价格基数
+     * @param customerContractId
+     * @param truckTypeId
+     * @return 结算金额
+     */
+    @ApiOperation("合同报价根据车型获取价格基数")
+    @GetMapping("/calculatePriceFromTruckRule")
+    public BaseResponse calculatePriceFromTruckRule(@RequestParam("customerContractId") Integer customerContractId,@RequestParam("truckTypeId") Integer truckTypeId) {
+        log.info("O calculatePriceFromTruckRule customerContractId={},truckTypeId={}",customerContractId,truckTypeId);
+        return BaseResponse.successInstance(calculatePriceService.calculatePriceFromTruckRule(customerContractId,truckTypeId));
+    }
+
 }

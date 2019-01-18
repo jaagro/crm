@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.dto.request.contract.CreateSettleMileageDto;
 import com.jaagro.crm.api.dto.request.contract.UpdateSettleMileageDto;
 import com.jaagro.crm.api.dto.request.contract.listSettleMileageCriteriaDto;
+import com.jaagro.crm.api.entity.SettleMileage;
 
 import java.util.Map;
 
@@ -36,4 +37,18 @@ public interface SettleMileageService {
      * @return
      */
     Map<String, Object> updateSettleMileage(UpdateSettleMileageDto dto);
+
+    /**
+     * 根据条件查询结算里程表id
+     * @param settleMileage
+     * @return
+     */
+    SettleMileage selectByCriteria(SettleMileage settleMileage);
+
+    /**
+     * 根据id逻辑删除
+     * @param id
+     * @return
+     */
+    Integer disableById(Integer id);
 }

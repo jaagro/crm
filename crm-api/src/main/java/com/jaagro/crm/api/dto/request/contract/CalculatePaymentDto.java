@@ -38,7 +38,7 @@ public class CalculatePaymentDto implements Serializable {
     /**
      * 车队合同id
      */
-    @NotNull(message = "{truckTeamContractId.NotNull}")
+    //@NotNull(message = "{truckTeamContractId.NotNull}")
     private Integer truckTeamContractId;
 
     /**

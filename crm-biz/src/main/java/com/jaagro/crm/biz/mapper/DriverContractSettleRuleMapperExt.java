@@ -49,4 +49,11 @@ public interface DriverContractSettleRuleMapperExt extends DriverContractSettleR
      * @param ids
      */
     void deleteDriverContractSettleById(@Param("ids") List<Integer> ids);
+
+    /**
+     * 根据车队合同id查询司机合同报价信息
+     * @param truckTeamContractId
+     * @return
+     */
+    List<ListDriverContractSettleDto> listByTruckTeamContractId(@Param("truckTeamContractId") Integer truckTeamContractId);
 }

@@ -8,6 +8,7 @@ import com.jaagro.crm.api.dto.request.contract.CreateSettleMileageDto;
 import com.jaagro.crm.api.dto.request.contract.UpdateCustomerContractSettlePriceDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnCustomerSettlePriceDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
+import com.jaagro.crm.api.entity.SettleMileage;
 import com.jaagro.crm.api.service.CustomerContractSettlePriceService;
 import com.jaagro.crm.api.service.SettleMileageService;
 import com.jaagro.crm.biz.entity.CustomerContract;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -47,8 +49,6 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
     private CustomerSiteMapperExt siteMapper;
     @Autowired
     private TruckTypeMapperExt truckTypeMapper;
-    @Autowired
-    private SettleMileageService mileageService;
     @Autowired
     private CustomerContractMapperExt contractMapperExt;
     @Autowired
@@ -112,7 +112,9 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
                 //结算里程
                 CreateSettleMileageDto settleMileageDto = new CreateSettleMileageDto();
                 BeanUtils.copyProperties(settlePrice, settleMileageDto);
-                settleMileageDto.setCustomerSettleMileage(settlePriceDto.getMileage());
+                settleMileageDto
+                        .setCustomerSettleMileage(settlePriceDto.getMileage())
+                        .setDriverSettleMileage(settlePriceDto.getMileage());
                 flag = settleMileageService.createSettleMileage(settleMileageDto);
                 if (flag) {
                     return flag;
@@ -136,6 +138,7 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> disableSettlePrice(Integer priceId) {
         CustomerContractSettlePrice settlePrice = settlePriceMapper.selectByPrimaryKey(priceId);
         if (settlePrice == null) {
@@ -148,6 +151,14 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
                 .setModifyUserId(currentUser == null ? null : currentUser.getId());
         int result = settlePriceMapper.updateByPrimaryKeySelective(settlePrice);
         if (result > 0) {
+            SettleMileage settleMileage = new SettleMileage();
+            settleMileage.setCustomerContractId(settlePrice.getCustomerContractId())
+                    .setLoadSiteId(settlePrice.getLoadSiteId())
+                    .setUnloadSiteId(settlePrice.getUnloadSiteId());
+            SettleMileage settleMileageDb = settleMileageService.selectByCriteria(settleMileage);
+            if (settleMileageDb != null) {
+                settleMileageService.disableById(settleMileageDb.getId());
+            }
             return ServiceResult.toResult("删除成功");
         }
         return ServiceResult.error("删除失败");
@@ -192,6 +203,7 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
         }
         BeanUtils.copyProperties(priceDto, settlePrice);
         settlePrice
+                .setId(null)
                 .setMileage(priceDto.getSettlePrice())
                 .setCreateUserId(currentUser == null ? null : currentUser.getId())
                 .setCreateTime(new Date());
@@ -221,6 +233,19 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
                 .setLoadSiteId(settlePrice.getLoadSiteId())
                 .setUnloadSiteId(settlePrice.getUnloadSiteId());
         return settlePriceMapper.listCustomerContractSettlePriceHistory(dto);
+    }
+
+    /**
+     * 根据客户合同id,装货地id,卸货地id获取实际里程
+     *
+     * @param customerContractId
+     * @param loadSiteId
+     * @param unloadSiteId
+     * @return
+     */
+    @Override
+    public BigDecimal getMileageByParams(Integer customerContractId, Integer loadSiteId, Integer unloadSiteId) {
+        return settlePriceMapper.getMileageByParams(customerContractId, loadSiteId, unloadSiteId);
     }
 
 }

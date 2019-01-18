@@ -20,4 +20,10 @@
         AND contract_id = #{contractId}
         AND contract_type = #{contractType}
     </select>
+    <update id="disableByContractIdAndType">
+        UPDATE contract_oil_price
+        SET enable = 0
+        WHERE  contract_id = #{contractId}
+        AND contract_type = #{contractType}
+    </update>
 </mapper>

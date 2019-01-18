@@ -57,7 +57,6 @@ public class CreateExpressDto implements Serializable {
     /**
      * 发布时间
      */
-    @NotNull(message = "{publishTime.NotNull}")
     private Date publishTime;
 
 }

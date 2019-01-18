@@ -25,4 +25,12 @@ public interface ContractOilPriceService {
      * @return
      */
     ReturnContractOilPriceDto getByContractId(Integer contractId, Integer contractType);
+
+    /**
+     * 根据合同id和合同类型删除
+     * @param contractId 合同id
+     * @param contractType 合同类型
+     * @return
+     */
+    Integer disableByContractIdAndType(Integer contractId, Integer contractType);
 }

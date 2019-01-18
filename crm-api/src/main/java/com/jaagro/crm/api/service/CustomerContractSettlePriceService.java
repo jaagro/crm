@@ -4,6 +4,7 @@ import com.jaagro.crm.api.dto.request.contract.CreateCustomerSettlePriceDto;
 import com.jaagro.crm.api.dto.request.contract.UpdateCustomerContractSettlePriceDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnCustomerSettlePriceDto;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -52,4 +53,13 @@ public interface CustomerContractSettlePriceService {
      * @return
      */
     List<ReturnCustomerSettlePriceDto> listCustomerContractSettlePriceHistory(Integer priceId);
+
+    /**
+     * 根据客户合同id,装货地id,卸货地id获取实际里程
+     * @param customerContractId
+     * @param loadSiteId
+     * @param unloadSiteId
+     * @return
+     */
+    BigDecimal getMileageByParams(Integer customerContractId, Integer loadSiteId, Integer unloadSiteId);
 }

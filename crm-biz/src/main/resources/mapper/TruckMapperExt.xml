@@ -26,6 +26,8 @@
         <result column="driving_permit" property="drivingPermit" jdbcType="VARCHAR"/>
         <result column="fuel_consumption" property="fuelConsumption" jdbcType="DECIMAL" />
         <result column="vehicle_type" property="vehicleType" jdbcType="INTEGER" />
+        <association property="truckTypeId" select="com.jaagro.crm.biz.mapper.TruckTypeMapperExt.getById"
+                     column="truck_type_id"></association>
         <collection property="qualificationDtoList" column="id"
                     select="com.jaagro.crm.biz.mapper.TruckQualificationMapperExt.listByTruckId"></collection>
     </resultMap>
@@ -300,5 +302,12 @@
         where truck_team_id = #{truckTeamId}
         and truck_status = 1
         order by create_time
+    </select>
+    <select id="getDetailByTruckNumber" resultMap="DetailInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from truck
+        where truck_number = #{truckNumber}
+        and truck_status = 1
     </select>
 </mapper>

@@ -34,6 +34,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -366,7 +367,7 @@ public class ContractController {
         List<ReturnCheckContractQualificationDto> qualificationDtos = qualificationMapper.listByCriteria(dto);
         if (qualificationDtos.size() > 0) {
             for (ReturnCheckContractQualificationDto checkContractQualificationDto : qualificationDtos
-            ) {
+                    ) {
                 TruckTeamContractReturnDto contractReturnDto = checkContractQualificationDto.getTruckTeamContractReturnDto();
                 if (contractReturnDto != null) {
                     TruckTeam truckTeam = this.truckTeamMapper.selectByPrimaryKey(contractReturnDto.getTruckTeamId());
@@ -408,10 +409,6 @@ public class ContractController {
             TruckTeamContract teamContract = this.truckTeamContractMapper.selectByPrimaryKey(relevanceId);
             if (teamContract == null) {
                 return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队合同不存在");
-            }
-            List<TruckTeamContractReturnDto> teamContractReturnDtos = this.truckTeamContractMapper.listByTruckTeamId(teamContract.getTruckTeamId());
-            if (teamContractReturnDtos.size() < 1) {
-                return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "车队没有相关合同");
             }
         }
         ListContractQualificationCriteriaDto dto = new ListContractQualificationCriteriaDto();
@@ -551,6 +548,19 @@ public class ContractController {
     }
 
     /**
+     * 获取客户合同制定装卸货地实际里程
+     * @param customerContractId
+     * @param loadSiteId
+     * @param unloadSiteId
+     * @return
+     */
+    @ApiOperation("获取客户合同指定装卸货地实际里程")
+    @GetMapping("getMileageByParams")
+    public BaseResponse<BigDecimal> getMileageByParams(@RequestParam("customerContractId") Integer customerContractId, @RequestParam("loadSiteId") Integer loadSiteId, @RequestParam("unloadSiteId") Integer unloadSiteId) {
+        return BaseResponse.successInstance(settlePriceService.getMileageByParams(customerContractId,loadSiteId,unloadSiteId));
+    }
+
+    /**
      * 修改结算信息
      *
      * @param priceDto
@@ -561,6 +571,7 @@ public class ContractController {
     public BaseResponse<Map<String, Object>> customerContractSettlePrice(@RequestBody UpdateCustomerContractSettlePriceDto priceDto) {
         return BaseResponse.service(settlePriceService.updateSettlePrice(priceDto));
     }
+
 
     /**
      * 合同结算信息

@@ -5,12 +5,14 @@ import com.jaagro.crm.api.dto.request.contract.ContractOilPriceCondition;
 import com.jaagro.crm.api.dto.request.contract.CreateDriverContractSettleDto;
 import com.jaagro.crm.api.dto.request.contract.DriverContractSettleCondition;
 import com.jaagro.crm.api.dto.request.contract.GetContractOilPriceDto;
+import com.jaagro.crm.api.dto.request.customer.CreateContractOilPriceDto;
 import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContractDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckTeamContractCriteriaDto;
 import com.jaagro.crm.api.dto.request.truck.UpdateTruckTeamContractDto;
 import com.jaagro.crm.api.dto.response.truck.ListDriverContractSettleDto;
-import com.jaagro.crm.api.dto.response.truck.ListDriverContractSettlelInfoDto;
+import com.jaagro.crm.api.dto.response.truck.ListDriverContractSettleInfoFlagDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
+import com.jaagro.crm.api.dto.response.truck.TruckTeamContractReturnDto;
 
 import java.util.List;
 import java.util.Map;
@@ -79,11 +81,10 @@ public interface TruckTeamContractService {
 
     /**
      * 运力合同报价列表
-     *
      * @param condition
      * @return
      */
-    List<ListDriverContractSettlelInfoDto> listTruckTeamContractPrice(DriverContractSettleCondition condition);
+    ListDriverContractSettleInfoFlagDto listDriverContractPrice(DriverContractSettleCondition condition);
 
     /**
      * 运力合同报价详情
@@ -91,7 +92,7 @@ public interface TruckTeamContractService {
      * @param condition
      * @return
      */
-    List<ListDriverContractSettleDto> listTruckTeamContractPriceDetails(DriverContractSettleCondition condition);
+    ListDriverContractSettleDto listTruckTeamContractPriceDetails(DriverContractSettleCondition condition);
 
     /**
      * 当前车辆类型所有的报价历史记录
@@ -123,5 +124,19 @@ public interface TruckTeamContractService {
      */
     GetContractOilPriceDto getNewOilPrice(ContractOilPriceCondition condition);
 
+    /**
+     * 更新油价
+     *
+     * @param createContractOilPriceDto
+     */
+    void updateOilPrice(CreateContractOilPriceDto createContractOilPriceDto);
+
+    /**
+     * 根据车队ID查询车队合同列表
+     * Gavin 20190108
+     * @param truckTeamId
+     * @return
+     */
+    List<TruckTeamContractReturnDto> getTruckTeamContractByTruckTeamId(Integer truckTeamId);
 
 }

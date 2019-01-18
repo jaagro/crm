@@ -120,4 +120,10 @@ public class CustomerSiteController {
     public BaseResponse updateAllCustomerSite() {
         return BaseResponse.successInstance(siteService.updateAllCustomerSite());
     }
+
+    @GetMapping("/getSiteBySiteName/{siteName}/{customerId}")
+    public BaseResponse<ShowSiteDto> getSiteBySiteName(@PathVariable("siteName") String siteName,
+                                                       @PathVariable("customerId") Integer customerId){
+        return BaseResponse.successInstance(siteMapper.getBySiteName(siteName, customerId));
+    }
 }

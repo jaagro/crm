@@ -28,7 +28,7 @@ public class CreateTruckTeamContractDto implements Serializable {
     private String contractNumber;
 
     /**
-     * 业务类型(1 饲料运输 2 毛鸡运输 3 猪运输)
+     * 业务类型(1 毛鸡运输 2 饲料运输 3 母猪运输 4 公猪运输 5 仔猪运输 6 生猪运输)
      */
     private Integer bussinessType;
 

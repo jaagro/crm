@@ -31,4 +31,12 @@ public interface ContractOilPriceMapperExt extends ContractOilPriceMapper {
      * @return
      */
     ReturnContractOilPriceDto getByContractIdAndType(@Param("contractId") Integer contractId, @Param("contractType") Integer contractType);
+
+    /**
+     * 根据合同id和类型删除
+     * @param contractId 合同id
+     * @param contractType 合同类型
+     * @return
+     */
+    Integer disableByContractIdAndType(@Param("contractId") Integer contractId, @Param("contractType") Integer contractType);
 }

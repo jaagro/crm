@@ -11,7 +11,10 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author gavin
@@ -33,7 +36,7 @@ public class ExpressController {
      */
     @ApiOperation("智库直通车列表")
     @PostMapping("/express/listExpressByCriteria")
-    public BaseResponse listExpressByCriteria(@RequestBody QueryExpressDto criteriaDto) {
+    public BaseResponse listExpressByCriteria(@RequestBody @Validated QueryExpressDto criteriaDto) {
         try {
             return BaseResponse.successInstance(expressService.listExpressByCriteria(criteriaDto));
         } catch (Exception e) {
@@ -49,7 +52,7 @@ public class ExpressController {
      */
     @ApiOperation("智库直通车发布")
     @PostMapping("/express")
-    public BaseResponse createExpress(@RequestBody CreateExpressDto createExpressDto) {
+    public BaseResponse createExpress(@RequestBody @Validated CreateExpressDto createExpressDto) {
         boolean result = expressService.createExpress(createExpressDto);
         if (result) {
             return BaseResponse.successInstance("智库直通车发布成功");
@@ -82,4 +85,9 @@ public class ExpressController {
         return BaseResponse.successInstance(returnDto);
     }
 
+    @ApiOperation(value = "新增查询所有智库直通车的人员")
+    @PostMapping("/addQueryAllPerson")
+    public BaseResponse addQueryAllPerson(@RequestBody List<String> phoneNumberList){
+        return BaseResponse.service(expressService.addQueryAllPerson(phoneNumberList));
+    }
 }

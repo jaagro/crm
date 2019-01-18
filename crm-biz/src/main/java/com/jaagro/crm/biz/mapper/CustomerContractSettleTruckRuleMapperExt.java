@@ -20,8 +20,16 @@ public interface CustomerContractSettleTruckRuleMapperExt extends CustomerContra
     /**
      * 根据结算主表id查询
      *
-     * @param id
+     * @param ruleId
      * @return
      */
     List<ReturnCustomerSettleTruckRuleDto> listByRuleId(@Param("ruleId") Integer ruleId);
+
+    /**
+     * 合同报价根据车型获取价格基数
+     * @param customerContractId
+     * @param truckTypeId
+     * @return
+     */
+    CustomerContractSettleTruckRule getLatestTruckRule(@Param("customerContractId") Integer customerContractId, @Param("truckTypeId") Integer truckTypeId);
 }

@@ -5,13 +5,16 @@
         SELECT
         <include refid="Base_Column_List"/>
         FROM settle_mileage
-        WHERE customer_contract_id = #{customerContractId}
+        WHERE
+        enable = 1
+        AND  customer_contract_id = #{customerContractId}
         <if test="siteDtoList !=null and siteDtoList.size() > 0">
             and
             <foreach collection="siteDtoList" separator=") or (" item="site" open="((" close="))">
                 load_site_id = #{site.loadSiteId} and unload_site_id = #{site.unloadSiteId}
             </foreach>
         </if>
+        order by create_time desc
     </select>
     <select id="listByCriteria" parameterType="com.jaagro.crm.api.dto.request.contract.listSettleMileageCriteriaDto"
             resultType="com.jaagro.crm.api.dto.response.contract.ReturnSettleMileageDto">
@@ -31,5 +34,31 @@
                 ${did}
             </foreach>
         </if>
+        order by create_time desc
     </select>
+    <select id="selectByCriteria" parameterType="com.jaagro.crm.api.entity.SettleMileage"
+            resultMap="BaseResultMap">
+        select
+         <include refid="Base_Column_List"/>
+        from
+        settle_mileage
+        where
+        enable = 1
+        <if test="loadSiteId != null">
+            and load_site_id = #{loadSiteId}
+        </if>
+        <if test="unloadSiteId != null">
+            and unload_site_id = #{unloadSiteId}
+        </if>
+        <if test="customerContractId != null">
+            and customer_contract_id = #{customerContractId}
+        </if>
+        order by create_time desc
+        limit 1
+    </select>
+    <update id="disableById">
+        UPDATE settle_mileage
+        SET enable = 0
+        WHERE id = #{id}
+    </update>
 </mapper>

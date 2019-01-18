@@ -7,27 +7,31 @@
         from express
         where
             enable=1
-                <if test="categoryId != null and categoryId !=''">
+                <if test="createUserId != null">
+                    and create_user_id = #{createUserId}
+                </if>
+                <if test="categoryId != null">
                     and category_Id = #{categoryId}
                 </if>
+
                 <if test="tags != null and tags != ''">
                     <![CDATA[and (tags like concat('%',#{tags},'%') )]]>
                 </if>
 
                 <if test='strDate=="oneday"'>
-                  and publish_time <![CDATA[ > ]]> DATE_ADD(NOW(),INTERVAL -1 DAY)
+                  and publish_time <![CDATA[ >= ]]> DATE_SUB(CURDATE(),INTERVAL 0 DAY)
                 </if>
                 <if test='strDate=="twoday"'>
-                  and publish_time <![CDATA[ > ]]>  DATE_ADD(NOW(),INTERVAL -2 DAY)
+                  and publish_time <![CDATA[ >= ]]>  DATE_SUB(CURDATE(),INTERVAL 1 DAY)
                 </if>
                 <if test='strDate=="oneweek"'>
-                  and publish_time <![CDATA[ > ]]>  DATE_ADD(NOW(),INTERVAL -7 DAY)
+                  and publish_time <![CDATA[ >= ]]>  DATE_SUB(CURDATE(),INTERVAL 6 DAY)
                 </if>
                 <if test='strDate=="onemonth"'>
-                  and publish_time <![CDATA[ > ]]>  DATE_ADD(NOW(),INTERVAL -30 DAY)
+                  and publish_time <![CDATA[ >= ]]>  DATE_SUB(CURDATE(),INTERVAL 30 DAY)
                 </if>
                 <if test='strDate=="threemonth"'>
-                  and publish_time <![CDATA[ > ]]>  DATE_ADD(NOW(),INTERVAL -90 DAY)
+                  and publish_time <![CDATA[ >= ]]>  DATE_SUB(CURDATE(),INTERVAL 90 DAY)
                 </if>
 
         order by publish_time desc
