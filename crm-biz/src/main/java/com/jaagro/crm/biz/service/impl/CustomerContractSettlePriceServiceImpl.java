@@ -156,7 +156,7 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
                     .setLoadSiteId(settlePrice.getLoadSiteId())
                     .setUnloadSiteId(settlePrice.getUnloadSiteId());
             SettleMileage settleMileageDb = settleMileageService.selectByCriteria(settleMileage);
-            if (settleMileageDb != null){
+            if (settleMileageDb != null) {
                 settleMileageService.disableById(settleMileageDb.getId());
             }
             return ServiceResult.toResult("删除成功");
@@ -203,6 +203,7 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
         }
         BeanUtils.copyProperties(priceDto, settlePrice);
         settlePrice
+                .setId(null)
                 .setMileage(priceDto.getSettlePrice())
                 .setCreateUserId(currentUser == null ? null : currentUser.getId())
                 .setCreateTime(new Date());
@@ -244,7 +245,7 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
      */
     @Override
     public BigDecimal getMileageByParams(Integer customerContractId, Integer loadSiteId, Integer unloadSiteId) {
-        return settlePriceMapper.getMileageByParams(customerContractId,loadSiteId,unloadSiteId);
+        return settlePriceMapper.getMileageByParams(customerContractId, loadSiteId, unloadSiteId);
     }
 
 }
