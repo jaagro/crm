@@ -190,7 +190,7 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
                     log.info("O calculatePaymentFromCustomer 仔猪结算 begin");
                     paymentMoney = new BigDecimal(0.00);
                     //根据合同id、装货地Id,卸货地id获取实际公里数
-                    actualMileage = new BigDecimal(40.00);
+                    actualMileage = new BigDecimal(00.00);
                     //根据合同Id,车型id和运单完成时间获取车型的价格基数,因为不同的车型结算单价不同
                     unitPrice = new BigDecimal(0.00);
                     contractSettlePriceList = customerContractSettlePriceMapperExt.getSectionWeightPrice(contractId, calculatePaymentDto.getDoneDate(), calculatePaymentDto.getSiteDtoList());
