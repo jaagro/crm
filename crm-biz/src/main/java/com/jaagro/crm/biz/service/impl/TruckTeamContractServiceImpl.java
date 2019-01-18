@@ -600,6 +600,10 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
      */
     @Override
     public List<ListTruckTypeDto> listTruckTeamTypeByGoodType(Integer goodType) {
-        return truckTypeMapper.listAll(String.valueOf(goodType));
+        Integer productName = goodType;
+        if (GoodsType.BOAR.equals(goodType) || GoodsType.SOW.equals(goodType) || GoodsType.LIVE_PIG.equals(goodType)){
+            productName = ProductName.COMMERCIAL_PIG;
+        }
+        return truckTypeMapper.listAll(String.valueOf(productName));
     }
 }
