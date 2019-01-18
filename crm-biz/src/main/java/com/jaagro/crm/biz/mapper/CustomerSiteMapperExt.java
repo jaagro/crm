@@ -68,7 +68,7 @@ public interface CustomerSiteMapperExt extends CustomerSiteMapper {
      * @param customerId
      * @return
      */
-    ShowSiteDto getBySiteName(String siteName, Integer customerId);
+    ShowSiteDto getBySiteName(@Param("siteName") String siteName, @Param("customerId") Integer customerId);
 
     /**
      * 根据地址id数组获得地址名称
