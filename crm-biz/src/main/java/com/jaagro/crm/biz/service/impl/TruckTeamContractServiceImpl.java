@@ -88,6 +88,12 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
         if (this.truckTeamMapper.selectByPrimaryKey(dto.getTruckTeamId()) == null) {
             throw new NullPointerException("车队不存在");
         }
+        if (this.truckTeamContractMapper.getByContractNumber(dto.getContractNumber()) != null) {
+            throw new RuntimeException("合同编号已存在");
+        }
+        if (this.truckTeamContractMapper.getByContractNumber(dto.getContractNumber()) != null) {
+            throw new RuntimeException("此类型合同已存在");
+        }
         UserInfo currentUser = this.userService.getCurrentUser();
         //创建合同
         TruckTeamContract truckTeamContract = new TruckTeamContract();
@@ -227,7 +233,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                 .setTruckTeamContractId(id);
         deleteTeamContractPrice(contractSettleCondition);
         // 删除油价
-        contractOilPriceService.disableByContractIdAndType(id,ContractType.DRIVER);
+        contractOilPriceService.disableByContractIdAndType(id, ContractType.DRIVER);
         return ServiceResult.toResult("删除成功");
     }
 
@@ -588,8 +594,8 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     @Override
     public List<TruckTeamContractReturnDto> getTruckTeamContractByTruckTeamId(Integer truckTeamId) {
 
-        List<TruckTeamContractReturnDto> teamContractReturnDtos =  truckTeamContractMapper.listByTruckTeamId(truckTeamId);
-       return teamContractReturnDtos;
+        List<TruckTeamContractReturnDto> teamContractReturnDtos = truckTeamContractMapper.listByTruckTeamId(truckTeamId);
+        return teamContractReturnDtos;
     }
 
     /**

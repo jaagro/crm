@@ -92,6 +92,9 @@ public class ContractServiceImpl implements ContractService {
         if (this.customerContractMapper.getByUpdateDto(updateContractDto) != null) {
             throw new RuntimeException("合同编号已存在");
         }
+        if (CollectionUtils.isEmpty(this.customerContractMapper.getByCustomerAndGoodsType(updateContractDto))) {
+            throw new RuntimeException("此类型合同已存在");
+        }
         customerContract
                 .setContractStatus(AuditStatus.UNCHECKED)
                 .setCreateUser(userService.getCurrentUser().getId());

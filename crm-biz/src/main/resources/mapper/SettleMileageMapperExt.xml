@@ -7,7 +7,7 @@
         FROM settle_mileage
         WHERE
         enable = 1
-        AND  customer_contract_id = #{customerContractId}
+        AND customer_contract_id = #{customerContractId}
         <if test="siteDtoList !=null and siteDtoList.size() > 0">
             and
             <foreach collection="siteDtoList" separator=") or (" item="site" open="((" close="))">
@@ -39,7 +39,7 @@
     <select id="selectByCriteria" parameterType="com.jaagro.crm.api.entity.SettleMileage"
             resultMap="BaseResultMap">
         select
-         <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List"/>
         from
         settle_mileage
         where

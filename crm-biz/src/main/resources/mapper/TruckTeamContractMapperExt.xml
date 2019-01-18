@@ -33,7 +33,7 @@
         select
         <include refid="Base_Column_List"/>
         from truck_team_contract
-        where contract_status = 1 and  truck_team_id = #{truckTeamId,jdbcType=INTEGER}
+        where contract_status = 1 and truck_team_id = #{truckTeamId,jdbcType=INTEGER}
     </select>
     <select id="listByCriteria" parameterType="com.jaagro.crm.api.dto.request.truck.ListTruckTeamContractCriteriaDto"
             resultMap="ReturnListInfo">
@@ -53,6 +53,19 @@
         where contract_status != 3
         <if test="contractNumber != null">
             and contract_number = #{contractNumber}
+        </if>
+    </select>
+    <select id="getByTeamIdAndType" parameterType="com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContractDto"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from truck_team_contract
+        where contract_status != 3
+        <if test="truckTeamId != null">
+            and truck_team_id = #{truckTeamId}
+        </if>
+        <if test="bussinessType != null">
+            and bussiness_type = #{bussinessType}
         </if>
     </select>
 </mapper>

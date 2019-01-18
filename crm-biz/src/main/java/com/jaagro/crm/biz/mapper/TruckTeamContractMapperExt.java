@@ -1,6 +1,7 @@
 package com.jaagro.crm.biz.mapper;
 
 
+import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContractDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckTeamContractCriteriaDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTeamContractDto;
 import com.jaagro.crm.api.dto.response.truck.TruckTeamContractReturnDto;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * @author gavin
  */
-public interface TruckTeamContractMapperExt extends TruckTeamContractMapper{
+public interface TruckTeamContractMapperExt extends TruckTeamContractMapper {
 
     /**
      * 查询合同dto
@@ -42,4 +43,13 @@ public interface TruckTeamContractMapperExt extends TruckTeamContractMapper{
      * @return
      */
     TruckTeamContract getByContractNumber(@Param("contractNumber") String contractNumber);
+
+    /**
+     * 根据车队和货物类型查询
+     *
+     * @param teamContractDto
+     * @return
+     */
+    List<TruckTeamContract> getByTeamIdAndType(CreateTruckTeamContractDto teamContractDto);
+
 }

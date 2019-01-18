@@ -73,9 +73,6 @@ public class TruckTeamContractController {
         if (StringUtils.isEmpty(dto.getContractNumber())) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同编号不能为空");
         }
-        if (this.truckTeamContractMapper.getByContractNumber(dto.getContractNumber()) != null) {
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同编号已存在");
-        }
         if (StringUtils.isEmpty(dto.getStartDate())) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同开始时间不能为空");
         }
@@ -234,6 +231,7 @@ public class TruckTeamContractController {
         listDriverContractSettleDtoPageInfo.setList(truckTeamContractPriceHistoryVos);
         return BaseResponse.successInstance(listDriverContractSettleDtoPageInfo);
     }
+
     @ApiOperation("根据车队ID查询车队合同列表")
     @PostMapping("/getTruckTeamContractByTruckTeamId/{truckTeamId}")
     public List<TruckTeamContractReturnDto> getTruckTeamContractByTruckTeamId(@PathVariable("truckTeamId") Integer truckTeamId) {

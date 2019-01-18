@@ -67,6 +67,19 @@
         </if>
         and contract_status != 3
     </select>
+    <select id="getByCustomerAndGoodsType" parameterType="com.jaagro.crm.api.dto.request.contract.UpdateContractDto"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from customer_contract
+        where contract_status != 3
+        <if test="customerId != null">
+            and customer_id = #{customerId}
+        </if>
+        <if test="type != null">
+            and type = #{type}
+        </if>
+    </select>
     <select id="countByCustomerId" parameterType="java.lang.Integer" resultType="int">
         select
         count(1)

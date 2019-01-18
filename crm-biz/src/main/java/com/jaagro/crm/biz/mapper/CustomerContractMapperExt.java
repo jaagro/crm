@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author gavin
  */
-public interface CustomerContractMapperExt extends CustomerContractMapper{
+public interface CustomerContractMapperExt extends CustomerContractMapper {
 
     /**
      * 查询单个Dto
@@ -44,6 +44,14 @@ public interface CustomerContractMapperExt extends CustomerContractMapper{
      * @return
      */
     CustomerContract getByUpdateDto(UpdateContractDto updateContractDto);
+
+    /**
+     * 根据客户id和货物类型查询
+     *
+     * @param updateContractDto
+     * @return
+     */
+    List<CustomerContract> getByCustomerAndGoodsType(UpdateContractDto updateContractDto);
 
     /**
      * 根据客户查询未审核个数
