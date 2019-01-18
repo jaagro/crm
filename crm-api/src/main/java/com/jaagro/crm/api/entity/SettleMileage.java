@@ -1,4 +1,4 @@
-package com.jaagro.crm.biz.entity;
+package com.jaagro.crm.api.entity;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -20,11 +20,6 @@ public class SettleMileage implements Serializable{
      * 客户合同id
      */
     private Integer customerContractId;
-
-    /**
-     * 客户合同结算信息id
-     */
-    private Integer customerSettlePriceId;
 
     /**
      * 部门id

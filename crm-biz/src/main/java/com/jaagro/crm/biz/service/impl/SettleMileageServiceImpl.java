@@ -11,7 +11,7 @@ import com.jaagro.crm.api.service.SettleMileageService;
 import com.jaagro.crm.biz.entity.Customer;
 import com.jaagro.crm.biz.entity.CustomerContract;
 import com.jaagro.crm.biz.entity.CustomerSite;
-import com.jaagro.crm.biz.entity.SettleMileage;
+import com.jaagro.crm.api.entity.SettleMileage;
 import com.jaagro.crm.biz.mapper.CustomerContractMapperExt;
 import com.jaagro.crm.biz.mapper.CustomerMapperExt;
 import com.jaagro.crm.biz.mapper.CustomerSiteMapperExt;
@@ -72,10 +72,19 @@ public class SettleMileageServiceImpl implements SettleMileageService {
                     .setDepartmentId(site.getDeptId())
                     .setDepartmentName(deptService.getDeptNameById(site.getDeptId()));
         }
-        Integer settleId = settleMileageMapperExt.selectByCriteria(settleMileage);
+        SettleMileage settleMileageDb = settleMileageMapperExt.selectByCriteria(settleMileage);
         int result;
-        if (settleId != null) {
-            settleMileage.setId(settleId);
+        if (settleMileageDb != null) {
+            settleMileage.setId(settleMileageDb.getId());
+            // 不覆盖已调整过的司机结算里程
+            if (settleMileageDb.getDriverSettleMileage() != null
+                    && settleMileageDb.getCustomerSettleMileage() != null
+                    && settleMileageDb.getDriverSettleMileage().compareTo(settleMileageDb.getCustomerSettleMileage()) != 0) {
+                settleMileage.setDriverSettleMileage(settleMileageDb.getDriverSettleMileage());
+            }
+            if (settleMileageDb.getTrackMileage() != null) {
+                settleMileage.setTrackMileage(settleMileageDb.getTrackMileage());
+            }
             result = settleMileageMapperExt.updateByPrimaryKeySelective(settleMileage);
         } else {
             result = settleMileageMapperExt.insertSelective(settleMileage);
@@ -142,12 +151,25 @@ public class SettleMileageServiceImpl implements SettleMileageService {
     }
 
     /**
-     * 根据结算信息id逻辑删除
+     * 根据条件查询结算里程表id
      *
-     * @param priceId
+     * @param settleMileage
+     * @return
      */
     @Override
-    public void disableByPriceId(Integer priceId) {
-        settleMileageMapperExt.disableBySettlePriceId(priceId);
+    public SettleMileage selectByCriteria(SettleMileage settleMileage) {
+        return settleMileageMapperExt.selectByCriteria(settleMileage);
     }
+
+    /**
+     * 根据id逻辑删除
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public Integer disableById(Integer id) {
+        return settleMileageMapperExt.disableById(id);
+    }
+
 }

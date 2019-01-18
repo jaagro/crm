@@ -5,7 +5,9 @@
         SELECT
         <include refid="Base_Column_List"/>
         FROM settle_mileage
-        WHERE customer_contract_id = #{customerContractId}
+        WHERE
+        enable = 1
+        AND  customer_contract_id = #{customerContractId}
         <if test="siteDtoList !=null and siteDtoList.size() > 0">
             and
             <foreach collection="siteDtoList" separator=") or (" item="site" open="((" close="))">
@@ -34,10 +36,10 @@
         </if>
         order by create_time desc
     </select>
-    <select id="selectByCriteria" parameterType="com.jaagro.crm.biz.entity.SettleMileage"
-            resultType="java.lang.Integer">
+    <select id="selectByCriteria" parameterType="com.jaagro.crm.api.entity.SettleMileage"
+            resultMap="BaseResultMap">
         select
-        id
+         <include refid="Base_Column_List"/>
         from
         settle_mileage
         where
@@ -48,10 +50,15 @@
         <if test="unloadSiteId != null">
             and unload_site_id = #{unloadSiteId}
         </if>
+        <if test="customerContractId != null">
+            and customer_contract_id = #{customerContractId}
+        </if>
         order by create_time desc
         limit 1
     </select>
-    <select id="disableBySettlePriceId" parameterType="java.lang.Integer">
-      update settle_mileage set enable = 0 where customer_settle_price_id = #{priceId}
-    </select>
+    <update id="disableById">
+        UPDATE settle_mileage
+        SET enable = 0
+        WHERE id = #{id}
+    </update>
 </mapper>

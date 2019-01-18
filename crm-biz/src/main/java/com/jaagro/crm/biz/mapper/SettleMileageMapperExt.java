@@ -3,7 +3,7 @@ package com.jaagro.crm.biz.mapper;
 import com.jaagro.crm.api.dto.response.contract.ReturnSettleMileageDto;
 import com.jaagro.crm.api.dto.request.contract.SiteDto;
 import com.jaagro.crm.api.dto.request.contract.listSettleMileageCriteriaDto;
-import com.jaagro.crm.biz.entity.SettleMileage;
+import com.jaagro.crm.api.entity.SettleMileage;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -33,17 +33,17 @@ public interface SettleMileageMapperExt extends SettleMileageMapper {
     List<ReturnSettleMileageDto> listByCriteria(listSettleMileageCriteriaDto dto);
 
     /**
-     * 根据装卸货地id，车型id判断是否存在
+     * 根据装卸货地id，车队合同id查询
      *
      * @param settleMileage
      * @return
      */
-    Integer selectByCriteria(SettleMileage settleMileage);
+    SettleMileage selectByCriteria(SettleMileage settleMileage);
 
     /**
-     * 根据结算信息id逻辑删除
-     *
-     * @param priceId
+     * 根据id逻辑删除
+     * @param id
+     * @return
      */
-    void disableBySettlePriceId(@Param("priceId") Integer priceId);
+    Integer disableById(@Param("id") Integer id);
 }

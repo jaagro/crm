@@ -52,4 +52,14 @@
         AND truck_type_id = #{truckTypeId}
         ORDER BY effective_time DESC
     </select>
+    <select id="getMileageByParams" resultType="java.math.BigDecimal">
+        select
+          mileage
+        from customer_contract_settle_price
+        where enable = 1
+        AND history_flag = 0
+        AND customer_contract_id = #{customerContractId}
+        AND load_site_id = #{loadSiteId}
+        AND unload_site_id = #{unloadSiteId}
+    </select>
 </mapper>

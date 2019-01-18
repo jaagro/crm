@@ -20,11 +20,6 @@ public class CreateSettleMileageDto implements Serializable {
     private Integer customerContractId;
 
     /**
-     * 客户合同结算信息id
-     */
-    private Integer customerSettlePriceId;
-
-    /**
      * 部门id
      */
     private Integer departmentId;
