@@ -51,7 +51,7 @@ public interface CustomerContractMapperExt extends CustomerContractMapper {
      * @param updateContractDto
      * @return
      */
-    List<CustomerContract> getByCustomerAndGoodsType(UpdateContractDto updateContractDto);
+    List<CustomerContract> getByCustomerAndGoodsType(CustomerContract updateContractDto);
 
     /**
      * 根据客户查询未审核个数

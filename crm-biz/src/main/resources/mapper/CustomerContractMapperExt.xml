@@ -67,7 +67,7 @@
         </if>
         and contract_status != 3
     </select>
-    <select id="getByCustomerAndGoodsType" parameterType="com.jaagro.crm.api.dto.request.contract.UpdateContractDto"
+    <select id="getByCustomerAndGoodsType" parameterType="com.jaagro.crm.biz.entity.CustomerContract"
             resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>

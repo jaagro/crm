@@ -91,8 +91,12 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
         if (this.truckTeamContractMapper.getByContractNumber(dto.getContractNumber()) != null) {
             throw new RuntimeException("合同编号已存在");
         }
-        if (this.truckTeamContractMapper.getByContractNumber(dto.getContractNumber()) != null) {
-            throw new RuntimeException("此类型合同已存在");
+        List<TruckTeamContract> contractList = truckTeamContractMapper.getByTeamIdAndType(dto);
+        if (!CollectionUtils.isEmpty(contractList)) {
+            Boolean aBoolean = checkContract(contractList, dto);
+            if (aBoolean) {
+                throw new RuntimeException("此类型合同日期重叠");
+            }
         }
         UserInfo currentUser = this.userService.getCurrentUser();
         //创建合同
@@ -607,9 +611,33 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     @Override
     public List<ListTruckTypeDto> listTruckTeamTypeByGoodType(Integer goodType) {
         Integer productName = goodType;
-        if (GoodsType.BOAR.equals(goodType) || GoodsType.SOW.equals(goodType) || GoodsType.LIVE_PIG.equals(goodType)){
+        if (GoodsType.BOAR.equals(goodType) || GoodsType.SOW.equals(goodType) || GoodsType.LIVE_PIG.equals(goodType)) {
             productName = ProductName.COMMERCIAL_PIG;
         }
         return truckTypeMapper.listAll(String.valueOf(productName));
     }
+
+    /**
+     * 判断 是否有重叠合同
+     *
+     * @param contractList
+     * @return
+     */
+    private Boolean checkContract(List<TruckTeamContract> contractList, CreateTruckTeamContractDto dto) {
+        if (CollectionUtils.isEmpty(contractList)) {
+            return false;
+        } else {
+            for (TruckTeamContract teamContract : contractList) {
+                if (dto.getStartDate().getTime() <= teamContract.getStartDate().getTime() && dto.getEndDate().getTime() >= teamContract.getStartDate().getTime()) {
+                    return true;
+                } else if (dto.getStartDate().getTime() >= teamContract.getStartDate().getTime() && dto.getStartDate().getTime() <= teamContract.getEndDate().getTime()) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            return false;
+        }
+    }
+
 }

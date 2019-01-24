@@ -92,8 +92,12 @@ public class ContractServiceImpl implements ContractService {
         if (this.customerContractMapper.getByUpdateDto(updateContractDto) != null) {
             throw new RuntimeException("合同编号已存在");
         }
-        if (CollectionUtils.isEmpty(this.customerContractMapper.getByCustomerAndGoodsType(updateContractDto))) {
-            throw new RuntimeException("此类型合同已存在");
+        List<CustomerContract> contractList = this.customerContractMapper.getByCustomerAndGoodsType(customerContract);
+        if (!CollectionUtils.isEmpty(contractList)) {
+            Boolean aBoolean = this.checkContract(contractList, dto);
+            if (aBoolean) {
+                throw new RuntimeException("此类型合同日期重叠");
+            }
         }
         customerContract
                 .setContractStatus(AuditStatus.UNCHECKED)
@@ -285,6 +289,29 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public List<ShowCustomerContractDto> listShowCustomerContractByCustomerId(Integer customerId) {
         return customerContractMapper.listShowCustomerContractByCustomerId(customerId);
+    }
+
+    /**
+     * 判断 是否有重叠合同
+     *
+     * @param contractList
+     * @return
+     */
+    private Boolean checkContract(List<CustomerContract> contractList, CreateContractDto dto) {
+        if (CollectionUtils.isEmpty(contractList)) {
+            return false;
+        } else {
+            for (CustomerContract contract : contractList) {
+                if (dto.getStartDate().getTime() <= contract.getStartDate().getTime() && dto.getEndDate().getTime() >= contract.getStartDate().getTime()) {
+                    return true;
+                } else if (dto.getStartDate().getTime() >= contract.getStartDate().getTime() && dto.getStartDate().getTime() <= contract.getEndDate().getTime()) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            return false;
+        }
     }
 
 }
