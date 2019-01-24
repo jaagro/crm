@@ -21,7 +21,7 @@
         FROM driver_contract_settle_section_rule
         WHERE 1=1
         and driver_contract_settle_rule_id = #{driverContractSettleRuleId}
-        order by start asc
+        order by settle_price asc
     </select>
     <update id="deleteDriverContractSettleSectionById" parameterType="java.util.List">
         update driver_contract_settle_section_rule
