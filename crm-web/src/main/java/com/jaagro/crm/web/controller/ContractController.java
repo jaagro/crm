@@ -625,5 +625,4 @@ public class ContractController {
         return BaseResponse.successInstance("新增成功");
     }
 
-
 }

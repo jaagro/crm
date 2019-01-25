@@ -94,6 +94,12 @@ public class ContractServiceImpl implements ContractService {
         }
         List<CustomerContract> contractList = this.customerContractMapper.getByCustomerAndGoodsType(customerContract);
         if (!CollectionUtils.isEmpty(contractList)) {
+            CustomerContract contract = contractList.get(0);
+            if (contract != null) {
+                if (dto.getStartDate().getTime() < contract.getEndDate().getTime()) {
+                    throw new RuntimeException("合同开始日期不能与上一份合同结束日期有空隙");
+                }
+            }
             Boolean aBoolean = this.checkContract(contractList, dto);
             if (aBoolean) {
                 throw new RuntimeException("此类型合同日期重叠");
