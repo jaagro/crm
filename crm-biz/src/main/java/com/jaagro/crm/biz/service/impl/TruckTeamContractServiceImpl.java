@@ -369,7 +369,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                             .setTruckTeamContractId(driverContractSettleRule.getTruckTeamContractId());
                     if (driverContractSettleRule.getHistoryFlag() == true) {
                         driverContractSettleParam
-                                .setEffectiveTime(driverContractSettleRule.getEffectiveTime())
+                                .setEffectiveTime(driverContractSettleRule.getInvalidTime())
                                 .setInvalidTime(truckTeamContract.getEndDate());
                         saveDriverContractSettle(driverContractSettleDto, driverContractSettleParam, null, false);
                         //当前最后一条记录为非历史记录
