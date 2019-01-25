@@ -60,11 +60,7 @@ public class ExpressServiceImpl implements ExpressService {
             Express express = new Express();
             BeanUtils.copyProperties(createExpressDto, express);
             express.setPublishTime(new Date());
-            // 内容里空格标签替换成空格,已跟前端约定
             String content = createExpressDto.getContent();
-            if (content.length() > 13000) {
-                throw new RuntimeException("亲,内容太长了");
-            }
             express.setContent(content);
             UserInfo currentUser = currentUserService.getCurrentUser();
             express.setCreateTime(new Date())
@@ -148,6 +144,19 @@ public class ExpressServiceImpl implements ExpressService {
                             DepartmentReturnDto departmentReturnDto = departmentReturnDtos.stream().filter(c -> c.getId().equals(userInfo.getDepartmentId())).collect(Collectors.toList()).get(0);
                             if (null != departmentReturnDto) {
                                 returnDto.setDepartmentName(departmentReturnDto.getDepartmentName());
+                            }
+                        }
+                    }
+                }else{
+                    userInfoList = userClientService.listUserInfo(new ArrayList<>(userIdSet), UserType.DRIVER);
+                    if (!CollectionUtils.isEmpty(userInfoList)) {
+                        for (ExpressReturnDto returnDto : returnDtoList) {
+
+                            UserInfo userInfo = userInfoList.stream().filter(c -> c.getId().equals(returnDto.getCreateUserId())).collect(Collectors.toList()).get(0);
+
+                            if (userInfo != null) {
+                                returnDto.setCreateUserName(userInfo.getName());
+                                    returnDto.setDepartmentName("司机");
                             }
                         }
                     }
