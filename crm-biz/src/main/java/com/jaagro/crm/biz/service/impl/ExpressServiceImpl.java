@@ -118,15 +118,19 @@ public class ExpressServiceImpl implements ExpressService {
         UserInfo currentUser = currentUserService.getCurrentUser();
         String currentUserId = currentUser == null ? null : currentUser.getId().toString();
         // 如果不在特权名单内只能查询自己创建的
-        if (!opsForSet.isMember(QUERY_EXPRESS_PERSONS,currentUserId)){
+        if (!opsForSet.isMember(QUERY_EXPRESS_PERSONS, currentUserId)) {
             criteriaDto.setCreateUserId(Integer.parseInt(currentUserId));
         }
         List<ExpressReturnDto> returnDtoList = expressMapperExt.listByCriteria(criteriaDto);
         if (!CollectionUtils.isEmpty(returnDtoList)) {
             Set<Integer> userIdSet = new HashSet<>();
+            Set<Integer> driverIdSet = new HashSet<>();
             returnDtoList.forEach(returnDto -> {
-                if (returnDto.getCreateUserId() != null) {
+                if (returnDto.getCreateUserId() != null && returnDto.getCreateUserType().equalsIgnoreCase(UserType.EMPLOYEE)) {
                     userIdSet.add(returnDto.getCreateUserId());
+                }
+                if (returnDto.getCreateUserId() != null && returnDto.getCreateUserType().equalsIgnoreCase(UserType.DRIVER)) {
+                    driverIdSet.add(returnDto.getCreateUserId());
                 }
             });
             if (!CollectionUtils.isEmpty(userIdSet)) {
@@ -136,33 +140,39 @@ public class ExpressServiceImpl implements ExpressService {
                     List<DepartmentReturnDto> departmentReturnDtos = userClientService.getAllDepartments();
 
                     for (ExpressReturnDto returnDto : returnDtoList) {
-
-                        UserInfo userInfo = userInfoList.stream().filter(c -> c.getId().equals(returnDto.getCreateUserId())).collect(Collectors.toList()).get(0);
-
-                        if (userInfo != null) {
-                            returnDto.setCreateUserName(userInfo.getName());
-                            DepartmentReturnDto departmentReturnDto = departmentReturnDtos.stream().filter(c -> c.getId().equals(userInfo.getDepartmentId())).collect(Collectors.toList()).get(0);
-                            if (null != departmentReturnDto) {
-                                returnDto.setDepartmentName(departmentReturnDto.getDepartmentName());
+                        List<UserInfo> empList = userInfoList.stream().filter(c -> c.getId().equals(returnDto.getCreateUserId())).collect(Collectors.toList());
+                        if (!CollectionUtils.isEmpty(empList)) {
+                            UserInfo userInfo = empList.get(0);
+                            if (userInfo != null) {
+                                returnDto.setCreateUserName(userInfo.getName());
+                                DepartmentReturnDto departmentReturnDto = departmentReturnDtos.stream().filter(c -> c.getId().equals(userInfo.getDepartmentId())).collect(Collectors.toList()).get(0);
+                                if (null != departmentReturnDto) {
+                                    returnDto.setDepartmentName(departmentReturnDto.getDepartmentName());
+                                }
                             }
                         }
                     }
-                }else{
-                    userInfoList = userClientService.listUserInfo(new ArrayList<>(userIdSet), UserType.DRIVER);
-                    if (!CollectionUtils.isEmpty(userInfoList)) {
-                        for (ExpressReturnDto returnDto : returnDtoList) {
+                }
+            }
 
-                            UserInfo userInfo = userInfoList.stream().filter(c -> c.getId().equals(returnDto.getCreateUserId())).collect(Collectors.toList()).get(0);
+            if (!CollectionUtils.isEmpty(driverIdSet)) {
+                List<UserInfo> driverInfoList = userClientService.listUserInfo(new ArrayList<>(driverIdSet), UserType.DRIVER);
+                if (!CollectionUtils.isEmpty(driverInfoList)) {
+                    for (ExpressReturnDto returnDto : returnDtoList) {
 
-                            if (userInfo != null) {
-                                returnDto.setCreateUserName(userInfo.getName());
-                                    returnDto.setDepartmentName("司机");
+                        List<UserInfo> driverList = driverInfoList.stream().filter(c -> c.getId().equals(returnDto.getCreateUserId())).collect(Collectors.toList());
+                        if (!CollectionUtils.isEmpty(driverList)) {
+                            UserInfo driverInfo = driverList.get(0);
+                            if (driverInfo != null) {
+                                returnDto.setCreateUserName(driverInfo.getName());
+                                returnDto.setDepartmentName("司机");
                             }
                         }
                     }
                 }
             }
         }
+
         return new PageInfo<>(returnDtoList);
     }
 
@@ -214,11 +224,11 @@ public class ExpressServiceImpl implements ExpressService {
                 }
             }
         }
-        if (successNum > 0){
-            result.put(ServiceKey.success.name(),Boolean.TRUE);
+        if (successNum > 0) {
+            result.put(ServiceKey.success.name(), Boolean.TRUE);
         }
-        result.put("successNum",successNum);
-        result.put("failNum",failNum);
+        result.put("successNum", successNum);
+        result.put("failNum", failNum);
         return result;
     }
 
