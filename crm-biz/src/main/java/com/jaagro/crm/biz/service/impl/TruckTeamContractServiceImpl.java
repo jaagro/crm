@@ -335,7 +335,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
             driverContractSettleParam
                     .setEffectiveTime(truckTeamContract.getStartDate())
                     .setInvalidTime(truckTeamContract.getEndDate());
-            if (judgeExpired(truckTeamContract.getEndDate())) {
+            if (judgeExpired(truckTeamContract.getEndDate(), true)) {
                 throw new NullPointerException("当前合同已经过期了");
             }
             //插入合同报价相关表
@@ -344,19 +344,27 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
         } else {
             TruckTeamContract truckTeamContract = truckTeamContractMapper.selectByPrimaryKey(driverContractSettleRule.getTruckTeamContractId());
             if (truckTeamContract.getEndDate() != null) {
-                if (judgeExpired(truckTeamContract.getEndDate())) {
+                if (judgeExpired(truckTeamContract.getEndDate(), true)) {
                     throw new NullPointerException("当前合同已经过期了");
                 }
             }
             boolean flag = (driverContractSettleDto.getPricingMethod().equals(driverContractSettleRule.getPricingMethod())
                     && driverContractSettleDto.getTruckTypeId().equals(driverContractSettleRule.getTruckTypeId()));
             if (flag) {
-                driverContractSettleParam
-                        .setEffectiveTime(new Date())
-                        .setTruckTeamContractId(driverContractSettleRule.getTruckTeamContractId())
-                        .setInvalidTime(driverContractSettleRule.getInvalidTime());
-
-                saveDriverContractSettle(driverContractSettleDto, driverContractSettleParam, driverContractSettleRule.getId());
+                //合同起始时间小于当前时间
+                if (judgeExpired(truckTeamContract.getStartDate(), false)) {
+                    driverContractSettleParam
+                            .setEffectiveTime(truckTeamContract.getStartDate())
+                            .setInvalidTime(truckTeamContract.getEndDate());
+                    //插入合同报价相关表
+                    saveDriverContractSettle(driverContractSettleDto, driverContractSettleParam, null);
+                } else {
+                    driverContractSettleParam
+                            .setEffectiveTime(new Date())
+                            .setTruckTeamContractId(driverContractSettleRule.getTruckTeamContractId())
+                            .setInvalidTime(driverContractSettleRule.getInvalidTime());
+                    saveDriverContractSettle(driverContractSettleDto, driverContractSettleParam, driverContractSettleRule.getId());
+                }
             } else {
                 log.info("O contractCapacitySettle :The current vehicle type already exists in the record!");
             }
@@ -366,14 +374,21 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     /**
      * 用于判断当前合同截止时间是否超过当前时间
      *
-     * @param endDate
+     * @param
      * @return
      * @author @Gao.
      */
-    private boolean judgeExpired(Date endDate) {
+    private boolean judgeExpired(Date date, boolean type) {
         Date currentDate = new Date();
-        if (currentDate.after(endDate)) {
-            return true;
+        if (type == true) {
+            if (currentDate.after(date)) {
+                return true;
+            }
+        }
+        if (type == false) {
+            if (currentDate.before(date)) {
+                return true;
+            }
         }
         return false;
     }
