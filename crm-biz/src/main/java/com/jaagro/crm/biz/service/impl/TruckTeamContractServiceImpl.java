@@ -30,11 +30,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author liqiangping
@@ -476,13 +474,17 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                 driverContractSettleInfoDto
                         .setBeginSettlePrice(dto.getBeginPrice());
             } else {
+                List<BigDecimal> settlePriceList = new ArrayList<>();
                 List<CreateDriverContractSettleSectionDto> DriverContractSettleSectionDtoList = dto.getCreateDriverContractSettleSectionDto();
                 if (!CollectionUtils.isEmpty(DriverContractSettleSectionDtoList)) {
+                    for (CreateDriverContractSettleSectionDto createDriverContractSettleSectionDto : DriverContractSettleSectionDtoList) {
+                        settlePriceList.add(createDriverContractSettleSectionDto.getSettlePrice());
+                    }
                     CreateDriverContractSettleSectionDto driverContractSettleSectionDto = DriverContractSettleSectionDtoList.get(0);
                     driverContractSettleInfoDto
                             .setUnit(driverContractSettleSectionDto.getUnit())
                             .setType(driverContractSettleSectionDto.getType())
-                            .setBeginSettlePrice(driverContractSettleSectionDto.getSettlePrice());
+                            .setBeginSettlePrice(Collections.min(settlePriceList));
                 }
             }
             driverContractSettleInfoDtoList.add(driverContractSettleInfoDto);
@@ -649,5 +651,4 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
             return false;
         }
     }
-
 }

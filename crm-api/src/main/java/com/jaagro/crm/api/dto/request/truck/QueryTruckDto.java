@@ -17,6 +17,10 @@ public class QueryTruckDto implements Serializable {
     private String truckNumber;
     private Integer truckTypeId;
     /**
+     * 货物类型
+     */
+    private Integer goodsType;
+    /**
      * 省
      */
     private String province;
