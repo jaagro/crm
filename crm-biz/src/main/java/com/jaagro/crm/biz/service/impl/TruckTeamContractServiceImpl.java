@@ -419,7 +419,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                     .setInvalidTime(new Date());
             driverContractSettleRuleMapper.updateByPrimaryKeySelective(driverContractSettle);
         }
-        //合同起始时间大于当前时间时，不更该起始和截止时间
+        //合同起始时间大于当前时间时，不更改起始和截止时间
         if (null != driverContractSettleId && type == false) {
             DriverContractSettleRule driverContractSettle = new DriverContractSettleRule();
             driverContractSettle
