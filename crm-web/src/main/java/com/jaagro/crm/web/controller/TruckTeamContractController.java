@@ -156,10 +156,10 @@ public class TruckTeamContractController {
         return BaseResponse.successInstance(truckTeamContractService.listTruckTeamTypeByGoodType(goodType));
     }
 
-    @ApiOperation("删除合同报价")
+    @ApiOperation("删除非历史合同报价")
     @PostMapping("/deleteTeamContractPrice")
     public BaseResponse deleteTeamContractPrice(@RequestBody DriverContractSettleCondition condition) {
-        truckTeamContractService.deleteTeamContractPrice(condition);
+        truckTeamContractService.deleteTeamContractPrice(condition.setFlag(4));
         return BaseResponse.successInstance(ResponseStatusCode.OPERATION_SUCCESS);
     }
 

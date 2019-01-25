@@ -81,6 +81,7 @@ public interface TruckTeamContractService {
 
     /**
      * 运力合同报价列表
+     *
      * @param condition
      * @return
      */
@@ -134,6 +135,7 @@ public interface TruckTeamContractService {
     /**
      * 根据车队ID查询车队合同列表
      * Gavin 20190108
+     *
      * @param truckTeamId
      * @return
      */

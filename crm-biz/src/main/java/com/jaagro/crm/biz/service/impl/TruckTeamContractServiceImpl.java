@@ -48,15 +48,11 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     @Autowired
     private TruckTeamMapperExt truckTeamMapper;
     @Autowired
-    private ContractQualificationMapperExt contractQualificationMapper;
-    @Autowired
     private CurrentUserService userService;
     @Autowired
     private ContractQualificationService contractQualificationService;
     @Autowired
     private OssSignUrlClientService ossSignUrlClientService;
-    @Autowired
-    private TruckTeamContractService truckTeamContractService;
     @Autowired
     private TruckTypeMapperExt truckTypeMapper;
     @Autowired
@@ -340,6 +336,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                     .setBeginPrice(driverContractSettleDto.getBeginPrice())
                     .setMileagePrice(driverContractSettleDto.getMileagePrice());
         }
+        //当前报价合同第一次插入
         if (null == driverContractSettleRule) {
             TruckTeamContract truckTeamContract = truckTeamContractMapper.selectByPrimaryKey(driverContractSettleDto.getContractId());
             driverContractSettleParam
@@ -348,8 +345,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
             if (judgeExpired(truckTeamContract.getEndDate(), true)) {
                 throw new NullPointerException("当前合同已经过期了");
             }
-            //插入合同报价相关表
-            saveDriverContractSettle(driverContractSettleDto, driverContractSettleParam, null);
+            saveDriverContractSettle(driverContractSettleDto, driverContractSettleParam, null, false);
 
         } else {
             TruckTeamContract truckTeamContract = truckTeamContractMapper.selectByPrimaryKey(driverContractSettleRule.getTruckTeamContractId());
@@ -366,14 +362,23 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                     driverContractSettleParam
                             .setEffectiveTime(truckTeamContract.getStartDate())
                             .setInvalidTime(truckTeamContract.getEndDate());
-                    //插入合同报价相关表
-                    saveDriverContractSettle(driverContractSettleDto, driverContractSettleParam, null);
+                    saveDriverContractSettle(driverContractSettleDto, driverContractSettleParam, driverContractSettleRule.getId(), false);
                 } else {
+                    //当前最后一条记录为历史记录
                     driverContractSettleParam
-                            .setEffectiveTime(new Date())
-                            .setTruckTeamContractId(driverContractSettleRule.getTruckTeamContractId())
-                            .setInvalidTime(driverContractSettleRule.getInvalidTime());
-                    saveDriverContractSettle(driverContractSettleDto, driverContractSettleParam, driverContractSettleRule.getId());
+                            .setTruckTeamContractId(driverContractSettleRule.getTruckTeamContractId());
+                    if (driverContractSettleRule.getHistoryFlag() == true) {
+                        driverContractSettleParam
+                                .setEffectiveTime(driverContractSettleRule.getEffectiveTime())
+                                .setInvalidTime(truckTeamContract.getEndDate());
+                        saveDriverContractSettle(driverContractSettleDto, driverContractSettleParam, null, false);
+                        //当前最后一条记录为非历史记录
+                    } else {
+                        driverContractSettleParam
+                                .setEffectiveTime(new Date())
+                                .setInvalidTime(driverContractSettleRule.getInvalidTime());
+                        saveDriverContractSettle(driverContractSettleDto, driverContractSettleParam, driverContractSettleRule.getId(), true);
+                    }
                 }
             } else {
                 log.info("O contractCapacitySettle :The current vehicle type already exists in the record!");
@@ -410,14 +415,21 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
      * @param driverContractSettleParam
      * @author @Gao.
      */
-    private void saveDriverContractSettle(CreateDriverContractSettleDto driverContractSettleDto, DriverContractSettleParam driverContractSettleParam, Integer driverContractSettleId) {
+    private void saveDriverContractSettle(CreateDriverContractSettleDto driverContractSettleDto, DriverContractSettleParam driverContractSettleParam, Integer driverContractSettleId, boolean type) {
         //有历史合同结算配置记录，更新失效时间
-        if (null != driverContractSettleId) {
+        if (null != driverContractSettleId && type == true) {
             DriverContractSettleRule driverContractSettle = new DriverContractSettleRule();
             driverContractSettle
                     .setHistoryFlag(true)
                     .setId(driverContractSettleId)
                     .setInvalidTime(new Date());
+            driverContractSettleRuleMapper.updateByPrimaryKeySelective(driverContractSettle);
+        }
+        if (null != driverContractSettleId && type == false) {
+            DriverContractSettleRule driverContractSettle = new DriverContractSettleRule();
+            driverContractSettle
+                    .setHistoryFlag(true)
+                    .setId(driverContractSettleId);
             driverContractSettleRuleMapper.updateByPrimaryKeySelective(driverContractSettle);
         }
         //插入合同结算配置规则
@@ -534,7 +546,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
      */
     @Override
     public PageInfo<ListDriverContractSettleDto> listTruckTeamContractPriceHistoryDetails(DriverContractSettleCondition condition) {
-        condition.setFlag(3);
+        condition.setFlag(5);
         return new PageInfo(driverContractSettleRuleMapper.listTruckTeamContractPriceCondition(condition));
     }
 
@@ -546,7 +558,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteTeamContractPrice(DriverContractSettleCondition condition) {
-        condition.setFlag(3);
+        condition.setFlag(condition.getFlag());
         List<ListDriverContractSettleDto> listDriverContractSettleDtos = driverContractSettleRuleMapper.listTruckTeamContractPriceCondition(condition);
         List<Integer> driverContractSettleIds = new ArrayList<>();
         List<Integer> driverContractSettleSectionIds = new ArrayList<>();
