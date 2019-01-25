@@ -93,6 +93,12 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
         }
         List<TruckTeamContract> contractList = truckTeamContractMapper.getByTeamIdAndType(dto);
         if (!CollectionUtils.isEmpty(contractList)) {
+            TruckTeamContract contract = contractList.get(0);
+            if (contract != null) {
+                if (dto.getStartDate().getTime() < contract.getEndDate().getTime()) {
+                    throw new RuntimeException("合同开始日期不能与上一份合同结束日期有空隙");
+                }
+            }
             Boolean aBoolean = checkContract(contractList, dto);
             if (aBoolean) {
                 throw new RuntimeException("此类型合同日期重叠");
@@ -218,8 +224,12 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> disableContract(Integer id) {
-        if (truckTeamContractMapper.selectByPrimaryKey(id) == null) {
+        TruckTeamContract teamContract = truckTeamContractMapper.selectByPrimaryKey(id);
+        if (teamContract == null) {
             return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询不到合同");
+        }
+        if (!teamContract.getContractStatus().equals(AuditStatus.UNCHECKED)) {
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "除待审核状态,其他状态合同不允许删除");
         }
         TruckTeamContractReturnDto contractReturnDto = truckTeamContractMapper.getById(id);
         if (contractReturnDto != null) {
