@@ -266,17 +266,11 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                     .setCreateUserId(currentUser.getId())
                     .setTruckTypeId(driverContractSettleDto.getTruckTypeId())
                     .setTruckTypeName(truckType.getTypeName());
-            //鸡车类型
-            if (GoodsType.CHICKEN.equals(Integer.parseInt(truckType.getProductName()))) {
-                //按照区间里程单价
+            //鸡车类型 饲料类型 只有一种结算方式
+            if (GoodsType.CHICKEN.equals(Integer.parseInt(truckType.getProductName())) || GoodsType.FODDER.equals(Integer.parseInt(truckType.getProductName()))) {
                 contractCapacitySettle(driverContractSettleCondition, driverContractSettleDto, driverContractSettleParam);
             }
-            //饲料类型
-            if (GoodsType.FODDER.equals(Integer.parseInt(truckType.getProductName()))) {
-                //按照区间重量单价
-                contractCapacitySettle(driverContractSettleCondition, driverContractSettleDto, driverContractSettleParam);
-            }
-            //仔猪 生猪类型
+            //仔猪 生猪类型 存在两种结算方式 只能选择一种选择一种
             boolean flag = (GoodsType.SOW.equals(Integer.parseInt(truckType.getProductName())) || GoodsType.BOAR.equals(Integer.parseInt(truckType.getProductName()))
                     || GoodsType.PIGLET.equals(Integer.parseInt(truckType.getProductName())) || GoodsType.LIVE_PIG.equals(Integer.parseInt(truckType.getProductName())));
             if (flag) {
@@ -387,7 +381,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     }
 
     /**
-     * 用于判断当前合同截止时间是否超过当前时间
+     * 当前合同起始截止时间与当前时间比较
      *
      * @param
      * @return
@@ -416,7 +410,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
      * @author @Gao.
      */
     private void saveDriverContractSettle(CreateDriverContractSettleDto driverContractSettleDto, DriverContractSettleParam driverContractSettleParam, Integer driverContractSettleId, boolean type) {
-        //有历史合同结算配置记录，更新失效时间
+        //有历史合同结算配置记录，更新上一条记录失效时间
         if (null != driverContractSettleId && type == true) {
             DriverContractSettleRule driverContractSettle = new DriverContractSettleRule();
             driverContractSettle
@@ -425,6 +419,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
                     .setInvalidTime(new Date());
             driverContractSettleRuleMapper.updateByPrimaryKeySelective(driverContractSettle);
         }
+        //合同起始时间大于当前时间时，不更该起始和截止时间
         if (null != driverContractSettleId && type == false) {
             DriverContractSettleRule driverContractSettle = new DriverContractSettleRule();
             driverContractSettle
