@@ -270,7 +270,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
             if (GoodsType.CHICKEN.equals(Integer.parseInt(truckType.getProductName())) || GoodsType.FODDER.equals(Integer.parseInt(truckType.getProductName()))) {
                 contractCapacitySettle(driverContractSettleCondition, driverContractSettleDto, driverContractSettleParam);
             }
-            //仔猪 生猪类型 存在两种结算方式 只能选择一种选择一种
+            //仔猪 生猪类型 存在两种结算方式 只能选择一种
             boolean flag = (GoodsType.SOW.equals(Integer.parseInt(truckType.getProductName())) || GoodsType.BOAR.equals(Integer.parseInt(truckType.getProductName()))
                     || GoodsType.PIGLET.equals(Integer.parseInt(truckType.getProductName())) || GoodsType.LIVE_PIG.equals(Integer.parseInt(truckType.getProductName())));
             if (flag) {
