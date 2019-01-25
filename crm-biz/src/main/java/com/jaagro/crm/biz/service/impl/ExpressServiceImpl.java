@@ -60,11 +60,7 @@ public class ExpressServiceImpl implements ExpressService {
             Express express = new Express();
             BeanUtils.copyProperties(createExpressDto, express);
             express.setPublishTime(new Date());
-            // 内容里空格标签替换成空格,已跟前端约定
             String content = createExpressDto.getContent();
-            if (content.length() > 13000) {
-                throw new RuntimeException("亲,内容太长了");
-            }
             express.setContent(content);
             UserInfo currentUser = currentUserService.getCurrentUser();
             express.setCreateTime(new Date())

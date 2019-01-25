@@ -55,11 +55,7 @@ public class NewsServiceImpl implements NewsService {
     public boolean createNews(CreateNewsDto createNewsDto) {
         News news = new News();
         BeanUtils.copyProperties(createNewsDto, news);
-        // 内容里空格标签替换成空格,已跟前端约定
         String content = createNewsDto.getContent();
-        if (content.length() > 13000){
-            throw new RuntimeException("亲,内容太长了");
-        }
         // 校验文件扩展名,只能上传图片
         if (!validFileExtension(createNewsDto.getImageUrl())){
             throw new RuntimeException("只能上传图片哦");
