@@ -142,7 +142,7 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
     <select id="listTruckForAssignWaybillByCriteria" resultType="com.jaagro.crm.api.dto.response.truck.ListTruckDto"
-            parameterType="com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto">
+            parameterType="com.jaagro.crm.api.dto.request.truck.QueryTruckDto">
 
         <if test="province != null and city != null and county != null">
             SELECT distinct

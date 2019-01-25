@@ -148,7 +148,8 @@ public class TruckController {
     @PostMapping("/listTrucksWithDrivers")
     public BaseResponse listTrucksWithDrivers(@RequestBody QueryTruckDto criteriaDto) {
         try {
-            return BaseResponse.service(truckService.listTrucksWithDrivers(criteriaDto));
+            Map<String, Object> stringObjectMap = truckService.listTrucksWithDrivers(criteriaDto);
+            return BaseResponse.successInstance(stringObjectMap);
         } catch (Exception e) {
             e.printStackTrace();
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查询指派车辆失败" + e.getMessage());
