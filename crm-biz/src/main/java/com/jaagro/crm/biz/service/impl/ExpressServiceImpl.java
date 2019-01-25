@@ -151,6 +151,19 @@ public class ExpressServiceImpl implements ExpressService {
                             }
                         }
                     }
+                }else{
+                    userInfoList = userClientService.listUserInfo(new ArrayList<>(userIdSet), UserType.DRIVER);
+                    if (!CollectionUtils.isEmpty(userInfoList)) {
+                        for (ExpressReturnDto returnDto : returnDtoList) {
+
+                            UserInfo userInfo = userInfoList.stream().filter(c -> c.getId().equals(returnDto.getCreateUserId())).collect(Collectors.toList()).get(0);
+
+                            if (userInfo != null) {
+                                returnDto.setCreateUserName(userInfo.getName());
+                                    returnDto.setDepartmentName("司机");
+                            }
+                        }
+                    }
                 }
             }
         }
