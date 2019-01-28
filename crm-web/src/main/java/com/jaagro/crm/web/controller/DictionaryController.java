@@ -18,6 +18,7 @@ import java.util.List;
 
 /**
  * 字典管理
+ *
  * @author yj
  * @since 2018/12/29
  */
@@ -41,5 +42,11 @@ public class DictionaryController {
             dictionaryVoList.add(dictionaryVo);
         });
         return BaseResponse.successInstance(dictionaryVoList);
+    }
+
+    @GetMapping("/getDictionaryById")
+    @ApiOperation(value = "根据id查询字典")
+    public DictionaryDto listDictionaryByCategory(@RequestParam("id") Integer id) {
+        return dictionaryService.getById(id);
     }
 }
