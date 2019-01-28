@@ -32,6 +32,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.net.URL;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -96,7 +97,7 @@ public class ContractServiceImpl implements ContractService {
         if (!CollectionUtils.isEmpty(contractList)) {
             CustomerContract contract = contractList.get(0);
             if (contract != null) {
-                if (dto.getStartDate().getTime() < contract.getEndDate().getTime()) {
+                if (dto.getStartDate().getTime() < contract.getEndDate().getTime() || differentDays(contract.getEndDate(), dto.getStartDate()) > 1) {
                     throw new RuntimeException("合同开始日期不能与上一份合同结束日期有空隙");
                 }
             }
@@ -117,6 +118,43 @@ public class ContractServiceImpl implements ContractService {
             }
         }
         return ServiceResult.toResult(customerContract.getId());
+    }
+
+    /**
+     * date2比date1多的天数
+     *
+     * @param date1
+     * @param date2
+     * @return
+     */
+    public static int differentDays(Date date1, Date date2) {
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(date1);
+
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(date2);
+        int day1 = cal1.get(Calendar.DAY_OF_YEAR);
+        int day2 = cal2.get(Calendar.DAY_OF_YEAR);
+
+        int year1 = cal1.get(Calendar.YEAR);
+        int year2 = cal2.get(Calendar.YEAR);
+        //同一年
+        if (year1 != year2) {
+            int timeDistance = 0;
+            for (int i = year1; i < year2; i++) {
+                //闰年
+                if (i % 4 == 0 && i % 100 != 0 || i % 400 == 0) {
+                    timeDistance += 366;
+                    //不是闰年
+                } else {
+                    timeDistance += 365;
+                }
+            }
+            return timeDistance + (day2 - day1);
+            //不同年
+        } else {
+            return day2 - day1;
+        }
     }
 
     @CacheEvict(cacheNames = "customer", allEntries = true)
