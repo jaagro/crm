@@ -85,6 +85,9 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
         if (this.truckTeamContractMapper.getByContractNumber(dto.getContractNumber()) != null) {
             throw new RuntimeException("合同编号已存在");
         }
+        if(judgeExpired(dto.getEndDate(),true)){
+            throw new RuntimeException("当前填写的合同时间已经过期");
+        }
         List<TruckTeamContract> contractList = truckTeamContractMapper.getByTeamIdAndType(dto);
         if (!CollectionUtils.isEmpty(contractList)) {
             TruckTeamContract contract = contractList.get(0);
@@ -524,8 +527,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
      */
     @Override
     public ListDriverContractSettleDto listTruckTeamContractPriceDetails(DriverContractSettleCondition condition) {
-        condition.setFlag(2);
-        List<ListDriverContractSettleDto> listDriverContractSettleDtos = driverContractSettleRuleMapper.listTruckTeamContractPriceCondition(condition);
+        List<ListDriverContractSettleDto> listDriverContractSettleDtos = driverContractSettleRuleMapper.listTruckTeamContractPriceCondition(condition.setFlag(2));
         ListDriverContractSettleDto listDriverContractSettle = null;
         if (!CollectionUtils.isEmpty(listDriverContractSettleDtos)) {
             listDriverContractSettle = listDriverContractSettleDtos.get(0);
@@ -541,8 +543,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
      */
     @Override
     public PageInfo<ListDriverContractSettleDto> listTruckTeamContractPriceHistoryDetails(DriverContractSettleCondition condition) {
-        condition.setFlag(5);
-        return new PageInfo(driverContractSettleRuleMapper.listTruckTeamContractPriceCondition(condition));
+        return new PageInfo(driverContractSettleRuleMapper.listTruckTeamContractPriceCondition(condition.setFlag(5)));
     }
 
     /**
