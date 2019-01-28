@@ -187,11 +187,7 @@
             left join truck_type p on t.truck_type_id = p.id
             left join truck_team_contract tc on tc.truck_team_id = m.id
             where t.truck_status = 1 and m.team_status=1 and tc.contract_status=1 and tc.bussiness_type=#{goodsType}
-            <![CDATA[
-                    and t.province <> #{province}
-                    and t.city <> #{city}
-                    and t.county <> #{county}
-                    ]]>
+           
             <if test="truckNumber != null and truckNumber !=''">
                 <![CDATA[and (t.truck_number like concat('%',#{truckNumber},'%') )]]>
             </if>
