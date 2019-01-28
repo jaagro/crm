@@ -46,7 +46,7 @@ public class DictionaryController {
 
     @GetMapping("/getDictionaryById")
     @ApiOperation(value = "根据id查询字典")
-    public DictionaryDto listDictionaryByCategory(@RequestParam("id") Integer id) {
+    public DictionaryDto getDictionaryById(@RequestParam("id") Integer id) {
         return dictionaryService.getById(id);
     }
 }
