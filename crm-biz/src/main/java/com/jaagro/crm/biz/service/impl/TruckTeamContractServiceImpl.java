@@ -85,11 +85,14 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
         if (this.truckTeamContractMapper.getByContractNumber(dto.getContractNumber()) != null) {
             throw new RuntimeException("合同编号已存在");
         }
+        if(judgeExpired(dto.getEndDate(),true)){
+            throw new RuntimeException("当前填写的合同时间已经过期");
+        }
         List<TruckTeamContract> contractList = truckTeamContractMapper.getByTeamIdAndType(dto);
         if (!CollectionUtils.isEmpty(contractList)) {
             TruckTeamContract contract = contractList.get(0);
             if (contract != null) {
-                if (dto.getStartDate().getTime() < contract.getEndDate().getTime()) {
+                if (dto.getStartDate().getTime() < contract.getEndDate().getTime() || differentDays(contract.getEndDate(), dto.getStartDate()) > 1) {
                     throw new RuntimeException("合同开始日期不能与上一份合同结束日期有空隙");
                 }
             }
@@ -113,6 +116,43 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
             }
         }
         return ServiceResult.toResult(truckTeamContract.getId());
+    }
+
+    /**
+     * date2比date1多的天数
+     *
+     * @param date1
+     * @param date2
+     * @return
+     */
+    public static int differentDays(Date date1, Date date2) {
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(date1);
+
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(date2);
+        int day1 = cal1.get(Calendar.DAY_OF_YEAR);
+        int day2 = cal2.get(Calendar.DAY_OF_YEAR);
+
+        int year1 = cal1.get(Calendar.YEAR);
+        int year2 = cal2.get(Calendar.YEAR);
+        //同一年
+        if (year1 != year2) {
+            int timeDistance = 0;
+            for (int i = year1; i < year2; i++) {
+                //闰年
+                if (i % 4 == 0 && i % 100 != 0 || i % 400 == 0) {
+                    timeDistance += 366;
+                    //不是闰年
+                } else {
+                    timeDistance += 365;
+                }
+            }
+            return timeDistance + (day2 - day1);
+            //不同年
+        } else {
+            return day2 - day1;
+        }
     }
 
     /**
@@ -524,8 +564,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
      */
     @Override
     public ListDriverContractSettleDto listTruckTeamContractPriceDetails(DriverContractSettleCondition condition) {
-        condition.setFlag(2);
-        List<ListDriverContractSettleDto> listDriverContractSettleDtos = driverContractSettleRuleMapper.listTruckTeamContractPriceCondition(condition);
+        List<ListDriverContractSettleDto> listDriverContractSettleDtos = driverContractSettleRuleMapper.listTruckTeamContractPriceCondition(condition.setFlag(2));
         ListDriverContractSettleDto listDriverContractSettle = null;
         if (!CollectionUtils.isEmpty(listDriverContractSettleDtos)) {
             listDriverContractSettle = listDriverContractSettleDtos.get(0);
@@ -541,8 +580,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
      */
     @Override
     public PageInfo<ListDriverContractSettleDto> listTruckTeamContractPriceHistoryDetails(DriverContractSettleCondition condition) {
-        condition.setFlag(5);
-        return new PageInfo(driverContractSettleRuleMapper.listTruckTeamContractPriceCondition(condition));
+        return new PageInfo(driverContractSettleRuleMapper.listTruckTeamContractPriceCondition(condition.setFlag(5)));
     }
 
     /**

@@ -63,6 +63,7 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
         }
         log.info("O calculatePaymentFromCustomer begin *****************");
         for (CalculatePaymentDto calculatePaymentDto : dtoList) {
+            log.info("O calculatePaymentFromCustomer calculatePaymentDto={}",calculatePaymentDto);
             Integer contractId = calculatePaymentDto.getCustomerContractId();
             // 校验合同状态,合同未审核通过不计算报价
             if (!checkContract(calculatePaymentDto)) {
@@ -74,7 +75,10 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
             BigDecimal unitPrice;
             BigDecimal actualMileage;
             BigDecimal minLoadWeight = new BigDecimal(0.00);
-            List<CustomerContractSettlePrice> contractSettlePriceList;
+            List<CustomerContractSettlePrice> contractSettlePriceList = customerContractSettlePriceMapperExt.getSectionWeightPrice(contractId, calculatePaymentDto.getDoneDate(), calculatePaymentDto.getSiteDtoList());
+            if(contractSettlePriceList.size()< calculatePaymentDto.getSiteDtoList().size()){
+                continue;
+            }
             int compare = 0;
             int productType = calculatePaymentDto.getProductType();
             QuerySettleRuleDto querySettleRuleDto;
