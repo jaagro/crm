@@ -88,7 +88,7 @@ public class ContractServiceImpl implements ContractService {
         //创建contract对象
         CustomerContract customerContract = new CustomerContract();
         BeanUtils.copyProperties(dto, customerContract);
-        if (new Date().before(dto.getEndDate())) {
+        if (dto.getEndDate().before(new Date())) {
             throw new RuntimeException("不可添加已过期的生效日期");
         }
         UpdateContractDto updateContractDto = new UpdateContractDto();
@@ -190,7 +190,7 @@ public class ContractServiceImpl implements ContractService {
         // 创建contract对象
         CustomerContract customerContract = new CustomerContract();
         BeanUtils.copyProperties(dto, customerContract);
-        if (dto.getEndDate() != null && new Date().before(customerContract.getEndDate())) {
+        if (dto.getEndDate() != null && customerContract.getEndDate().before(new Date())) {
             throw new RuntimeException("截止日期不能小于今天");
         }
         if (this.customerContractMapper.getByUpdateDto(dto) != null) {

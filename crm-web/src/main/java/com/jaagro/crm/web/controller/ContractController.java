@@ -524,7 +524,7 @@ public class ContractController {
                     return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同id不能为空");
                 }
                 CustomerContract customerContract = customerContractMapper.selectByPrimaryKey(priceDto.getCustomerContractId());
-                if (new Date().before(customerContract.getEndDate())) {
+                if (customerContract.getEndDate().before(new Date())) {
                     return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同已过期，不可继续增加报价");
                 }
                 if (StringUtils.isEmpty(priceDto.getUnloadSiteId())) {

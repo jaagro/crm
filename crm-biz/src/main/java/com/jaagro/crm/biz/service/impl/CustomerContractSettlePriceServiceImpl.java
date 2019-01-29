@@ -194,7 +194,7 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
         if (customerContract == null) {
             return ServiceResult.error("合同信息有误");
         }
-        if (new Date().before(customerContract.getEndDate())) {
+        if (customerContract.getEndDate().before(new Date())) {
             return ServiceResult.error("合同已过期，不可继续修改报价");
         }
         //查询是否有历史记录
