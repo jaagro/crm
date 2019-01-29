@@ -1,6 +1,7 @@
 package com.jaagro.crm.biz.mapper;
 
 
+import com.jaagro.crm.api.dto.request.contract.ContractDto;
 import com.jaagro.crm.api.dto.request.truck.CreateTruckTeamContractDto;
 import com.jaagro.crm.api.dto.request.truck.ListTruckTeamContractCriteriaDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTeamContractDto;
@@ -51,5 +52,13 @@ public interface TruckTeamContractMapperExt extends TruckTeamContractMapper {
      * @return
      */
     List<TruckTeamContract> getByTeamIdAndType(CreateTruckTeamContractDto teamContractDto);
+
+    /**
+     *
+     * 根据货物类型、客户id、运单完成时间获取运力合同
+     * @param contractDto
+     * @return
+     */
+    List<ContractDto> getTruckTeamContract(ContractDto contractDto);
 
 }

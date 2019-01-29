@@ -69,4 +69,19 @@
             and bussiness_type = #{bussinessType}
         </if>
     </select>
+    <select id="getTruckTeamContract" parameterType="com.jaagro.crm.api.dto.request.contract.ContractDto"
+            resultType="com.jaagro.crm.api.dto.request.contract.ContractDto">
+        select
+        <include refid="Base_Column_List"/>
+        FROM
+        truck_team_contract
+        WHERE
+        contract_status = 1
+        AND truck_team_id = #{truckTeamId}
+        AND bussiness_type = #{goodsType}
+        AND #{waybillDoneDate}
+        BETWEEN DATE_FORMAT(start_date, '%Y-%m-%d')
+        AND DATE_FORMAT(DATE_ADD(end_date, INTERVAL 1 DAY),'%Y-%m-%d')
+    </select>
+
 </mapper>

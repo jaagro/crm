@@ -25,6 +25,7 @@ import com.jaagro.crm.biz.service.OssSignUrlClientService;
 import com.jaagro.crm.biz.service.impl.CurrentUserService;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
+import feign.Contract;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import jdk.nashorn.internal.ir.annotations.Ignore;
@@ -32,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -506,6 +508,34 @@ public class ContractController {
         return customerContractMapper.getShowCustomerContractById(id);
     }
 
+    @ApiOperation("根据货物类型、客户id、运单完成时间获取客户合同和运力合同")
+    @PostMapping("/getContractByContractDto")
+    public ContractDto getContractByContractDto(@RequestBody @Validated ContractDto contractDto) {
+        if (contractDto.getContractType() == 1 && contractDto.getCustomerId() != null) {
+            List<ContractDto> contractDtos = customerContractMapper.getCustomerContract(contractDto);
+            if (!CollectionUtils.isEmpty(contractDtos)) {
+
+                ContractDto contract = contractDtos.get(0);
+                contract.setContractType(contractDto.getContractType());
+                contract.setGoodsType(contractDto.getGoodsType());
+                contract.setWaybillDoneDate(contractDto.getWaybillDoneDate());
+                return contract;
+            }
+        }
+        if (contractDto.getContractType() == 2 && contractDto.getTruckTeamId() != null) {
+            List<ContractDto> contractDtos = truckTeamContractMapper.getTruckTeamContract(contractDto);
+            if (!CollectionUtils.isEmpty(contractDtos)) {
+                ContractDto contract = contractDtos.get(0);
+                contract.setContractType(contractDto.getContractType());
+                contract.setGoodsType(contractDto.getGoodsType());
+                contract.setTruckTeamId(contractDto.getTruckTeamId());
+                contract.setWaybillDoneDate(contractDto.getWaybillDoneDate());
+                return contract;
+            }
+        }
+        return null;
+
+    }
     //--------------------------------------------------------合同结算信息-----------------------------------------------------------
 
     /**
@@ -549,6 +579,7 @@ public class ContractController {
 
     /**
      * 获取客户合同制定装卸货地实际里程
+     *
      * @param customerContractId
      * @param loadSiteId
      * @param unloadSiteId
@@ -557,7 +588,7 @@ public class ContractController {
     @ApiOperation("获取客户合同指定装卸货地实际里程")
     @GetMapping("getMileageByParams")
     public BaseResponse<BigDecimal> getMileageByParams(@RequestParam("customerContractId") Integer customerContractId, @RequestParam("loadSiteId") Integer loadSiteId, @RequestParam("unloadSiteId") Integer unloadSiteId) {
-        return BaseResponse.successInstance(settlePriceService.getMileageByParams(customerContractId,loadSiteId,unloadSiteId));
+        return BaseResponse.successInstance(settlePriceService.getMileageByParams(customerContractId, loadSiteId, unloadSiteId));
     }
 
     /**

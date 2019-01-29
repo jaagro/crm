@@ -114,4 +114,13 @@
         and (select now() between start_date and end_date)
         order by create_time desc
     </select>
+
+    <select id="getCustomerContract" parameterType="com.jaagro.crm.api.dto.request.contract.ContractDto"
+            resultType="com.jaagro.crm.api.dto.request.contract.ContractDto">
+        select
+        <include refid="Base_Column_List"/>
+        from customer_contract
+        where contract_status = 1 and customer_id = #{customerId} and type = #{goodsType}
+              and #{waybillDoneDate} BETWEEN start_date AND DATE_ADD(end_date,INTERVAL 1 DAY)
+    </select>
 </mapper>
