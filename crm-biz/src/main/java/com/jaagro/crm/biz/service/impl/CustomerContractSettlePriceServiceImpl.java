@@ -2,6 +2,7 @@ package com.jaagro.crm.biz.service.impl;
 
 import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.constant.ProductType;
+import com.jaagro.crm.api.dto.base.CountUnFinishWaybillCriteriaDto;
 import com.jaagro.crm.api.dto.base.QueryCustomerContractSettlePriceDto;
 import com.jaagro.crm.api.dto.request.contract.CreateCustomerSettlePriceDto;
 import com.jaagro.crm.api.dto.request.contract.CreateSettleMileageDto;
@@ -18,6 +19,7 @@ import com.jaagro.crm.biz.mapper.CustomerContractMapperExt;
 import com.jaagro.crm.biz.mapper.CustomerContractSettlePriceMapperExt;
 import com.jaagro.crm.biz.mapper.CustomerSiteMapperExt;
 import com.jaagro.crm.biz.mapper.TruckTypeMapperExt;
+import com.jaagro.crm.biz.service.MessageClientService;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +55,8 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
     private CustomerContractMapperExt contractMapperExt;
     @Autowired
     private SettleMileageService settleMileageService;
+    @Autowired
+    private MessageClientService tmsClientService;
 
     /**
      * 创建客户合同报价
@@ -144,6 +148,16 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
         if (settlePrice == null) {
             return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "结算信息不存在");
         }
+        //查询是否有未完成的运单
+        CountUnFinishWaybillCriteriaDto criteriaDto = new CountUnFinishWaybillCriteriaDto();
+        criteriaDto
+                .setCustomerContractId(settlePrice.getCustomerContractId())
+                .setLoadSiteId(settlePrice.getLoadSiteId())
+                .setUnloadSiteId(settlePrice.getUnloadSiteId());
+        Integer countNum = tmsClientService.countUnFinishWaybillByContract(criteriaDto);
+        if (countNum > 0) {
+            return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "该结算信息存在对应未完成运单，不得删除");
+        }
         UserInfo currentUser = userService.getCurrentUser();
         settlePrice
                 .setEnable(false)
@@ -179,6 +193,9 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
         CustomerContract customerContract = contractMapperExt.selectByPrimaryKey(settlePrice.getCustomerContractId());
         if (customerContract == null) {
             return ServiceResult.error("合同信息有误");
+        }
+        if (new Date().before(customerContract.getEndDate())) {
+            return ServiceResult.error("合同已过期，不可继续修改报价");
         }
         //查询是否有历史记录
         QueryCustomerContractSettlePriceDto queryDto = new QueryCustomerContractSettlePriceDto();

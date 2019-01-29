@@ -17,6 +17,7 @@ import com.jaagro.crm.biz.entity.Customer;
 import com.jaagro.crm.biz.entity.CustomerContract;
 import com.jaagro.crm.biz.entity.TruckType;
 import com.jaagro.crm.biz.mapper.*;
+import com.jaagro.crm.biz.service.MessageClientService;
 import com.jaagro.crm.biz.service.OssSignUrlClientService;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
@@ -74,7 +75,6 @@ public class ContractServiceImpl implements ContractService {
     private CustomerSiteMapperExt siteMapperExt;
     @Autowired
     private TruckTypeMapperExt truckTypeMapperExt;
-
     /**
      * 创建合同
      *
@@ -88,6 +88,9 @@ public class ContractServiceImpl implements ContractService {
         //创建contract对象
         CustomerContract customerContract = new CustomerContract();
         BeanUtils.copyProperties(dto, customerContract);
+        if (new Date().before(dto.getEndDate())) {
+            throw new RuntimeException("不可添加已过期的生效日期");
+        }
         UpdateContractDto updateContractDto = new UpdateContractDto();
         updateContractDto.setContractNumber(customerContract.getContractNumber());
         if (this.customerContractMapper.getByUpdateDto(updateContractDto) != null) {
@@ -187,7 +190,9 @@ public class ContractServiceImpl implements ContractService {
         // 创建contract对象
         CustomerContract customerContract = new CustomerContract();
         BeanUtils.copyProperties(dto, customerContract);
-
+        if (dto.getEndDate() != null && new Date().before(customerContract.getEndDate())) {
+            throw new RuntimeException("截止日期不能小于今天");
+        }
         if (this.customerContractMapper.getByUpdateDto(dto) != null) {
             throw new RuntimeException("合同编号已存在");
         }
