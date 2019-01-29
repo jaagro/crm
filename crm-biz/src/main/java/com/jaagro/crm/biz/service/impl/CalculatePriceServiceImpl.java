@@ -63,6 +63,7 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
         }
         log.info("O calculatePaymentFromCustomer begin *****************");
         for (CalculatePaymentDto calculatePaymentDto : dtoList) {
+            log.info("O calculatePaymentFromCustomer calculatePaymentDto={}",calculatePaymentDto);
             Integer contractId = calculatePaymentDto.getCustomerContractId();
             // 校验合同状态,合同未审核通过不计算报价
             if (!checkContract(calculatePaymentDto)) {
