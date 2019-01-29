@@ -74,7 +74,10 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
             BigDecimal unitPrice;
             BigDecimal actualMileage;
             BigDecimal minLoadWeight = new BigDecimal(0.00);
-            List<CustomerContractSettlePrice> contractSettlePriceList;
+            List<CustomerContractSettlePrice> contractSettlePriceList = customerContractSettlePriceMapperExt.getSectionWeightPrice(contractId, calculatePaymentDto.getDoneDate(), calculatePaymentDto.getSiteDtoList());
+            if(contractSettlePriceList.size()< calculatePaymentDto.getSiteDtoList().size()){
+                continue;
+            }
             int compare = 0;
             int productType = calculatePaymentDto.getProductType();
             QuerySettleRuleDto querySettleRuleDto;
