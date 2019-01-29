@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -122,8 +123,8 @@ public class ContractController {
     @ApiOperation("合同修改")
     @PutMapping("/contract")
     public BaseResponse updateContract(@RequestBody UpdateContractDto dto) {
-
-        if (customerContractMapper.selectByPrimaryKey(dto.getId()) == null) {
+        CustomerContract customerContract = customerContractMapper.selectByPrimaryKey(dto.getId());
+        if (customerContract == null) {
             return BaseResponse.idError("合同不存在");
         }
         if (StringUtils.isEmpty(dto.getCustomerId())) {
@@ -369,7 +370,7 @@ public class ContractController {
         List<ReturnCheckContractQualificationDto> qualificationDtos = qualificationMapper.listByCriteria(dto);
         if (qualificationDtos.size() > 0) {
             for (ReturnCheckContractQualificationDto checkContractQualificationDto : qualificationDtos
-                    ) {
+            ) {
                 TruckTeamContractReturnDto contractReturnDto = checkContractQualificationDto.getTruckTeamContractReturnDto();
                 if (contractReturnDto != null) {
                     TruckTeam truckTeam = this.truckTeamMapper.selectByPrimaryKey(contractReturnDto.getTruckTeamId());
@@ -551,6 +552,10 @@ public class ContractController {
             for (CreateCustomerSettlePriceDto priceDto : priceDtoList) {
                 if (StringUtils.isEmpty(priceDto.getCustomerContractId())) {
                     return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同id不能为空");
+                }
+                CustomerContract customerContract = customerContractMapper.selectByPrimaryKey(priceDto.getCustomerContractId());
+                if (customerContract.getEndDate().before(new Date())) {
+                    return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同已过期，不可继续增加报价");
                 }
                 if (StringUtils.isEmpty(priceDto.getUnloadSiteId())) {
                     return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同报价卸货地不能为空");
