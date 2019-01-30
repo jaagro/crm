@@ -82,6 +82,45 @@
                 and pricing_method=#{pricingMethod}
             </if>
         </if>
+        <if test="flag == 4">
+            and history_flag=0
+            <if test="truckTeamContractId!=null">
+                and truck_team_contract_id=#{truckTeamContractId}
+            </if>
+            <if test="truckTypeId!=null">
+                and truck_type_id=#{truckTypeId}
+            </if>
+            <if test="pricingMethod!=null">
+                and pricing_method=#{pricingMethod}
+            </if>
+        </if>
+        <if test="flag == 5">
+            and history_flag=1
+            <if test="truckTeamContractId!=null">
+                and truck_team_contract_id=#{truckTeamContractId}
+            </if>
+            <if test="truckTypeId!=null">
+                and truck_type_id=#{truckTypeId}
+            </if>
+            <if test="pricingMethod!=null">
+                and pricing_method=#{pricingMethod}
+            </if>
+        </if>
+    </select>
+    <select id="listNonHistoryTruckTeamContractPriceCondition" resultMap="ResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM driver_contract_settle_rule
+        WHERE enable=1 AND history_flag=0
+        <if test="truckTeamContractId!=null">
+            and truck_team_contract_id=#{truckTeamContractId}
+        </if>
+        <if test="truckTypeId!=null">
+            and truck_type_id=#{truckTypeId}
+        </if>
+        <if test="pricingMethod!=null">
+            and pricing_method=#{pricingMethod}
+        </if>
     </select>
     <update id="deleteDriverContractSettleById" parameterType="java.util.List">
         update driver_contract_settle_rule
@@ -102,7 +141,7 @@
         <include refid="Base_Column_List"/>
         from driver_contract_settle_rule
         where enable=1
-        AND  history_flag = 0
+        AND history_flag = 0
         <if test="truckTeamContractId != null">
             and truck_team_contract_id=#{truckTeamContractId}
         </if>

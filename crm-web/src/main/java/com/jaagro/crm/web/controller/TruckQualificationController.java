@@ -109,7 +109,7 @@ public class TruckQualificationController {
     /**
      * 修改提供给feign
      *
-     * @param dto
+     * @param
      * @return
      */
     @Ignore

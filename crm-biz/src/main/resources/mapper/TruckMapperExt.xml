@@ -142,7 +142,7 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
     <select id="listTruckForAssignWaybillByCriteria" resultType="com.jaagro.crm.api.dto.response.truck.ListTruckDto"
-            parameterType="com.jaagro.crm.api.dto.request.truck.ListTruckCriteriaDto">
+            parameterType="com.jaagro.crm.api.dto.request.truck.QueryTruckDto">
 
         <if test="province != null and city != null and county != null">
             SELECT distinct
@@ -160,7 +160,7 @@
             left join truck_team m on t.truck_team_id = m.id
             left join truck_type p on t.truck_type_id = p.id
             left join truck_team_contract tc on tc.truck_team_id = m.id
-            where t.truck_status = 1 and m.team_status=1 and tc.contract_status=1
+            where t.truck_status = 1 and m.team_status=1 and tc.contract_status=1 and tc.bussiness_type=#{goodsType}
             and t.province = #{province}
             and t.city = #{city}
             and t.county = #{county}
@@ -186,12 +186,8 @@
             left join truck_team m on t.truck_team_id = m.id
             left join truck_type p on t.truck_type_id = p.id
             left join truck_team_contract tc on tc.truck_team_id = m.id
-            where t.truck_status = 1 and m.team_status=1 and tc.contract_status=1
-            <![CDATA[
-                    and t.province <> #{province}
-                    and t.city <> #{city}
-                    and t.county <> #{county}
-                    ]]>
+            where t.truck_status = 1 and m.team_status=1 and tc.contract_status=1 and tc.bussiness_type=#{goodsType}
+
             <if test="truckNumber != null and truckNumber !=''">
                 <![CDATA[and (t.truck_number like concat('%',#{truckNumber},'%') )]]>
             </if>
@@ -215,7 +211,7 @@
             left join truck_team m on t.truck_team_id = m.id
             left join truck_type p on t.truck_type_id = p.id
             left join truck_team_contract tc on tc.truck_team_id = m.id
-            where t.truck_status = 1 and m.team_status=1 and tc.contract_status=1
+            where t.truck_status = 1 and m.team_status=1 and tc.contract_status=1 and tc.bussiness_type=#{goodsType}
             <if test="truckNumber != null and truckNumber !=''">
                 <![CDATA[and (t.truck_number like concat('%',#{truckNumber},'%') )]]>
             </if>

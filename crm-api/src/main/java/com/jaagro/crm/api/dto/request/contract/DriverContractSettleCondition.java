@@ -29,6 +29,7 @@ public class DriverContractSettleCondition implements Serializable {
      * 车队合同id
      */
     private Integer truckTeamContractId;
+
     /**
      *运力合同配置主表id
      */
@@ -43,6 +44,7 @@ public class DriverContractSettleCondition implements Serializable {
      * 计价方式(1-按区间重量单价,2-按区间里程单价,3-按起步里程+里程单价)
      */
     private Integer pricingMethod;
+
     /**
      *
      */

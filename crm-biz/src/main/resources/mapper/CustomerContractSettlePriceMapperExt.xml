@@ -50,7 +50,7 @@
         AND load_site_id = #{loadSiteId}
         AND unload_site_id = #{unloadSiteId}
         AND truck_type_id = #{truckTypeId}
-        ORDER BY effective_time DESC
+        ORDER BY create_time DESC
     </select>
     <select id="getMileageByParams" resultType="java.math.BigDecimal">
         select

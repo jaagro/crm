@@ -30,6 +30,11 @@ public class ListTruckTeamContractDto implements Serializable {
     private Integer truckTeamId;
 
     /**
+     * 合同货物类型
+     */
+    private Integer bussinessType;
+
+    /**
      * 合同编号
      */
     private String contractNumber;

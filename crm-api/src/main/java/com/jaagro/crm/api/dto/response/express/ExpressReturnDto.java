@@ -67,4 +67,9 @@ public class ExpressReturnDto implements Serializable{
      * 标签查询字段
      */
     private String  tags;
+
+    /**
+     * "employee","driver"
+     */
+    private String createUserType;
 }

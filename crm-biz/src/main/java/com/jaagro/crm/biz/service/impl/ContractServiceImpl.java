@@ -32,6 +32,8 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -87,10 +89,26 @@ public class ContractServiceImpl implements ContractService {
         //创建contract对象
         CustomerContract customerContract = new CustomerContract();
         BeanUtils.copyProperties(dto, customerContract);
+        if (dto.getEndDate().before(new Date())) {
+            throw new RuntimeException("不可添加已过期的生效日期");
+        }
         UpdateContractDto updateContractDto = new UpdateContractDto();
         updateContractDto.setContractNumber(customerContract.getContractNumber());
         if (this.customerContractMapper.getByUpdateDto(updateContractDto) != null) {
             throw new RuntimeException("合同编号已存在");
+        }
+        List<CustomerContract> contractList = this.customerContractMapper.getByCustomerAndGoodsType(customerContract);
+        if (!CollectionUtils.isEmpty(contractList)) {
+            CustomerContract contract = contractList.get(0);
+            if (contract != null) {
+                if (dto.getStartDate().getTime() < contract.getEndDate().getTime() || differentDays(contract.getEndDate(), dto.getStartDate()) > 1) {
+                    throw new RuntimeException("合同开始日期不能与上一份合同结束日期有空隙");
+                }
+            }
+            Boolean aBoolean = this.checkContract(contractList, dto);
+            if (aBoolean) {
+                throw new RuntimeException("此类型合同日期重叠");
+            }
         }
         customerContract
                 .setContractStatus(AuditStatus.UNCHECKED)
@@ -104,6 +122,23 @@ public class ContractServiceImpl implements ContractService {
             }
         }
         return ServiceResult.toResult(customerContract.getId());
+    }
+
+    /**
+     * date2比date1多的天数
+     *
+     * @param date1
+     * @param date2
+     * @return
+     */
+    public static int differentDays(Date date2, Date date1) {
+        try {
+            int a = (int) ((date1.getTime() - date2.getTime()) / (1000 * 3600 * 24));
+            return a;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return 1;
+        }
     }
 
     @CacheEvict(cacheNames = "customer", allEntries = true)
@@ -136,7 +171,9 @@ public class ContractServiceImpl implements ContractService {
         // 创建contract对象
         CustomerContract customerContract = new CustomerContract();
         BeanUtils.copyProperties(dto, customerContract);
-
+        if (dto.getEndDate() != null && customerContract.getEndDate().before(new Date())) {
+            throw new RuntimeException("截止日期不能小于今天");
+        }
         if (this.customerContractMapper.getByUpdateDto(dto) != null) {
             throw new RuntimeException("合同编号已存在");
         }
@@ -282,6 +319,29 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public List<ShowCustomerContractDto> listShowCustomerContractByCustomerId(Integer customerId) {
         return customerContractMapper.listShowCustomerContractByCustomerId(customerId);
+    }
+
+    /**
+     * 判断 是否有重叠合同
+     *
+     * @param contractList
+     * @return
+     */
+    private Boolean checkContract(List<CustomerContract> contractList, CreateContractDto dto) {
+        if (CollectionUtils.isEmpty(contractList)) {
+            return false;
+        } else {
+            for (CustomerContract contract : contractList) {
+                if (dto.getStartDate().getTime() <= contract.getStartDate().getTime() && dto.getEndDate().getTime() >= contract.getStartDate().getTime()) {
+                    return true;
+                } else if (dto.getStartDate().getTime() >= contract.getStartDate().getTime() && dto.getStartDate().getTime() <= contract.getEndDate().getTime()) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            return false;
+        }
     }
 
 }
