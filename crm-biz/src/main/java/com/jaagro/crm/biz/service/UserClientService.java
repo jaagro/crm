@@ -30,6 +30,7 @@ public interface UserClientService {
 
     /**
      * 获取用户id
+     *
      * @return
      */
     @GetMapping("/getNextUserId")
@@ -37,6 +38,7 @@ public interface UserClientService {
 
     /**
      * 根据手机号查询客户用户
+     *
      * @param phoneNumber
      * @return
      */
@@ -45,6 +47,7 @@ public interface UserClientService {
 
     /**
      * 根据客户关联id查询
+     *
      * @param relevanceId
      * @return
      */
@@ -68,11 +71,20 @@ public interface UserClientService {
     @PostMapping("/getDownDepartment")
     List<Integer> getDownDepartment();
 
+    /**
+     * 获取指定部门id及下属部门
+     *
+     * @return
+     */
+    @PostMapping("/getDownDepartmentByDeptId/{deptId}")
+    List<Integer> getDownDepartmentByDeptId(@PathVariable("deptId") Integer deptId);
+
     @PostMapping("/getAllDepartments")
     List<DepartmentReturnDto> getAllDepartments();
 
     /**
      * 获取用户信息
+     *
      * @param key
      * @param userType
      * @param loginType
