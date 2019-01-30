@@ -90,14 +90,25 @@ public class ExpressServiceImpl implements ExpressService {
             convertImageUrl(returnDto);
             Set<Integer> userIdSet = new HashSet<>();
             userIdSet.add(returnDto.getCreateUserId());
-            List<UserInfo> userInfoList = userClientService.listUserInfo(new ArrayList<>(userIdSet), UserType.EMPLOYEE);
-            List<DepartmentReturnDto> departmentReturnDtos = userClientService.getAllDepartments();
-            if (!CollectionUtils.isEmpty(userInfoList)) {
-                returnDto.setCreateUserName(userInfoList.get(0).getName());
-                DepartmentReturnDto departmentReturnDto = departmentReturnDtos.stream().filter(c -> c.getId().equals(userInfoList.get(0).getDepartmentId())).collect(Collectors.toList()).get(0);
-                if (null != departmentReturnDto) {
-                    returnDto.setDepartmentName(departmentReturnDto.getDepartmentName());
+            if (express.getCreateUserType().equalsIgnoreCase(UserType.EMPLOYEE)) {
+                List<UserInfo> userInfoList = userClientService.listUserInfo(new ArrayList<>(userIdSet), UserType.EMPLOYEE);
+
+                List<DepartmentReturnDto> departmentReturnDtos = userClientService.getAllDepartments();
+                if (!CollectionUtils.isEmpty(userInfoList) && null != userInfoList.get(0)) {
+                    returnDto.setCreateUserName(userInfoList.get(0).getName());
+                    DepartmentReturnDto departmentReturnDto = departmentReturnDtos.stream().filter(c -> c.getId().equals(userInfoList.get(0).getDepartmentId())).collect(Collectors.toList()).get(0);
+                    if (null != departmentReturnDto) {
+                        returnDto.setDepartmentName(departmentReturnDto.getDepartmentName());
+                    }
                 }
+            }
+            if (express.getCreateUserType().equalsIgnoreCase(UserType.DRIVER)) {
+                List<UserInfo> driverInfoList = userClientService.listUserInfo(new ArrayList<>(userIdSet), UserType.DRIVER);
+                List<UserInfo> driverList = driverInfoList.stream().filter(c -> c.getId().equals(express.getCreateUserId())).collect(Collectors.toList());
+                if (!CollectionUtils.isEmpty(driverList) && null != driverList.get(0)) {
+                    returnDto.setCreateUserName(driverList.get(0).getName());
+                }
+                returnDto.setDepartmentName("司机");
             }
         }
         return returnDto;
