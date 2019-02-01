@@ -37,19 +37,22 @@ public class TestServiceImpl implements TestService {
         final String tokenF = token;
         final String wxIdF = wxId;
         final String userIdF = userId;
-        Long delFromRedis = 3L;
         Boolean execute = redisTemplate.execute((RedisCallback<Boolean>) connection -> {
+            Long delFromRedis = 0L;
             byte[] bytesToken = new byte[1];
             if (StringUtils.hasText(tokenF)){
                 bytesToken = tokenF.getBytes();
+                delFromRedis = delFromRedis+1;
             }
             byte[] bytesWxId = new byte[1];
             if (StringUtils.hasText(wxIdF)){
                 bytesWxId = wxIdF.getBytes();
+                delFromRedis = delFromRedis+1;
             }
             byte[] bytesUserId = new byte[1];
             if (StringUtils.hasText(userIdF)){
                 bytesUserId = userIdF.getBytes();
+                delFromRedis = delFromRedis+1;
             }
             Long del = connection.del(bytesToken, bytesWxId, bytesUserId);
             if (del != null && del.equals(delFromRedis)) {
