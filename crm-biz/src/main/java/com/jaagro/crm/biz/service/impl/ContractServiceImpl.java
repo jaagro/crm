@@ -215,13 +215,17 @@ public class ContractServiceImpl implements ContractService {
             return ServiceResult.error(ResponseStatusCode.ID_VALUE_ERROR.getCode(), "id: " + contractId + "不存在");
         }
         ReturnContractDto contractDto = customerContractMapper.getById(contractId);
-        if (contractDto.getQualifications().size() > 0) {
-            for (ReturnContractQualificationDto contractQualificationDto : contractDto.getQualifications()
-            ) {
-                //替换资质证照地址
-                String[] strArray = {contractQualificationDto.getCertificateImageUrl()};
-                List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
-                contractQualificationDto.setCertificateImageUrl(urlList.get(0).toString());
+        if (contractDto != null) {
+            List<ReturnContractQualificationDto> qualificationDtoList = contractQualificationMapper.listQualificationByContractIdAndType(contractDto.getId(), ContractType.CUSTOMER);
+            if (!CollectionUtils.isEmpty(qualificationDtoList)) {
+                for (ReturnContractQualificationDto contractQualificationDto : qualificationDtoList
+                ) {
+                    //替换资质证照地址
+                    String[] strArray = {contractQualificationDto.getCertificateImageUrl()};
+                    List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+                    contractQualificationDto.setCertificateImageUrl(urlList.get(0).toString());
+                }
+                contractDto.setQualifications(qualificationDtoList);
             }
         }
         //结算装卸货地

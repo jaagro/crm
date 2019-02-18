@@ -67,6 +67,8 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     private UserClientService userClientService;
     @Autowired
     private CurrentUserService currentUserService;
+    @Autowired
+    private ContractQualificationMapperExt contractQualificationMapperExt;
 
 
     /**
@@ -85,7 +87,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
         if (this.truckTeamContractMapper.getByContractNumber(dto.getContractNumber()) != null) {
             throw new RuntimeException("合同编号已存在");
         }
-        if(judgeExpired(dto.getEndDate(),true)){
+        if (judgeExpired(dto.getEndDate(), true)) {
             throw new RuntimeException("当前填写的合同时间已经过期");
         }
         List<TruckTeamContract> contractList = truckTeamContractMapper.getByTeamIdAndType(dto);
@@ -144,13 +146,16 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     @Override
     public Map<String, Object> getById(Integer id) {
         TruckTeamContractReturnDto contractReturnDto = truckTeamContractMapper.getById(id);
-        if (contractReturnDto.getQualificationDtoList().size() > 0) {
-            for (ReturnContractQualificationDto qualificationDto : contractReturnDto.getQualificationDtoList()
-            ) {
-                //替换资质证照地址
-                String[] strArray = {qualificationDto.getCertificateImageUrl()};
-                List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
-                qualificationDto.setCertificateImageUrl(urlList.get(0).toString());
+        if (contractReturnDto != null) {
+            List<ReturnContractQualificationDto> qualificationDtoList = contractQualificationMapperExt.listQualificationByContractIdAndType(contractReturnDto.getId(), ContractType.DRIVER);
+            if (!CollectionUtils.isEmpty(qualificationDtoList)) {
+                for (ReturnContractQualificationDto qualificationDto : qualificationDtoList) {
+                    //替换资质证照地址
+                    String[] strArray = {qualificationDto.getCertificateImageUrl()};
+                    List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+                    qualificationDto.setCertificateImageUrl(urlList.get(0).toString());
+                }
+                contractReturnDto.setQualificationDtoList(qualificationDtoList);
             }
         }
         return ServiceResult.toResult(contractReturnDto);
