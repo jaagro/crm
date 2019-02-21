@@ -160,6 +160,7 @@
             left join truck_team m on t.truck_team_id = m.id
             left join truck_type p on t.truck_type_id = p.id
             left join truck_team_contract tc on tc.truck_team_id = m.id
+            right join userserver.driver drv on drv.truck_id=t.id and drv.`status` not in(0,3)
             where t.truck_status = 1 and m.team_status=1 and tc.contract_status=1 and tc.bussiness_type=#{goodsType}
             and t.province = #{province}
             and t.city = #{city}
@@ -186,6 +187,7 @@
             left join truck_team m on t.truck_team_id = m.id
             left join truck_type p on t.truck_type_id = p.id
             left join truck_team_contract tc on tc.truck_team_id = m.id
+            right join userserver.driver drv on drv.truck_id=t.id and drv.`status` not in(0,3)
             where t.truck_status = 1 and m.team_status=1 and tc.contract_status=1 and tc.bussiness_type=#{goodsType}
 
             <if test="truckNumber != null and truckNumber !=''">
@@ -211,6 +213,7 @@
             left join truck_team m on t.truck_team_id = m.id
             left join truck_type p on t.truck_type_id = p.id
             left join truck_team_contract tc on tc.truck_team_id = m.id
+            right join userserver.driver drv on drv.truck_id=t.id and drv.`status` not in(0,3)
             where t.truck_status = 1 and m.team_status=1 and tc.contract_status=1 and tc.bussiness_type=#{goodsType}
             <if test="truckNumber != null and truckNumber !=''">
                 <![CDATA[and (t.truck_number like concat('%',#{truckNumber},'%') )]]>

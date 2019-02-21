@@ -30,6 +30,14 @@ public interface ContractQualificationMapperExt extends ContractQualificationMap
     List<ReturnContractQualificationDto> listQualificationByContractId(Integer contractId);
 
     /**
+     * 根据合同id和类型查询
+     *
+     * @param contractId
+     * @return
+     */
+    List<ReturnContractQualificationDto> listQualificationByContractIdAndType(@Param("contractId") Integer contractId, @Param("type") Integer type);
+
+    /**
      * 合同资质证分页
      *
      * @param dto
