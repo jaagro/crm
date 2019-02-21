@@ -25,6 +25,7 @@ import com.jaagro.crm.biz.service.OssSignUrlClientService;
 import com.jaagro.crm.biz.service.impl.CurrentUserService;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
+import feign.Contract;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import jdk.nashorn.internal.ir.annotations.Ignore;
@@ -32,10 +33,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -120,8 +123,8 @@ public class ContractController {
     @ApiOperation("合同修改")
     @PutMapping("/contract")
     public BaseResponse updateContract(@RequestBody UpdateContractDto dto) {
-
-        if (customerContractMapper.selectByPrimaryKey(dto.getId()) == null) {
+        CustomerContract customerContract = customerContractMapper.selectByPrimaryKey(dto.getId());
+        if (customerContract == null) {
             return BaseResponse.idError("合同不存在");
         }
         if (StringUtils.isEmpty(dto.getCustomerId())) {
@@ -367,7 +370,7 @@ public class ContractController {
         List<ReturnCheckContractQualificationDto> qualificationDtos = qualificationMapper.listByCriteria(dto);
         if (qualificationDtos.size() > 0) {
             for (ReturnCheckContractQualificationDto checkContractQualificationDto : qualificationDtos
-                    ) {
+            ) {
                 TruckTeamContractReturnDto contractReturnDto = checkContractQualificationDto.getTruckTeamContractReturnDto();
                 if (contractReturnDto != null) {
                     TruckTeam truckTeam = this.truckTeamMapper.selectByPrimaryKey(contractReturnDto.getTruckTeamId());
@@ -506,6 +509,34 @@ public class ContractController {
         return customerContractMapper.getShowCustomerContractById(id);
     }
 
+    @ApiOperation("根据货物类型、客户id、运单完成时间获取客户合同和运力合同")
+    @PostMapping("/getContractByContractDto")
+    public ContractDto getContractByContractDto(@RequestBody @Validated ContractDto contractDto) {
+        if (contractDto.getContractType() == 1 && contractDto.getCustomerId() != null) {
+            List<ContractDto> contractDtos = customerContractMapper.getCustomerContract(contractDto);
+            if (!CollectionUtils.isEmpty(contractDtos)) {
+
+                ContractDto contract = contractDtos.get(0);
+                contract.setContractType(contractDto.getContractType());
+                contract.setGoodsType(contractDto.getGoodsType());
+                contract.setWaybillDoneDate(contractDto.getWaybillDoneDate());
+                return contract;
+            }
+        }
+        if (contractDto.getContractType() == 2 && contractDto.getTruckTeamId() != null) {
+            List<ContractDto> contractDtos = truckTeamContractMapper.getTruckTeamContract(contractDto);
+            if (!CollectionUtils.isEmpty(contractDtos)) {
+                ContractDto contract = contractDtos.get(0);
+                contract.setContractType(contractDto.getContractType());
+                contract.setGoodsType(contractDto.getGoodsType());
+                contract.setTruckTeamId(contractDto.getTruckTeamId());
+                contract.setWaybillDoneDate(contractDto.getWaybillDoneDate());
+                return contract;
+            }
+        }
+        return null;
+
+    }
     //--------------------------------------------------------合同结算信息-----------------------------------------------------------
 
     /**
@@ -521,6 +552,10 @@ public class ContractController {
             for (CreateCustomerSettlePriceDto priceDto : priceDtoList) {
                 if (StringUtils.isEmpty(priceDto.getCustomerContractId())) {
                     return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同id不能为空");
+                }
+                CustomerContract customerContract = customerContractMapper.selectByPrimaryKey(priceDto.getCustomerContractId());
+                if (customerContract.getEndDate().before(new Date())) {
+                    return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同已过期，不可继续增加报价");
                 }
                 if (StringUtils.isEmpty(priceDto.getUnloadSiteId())) {
                     return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同报价卸货地不能为空");
@@ -549,6 +584,7 @@ public class ContractController {
 
     /**
      * 获取客户合同制定装卸货地实际里程
+     *
      * @param customerContractId
      * @param loadSiteId
      * @param unloadSiteId
@@ -557,7 +593,7 @@ public class ContractController {
     @ApiOperation("获取客户合同指定装卸货地实际里程")
     @GetMapping("getMileageByParams")
     public BaseResponse<BigDecimal> getMileageByParams(@RequestParam("customerContractId") Integer customerContractId, @RequestParam("loadSiteId") Integer loadSiteId, @RequestParam("unloadSiteId") Integer unloadSiteId) {
-        return BaseResponse.successInstance(settlePriceService.getMileageByParams(customerContractId,loadSiteId,unloadSiteId));
+        return BaseResponse.successInstance(settlePriceService.getMileageByParams(customerContractId, loadSiteId, unloadSiteId));
     }
 
     /**
@@ -624,6 +660,5 @@ public class ContractController {
         }
         return BaseResponse.successInstance("新增成功");
     }
-
 
 }

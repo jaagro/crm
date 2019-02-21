@@ -23,6 +23,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -109,6 +110,13 @@ public class SettleMileageServiceImpl implements SettleMileageService {
         List<Integer> departIds = userClientService.getDownDepartment();
         if (!CollectionUtils.isEmpty(departIds)) {
             dto.setDepartIds(departIds);
+        }
+        if (!StringUtils.isEmpty(dto.getDeptId())) {
+            departIds = userClientService.getDownDepartmentByDeptId(dto.getDeptId());
+            if (!CollectionUtils.isEmpty(departIds)) {
+                dto.setDepartIds(departIds);
+                dto.setDeptId(null);
+            }
         }
         List<ReturnSettleMileageDto> settleMileageDtoList = settleMileageMapperExt.listByCriteria(dto);
         if (!CollectionUtils.isEmpty(settleMileageDtoList)) {

@@ -1,5 +1,6 @@
 package com.jaagro.crm.biz.mapper;
 
+import com.jaagro.crm.api.dto.request.contract.ContractDto;
 import com.jaagro.crm.api.dto.request.contract.ListContractCriteriaDto;
 import com.jaagro.crm.api.dto.request.contract.UpdateContractDto;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto;
@@ -12,12 +13,12 @@ import java.util.List;
 /**
  * @author gavin
  */
-public interface CustomerContractMapperExt extends CustomerContractMapper{
+public interface CustomerContractMapperExt extends CustomerContractMapper {
 
     /**
      * 查询单个Dto
      *
-     * @param idgetById
+     * @param id
      */
     ReturnContractDto getById(Integer id);
 
@@ -32,7 +33,7 @@ public interface CustomerContractMapperExt extends CustomerContractMapper{
     /**
      * 查询客户Id查询合同
      *
-     * @param dto
+     * @param id
      * @return
      */
     List<ReturnContractDto> getByCustomerId(Integer id);
@@ -44,6 +45,14 @@ public interface CustomerContractMapperExt extends CustomerContractMapper{
      * @return
      */
     CustomerContract getByUpdateDto(UpdateContractDto updateContractDto);
+
+    /**
+     * 根据客户id和货物类型查询
+     *
+     * @param updateContractDto
+     * @return
+     */
+    List<CustomerContract> getByCustomerAndGoodsType(CustomerContract updateContractDto);
 
     /**
      * 根据客户查询未审核个数
@@ -76,4 +85,12 @@ public interface CustomerContractMapperExt extends CustomerContractMapper{
      * @return
      */
     List<ShowCustomerContractDto> listShowCustomerContractByCustomerId(Integer customerId);
+
+    /**
+     *根据货物类型、客户id、运单完成时间获取客户合同
+     *
+     * @param contractDto
+     * @return
+     */
+    List<ContractDto> getCustomerContract(ContractDto contractDto);
 }

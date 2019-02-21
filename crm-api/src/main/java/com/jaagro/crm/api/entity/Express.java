@@ -84,4 +84,8 @@ public class Express implements Serializable {
      * 修改人
      */
     private Integer modifyUserId;
+    /**
+     * "employee","driver"
+     */
+    private String createUserType;
 }

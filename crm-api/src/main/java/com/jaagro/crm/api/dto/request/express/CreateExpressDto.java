@@ -59,4 +59,9 @@ public class CreateExpressDto implements Serializable {
      */
     private Date publishTime;
 
+    /**
+     * "employee","driver"
+     */
+    private String createUserType;
+
 }
