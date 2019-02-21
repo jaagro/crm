@@ -550,6 +550,12 @@ public class ContractController {
     public BaseResponse createCustomerContractSettlePrice(@RequestBody List<CreateCustomerSettlePriceDto> priceDtoList) {
         if (!CollectionUtils.isEmpty(priceDtoList)) {
             for (CreateCustomerSettlePriceDto priceDto : priceDtoList) {
+                if (StringUtils.isEmpty(priceDto.getMileage())) {
+                    return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "里程数不能为空");
+                }
+                if (StringUtils.isEmpty(priceDto.getSettlePrice())) {
+                    return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "结算单价不能为空");
+                }
                 if (StringUtils.isEmpty(priceDto.getCustomerContractId())) {
                     return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同id不能为空");
                 }
