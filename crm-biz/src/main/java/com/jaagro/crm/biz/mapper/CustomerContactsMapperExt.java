@@ -2,13 +2,14 @@ package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.api.dto.request.customer.ListCustomerContactsCriteriaDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerContactsReturnDto;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 /**
  * @author gavin
  */
-public interface CustomerContactsMapperExt extends CustomerContactsMapper{
+public interface CustomerContactsMapperExt extends CustomerContactsMapper {
 
     /**
      * 查询客户全部联系人
@@ -33,4 +34,12 @@ public interface CustomerContactsMapperExt extends CustomerContactsMapper{
      * @return
      */
     int deleteByCustomerId(Integer customerId);
+
+    /**
+     * 根据关键词查询客户id
+     *
+     * @param keyword
+     * @return
+     */
+    List<Integer> listCustomerIdByKeyWord(@Param("keyword") String keyword);
 }
