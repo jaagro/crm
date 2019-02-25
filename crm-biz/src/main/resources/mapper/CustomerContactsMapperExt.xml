@@ -41,5 +41,7 @@
         delete from customer_contacts
         where customer_id = #{customerId}
     </delete>
-
+    <select id="listCustomerIdByKeyWord" resultType="java.lang.Integer" parameterType="java.lang.String">
+        select customer_id from customer_contacts where CONCAT(contact,phone) like CONCAT('%',#{keyword},'%')
+    </select>
 </mapper>

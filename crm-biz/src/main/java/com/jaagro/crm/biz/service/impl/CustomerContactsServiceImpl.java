@@ -157,4 +157,14 @@ public class CustomerContactsServiceImpl implements CustomerContactsService {
         return null;
     }
 
+    /**
+     * 根据关键词查询客户Id集合
+     *
+     * @param keyword
+     * @return
+     */
+    @Override
+    public List<Integer> listCustomerIdByKeyWord(String keyword) {
+        return customerContactsMapper.listCustomerIdByKeyWord(keyword);
+    }
 }

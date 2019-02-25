@@ -88,8 +88,16 @@ public interface CustomerContactsService {
 
     /**
      * 获取显示客户合同
+     *
      * @param id
      * @return
      */
     ShowCustomerContractDto getCustomerContactsById(Integer id);
+
+    /**
+     * 根据关键词查询客户Id集合
+     * @param keyword
+     * @return
+     */
+    List<Integer> listCustomerIdByKeyWord(String keyword);
 }

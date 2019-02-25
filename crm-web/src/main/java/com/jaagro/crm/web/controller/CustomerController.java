@@ -300,4 +300,10 @@ public class CustomerController {
         }
     }
 
+
+    @ApiOperation("根据关键字查询客户id集合")
+    @GetMapping("/listCustomerIdByKeyWord/{keyword}")
+    public BaseResponse<List<Integer>> listCustomerIdByKeyWord(@PathVariable String keyword) {
+        return BaseResponse.successInstance(customerContactsService.listCustomerIdByKeyWord(keyword));
+    }
 }
