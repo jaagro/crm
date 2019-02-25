@@ -257,7 +257,7 @@ public class CustomerController {
      */
     @Ignore
     @GetMapping("/getCustomerContactByCustomerId/{customerId}")
-    public CustomerContactsReturnDto getCustomerContactByCustomerId(@PathVariable Integer customerId) {
+    public CustomerContactsReturnDto getCustomerContactByCustomerId(@PathVariable("customerId") Integer customerId) {
         if (this.customerMapper.selectByPrimaryKey(customerId) == null) {
             return null;
         }
