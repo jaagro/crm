@@ -15,7 +15,7 @@ import java.util.Date;
 public class Customer implements Serializable {
     private static final long serialVersionUID = 6958779518702642899L;
     /**
-     * 客户主键idnabled
+     * 客户主键id
      */
     private Integer id;
 
@@ -26,9 +26,14 @@ public class Customer implements Serializable {
 
     /**
      * 客户类型
- (1:个体客户 2:企业客户 )
+     * (1:个体客户 2:企业客户 )
      */
     private Integer customerType;
+
+    /**
+     * 客户类别(1:物流业务 2:养殖业务 3:运力 4: 物资生产企业)
+     */
+    private Integer customerCategory;
 
     /**
      * 统一社会验证码(个体客户时，就是自然人身份证号码)
@@ -37,7 +42,7 @@ public class Customer implements Serializable {
 
     /**
      * 审核状态
- (0未审核，1-正常合作  10-停止合作 11-审核未通过 13-作废)
+     * (0未审核，1-正常合作  10-停止合作 11-审核未通过 13-作废)
      */
     private Integer customerStatus;
 
@@ -78,13 +83,13 @@ public class Customer implements Serializable {
 
     /**
      * 是否开票
- 0:否 1:是
+     * 0:否 1:是
      */
     private Boolean enableInvoice;
 
     /**
      * 发票类型
- 1:增值税普通发票 2:增值税专用发票
+     * 1:增值税普通发票 2:增值税专用发票
      */
     private Integer invoiceType;
 
@@ -122,8 +127,9 @@ public class Customer implements Serializable {
      * 修改人(References: user)
      */
     private Integer modifyUserId;
+
     /**
-     * 客户可以直接下单开关
+     * 开启客户直接下单开关
      */
-    private  String enableDirectOrder;
+    private String enableDirectOrder;
 }
