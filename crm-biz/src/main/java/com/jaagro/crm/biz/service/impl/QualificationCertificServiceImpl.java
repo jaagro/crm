@@ -39,87 +39,79 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
     private static final Logger log = LoggerFactory.getLogger(QualificationCertificServiceImpl.class);
 
     @Autowired
-    private CustomerQualificationMapperExt certificMapper;
-    @Autowired
     private CurrentUserService userService;
     @Autowired
     private OssSignUrlClientService ossSignUrlClientService;
     @Autowired
     private CustomerMapperExt customerMapper;
+    @Autowired
+    private CustomerQualificationMapperExt qualificationMapper;
 
     @CacheEvict(cacheNames = "customer", allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Map<String, Object> createQualificationCertific(CreateCustomerQualificationDto certificDto) {
-        if (this.customerMapper.selectByPrimaryKey(certificDto.getCustomerId()) == null) {
+    public Map<String, Object> createQualificationCertific(CreateCustomerQualificationDto dto) {
+        if (customerMapper.selectByPrimaryKey(dto.getCustomerId()) == null) {
             throw new RuntimeException("客户不存在");
         }
         CustomerQualification qc = new CustomerQualification();
-        BeanUtils.copyProperties(certificDto, qc);
+        BeanUtils.copyProperties(dto, qc);
         if (StringUtils.isEmpty(qc.getCertificateType())) {
             throw new RuntimeException("资质证件照类型不能为空");
         }
-        if (!certificDto.getCertificateType().equals(CertificateType.ELSE)) {
+        if (!dto.getCertificateType().equals(CertificateType.ELSE)) {
             //新增前判断是否此资质已新增过
-            List<CustomerQualificationReturnDto> returnDtos = certificMapper.getByCustomerIdAndId(qc.getCustomerId(), qc.getCertificateType());
-            if (returnDtos.size() > 0) {
+            List<CustomerQualificationReturnDto> returnDtoList = qualificationMapper.getByCustomerIdAndId(qc.getCustomerId(), qc.getCertificateType());
+            if (returnDtoList.size() > 0) {
                 throw new RuntimeException("此客户的资质已上传，不允许再上传");
             }
         }
-        qc
-                .setCreateUserId(userService.getCurrentUser().getId());
+        qc.setCreateUserId(userService.getCurrentUser().getId());
         try {
-            this.certificMapper.insertSelective(qc);
-            //新增后的返回：替换资质证照地址
-            String[] strArray = {qc.getCertificateImageUrl()};
-            List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
-            qc.setCertificateImageUrl(urlList.get(0).toString());
+            qualificationMapper.insertSelective(qc);
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new RuntimeException(ex.getMessage());
         }
-        return ServiceResult.toResult(qc);
+        return ServiceResult.toResult("success");
     }
 
     @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
-    public Map<String, Object> createQualificationCertific(List<CreateCustomerQualificationDto> certificDtos, Integer CustomerId) {
-        if (certificDtos != null && certificDtos.size() > 0) {
-            for (CreateCustomerQualificationDto certificDto : certificDtos) {
+    public Map<String, Object> createQualificationCertific(List<CreateCustomerQualificationDto> qualificationDtoList, Integer CustomerId) {
+        if (qualificationDtoList != null && qualificationDtoList.size() > 0) {
+            for (CreateCustomerQualificationDto dto : qualificationDtoList) {
                 CustomerQualification qc = new CustomerQualification();
-                BeanUtils.copyProperties(certificDto, qc);
+                BeanUtils.copyProperties(dto, qc);
                 qc
                         .setCreateUserId(userService.getCurrentUser().getId());
-                this.certificMapper.insertSelective(qc);
+                qualificationMapper.insertSelective(qc);
             }
         }
         return ServiceResult.toResult("资质证件照列表创建成功");
     }
 
-    /**
-     * 这里只能审核客户资质，车队资质审核在哪里？？？
-     */
     @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
-    public Map<String, Object> updateQualificationCertific(UpdateCustomerQualificationDto certificDto) {
+    public Map<String, Object> updateQualificationCertific(UpdateCustomerQualificationDto dto) {
         //如果id为空，则新增此条数据
-        if (certificDto.getId() == null) {
+        if (dto.getId() == null) {
             CreateCustomerQualificationDto createCustomerQualificationDto = new CreateCustomerQualificationDto();
-            BeanUtils.copyProperties(certificDto, createCustomerQualificationDto);
+            BeanUtils.copyProperties(dto, createCustomerQualificationDto);
             try {
-                this.createQualificationCertific(createCustomerQualificationDto);
+                createQualificationCertific(createCustomerQualificationDto);
             } catch (Exception ex) {
                 ex.printStackTrace();
                 return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), ex.getMessage());
             }
         } else {
             //修改
-            CustomerQualification qualification = this.certificMapper.selectByPrimaryKey(certificDto.getId());
+            CustomerQualification qualification = qualificationMapper.selectByPrimaryKey(dto.getId());
             if (qualification == null) {
-                return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "证件" + certificDto.getId() + "不存在");
+                return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "证件" + dto.getId() + "不存在");
             }
             CustomerQualification qc = new CustomerQualification();
-            BeanUtils.copyProperties(certificDto, qc);
+            BeanUtils.copyProperties(dto, qc);
             qc
                     .setModifyUserId(userService.getCurrentUser().getId())
                     .setModifyTime(new Date());
@@ -128,7 +120,7 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
              */
             // 待审核
             if (qualification.getCertificateStatus().equals(AuditStatus.UNCHECKED)) {
-                this.certificMapper.updateByPrimaryKeySelective(qc);
+                qualificationMapper.updateByPrimaryKeySelective(qc);
             }
             // 审核未通过的
             if (qualification.getCertificateStatus().equals(AuditStatus.AUDIT_FAILED)) {
@@ -136,45 +128,45 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
                 qualification
                         .setEnabled(false)
                         .setCertificateStatus(AuditStatus.STOP_COOPERATION);
-                this.certificMapper.updateByPrimaryKeySelective(qualification);
+                qualificationMapper.updateByPrimaryKeySelective(qualification);
                 // 把新资质证件照新增
                 qc
                         .setId(null)
                         .setCertificateStatus(AuditStatus.UNCHECKED)
                         .setCreateUserId(userService.getCurrentUser().getId())
                         .setCustomerId(qualification.getCustomerId());
-                this.certificMapper.insertSelective(qc);
+                qualificationMapper.insertSelective(qc);
             }
         }
         //修改后的返回：替换资质证照地址
-        String[] strArray = {certificDto.getCertificateImageUrl()};
+        String[] strArray = {dto.getCertificateImageUrl()};
         List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
-        certificDto.setCertificateImageUrl(urlList.get(0).toString());
-        return ServiceResult.toResult(certificDto);
+        dto.setCertificateImageUrl(urlList.get(0).toString());
+        return ServiceResult.toResult(dto);
     }
 
     @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
-    public Map<String, Object> updateQualificationCertific(List<UpdateCustomerQualificationDto> certificDtos) {
-        if (certificDtos != null && certificDtos.size() > 0) {
-            for (UpdateCustomerQualificationDto certificDto : certificDtos) {
+    public Map<String, Object> updateQualificationCertific(List<UpdateCustomerQualificationDto> qualificationDtoList) {
+        if (qualificationDtoList != null && qualificationDtoList.size() > 0) {
+            for (UpdateCustomerQualificationDto dto : qualificationDtoList) {
                 //如果id为空，则新增此条数据
-                if (certificDto.getId() == null) {
+                if (dto.getId() == null) {
                     CreateCustomerQualificationDto createCustomerQualificationDto = new CreateCustomerQualificationDto();
-                    BeanUtils.copyProperties(certificDto, createCustomerQualificationDto);
+                    BeanUtils.copyProperties(dto, createCustomerQualificationDto);
                     try {
-                        this.createQualificationCertific(createCustomerQualificationDto);
+                        createQualificationCertific(createCustomerQualificationDto);
                     } catch (Exception ex) {
                         return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), ex.getMessage());
                     }
                 } else {
                     //修改
-                    CustomerQualification qualification = this.certificMapper.selectByPrimaryKey(certificDto.getId());
+                    CustomerQualification qualification = qualificationMapper.selectByPrimaryKey(dto.getId());
                     if (qualification == null) {
-                        return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "证件[id=" + certificDto.getId() + "]不存在");
+                        return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "证件[id=" + dto.getId() + "]不存在");
                     }
                     CustomerQualification qc = new CustomerQualification();
-                    BeanUtils.copyProperties(certificDto, qc);
+                    BeanUtils.copyProperties(dto, qc);
                     qc
                             .setModifyUserId(userService.getCurrentUser().getId())
                             .setModifyTime(new Date());
@@ -183,7 +175,7 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
                      */
                     // 待审核
                     if (qualification.getCertificateStatus().equals(AuditStatus.UNCHECKED)) {
-                        this.certificMapper.updateByPrimaryKeySelective(qc);
+                        qualificationMapper.updateByPrimaryKeySelective(qc);
                     }
                     // 审核未通过的
                     if (qualification.getCertificateStatus().equals(AuditStatus.AUDIT_FAILED)) {
@@ -191,14 +183,14 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
                         qualification
                                 .setEnabled(false)
                                 .setCertificateStatus(AuditStatus.STOP_COOPERATION);
-                        this.certificMapper.updateByPrimaryKeySelective(qualification);
+                        qualificationMapper.updateByPrimaryKeySelective(qualification);
                         // 把新资质证件照新增
                         qc
                                 .setId(null)
                                 .setCertificateStatus(AuditStatus.UNCHECKED)
                                 .setCreateUserId(userService.getCurrentUser().getId())
                                 .setCustomerId(qualification.getCustomerId());
-                        this.certificMapper.insertSelective(qc);
+                        qualificationMapper.insertSelective(qc);
                     }
                 }
             }
@@ -208,12 +200,12 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
 
     @Override
     public Map<String, Object> getById(Integer id) {
-        return ServiceResult.toResult(this.certificMapper.selectByPrimaryKey(id));
+        return ServiceResult.toResult(qualificationMapper.selectByPrimaryKey(id));
     }
 
     @Override
     public Map<String, Object> getDetailById(Integer id) {
-        ReturnQualificationDto returnQualificationDto = this.certificMapper.getDetailById(id);
+        ReturnQualificationDto returnQualificationDto = qualificationMapper.getDetailById(id);
         //替换资质证照地址
         String[] strArray = {returnQualificationDto.getCertificateImageUrl()};
         List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
@@ -224,28 +216,28 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
     @Override
     public Map<String, Object> listByCriteria(ListCustomerQualificationCriteriaDto dto) {
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
-        List<ReturnQualificationDto> certificReturnDtos = this.certificMapper.listByCustomerIdAndStatus(dto);
-        if (certificReturnDtos.size() > 0) {
-            for (ReturnQualificationDto qualificationReturnDto : certificReturnDtos) {
+        List<ReturnQualificationDto> returnQualificationDtoList = qualificationMapper.listByCustomerIdAndStatus(dto);
+        if (returnQualificationDtoList.size() > 0) {
+            for (ReturnQualificationDto qualificationReturnDto : returnQualificationDtoList) {
                 //替换资质证照地址
                 String[] strArray = {qualificationReturnDto.getCertificateImageUrl()};
                 List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
                 qualificationReturnDto.setCertificateImageUrl(urlList.get(0).toString());
             }
         }
-        return ServiceResult.toResult(new PageInfo<>(certificReturnDtos));
+        return ServiceResult.toResult(new PageInfo<>(returnQualificationDtoList));
     }
 
     @Override
     public Map<String, Object> listByCustomerId(Integer customerId) {
-        if (this.customerMapper.selectByPrimaryKey(customerId) == null) {
+        if (customerMapper.selectByPrimaryKey(customerId) == null) {
             return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "此客户不存在");
         }
         ListCustomerQualificationCriteriaDto dto = new ListCustomerQualificationCriteriaDto();
         dto
                 .setCustomerId(customerId)
                 .setEnableCheck("查询详情");
-        List<ReturnQualificationDto> certificReturnDtos = this.certificMapper.listByCustomerIdAndStatus(dto);
+        List<ReturnQualificationDto> certificReturnDtos = qualificationMapper.listByCustomerIdAndStatus(dto);
         if (certificReturnDtos != null && certificReturnDtos.size() > 0) {
             for (ReturnQualificationDto qualificationReturnDto : certificReturnDtos) {
                 //替换资质证照地址
@@ -262,7 +254,7 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
     public Map<String, Object> deleteQualificationCertific(List<Integer> ids) {
         if (ids != null && ids.size() > 0) {
             for (Integer id : ids) {
-                this.certificMapper.deleteByPrimaryKey(id);
+                qualificationMapper.deleteByPrimaryKey(id);
             }
         }
         return ServiceResult.toResult("删除成功");
@@ -271,9 +263,9 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
     @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
     public Map<String, Object> disableQualificationCertific(Integer id) {
-        CustomerQualification certific = this.certificMapper.selectByPrimaryKey(id);
+        CustomerQualification certific = qualificationMapper.selectByPrimaryKey(id);
         certific.setEnabled(false);
-        this.certificMapper.updateByPrimaryKeySelective(certific);
+        qualificationMapper.updateByPrimaryKeySelective(certific);
         return ServiceResult.toResult("资质证件照删除成功");
     }
 
@@ -281,10 +273,10 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
     @Override
     public Map<String, Object> disableQualificationCertific(List<CustomerQualificationReturnDto> qualifications) {
         if (qualifications != null && qualifications.size() > 0) {
-            for (CustomerQualificationReturnDto certificReturnDto : qualifications) {
-                CustomerQualification certific = this.certificMapper.selectByPrimaryKey(certificReturnDto.getId());
-                certific.setEnabled(false);
-                this.certificMapper.updateByPrimaryKeySelective(certific);
+            for (CustomerQualificationReturnDto returnDto : qualifications) {
+                CustomerQualification qualification = qualificationMapper.selectByPrimaryKey(returnDto.getId());
+                qualification.setEnabled(false);
+                qualificationMapper.updateByPrimaryKeySelective(qualification);
             }
         }
         return ServiceResult.toResult("资质证件照删除成功");
@@ -292,7 +284,7 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
 
     @Override
     public ReturnQualificationDto getQualificationById(Integer id) {
-        return this.certificMapper.getQualificationById(id);
+        return qualificationMapper.getQualificationById(id);
     }
 
 }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.jaagro.crm.biz.mapper.CustomerMapperExt">
-
     <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.Customer">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="customer_name" property="customerName" jdbcType="VARCHAR"/>
         <result column="customer_type" property="customerType" jdbcType="INTEGER"/>
+        <result column="customer_category" property="customerCategory" jdbcType="INTEGER"/>
         <result column="credit_code" property="creditCode" jdbcType="VARCHAR"/>
         <result column="customer_status" property="customerStatus" jdbcType="INTEGER"/>
         <result column="city" property="city" jdbcType="VARCHAR"/>
@@ -28,42 +28,41 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-    id, customer_name, customer_type, credit_code, customer_status, city, province, county,
-    address, latitude, longitude, billing_period, enable_invoice, invoice_type, invoice_header,
-    tax_number, notes, create_time, modify_time, create_user_id, modify_user_id,enable_direct_order
-  </sql>
-
+        id, customer_name, customer_type, customer_category, credit_code, customer_status,
+        city, province, county, address, latitude, longitude, billing_period, enable_invoice,
+        invoice_type, invoice_header, tax_number, notes, create_time, modify_time, create_user_id,
+        modify_user_id, enable_direct_order
+    </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
         from customer
         where id = #{id,jdbcType=INTEGER}
     </select>
-      <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
         delete from customer
         where id = #{id,jdbcType=INTEGER}
-      </delete>
-      <insert id="insert" parameterType="com.jaagro.crm.biz.entity.Customer" useGeneratedKeys="true" keyProperty="id"
-                keyColumn="id">
-        insert into customer (id, customer_name, customer_type,
-          credit_code, customer_status, city,
-          province, county, address,
-          latitude, longitude, billing_period,
-          enable_invoice, invoice_type, invoice_header,
-          tax_number, notes, create_time,
-          modify_time, create_user_id, modify_user_id
-          )
-        values (#{id,jdbcType=INTEGER}, #{customerName,jdbcType=VARCHAR}, #{customerType,jdbcType=INTEGER},
-          #{creditCode,jdbcType=VARCHAR}, #{customerStatus,jdbcType=INTEGER}, #{city,jdbcType=VARCHAR},
-          #{province,jdbcType=VARCHAR}, #{county,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
-          #{latitude,jdbcType=DECIMAL}, #{longitude,jdbcType=DECIMAL}, #{billingPeriod,jdbcType=INTEGER},
-          #{enableInvoice,jdbcType=BIT}, #{invoiceType,jdbcType=INTEGER}, #{invoiceHeader,jdbcType=VARCHAR},
-          #{taxNumber,jdbcType=VARCHAR}, #{notes,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
-          #{modifyTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, #{modifyUserId,jdbcType=INTEGER}
-          )
-      </insert>
-    <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.Customer" useGeneratedKeys="true"
-            keyProperty="id"
+    </delete>
+    <insert id="insert" parameterType="com.jaagro.crm.biz.entity.Customer" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id">
+    insert into customer (id, customer_name, customer_type,
+      customer_category, credit_code, customer_status,
+      city, province, county,
+      address, latitude, longitude,
+      billing_period, enable_invoice, invoice_type,
+      invoice_header, tax_number, notes,
+      create_time, modify_time, create_user_id,
+      modify_user_id, enable_direct_order)
+    values (#{id,jdbcType=INTEGER}, #{customerName,jdbcType=VARCHAR}, #{customerType,jdbcType=INTEGER},
+      #{customerCategory,jdbcType=INTEGER}, #{creditCode,jdbcType=VARCHAR}, #{customerStatus,jdbcType=INTEGER},
+      #{city,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, #{county,jdbcType=VARCHAR},
+      #{address,jdbcType=VARCHAR}, #{latitude,jdbcType=DECIMAL}, #{longitude,jdbcType=DECIMAL},
+      #{billingPeriod,jdbcType=INTEGER}, #{enableInvoice,jdbcType=BIT}, #{invoiceType,jdbcType=INTEGER},
+      #{invoiceHeader,jdbcType=VARCHAR}, #{taxNumber,jdbcType=VARCHAR}, #{notes,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER},
+      #{modifyUserId,jdbcType=INTEGER}, #{enableDirectOrder,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.Customer" useGeneratedKeys="true" keyProperty="id"
             keyColumn="id">
         insert into customer
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -75,6 +74,9 @@
             </if>
             <if test="customerType != null">
                 customer_type,
+            </if>
+            <if test="customerCategory != null">
+                customer_category,
             </if>
             <if test="creditCode != null">
                 credit_code,
@@ -131,8 +133,8 @@
                 modify_user_id,
             </if>
             <if test="enableDirectOrder != null">
-               enable_direct_order ,
-             </if>
+                enable_direct_order,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -143,6 +145,9 @@
             </if>
             <if test="customerType != null">
                 #{customerType,jdbcType=INTEGER},
+            </if>
+            <if test="customerCategory != null">
+                #{customerCategory,jdbcType=INTEGER},
             </if>
             <if test="creditCode != null">
                 #{creditCode,jdbcType=VARCHAR},
@@ -203,8 +208,9 @@
             </if>
         </trim>
     </insert>
-
-    <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.Customer">
+    <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.Customer" useGeneratedKeys="true"
+            keyProperty="id"
+            keyColumn="id">
         update customer
         <set>
             <if test="customerName != null">
@@ -212,6 +218,9 @@
             </if>
             <if test="customerType != null">
                 customer_type = #{customerType,jdbcType=INTEGER},
+            </if>
+            <if test="customerCategory != null">
+                customer_category = #{customerCategory,jdbcType=INTEGER},
             </if>
             <if test="creditCode != null">
                 credit_code = #{creditCode,jdbcType=VARCHAR},
@@ -270,15 +279,16 @@
             <if test="enableDirectOrder != null">
                 enable_direct_order = #{enableDirectOrder,jdbcType=VARCHAR},
             </if>
-
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-
-    <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.Customer">
+    <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.Customer" useGeneratedKeys="true"
+            keyProperty="id"
+            keyColumn="id">
     update customer
     set customer_name = #{customerName,jdbcType=VARCHAR},
       customer_type = #{customerType,jdbcType=INTEGER},
+      customer_category = #{customerCategory,jdbcType=INTEGER},
       credit_code = #{creditCode,jdbcType=VARCHAR},
       customer_status = #{customerStatus,jdbcType=INTEGER},
       city = #{city,jdbcType=VARCHAR},
@@ -296,9 +306,8 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       modify_time = #{modifyTime,jdbcType=TIMESTAMP},
       create_user_id = #{createUserId,jdbcType=INTEGER},
-      enable_direct_order = #{enableDirectOrder,jdbcType=VARCHAR},
-      modify_user_id = #{modifyUserId,jdbcType=INTEGER}
+      modify_user_id = #{modifyUserId,jdbcType=INTEGER},
+      enable_direct_order = #{enableDirectOrder,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-
 </mapper>

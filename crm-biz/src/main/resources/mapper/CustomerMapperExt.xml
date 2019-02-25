@@ -6,6 +6,7 @@
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="customer_name" property="customerName" jdbcType="VARCHAR"/>
         <result column="customer_type" property="customerType" jdbcType="INTEGER"/>
+        <result column="customer_category" property="customerCategory" jdbcType="INTEGER"/>
         <result column="credit_code" property="creditCode" jdbcType="VARCHAR"/>
         <result column="customer_status" property="customerStatus" jdbcType="INTEGER"/>
         <result column="city" property="city" jdbcType="VARCHAR"/>
@@ -80,6 +81,9 @@
         </if>
         <if test="customerStatus != null">
             and m.customer_status = #{customerStatus}
+        </if>
+        <if test="customerCategory != null">
+            and m.customer_category = #{customerCategory}
         </if>
         <if test="customerName != null">
             <![CDATA[and (m.customer_name like concat('%',#{customerName},'%') )]]>
