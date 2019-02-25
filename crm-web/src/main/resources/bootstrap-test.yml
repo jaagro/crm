@@ -8,4 +8,4 @@ spring:
 
   # 日志输出
   profiles:
-    active: dev
+    active: test
