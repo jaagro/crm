@@ -29,6 +29,11 @@ public class ListCustomerCriteriaDto implements Serializable {
     private String customerName;
 
     /**
+     * 客户类别(1:物流业务 2:养殖业务 3:运力 4: 物资生产企业)
+     */
+    private Integer customerCategory;
+
+    /**
      * 联系人电话
      */
     private String phone;

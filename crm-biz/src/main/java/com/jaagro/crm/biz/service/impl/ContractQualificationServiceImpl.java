@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 合同资质
+ *
  * @author baiyiran
  */
 @CacheConfig(keyGenerator = "wiselyKeyGenerator")
@@ -33,11 +35,11 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
     private static final Logger log = LoggerFactory.getLogger(ContractQualificationServiceImpl.class);
 
     @Autowired
-    private ContractQualificationMapperExt qualificationMapper;
-    @Autowired
     private CurrentUserService userService;
     @Autowired
     private OssSignUrlClientService ossSignUrlClientService;
+    @Autowired
+    private ContractQualificationMapperExt qualificationMapper;
 
     /**
      * 新增
@@ -58,13 +60,8 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
         if (qualificationList.size() > 0) {
             throw new RuntimeException("此合同已上传资质，不允许再上传");
         }
-        qualification.setCreateUserId(this.userService.getCurrentUser().getId());
-        this.qualificationMapper.insertSelective(qualification);
-
-        //新增后的返回：替换资质证照地址
-        String[] strArray = {qualification.getCertificateImageUrl()};
-        List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
-        qualification.setCertificateImageUrl(urlList.get(0).toString());
+        qualification.setCreateUserId(userService.getCurrentUser().getId());
+        qualificationMapper.insertSelective(qualification);
         return ServiceResult.toResult(qualification);
     }
 
@@ -81,7 +78,7 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
         if (qualificationDto.getId() == null) {
             return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "证件id不能为空");
         }
-        ContractQualification qualification = this.qualificationMapper.selectByPrimaryKey(qualificationDto.getId());
+        ContractQualification qualification = qualificationMapper.selectByPrimaryKey(qualificationDto.getId());
         if (qualification == null) {
             return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "证件" + qualification.getId() + "不存在");
         }
@@ -96,8 +93,8 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
         }
         // 待审核
         if (qualification.getCertificateStatus().equals(AuditStatus.UNCHECKED)) {
-            contractQualification.setModifyUserId(this.userService.getCurrentUser().getId());
-            this.qualificationMapper.updateByPrimaryKeySelective(contractQualification);
+            contractQualification.setModifyUserId(userService.getCurrentUser().getId());
+            qualificationMapper.updateByPrimaryKeySelective(contractQualification);
         }
         // 审核未通过的
         if (qualificationDto.getCertificateStatus().equals(AuditStatus.AUDIT_FAILED)) {
@@ -105,9 +102,9 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
             qualification
                     .setEnabled(false)
                     .setCertificateStatus(AuditStatus.STOP_COOPERATION);
-            this.qualificationMapper.updateByPrimaryKeySelective(qualification);
+            qualificationMapper.updateByPrimaryKeySelective(qualification);
             // 把新资质证件照新增
-            this.qualificationMapper.insertSelective(contractQualification);
+            qualificationMapper.insertSelective(contractQualification);
         }
         // 已删除的
         if (qualification.getCertificateStatus().equals(AuditStatus.STOP_COOPERATION) || qualification.getEnabled().equals(0)) {
@@ -130,9 +127,9 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> disableContractQuaion(Integer id) {
-        ContractQualification qualification = this.qualificationMapper.selectByPrimaryKey(id);
+        ContractQualification qualification = qualificationMapper.selectByPrimaryKey(id);
         qualification.setEnabled(false);
-        this.qualificationMapper.updateByPrimaryKeySelective(qualification);
+        qualificationMapper.updateByPrimaryKeySelective(qualification);
         return ServiceResult.toResult("客户资质删除成功");
     }
 }
