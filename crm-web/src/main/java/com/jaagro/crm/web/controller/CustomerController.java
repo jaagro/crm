@@ -5,6 +5,7 @@ import com.jaagro.crm.api.dto.response.customer.CustomerContactsReturnDto;
 import com.jaagro.crm.api.service.CustomerContactsService;
 import com.jaagro.crm.api.service.CustomerService;
 import com.jaagro.crm.biz.entity.Customer;
+import com.jaagro.crm.biz.entity.CustomerContacts;
 import com.jaagro.crm.biz.entity.CustomerTenant;
 import com.jaagro.crm.biz.mapper.*;
 import com.jaagro.utils.BaseResponse;
@@ -256,7 +257,7 @@ public class CustomerController {
      */
     @Ignore
     @GetMapping("/getCustomerContactByCustomerId/{customerId}")
-    public CustomerContactsReturnDto getCustomerContactByCustomerId(@PathVariable Integer customerId) {
+    public CustomerContactsReturnDto getCustomerContactByCustomerId(@PathVariable("customerId") Integer customerId) {
         if (this.customerMapper.selectByPrimaryKey(customerId) == null) {
             return null;
         }
@@ -275,7 +276,7 @@ public class CustomerController {
      */
     @ApiOperation("查询单个户联系人")
     @GetMapping("/getContactsById/{id}")
-    public BaseResponse getContactsById(@PathVariable Integer id) {
+    public BaseResponse<CustomerContacts> getContactsById(@PathVariable("id") Integer id) {
         if (this.customerContactsMapper.selectByPrimaryKey(id) == null) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户联系人不存在");
         }
@@ -303,7 +304,7 @@ public class CustomerController {
 
     @ApiOperation("根据关键字查询客户id集合")
     @GetMapping("/listCustomerIdByKeyWord/{keyword}")
-    public BaseResponse<List<Integer>> listCustomerIdByKeyWord(@PathVariable String keyword) {
+    public BaseResponse<List<Integer>> listCustomerIdByKeyWord(@PathVariable("keyword") String keyword) {
         return BaseResponse.successInstance(customerContactsService.listCustomerIdByKeyWord(keyword));
     }
 }

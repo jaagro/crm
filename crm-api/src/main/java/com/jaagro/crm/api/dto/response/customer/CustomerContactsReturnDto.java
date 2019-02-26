@@ -45,23 +45,14 @@ public class CustomerContactsReturnDto implements Serializable {
      */
     private Boolean enabled;
 
-    /**
-     * 创建时间
-     */
-    private Date createTime;
 
     /**
-     * 修改时间
+     * 客户联系地址
      */
-    private Date modifyTime;
+    private String  address;
 
     /**
-     * 创建人
+     * customer_name
      */
-    private Integer createUserId;
-
-    /**
-     * 修改人
-     */
-    private Integer modifyUserId;
+    private String customerName;
 }

@@ -29,13 +29,13 @@
         </if>
         order by create_time desc
     </select>
-    <select id="listByCustomerId" resultMap="ReturnMap" parameterType="java.lang.Integer">
+    <select id="listByCustomerId" resultType="com.jaagro.crm.api.dto.response.customer.CustomerContactsReturnDto" parameterType="java.lang.Integer">
         select
-        <include refid="Base_Column_List"/>
-        from customer_contacts
-        where customer_id = #{id,jdbcType=INTEGER}
+          a.id,a.customer_id,a.contact,a.phone,b.address,b.customer_name as customerName
+        from customer_contacts a,customer b
+        where a.customer_id=b.id and  a.customer_id = #{id,jdbcType=INTEGER}
         and enabled = 1
-        order by create_time
+        order by b.create_time
     </select>
     <delete id="deleteByCustomerId">
         delete from customer_contacts
