@@ -34,6 +34,11 @@ public class CustomerReturnDto implements Serializable {
     private Integer customerType;
 
     /**
+     * 客户类别(1:物流业务 2:养殖业务 3:运力 4: 物资生产企业)
+     */
+    private Integer customerCategory;
+
+    /**
      * 统一社会验证码(个体客户时，就是自然人身份证号码)
      */
     private String creditCode;
@@ -149,4 +154,9 @@ public class CustomerReturnDto implements Serializable {
      * 查询客户资质证件照
      */
     private List<CustomerQualificationReturnDto> qualifications;
+
+    /**
+     * 租户id
+     */
+    private Integer tenantId;
 }
