@@ -1,7 +1,7 @@
 package com.jaagro.crm.biz.mapper;
 
 import com.jaagro.crm.api.dto.response.news.NewsCategoryReturnDto;
-import com.jaagro.crm.api.entity.NewsCategory;
+import com.jaagro.crm.biz.entity.NewsCategory;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

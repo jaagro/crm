@@ -3,12 +3,13 @@ package com.jaagro.crm.web.controller;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.constant.RequestSource;
+import com.jaagro.crm.api.dto.NewsCategoryDto;
 import com.jaagro.crm.api.dto.request.news.CreateNewsDto;
 import com.jaagro.crm.api.dto.request.news.ListNewsCriteriaDto;
 import com.jaagro.crm.api.dto.request.news.UpdateNewsDto;
 import com.jaagro.crm.api.dto.response.news.NewsCategoryReturnDto;
 import com.jaagro.crm.api.dto.response.news.NewsReturnDto;
-import com.jaagro.crm.api.entity.NewsCategory;
+import com.jaagro.crm.biz.entity.NewsCategory;
 import com.jaagro.crm.api.service.NewsService;
 import com.jaagro.crm.web.vo.news.NewsCategoryVo;
 import com.jaagro.crm.web.vo.news.NewsVo;
@@ -44,7 +45,7 @@ public class NewsController {
     @ApiOperation(value = "查询新闻类别")
     @GetMapping("/getAllNewsCategory")
     public BaseResponse getAllNewsCategory() {
-        List<NewsCategory> allNewsCategory = newsService.getAllNewsCategory();
+        List<NewsCategoryDto> allNewsCategory = newsService.getAllNewsCategory();
         List<NewsCategoryVo> newsCategoryVoList = generateNewsCategoryVo(allNewsCategory);
         return BaseResponse.successInstance(newsCategoryVoList);
     }
@@ -103,10 +104,10 @@ public class NewsController {
     }
 
 
-    private List<NewsCategoryVo> generateNewsCategoryVo(List<NewsCategory> allNewsCategory) {
+    private List<NewsCategoryVo> generateNewsCategoryVo(List<NewsCategoryDto> allNewsCategory) {
         List<NewsCategoryVo> newsCategoryVoList = new LinkedList<>();
         if (!CollectionUtils.isEmpty(allNewsCategory)) {
-            for (NewsCategory newsCategory : allNewsCategory) {
+            for (NewsCategoryDto newsCategory : allNewsCategory) {
                 NewsCategoryVo vo = new NewsCategoryVo();
                 vo.setId(newsCategory.getId());
                 vo.setName(newsCategory.getName());

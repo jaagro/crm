@@ -10,7 +10,7 @@ import com.jaagro.crm.api.dto.request.express.CreateExpressDto;
 import com.jaagro.crm.api.dto.request.express.QueryExpressDto;
 import com.jaagro.crm.api.dto.response.department.DepartmentReturnDto;
 import com.jaagro.crm.api.dto.response.express.ExpressReturnDto;
-import com.jaagro.crm.api.entity.Express;
+import com.jaagro.crm.biz.entity.Express;
 import com.jaagro.crm.api.service.ExpressService;
 import com.jaagro.crm.biz.mapper.ExpressMapperExt;
 import com.jaagro.crm.biz.service.UserClientService;

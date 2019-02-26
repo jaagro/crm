@@ -3,6 +3,7 @@ package com.jaagro.crm.biz.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.constant.UserInfo;
+import com.jaagro.crm.api.dto.SettleMileageDto;
 import com.jaagro.crm.api.dto.request.contract.CreateSettleMileageDto;
 import com.jaagro.crm.api.dto.request.contract.UpdateSettleMileageDto;
 import com.jaagro.crm.api.dto.request.contract.listSettleMileageCriteriaDto;
@@ -11,7 +12,7 @@ import com.jaagro.crm.api.service.SettleMileageService;
 import com.jaagro.crm.biz.entity.Customer;
 import com.jaagro.crm.biz.entity.CustomerContract;
 import com.jaagro.crm.biz.entity.CustomerSite;
-import com.jaagro.crm.api.entity.SettleMileage;
+import com.jaagro.crm.biz.entity.SettleMileage;
 import com.jaagro.crm.biz.mapper.CustomerContractMapperExt;
 import com.jaagro.crm.biz.mapper.CustomerMapperExt;
 import com.jaagro.crm.biz.mapper.CustomerSiteMapperExt;
@@ -21,6 +22,7 @@ import com.jaagro.crm.biz.service.UserClientService;
 import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -161,12 +163,17 @@ public class SettleMileageServiceImpl implements SettleMileageService {
     /**
      * 根据条件查询结算里程表id
      *
-     * @param settleMileage
+     * @param paramDto
      * @return
      */
     @Override
-    public SettleMileage selectByCriteria(SettleMileage settleMileage) {
-        return settleMileageMapperExt.selectByCriteria(settleMileage);
+    public SettleMileageDto selectByCriteria(SettleMileageDto paramDto) {
+        SettleMileageDto settleMileageDto = new SettleMileageDto();
+        SettleMileage settleMileage = new SettleMileage();
+        BeanUtils.copyProperties(paramDto,settleMileage);
+        SettleMileage settleMileageDo = settleMileageMapperExt.selectByCriteria(settleMileage);
+        BeanUtils.copyProperties(settleMileageDo,settleMileageDto);
+        return settleMileageDto;
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.jaagro.crm.api.entity;
+package com.jaagro.crm.api.dto;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -12,7 +12,7 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-public class Express implements Serializable {
+public class ExpressDto implements Serializable {
 
     private static final long serialVersionUID = 5813385298487748299L;
     /**

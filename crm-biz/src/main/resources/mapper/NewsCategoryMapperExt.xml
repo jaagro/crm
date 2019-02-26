@@ -8,7 +8,7 @@
         <result column="category" property="category" jdbcType="INTEGER" />
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     </resultMap>
-    <select id="selectAll" resultType="com.jaagro.crm.api.entity.NewsCategory">
+    <select id="selectAll" resultType="com.jaagro.crm.biz.entity.NewsCategory">
         select <include refid="Base_Column_List"/>
         FROM  news_category
     </select>
@@ -17,7 +17,7 @@
         FROM  news_category
         where id = #{id,jdbcType=INTEGER}
     </select>
-    <select id="listByCategory" resultType="com.jaagro.crm.api.entity.NewsCategory">
+    <select id="listByCategory" resultType="com.jaagro.crm.biz.entity.NewsCategory">
         select <include refid="Base_Column_List"/>
         FROM  news_category
         WHERE category = #{category,jdbcType=INTEGER}
