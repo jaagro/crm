@@ -277,25 +277,6 @@ public class CustomerController {
         return BaseResponse.successInstance(this.customerContactsMapper.selectByPrimaryKey(id));
     }
 
-    /**
-     * 根据养殖户查询租户
-     *
-     * @param customerId
-     * @return
-     */
-    @Ignore
-    @ApiOperation("根据养殖户查询租户")
-    @GetMapping("/getTenantByCustomer/{customerId}")
-    public Integer getTenantByCustomer(@PathVariable("customerId") Integer customerId) {
-        CustomerTenant customerTenant = this.customerTenantMapperExt.getByCustomerId(customerId);
-        if (customerTenant != null) {
-            return customerTenant.getTenantId();
-        } else {
-            return 0;
-        }
-    }
-
-
     @ApiOperation("根据关键字查询客户id集合")
     @GetMapping("/listCustomerIdByKeyWord/{keyword}")
     public BaseResponse<List<Integer>> listCustomerIdByKeyWord(@PathVariable("keyword") String keyword) {

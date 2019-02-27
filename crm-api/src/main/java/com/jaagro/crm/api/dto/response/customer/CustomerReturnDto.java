@@ -23,6 +23,11 @@ public class CustomerReturnDto implements Serializable {
     private Integer id;
 
     /**
+     *
+     */
+    private Integer tenantId;
+
+    /**
      * 客户名称(个体客户时，就是自然人姓名)
      */
     private String customerName;
@@ -155,8 +160,4 @@ public class CustomerReturnDto implements Serializable {
      */
     private List<CustomerQualificationReturnDto> qualifications;
 
-    /**
-     * 租户id
-     */
-    private Integer tenantId;
 }

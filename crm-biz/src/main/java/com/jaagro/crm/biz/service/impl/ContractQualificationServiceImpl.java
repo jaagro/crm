@@ -95,6 +95,7 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
         if (qualification.getCertificateStatus().equals(AuditStatus.UNCHECKED)) {
             contractQualification.setModifyUserId(userService.getCurrentUser().getId());
             qualificationMapper.updateByPrimaryKeySelective(contractQualification);
+            return ServiceResult.toResult(contractQualification);
         }
         // 审核未通过的
         if (qualificationDto.getCertificateStatus().equals(AuditStatus.AUDIT_FAILED)) {
@@ -105,6 +106,7 @@ public class ContractQualificationServiceImpl implements ContractQualificationSe
             qualificationMapper.updateByPrimaryKeySelective(qualification);
             // 把新资质证件照新增
             qualificationMapper.insertSelective(contractQualification);
+            return ServiceResult.toResult(contractQualification);
         }
         // 已删除的
         if (qualification.getCertificateStatus().equals(AuditStatus.STOP_COOPERATION) || qualification.getEnabled().equals(0)) {

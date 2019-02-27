@@ -121,6 +121,7 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
             // 待审核
             if (qualification.getCertificateStatus().equals(AuditStatus.UNCHECKED)) {
                 qualificationMapper.updateByPrimaryKeySelective(qc);
+                return ServiceResult.toResult(dto);
             }
             // 审核未通过的
             if (qualification.getCertificateStatus().equals(AuditStatus.AUDIT_FAILED)) {
