@@ -1,4 +1,4 @@
-package com.jaagro.crm.api.entity;
+package com.jaagro.crm.api.dto;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -12,7 +12,7 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
-public class NewsCategory implements Serializable{
+public class NewsCategoryDto implements Serializable{
     private static final long serialVersionUID = 4189502807629278079L;
     /**
      * 新闻类别字典表id

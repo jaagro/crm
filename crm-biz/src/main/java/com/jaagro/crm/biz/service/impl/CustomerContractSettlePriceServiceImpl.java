@@ -2,6 +2,7 @@ package com.jaagro.crm.biz.service.impl;
 
 import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.constant.ProductType;
+import com.jaagro.crm.api.dto.SettleMileageDto;
 import com.jaagro.crm.api.dto.base.CountUnFinishWaybillCriteriaDto;
 import com.jaagro.crm.api.dto.base.QueryCustomerContractSettlePriceDto;
 import com.jaagro.crm.api.dto.request.contract.CreateCustomerSettlePriceDto;
@@ -9,7 +10,7 @@ import com.jaagro.crm.api.dto.request.contract.CreateSettleMileageDto;
 import com.jaagro.crm.api.dto.request.contract.UpdateCustomerContractSettlePriceDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnCustomerSettlePriceDto;
 import com.jaagro.crm.api.dto.response.truck.ListTruckTypeDto;
-import com.jaagro.crm.api.entity.SettleMileage;
+import com.jaagro.crm.biz.entity.SettleMileage;
 import com.jaagro.crm.api.service.CustomerContractSettlePriceService;
 import com.jaagro.crm.api.service.SettleMileageService;
 import com.jaagro.crm.biz.entity.CustomerContract;
@@ -165,11 +166,11 @@ public class CustomerContractSettlePriceServiceImpl implements CustomerContractS
                 .setModifyUserId(currentUser == null ? null : currentUser.getId());
         int result = settlePriceMapper.updateByPrimaryKeySelective(settlePrice);
         if (result > 0) {
-            SettleMileage settleMileage = new SettleMileage();
+            SettleMileageDto settleMileage = new SettleMileageDto();
             settleMileage.setCustomerContractId(settlePrice.getCustomerContractId())
                     .setLoadSiteId(settlePrice.getLoadSiteId())
                     .setUnloadSiteId(settlePrice.getUnloadSiteId());
-            SettleMileage settleMileageDb = settleMileageService.selectByCriteria(settleMileage);
+            SettleMileageDto settleMileageDb = settleMileageService.selectByCriteria(settleMileage);
             if (settleMileageDb != null) {
                 settleMileageService.disableById(settleMileageDb.getId());
             }

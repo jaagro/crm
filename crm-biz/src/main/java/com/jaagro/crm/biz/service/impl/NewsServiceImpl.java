@@ -4,12 +4,14 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.constant.UserType;
+import com.jaagro.crm.api.dto.NewsCategoryDto;
 import com.jaagro.crm.api.dto.request.news.CreateNewsDto;
 import com.jaagro.crm.api.dto.request.news.ListNewsCriteriaDto;
 import com.jaagro.crm.api.dto.request.news.UpdateNewsDto;
 import com.jaagro.crm.api.dto.response.news.NewsReturnDto;
 import com.jaagro.crm.biz.entity.News;
-import com.jaagro.crm.api.entity.NewsCategory;
+import com.jaagro.crm.biz.entity.NewsCategory;
+import com.jaagro.crm.biz.entity.NewsCategory;
 import com.jaagro.crm.biz.mapper.NewsCategoryMapperExt;
 import com.jaagro.crm.biz.mapper.NewsMapperExt;
 import com.jaagro.crm.api.service.NewsService;
@@ -82,8 +84,15 @@ public class NewsServiceImpl implements NewsService {
      * @return
      */
     @Override
-    public List<NewsCategory> getAllNewsCategory() {
-        return newsCategoryMapperExt.selectAll();
+    public List<NewsCategoryDto> getAllNewsCategory() {
+
+        List<NewsCategoryDto> newsCategoryDtos = new ArrayList<>();
+        List<NewsCategory> newsCategories =  newsCategoryMapperExt.selectAll();
+        for (NewsCategory newsCategory : newsCategories) {
+            NewsCategoryDto newsCategoryDto = new NewsCategoryDto();
+            BeanUtils.copyProperties(newsCategory,newsCategoryDto);
+        }
+        return newsCategoryDtos;
     }
 
     /**
