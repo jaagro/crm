@@ -64,12 +64,6 @@ public class CustomerController {
         if (StringUtils.isEmpty(customer.getCustomerCategory())) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户类别不能为空");
         }
-        if (customer.getLatitude() == null) {
-            return BaseResponse.errorInstance("经度不能为空");
-        }
-        if (customer.getLongitude() == null) {
-            return BaseResponse.errorInstance("纬度不能为空");
-        }
         Map<String, Object> result;
         try {
             result = customerService.createCustomer(customer);

@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.constant.AccountType;
 import com.jaagro.crm.api.constant.AccountUserType;
+import com.jaagro.crm.api.constant.CustomerCategory;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerDto;
@@ -73,6 +74,9 @@ public class CustomerServiceImpl implements CustomerService {
         BeanUtils.copyProperties(dto, customer);
         customer
                 .setCreateUserId(userService.getCurrentUser().getId());
+        if (CustomerCategory.FARMS.equals(dto.getCustomerCategory())) {
+            customer.setTenantId(userService.getCurrentUser().getTenantId());
+        }
         if (StringUtils.isEmpty(customer.getCustomerType())) {
             throw new NullPointerException("客户类型不能为空");
         }
@@ -219,7 +223,7 @@ public class CustomerServiceImpl implements CustomerService {
         return customerMapper.getShowCustomerById(id);
     }
 
-//    @Cacheable
+    //    @Cacheable
     @Override
     public List<ShowCustomerDto> listAllCustomer() {
         return customerMapper.getAllCustomer();

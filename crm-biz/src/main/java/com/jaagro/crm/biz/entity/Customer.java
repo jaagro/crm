@@ -20,6 +20,11 @@ public class Customer implements Serializable {
     private Integer id;
 
     /**
+     *
+     */
+    private Integer tenantId;
+
+    /**
      * 客户名称(个体客户时，就是自然人姓名)
      */
     private String customerName;
