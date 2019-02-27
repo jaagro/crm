@@ -16,15 +16,15 @@ public final class CustomerCategory {
     /**
      * 养殖业务
      */
-    public static final Integer BREED = 2;
+    public static final Integer FARMS = 20;
 
     /**
      * 运力业务
      */
-    public static final Integer TRANSPORT = 3;
+    public static final Integer TRANSPORT = 30;
 
     /**
      * 物资生产企业业务
      */
-    public static final Integer GOODS = 4;
+    public static final Integer GOODS = 40;
 }

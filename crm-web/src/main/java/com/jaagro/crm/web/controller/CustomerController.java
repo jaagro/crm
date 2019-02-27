@@ -297,7 +297,7 @@ public class CustomerController {
         if (customerTenant != null) {
             return customerTenant.getTenantId();
         } else {
-            return null;
+            return 0;
         }
     }
 

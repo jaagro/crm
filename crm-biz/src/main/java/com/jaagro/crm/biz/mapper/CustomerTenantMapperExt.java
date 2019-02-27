@@ -14,5 +14,5 @@ public interface CustomerTenantMapperExt extends CustomerTenantMapper {
      * @param customerId
      * @return
      */
-    CustomerTenant getByCustomerId(@Param("customer") Integer customerId);
+    CustomerTenant getByCustomerId(@Param("customerId") Integer customerId);
 }
