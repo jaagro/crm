@@ -10,7 +10,7 @@ public enum TenantTypeEnum {
      * 租户类型
      */
     LOGISTICS(1, "LOGISTICS", "物流"),
-    BREEDING(2, "BREEDING", "养殖");
+    BREEDING(20, "BREEDING", "养殖");
 
     private int code;
     private String type;
