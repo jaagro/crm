@@ -85,6 +85,9 @@
         <if test="customerCategory != null">
             and m.customer_category = #{customerCategory}
         </if>
+        <if test="tenantId != null">
+            and m.tenant_id = #{tenantId}
+        </if>
         <if test="customerName != null">
             <![CDATA[and (m.customer_name like concat('%',#{customerName},'%') )]]>
         </if>

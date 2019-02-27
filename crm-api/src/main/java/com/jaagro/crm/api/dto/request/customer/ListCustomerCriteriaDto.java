@@ -49,5 +49,7 @@ public class ListCustomerCriteriaDto implements Serializable {
      */
     private Integer customerStatus;
 
+    private Integer tenantId;
+
 }
 

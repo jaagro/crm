@@ -218,7 +218,7 @@ public class QualificationCertificController {
      * @return
      */
     @ApiOperation("根据客户id查询资质列表")
-    @GetMapping("/listQualificationByCustomerId/{customerId}")
+    @GetMapping("/ /{customerId}")
     public BaseResponse listByCriteria(@PathVariable("customerId") Integer customerId) {
         if (customerId == null) {
             return BaseResponse.service(ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户id不能为空"));

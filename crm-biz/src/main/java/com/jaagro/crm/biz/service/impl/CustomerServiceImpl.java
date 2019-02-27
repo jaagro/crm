@@ -141,6 +141,7 @@ public class CustomerServiceImpl implements CustomerService {
 //    @Cacheable
     public Map<String, Object> listByCriteria(ListCustomerCriteriaDto dto) {
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
+        dto.setTenantId(userService.getCurrentUser().getTenantId());
         List<ListCustomerDto> listCustomerDtoList = this.customerMapper.listByCriteriaDto(dto);
         if (listCustomerDtoList != null && listCustomerDtoList.size() > 0) {
             for (ListCustomerDto customerDto : listCustomerDtoList) {
