@@ -10,7 +10,8 @@ public interface TenantService {
 
     /**
      * 获取当前租户详情
+     * @param id
      * @return
      */
-    GetTenantDto getCurrentTenant();
+    GetTenantDto getTenantById(int id);
 }

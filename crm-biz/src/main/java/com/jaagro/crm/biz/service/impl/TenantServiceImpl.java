@@ -1,6 +1,5 @@
 package com.jaagro.crm.biz.service.impl;
 
-import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.dto.response.tenant.GetTenantDto;
 import com.jaagro.crm.api.service.TenantService;
 import com.jaagro.crm.biz.entity.Tenant;
@@ -22,11 +21,10 @@ public class TenantServiceImpl implements TenantService {
     private CurrentUserService currentUserService;
 
     @Override
-    public GetTenantDto getCurrentTenant() {
-        UserInfo userInfo = currentUserService.getCurrentUser();
-        Tenant tenant = tenantMapperExt.selectByPrimaryKey(userInfo.getTenantId());
+    public GetTenantDto getTenantById(int id) {
+        Tenant tenant = tenantMapperExt.selectByPrimaryKey(id);
         if (null == tenant) {
-            throw new NullPointerException("tenant must not be null. error user: " + userInfo);
+            throw new NullPointerException("tenant must not be null. error id: " + id);
         }
         GetTenantDto tenantDto = new GetTenantDto();
         BeanUtils.copyProperties(tenant, tenantDto);
