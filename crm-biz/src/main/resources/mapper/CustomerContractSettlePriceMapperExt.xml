@@ -36,7 +36,7 @@
         WHERE customer_contract_id = #{customerContractId}
         AND enable = 1
         AND history_flag = 0
-        ORDER BY effective_time DESC
+        ORDER BY create_time DESC
     </select>
     <select id="listCustomerContractSettlePriceHistory"
             parameterType="com.jaagro.crm.api.dto.base.QueryCustomerContractSettlePriceDto"

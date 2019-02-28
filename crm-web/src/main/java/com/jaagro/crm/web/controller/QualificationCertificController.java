@@ -214,7 +214,7 @@ public class QualificationCertificController {
     /**
      * 根据客户id查询资质列表
      *
-     * @param criteriaDto
+     * @param customerId
      * @return
      */
     @ApiOperation("根据客户id查询资质列表")
@@ -260,7 +260,7 @@ public class QualificationCertificController {
     /**
      * 待审核资质详情
      *
-     * @param customerId
+     * @param id
      * @return
      */
     @ApiOperation("待审核资质详情")
