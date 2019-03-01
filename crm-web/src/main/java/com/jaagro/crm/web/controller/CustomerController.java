@@ -5,10 +5,9 @@ import com.jaagro.crm.api.dto.response.customer.CustomerContactsReturnDto;
 import com.jaagro.crm.api.service.CustomerContactsService;
 import com.jaagro.crm.api.service.CustomerService;
 import com.jaagro.crm.biz.entity.Customer;
-import com.jaagro.crm.biz.mapper.CustomerContactsMapperExt;
-import com.jaagro.crm.biz.mapper.CustomerContractMapperExt;
-import com.jaagro.crm.biz.mapper.CustomerMapperExt;
-import com.jaagro.crm.biz.mapper.CustomerQualificationMapperExt;
+import com.jaagro.crm.biz.entity.CustomerContacts;
+import com.jaagro.crm.biz.entity.CustomerTenant;
+import com.jaagro.crm.biz.mapper.*;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import io.swagger.annotations.Api;
@@ -34,15 +33,18 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
     @Autowired
+    private CustomerContactsService customerContactsService;
+    @Autowired
     private CustomerMapperExt customerMapper;
+    @Autowired
+    private CustomerContractMapperExt contractMapper;
     @Autowired
     private CustomerContactsMapperExt customerContactsMapper;
     @Autowired
-    private CustomerContactsService customerContactsService;
-    @Autowired
     private CustomerQualificationMapperExt qualificationMapper;
     @Autowired
-    private CustomerContractMapperExt contractMapper;
+    private CustomerTenantMapperExt customerTenantMapperExt;
+
 
     /**
      * 新增客户
@@ -53,22 +55,23 @@ public class CustomerController {
     @ApiOperation("新增客户")
     @PostMapping("/customer")
     public BaseResponse insertCustomer(@RequestBody CreateCustomerDto customer) {
-        if (customer.getCustomerType() == null) {
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户类型:[customerType]不能为空");
+        if (StringUtils.isEmpty(customer.getCustomerType())) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户类型不能为空");
         }
-        if (customer.getCustomerName() == null) {
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户名称:[customerName]不能为空");
+        if (StringUtils.isEmpty(customer.getCustomerName())) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户名称不能为空");
         }
-        //先注释，最后商议
-       /* if (customer.getLatitude() == null) {
-            return BaseResponse.errorInstance("经度:[latitude]不能为空");
+        if (StringUtils.isEmpty(customer.getCustomerCategory())) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户类别不能为空");
         }
-        if (customer.getLongitude() == null) {
-            return BaseResponse.errorInstance("纬度:[longitude]不能为空");
-        }*/
-        UpdateCustomerDto updateCustomerDto = new UpdateCustomerDto();
-        updateCustomerDto.setCustomerName(customer.getCustomerName());
-        return BaseResponse.service(customerService.createCustomer(customer));
+        Map<String, Object> result;
+        try {
+            result = customerService.createCustomer(customer);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return BaseResponse.errorInstance(e.getMessage());
+        }
+        return BaseResponse.service(result);
     }
 
     /**
@@ -104,8 +107,7 @@ public class CustomerController {
     @ApiOperation("查询单个客户")
     @GetMapping("/customer/{id}")
     public BaseResponse getById(@PathVariable Integer id) {
-        Map<String, Object> result = customerService.getById(id);
-        return BaseResponse.service(result);
+        return BaseResponse.service(customerService.getById(id));
     }
 
     /**
@@ -117,6 +119,15 @@ public class CustomerController {
     @ApiOperation("分页查询客户")
     @PostMapping("/listCustomerByCriteria")
     public BaseResponse listByCriteria(@RequestBody ListCustomerCriteriaDto criteriaDto) {
+        if (StringUtils.isEmpty(criteriaDto.getPageNum())) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "pageNum不能为空");
+        }
+        if (StringUtils.isEmpty(criteriaDto.getPageSize())) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "pageSize不能为空");
+        }
+//        if (StringUtils.isEmpty(criteriaDto.getCustomerCategory())) {
+//            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户类别不能为空");
+//        }
         return BaseResponse.service(this.customerService.listByCriteria(criteriaDto));
     }
 
@@ -155,20 +166,20 @@ public class CustomerController {
         return customerService.listNormalCustomer();
     }
 
-    //-------------------------------------------------客户联系人---------------------------------
+    //-------------------------------------------------客户联系人-------------------------------------------------------
 
     /**
      * 客户联系人新增
      *
-     * @param contractDtos
+     * @param contactsDtoList
      * @return
      */
     @ApiOperation("客户联系人新增")
     @PostMapping("/createCustomerContacts")
-    public BaseResponse createCustomerContacts(@RequestBody List<CreateCustomerContactsDto> contractDtos) {
+    public BaseResponse createCustomerContacts(@RequestBody List<CreateCustomerContactsDto> contactsDtoList) {
         Integer customerId = 0;
-        if (contractDtos != null && contractDtos.size() > 0) {
-            for (CreateCustomerContactsDto contractDto : contractDtos) {
+        if (contactsDtoList != null && contactsDtoList.size() > 0) {
+            for (CreateCustomerContactsDto contractDto : contactsDtoList) {
                 if (StringUtils.isEmpty(contractDto.getCustomerId())) {
                     return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "联系人客户id不能为空");
                 }
@@ -184,21 +195,21 @@ public class CustomerController {
                 }
             }
         }
-        customerId = contractDtos.get(0).getCustomerId();
-        return BaseResponse.service(this.customerContactsService.createCustomerContacts(contractDtos, customerId));
+        customerId = contactsDtoList.get(0).getCustomerId();
+        return BaseResponse.service(this.customerContactsService.createCustomerContacts(contactsDtoList, customerId));
     }
 
     /**
      * 客户联系人修改
      *
-     * @param contractDtos
+     * @param contactsDtoList
      * @return
      */
     @ApiOperation("客户联系人修改")
     @PostMapping("/updateCustomerContacts")
-    public BaseResponse updateCustomerContacts(@RequestBody List<UpdateCustomerContactsDto> contractDtos) {
-        if (contractDtos != null && contractDtos.size() > 0) {
-            this.customerContactsService.updateCustomerContacts(contractDtos);
+    public BaseResponse updateCustomerContacts(@RequestBody List<UpdateCustomerContactsDto> contactsDtoList) {
+        if (contactsDtoList != null && contactsDtoList.size() > 0) {
+            this.customerContactsService.updateCustomerContacts(contactsDtoList);
             return BaseResponse.successInstance("修改成功");
         } else {
             return BaseResponse.errorInstance("修改失败");
@@ -240,13 +251,13 @@ public class CustomerController {
      */
     @Ignore
     @GetMapping("/getCustomerContactByCustomerId/{customerId}")
-    public CustomerContactsReturnDto getCustomerContactByCustomerId(@PathVariable Integer customerId) {
+    public CustomerContactsReturnDto getCustomerContactByCustomerId(@PathVariable("customerId") Integer customerId) {
         if (this.customerMapper.selectByPrimaryKey(customerId) == null) {
             return null;
         }
-        List<CustomerContactsReturnDto> contactsReturnDtos = this.customerContactsMapper.listByCustomerId(customerId);
-        if (contactsReturnDtos.size() > 0) {
-            return contactsReturnDtos.get(0);
+        List<CustomerContactsReturnDto> contactsDtoList = this.customerContactsMapper.listByCustomerId(customerId);
+        if (contactsDtoList.size() > 0) {
+            return contactsDtoList.get(0);
         }
         return null;
     }
@@ -259,10 +270,16 @@ public class CustomerController {
      */
     @ApiOperation("查询单个户联系人")
     @GetMapping("/getContactsById/{id}")
-    public BaseResponse getContactsById(@PathVariable Integer id) {
+    public BaseResponse<CustomerContacts> getContactsById(@PathVariable("id") Integer id) {
         if (this.customerContactsMapper.selectByPrimaryKey(id) == null) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户联系人不存在");
         }
         return BaseResponse.successInstance(this.customerContactsMapper.selectByPrimaryKey(id));
+    }
+
+    @ApiOperation("根据关键字查询客户id集合")
+    @GetMapping("/listCustomerIdByKeyWord/{keyword}")
+    public BaseResponse<List<Integer>> listCustomerIdByKeyWord(@PathVariable("keyword") String keyword) {
+        return BaseResponse.successInstance(customerContactsService.listCustomerIdByKeyWord(keyword));
     }
 }

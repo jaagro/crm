@@ -20,12 +20,10 @@ import com.jaagro.crm.biz.entity.CustomerContract;
 import com.jaagro.crm.biz.entity.TruckTeam;
 import com.jaagro.crm.biz.entity.TruckTeamContract;
 import com.jaagro.crm.biz.mapper.*;
-import com.jaagro.crm.biz.service.DriverClientService;
 import com.jaagro.crm.biz.service.OssSignUrlClientService;
 import com.jaagro.crm.biz.service.impl.CurrentUserService;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
-import feign.Contract;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import jdk.nashorn.internal.ir.annotations.Ignore;
@@ -43,6 +41,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 客户合同管理
+ *
  * @author baiyiran
  */
 @RestController
@@ -52,37 +52,31 @@ public class ContractController {
     @Autowired
     private ContractService contractService;
     @Autowired
-    private CustomerContractMapperExt customerContractMapper;
-    @Autowired
-    private CustomerMapperExt customerMapper;
-    @Autowired
-    private ContractQualificationMapperExt qualificationMapper;
-    @Autowired
-    private ContractQualificationService contractQualificationService;
-    @Autowired
-    private CustomerService customerService;
-    @Autowired
-    private QualificationVerifyLogService logService;
-    @Autowired
-    private DriverClientService driverClientService;
-    @Autowired
-    private TruckTeamMapperExt teamMapper;
-    @Autowired
-    private TruckTeamContractMapperExt truckTeamContractMapper;
-    @Autowired
-    private OssSignUrlClientService ossSignUrlClientService;
-    @Autowired
-    private TruckTeamMapperExt truckTeamMapper;
+    private CustomerSiteService siteService;
     @Autowired
     private CurrentUserService currentUserService;
     @Autowired
-    private CustomerSiteService siteService;
+    private QualificationVerifyLogService logService;
+    @Autowired
+    private OssSignUrlClientService ossSignUrlClientService;
+    @Autowired
+    private CustomerContractSettleRuleService settleRuleService;
     @Autowired
     private CustomerContractSettlePriceService settlePriceService;
     @Autowired
-    private ContractOilPriceService oilPriceService;
+    private ContractQualificationService contractQualificationService;
     @Autowired
-    private CustomerContractSettleRuleService settleRuleService;
+    private TruckTeamMapperExt teamMapper;
+    @Autowired
+    private CustomerMapperExt customerMapper;
+    @Autowired
+    private TruckTeamMapperExt truckTeamMapper;
+    @Autowired
+    private CustomerContractMapperExt customerContractMapper;
+    @Autowired
+    private TruckTeamContractMapperExt truckTeamContractMapper;
+    @Autowired
+    private ContractQualificationMapperExt qualificationMapper;
 
     /**
      * 合同新增
@@ -109,7 +103,7 @@ public class ContractController {
             result = contractService.createContract(dto);
         } catch (Exception e) {
             e.printStackTrace();
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), e.getMessage());
+            return BaseResponse.errorInstance(e.getMessage());
         }
         return BaseResponse.service(result);
     }

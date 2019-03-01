@@ -1,5 +1,4 @@
-package com.jaagro.crm.api.entity;
-
+package com.jaagro.crm.api.dto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -9,8 +8,9 @@ import java.util.Date;
 
 @Data
 @Accessors(chain = true)
-public class SettleMileage implements Serializable{
-    private static final long serialVersionUID = 3423480159810976622L;
+public class SettleMileageDto implements Serializable{
+
+    private static final long serialVersionUID = 3746056208440115032L;
     /**
      * 结算里程表id
      */
@@ -100,5 +100,4 @@ public class SettleMileage implements Serializable{
      * 修改人姓名
      */
     private String modifyUserName;
-
 }

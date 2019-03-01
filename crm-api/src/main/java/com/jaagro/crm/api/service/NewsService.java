@@ -5,7 +5,7 @@ import com.jaagro.crm.api.dto.request.news.CreateNewsDto;
 import com.jaagro.crm.api.dto.request.news.ListNewsCriteriaDto;
 import com.jaagro.crm.api.dto.request.news.UpdateNewsDto;
 import com.jaagro.crm.api.dto.response.news.NewsReturnDto;
-import com.jaagro.crm.api.entity.NewsCategory;
+import com.jaagro.crm.api.dto.NewsCategoryDto;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public interface NewsService {
      * 查询所有新闻类别
      * @return
      */
-    List<NewsCategory> getAllNewsCategory();
+    List<NewsCategoryDto> getAllNewsCategory();
 
     /**
      * 编辑新闻

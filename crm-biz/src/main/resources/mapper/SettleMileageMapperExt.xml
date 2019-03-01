@@ -36,7 +36,7 @@
         </if>
         order by create_time desc
     </select>
-    <select id="selectByCriteria" parameterType="com.jaagro.crm.api.entity.SettleMileage"
+    <select id="selectByCriteria" parameterType="com.jaagro.crm.biz.entity.SettleMileage"
             resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>

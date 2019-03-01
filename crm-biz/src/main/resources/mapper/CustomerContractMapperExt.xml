@@ -111,7 +111,8 @@
         from customer_contract
         where customer_id = #{customerId,jdbcType=INTEGER}
         and contract_status = 1
-        and (select now() between start_date and end_date)
+        <![CDATA[ and DATE_FORMAT( now( ), '%Y-%m-%d' ) > start_date ]]>
+        <![CDATA[ and DATE_FORMAT( now( ), '%Y-%m-%d' ) <= end_date ]]>
         order by create_time desc
     </select>
 
@@ -121,6 +122,6 @@
         <include refid="Base_Column_List"/>
         from customer_contract
         where contract_status = 1 and customer_id = #{customerId} and type = #{goodsType}
-              and #{waybillDoneDate} BETWEEN start_date AND DATE_ADD(end_date,INTERVAL 1 DAY)
+        and #{waybillDoneDate} BETWEEN start_date AND DATE_ADD(end_date,INTERVAL 1 DAY)
     </select>
 </mapper>
