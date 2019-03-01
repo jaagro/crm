@@ -39,6 +39,13 @@
         from contract_qualification
         where relevance_id = #{contractId,jdbcType=INTEGER}
     </select>
+    <select id="listQualificationByContractIdAndType" resultMap="ReturnMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from contract_qualification
+        where relevance_id = #{contractId,jdbcType=INTEGER}
+        and relevance_type = #{type}
+    </select>
     <select id="listByCriteria" resultMap="ReturnCheckMap"
             parameterType="com.jaagro.crm.api.dto.request.contract.ListContractQualificationCriteriaDto">
         select
