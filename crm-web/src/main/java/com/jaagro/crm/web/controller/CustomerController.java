@@ -6,7 +6,6 @@ import com.jaagro.crm.api.service.CustomerContactsService;
 import com.jaagro.crm.api.service.CustomerService;
 import com.jaagro.crm.biz.entity.Customer;
 import com.jaagro.crm.biz.entity.CustomerContacts;
-import com.jaagro.crm.biz.entity.CustomerTenant;
 import com.jaagro.crm.biz.mapper.*;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
@@ -42,8 +41,6 @@ public class CustomerController {
     private CustomerContactsMapperExt customerContactsMapper;
     @Autowired
     private CustomerQualificationMapperExt qualificationMapper;
-    @Autowired
-    private CustomerTenantMapperExt customerTenantMapperExt;
 
 
     /**
