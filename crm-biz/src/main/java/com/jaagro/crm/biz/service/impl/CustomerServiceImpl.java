@@ -14,7 +14,6 @@ import com.jaagro.crm.api.dto.response.customer.CustomerReturnDto;
 import com.jaagro.crm.api.dto.response.customer.ListCustomerDto;
 import com.jaagro.crm.api.service.*;
 import com.jaagro.crm.biz.entity.Customer;
-import com.jaagro.crm.biz.entity.CustomerTenant;
 import com.jaagro.crm.biz.mapper.*;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
@@ -53,8 +52,6 @@ public class CustomerServiceImpl implements CustomerService {
     private QualificationCertificService qualificationCertificService;
     @Autowired
     private CustomerMapperExt customerMapper;
-    @Autowired
-    private CustomerTenantMapperExt customerTenantMapper;
     @Autowired
     private CustomerContactsMapperExt customerContactsMapper;
 
@@ -121,14 +118,7 @@ public class CustomerServiceImpl implements CustomerService {
         if (customerMapper.selectByPrimaryKey(id) == null) {
             return ServiceResult.error(ResponseStatusCode.ID_VALUE_ERROR.getCode(), "此客户不存在");
         }
-        CustomerReturnDto customerReturnDto = customerMapper.getById(id);
-        if (customerReturnDto != null) {
-            CustomerTenant customerTenant = customerTenantMapper.getByCustomerId(customerReturnDto.getId());
-            if (customerTenant != null) {
-                customerReturnDto.setTenantId(customerTenant.getTenantId());
-            }
-        }
-        return ServiceResult.toResult(customerReturnDto);
+        return ServiceResult.toResult(customerMapper.getById(id));
     }
 
     /**

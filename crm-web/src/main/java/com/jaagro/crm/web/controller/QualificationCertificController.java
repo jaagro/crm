@@ -304,4 +304,5 @@ public class QualificationCertificController {
         // 1-客户资质 2-运力资质 3-客户合同 4-运力合同
         return BaseResponse.service(this.logService.createVerifyLog(logDto));
     }
+    
 }
