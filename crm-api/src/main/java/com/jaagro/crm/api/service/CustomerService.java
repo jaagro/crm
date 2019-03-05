@@ -47,16 +47,6 @@ public interface CustomerService {
     Map<String, Object> listByCriteria(ListCustomerCriteriaDto dto);
 
     /**
-     * 1
-     * 审核客户，注意需要修改的字段有哪些，插入的表有哪些
-     *
-     * @param id
-     * @param auditResult
-     * @return
-     */
-    Map<String, Object> auditCustomer(Integer id, String auditResult);
-
-    /**
      * 逻辑删除
      *
      * @param id
@@ -85,4 +75,12 @@ public interface CustomerService {
      * @return
      */
     List<ShowCustomerDto> listNormalCustomer();
+
+    /**
+     * 根据客户名称查询客户id集合
+     *
+     * @param customerName
+     * @return
+     */
+    List<Integer> listCustomerIdByName(String customerName);
 }

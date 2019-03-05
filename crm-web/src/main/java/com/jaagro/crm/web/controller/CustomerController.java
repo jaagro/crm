@@ -279,4 +279,16 @@ public class CustomerController {
     public BaseResponse<List<Integer>> listCustomerIdByKeyWord(@PathVariable("keyword") String keyword) {
         return BaseResponse.successInstance(customerContactsService.listCustomerIdByKeyWord(keyword));
     }
+
+    /**
+     * 根据客户名称查询客户id集合
+     *
+     * @param customerName
+     * @return
+     */
+    @Ignore
+    @GetMapping("/listCustomerIdByName/{customerName}")
+    public List<Integer> listCustomerIdByName(@PathVariable("customerName") String customerName) {
+        return customerService.listCustomerIdByName(customerName);
+    }
 }

@@ -148,19 +148,6 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * 审核客户，注意需要修改的字段有哪些，插入的表有哪些
-     *
-     * @param id
-     * @param auditResult
-     * @return
-     */
-//    @CacheEvict(cacheNames = "customer", allEntries = true)
-    @Override
-    public Map<String, Object> auditCustomer(Integer id, String auditResult) {
-        return null;
-    }
-
-    /**
      * 逻辑删除
      *
      * @param id
@@ -228,5 +215,16 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<ShowCustomerDto> listNormalCustomer() {
         return customerMapper.listNormalCustomer();
+    }
+
+    /**
+     * 根据客户名称查询客户id集合
+     *
+     * @param customerName
+     * @return
+     */
+    @Override
+    public List<Integer> listCustomerIdByName(String customerName) {
+        return customerMapper.listCustomerIdByName(customerName);
     }
 }
