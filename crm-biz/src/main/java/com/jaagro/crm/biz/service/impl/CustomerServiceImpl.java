@@ -2,6 +2,7 @@ package com.jaagro.crm.biz.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.constant.AccountType;
 import com.jaagro.crm.api.constant.AccountUserType;
 import com.jaagro.crm.api.constant.CustomerCategory;
@@ -23,8 +24,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -226,5 +229,31 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<Integer> listCustomerIdByName(String customerName) {
         return customerMapper.listCustomerIdByName(customerName);
+    }
+
+    /**
+     * 根据当前登录人 查询养殖客户信息
+     *
+     * @return
+     */
+    @Override
+    public List<ShowCustomerDto> listCustomerInfoByCurrentUser() {
+        List<ShowCustomerDto> showCustomerDtos = new ArrayList<>();
+        ListCustomerCriteriaDto listCustomerCriteriaDto = new ListCustomerCriteriaDto();
+        UserInfo currentUser = userService.getCurrentUser();
+        if (currentUser != null && currentUser.getTenantId() != null) {
+            listCustomerCriteriaDto
+                    .setCustomerCategory(CustomerCategory.FARMS)
+                    .setTenantId(currentUser.getTenantId());
+        }
+        List<ListCustomerDto> listCustomerDtos = customerMapper.listByCriteriaDto(listCustomerCriteriaDto);
+        if (!CollectionUtils.isEmpty(listCustomerDtos)) {
+            for (ListCustomerDto listCustomerDto : listCustomerDtos) {
+                ShowCustomerDto showCustomerDto = new ShowCustomerDto();
+                BeanUtils.copyProperties(listCustomerDto, showCustomerDto);
+                showCustomerDtos.add(showCustomerDto);
+            }
+        }
+        return showCustomerDtos;
     }
 }

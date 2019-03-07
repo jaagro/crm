@@ -83,4 +83,11 @@ public interface CustomerService {
      * @return
      */
     List<Integer> listCustomerIdByName(String customerName);
+
+    /**
+     * 根据当前登录人 查询养殖客户信息
+     *
+     * @return
+     */
+    List<ShowCustomerDto> listCustomerInfoByCurrentUser();
 }

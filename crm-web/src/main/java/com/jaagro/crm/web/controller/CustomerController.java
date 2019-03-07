@@ -291,4 +291,17 @@ public class CustomerController {
     public List<Integer> listCustomerIdByName(@PathVariable("customerName") String customerName) {
         return customerService.listCustomerIdByName(customerName);
     }
+
+
+    /**
+     * 获取当前登录人养殖客户信息
+     *
+     * @param
+     * @return
+     */
+    @Ignore
+    @GetMapping("/listCustomerInfoByCurrentUser")
+    public List<ShowCustomerDto> listCustomerInfoByCurrentUser() {
+        return customerService.listCustomerInfoByCurrentUser();
+    }
 }
