@@ -301,7 +301,7 @@ public class CustomerController {
      */
     @Ignore
     @GetMapping("/listCustomerInfoByCurrentUser")
-    public List<ShowCustomerDto> listCustomerInfoByCurrentUser() {
-        return customerService.listCustomerInfoByCurrentUser();
+    public BaseResponse listCustomerInfoByCurrentUser() {
+        return BaseResponse.successInstance(customerService.listCustomerInfoByCurrentUser());
     }
 }
