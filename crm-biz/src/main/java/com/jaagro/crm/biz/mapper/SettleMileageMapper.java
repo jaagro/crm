@@ -1,6 +1,6 @@
 package com.jaagro.crm.biz.mapper;
 
-import com.jaagro.crm.api.entity.SettleMileage;
+import com.jaagro.crm.biz.entity.SettleMileage;
 
 public interface SettleMileageMapper {
     /**

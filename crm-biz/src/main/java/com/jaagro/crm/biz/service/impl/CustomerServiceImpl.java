@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.constant.AccountType;
 import com.jaagro.crm.api.constant.AccountUserType;
+import com.jaagro.crm.api.constant.CustomerCategory;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerDto;
@@ -13,10 +14,7 @@ import com.jaagro.crm.api.dto.response.customer.CustomerReturnDto;
 import com.jaagro.crm.api.dto.response.customer.ListCustomerDto;
 import com.jaagro.crm.api.service.*;
 import com.jaagro.crm.biz.entity.Customer;
-import com.jaagro.crm.biz.mapper.CustomerContactsMapperExt;
-import com.jaagro.crm.biz.mapper.CustomerContractMapperExt;
-import com.jaagro.crm.biz.mapper.CustomerMapperExt;
-import com.jaagro.crm.biz.mapper.CustomerQualificationMapperExt;
+import com.jaagro.crm.biz.mapper.*;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
@@ -41,7 +39,7 @@ public class CustomerServiceImpl implements CustomerService {
     private static final Logger log = LoggerFactory.getLogger(CustomerServiceImpl.class);
 
     @Autowired
-    private CustomerMapperExt customerMapper;
+    private AccountService accountService;
     @Autowired
     private CurrentUserService userService;
     @Autowired
@@ -49,17 +47,13 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private ContractService contractService;
     @Autowired
-    private QualificationCertificService certificService;
-    @Autowired
     private CustomerContactsService customerContactsService;
     @Autowired
-    private CustomerContractMapperExt contractMapper;
+    private QualificationCertificService qualificationCertificService;
     @Autowired
-    private CustomerQualificationMapperExt qualificationMapper;
+    private CustomerMapperExt customerMapper;
     @Autowired
     private CustomerContactsMapperExt customerContactsMapper;
-    @Autowired
-    private AccountService accountService;
 
     /**
      * 创建客户
@@ -77,6 +71,9 @@ public class CustomerServiceImpl implements CustomerService {
         BeanUtils.copyProperties(dto, customer);
         customer
                 .setCreateUserId(userService.getCurrentUser().getId());
+        if (CustomerCategory.FARMS.equals(dto.getCustomerCategory())) {
+            customer.setTenantId(userService.getCurrentUser().getTenantId());
+        }
         if (StringUtils.isEmpty(customer.getCustomerType())) {
             throw new NullPointerException("客户类型不能为空");
         }
@@ -119,7 +116,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Map<String, Object> getById(Integer id) {
         if (customerMapper.selectByPrimaryKey(id) == null) {
-            return ServiceResult.error(ResponseStatusCode.ID_VALUE_ERROR.getCode(), "id: " + id + "不存在");
+            return ServiceResult.error(ResponseStatusCode.ID_VALUE_ERROR.getCode(), "此客户不存在");
         }
         return ServiceResult.toResult(customerMapper.getById(id));
     }
@@ -134,10 +131,10 @@ public class CustomerServiceImpl implements CustomerService {
 //    @Cacheable
     public Map<String, Object> listByCriteria(ListCustomerCriteriaDto dto) {
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
-        List<ListCustomerDto> customerReturnDtos = this.customerMapper.listByCriteriaDto(dto);
-        if (customerReturnDtos != null && customerReturnDtos.size() > 0) {
-            for (ListCustomerDto customerDto : customerReturnDtos
-            ) {
+        dto.setTenantId(userService.getCurrentUser().getTenantId());
+        List<ListCustomerDto> listCustomerDtoList = this.customerMapper.listByCriteriaDto(dto);
+        if (listCustomerDtoList != null && listCustomerDtoList.size() > 0) {
+            for (ListCustomerDto customerDto : listCustomerDtoList) {
                 List<CustomerContactsReturnDto> contractDtoList = this.customerContactsMapper.listByCustomerId(customerDto.getId());
                 if (contractDtoList.size() > 0) {
                     CustomerContactsReturnDto contactsReturnDto = contractDtoList.get(0);
@@ -147,7 +144,7 @@ public class CustomerServiceImpl implements CustomerService {
                 }
             }
         }
-        return ServiceResult.toResult(new PageInfo<>(customerReturnDtos));
+        return ServiceResult.toResult(new PageInfo<>(listCustomerDtoList));
     }
 
     /**
@@ -193,7 +190,7 @@ public class CustomerServiceImpl implements CustomerService {
             }
             //逻辑删除 证件照
             if (customerDto.getQualifications() != null && customerDto.getQualifications().size() > 0) {
-                this.certificService.disableQualificationCertific(customerDto.getQualifications());
+                this.qualificationCertificService.disableQualificationCertific(customerDto.getQualifications());
             }
             //逻辑删除 合同
             if (customerDto.getReturnContractDtos() != null && customerDto.getReturnContractDtos().size() > 0) {
@@ -217,7 +214,7 @@ public class CustomerServiceImpl implements CustomerService {
         return customerMapper.getShowCustomerById(id);
     }
 
-//    @Cacheable
+    //    @Cacheable
     @Override
     public List<ShowCustomerDto> listAllCustomer() {
         return customerMapper.getAllCustomer();

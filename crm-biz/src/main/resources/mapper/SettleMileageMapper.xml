@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.jaagro.crm.biz.mapper.SettleMileageMapperExt" >
-  <resultMap id="BaseResultMap" type="com.jaagro.crm.api.entity.SettleMileage" >
+  <resultMap id="BaseResultMap" type="com.jaagro.crm.biz.entity.SettleMileage" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="customer_contract_id" property="customerContractId" jdbcType="INTEGER" />
     <result column="department_id" property="departmentId" jdbcType="INTEGER" />
@@ -37,7 +37,7 @@
     delete from settle_mileage
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.jaagro.crm.api.entity.SettleMileage" useGeneratedKeys="true" keyProperty="id"
+  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.SettleMileage" useGeneratedKeys="true" keyProperty="id"
           keyColumn="id">
     insert into settle_mileage (id, customer_contract_id,
       department_id, department_name, load_site_id, 
@@ -54,7 +54,7 @@
       #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP}, 
       #{modifyUserId,jdbcType=INTEGER}, #{modifyUserName,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.jaagro.crm.api.entity.SettleMileage" useGeneratedKeys="true" keyProperty="id"
+  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.SettleMileage" useGeneratedKeys="true" keyProperty="id"
           keyColumn="id">
     insert into settle_mileage
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -170,7 +170,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.api.entity.SettleMileage" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.SettleMileage" >
     update settle_mileage
     <set >
       <if test="customerContractId != null" >
@@ -227,7 +227,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.api.entity.SettleMileage" >
+  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.SettleMileage" >
     update settle_mileage
     set customer_contract_id = #{customerContractId,jdbcType=INTEGER},
       department_id = #{departmentId,jdbcType=INTEGER},

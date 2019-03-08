@@ -3,7 +3,7 @@ package com.jaagro.crm.biz.mapper;
 import com.jaagro.crm.api.dto.response.contract.ReturnSettleMileageDto;
 import com.jaagro.crm.api.dto.request.contract.SiteDto;
 import com.jaagro.crm.api.dto.request.contract.listSettleMileageCriteriaDto;
-import com.jaagro.crm.api.entity.SettleMileage;
+import com.jaagro.crm.biz.entity.SettleMileage;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

@@ -4,7 +4,6 @@ import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.dto.request.express.CreateExpressDto;
 import com.jaagro.crm.api.dto.request.express.QueryExpressDto;
 import com.jaagro.crm.api.dto.response.express.ExpressReturnDto;
-import com.jaagro.crm.api.entity.Express;
 
 import java.util.List;
 import java.util.Map;
