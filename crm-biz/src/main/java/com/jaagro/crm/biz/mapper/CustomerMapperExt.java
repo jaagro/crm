@@ -70,4 +70,11 @@ public interface CustomerMapperExt extends CustomerMapper {
      */
     List<ShowCustomerDto> listNormalCustomer();
 
+    /**
+     * 根据客户名称查询客户id集合
+     *
+     * @param customerName
+     * @return
+     */
+    List<Integer> listCustomerIdByName(String customerName);
 }
