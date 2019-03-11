@@ -45,7 +45,7 @@
         <if test="customerId != null">
             and t.customer_id = #{customerId}
         </if>
---         and c.tenant_id = #{tenantId}
+        and c.tenant_id = #{tenantId}
         ORDER BY
         t.create_time DESC
     </select>
