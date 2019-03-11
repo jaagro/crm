@@ -29,6 +29,11 @@ public class ListContractCriteriaDto implements Serializable {
     private Integer customerId;
 
     /**
+     * 租户Id
+     */
+    private Integer tenantId;
+
+    /**
      * 合同状态: 1-正常 2-终止
      */
     private Integer contractStatus;
