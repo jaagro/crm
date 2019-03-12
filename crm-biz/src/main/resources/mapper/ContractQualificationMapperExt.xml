@@ -75,7 +75,8 @@
         q.*
         FROM
         contract_qualification q
-        LEFT JOIN customer c ON q.relevance_id = c.id
+        LEFT JOIN customer_contract t ON q.relevance_id = t.id
+        LEFT JOIN customer c ON t.customer_id = c.id
         WHERE
         q.enabled = 1
         AND c.tenant_id = #{tenantId}
@@ -88,12 +89,10 @@
         <if test="relevanceId != null">
             and q.relevance_id = #{relevanceId,jdbcType=INTEGER}
         </if>
-        <if test="relevanceType != null">
-            and q.relevance_type = #{relevanceType,jdbcType=INTEGER}
-        </if>
         <if test="certificateStatus == null and enableCheck == null">
             and q.certificate_status = 0
         </if>
+        AND q.relevance_type = 3
         ORDER BY
         q.create_time DESC
     </select>
