@@ -77,6 +77,8 @@ public class ContractController {
     private TruckTeamContractMapperExt truckTeamContractMapper;
     @Autowired
     private ContractQualificationMapperExt qualificationMapper;
+    @Autowired
+    private CurrentUserService userService;
 
     /**
      * 合同新增
@@ -362,6 +364,33 @@ public class ContractController {
     public BaseResponse listContractQuaByCriteria(@RequestBody ListContractQualificationCriteriaDto dto) {
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
         List<ReturnCheckContractQualificationDto> qualificationDtos = qualificationMapper.listByCriteria(dto);
+        if (qualificationDtos.size() > 0) {
+            for (ReturnCheckContractQualificationDto checkContractQualificationDto : qualificationDtos
+            ) {
+                TruckTeamContractReturnDto contractReturnDto = checkContractQualificationDto.getTruckTeamContractReturnDto();
+                if (contractReturnDto != null) {
+                    TruckTeam truckTeam = this.truckTeamMapper.selectByPrimaryKey(contractReturnDto.getTruckTeamId());
+                    if (truckTeam != null) {
+                        contractReturnDto.setTruckTeamName(truckTeam.getTeamName());
+                    }
+                }
+            }
+        }
+        return BaseResponse.successInstance(new PageInfo<>(qualificationDtos));
+    }
+
+    /**
+     * 待审核合同资质分页[养殖户]
+     *
+     * @param dto
+     * @return
+     */
+    @ApiOperation("待审核合同资质分页[养殖户]")
+    @PostMapping("/listPlantContractQuaByCriteria")
+    public BaseResponse listPlantContractQuaByCriteria(@RequestBody ListContractQualificationCriteriaDto dto) {
+        PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
+        dto.setTenantId(userService.getCurrentUser().getTenantId());
+        List<ReturnCheckContractQualificationDto> qualificationDtos = qualificationMapper.listPlantQuaByCriteria(dto);
         if (qualificationDtos.size() > 0) {
             for (ReturnCheckContractQualificationDto checkContractQualificationDto : qualificationDtos
             ) {
