@@ -30,6 +30,11 @@ public class ListCustomerQualificationCriteriaDto implements Serializable {
     private Integer customerId;
 
     /**
+     * 租户id
+     */
+    private Integer tenantId;
+
+    /**
      * 证件类型(1-工商执照 2-身份证正面 3-身份证反面 4-......)
      */
     private Integer certificateType;
