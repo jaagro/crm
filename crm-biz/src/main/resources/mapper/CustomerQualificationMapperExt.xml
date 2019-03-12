@@ -56,7 +56,7 @@
         q.enabled = 1
         AND c.tenant_id = #{tenantId}
         <if test="customerId != null">
-            AND c.customer_id = #{customerId}
+            AND q.customer_id = #{customerId}
         </if>
         <if test="certificateType != null">
             AND q.certificate_type = #{certificateType}

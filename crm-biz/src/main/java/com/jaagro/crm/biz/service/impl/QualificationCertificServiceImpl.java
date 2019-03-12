@@ -237,6 +237,7 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
         }
         ListCustomerQualificationCriteriaDto dto = new ListCustomerQualificationCriteriaDto();
         dto
+                .setTenantId(userService.getCurrentUser().getTenantId())
                 .setCustomerId(customerId)
                 .setEnableCheck("查询详情");
         List<ReturnQualificationDto> certificReturnDtos = qualificationMapper.listByCustomerIdAndStatus(dto);
