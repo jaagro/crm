@@ -24,7 +24,7 @@ public class ListContractQualificationCriteriaDto implements Serializable {
     private int pageSize;
 
     /**
-     * 关联类型：1-客户合同 2-司机合同
+     * 关联类型：1-客户合同 2-司机合同 3-养殖客户合同
      */
     private Integer relevanceType;
 
