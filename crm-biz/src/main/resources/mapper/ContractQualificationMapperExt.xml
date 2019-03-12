@@ -69,6 +69,34 @@
         </if>
         order by create_time desc
     </select>
+    <select id="listPlantQuaByCriteria" resultMap="ReturnCheckMap"
+            parameterType="com.jaagro.crm.api.dto.request.contract.ListContractQualificationCriteriaDto">
+        SELECT
+        q.*
+        FROM
+        contract_qualification q
+        LEFT JOIN customer c ON q.relevance_id = c.id
+        WHERE
+        q.enabled = 1
+        AND c.tenant_id = #{tenantId}
+        <if test="certificateStatus != null">
+            and q.certificate_status = #{certificateStatus,jdbcType=INTEGER}
+        </if>
+        <if test="enableCheck != null">
+            and q.certificate_status != 3
+        </if>
+        <if test="relevanceId != null">
+            and q.relevance_id = #{relevanceId,jdbcType=INTEGER}
+        </if>
+        <if test="relevanceType != null">
+            and q.relevance_type = #{relevanceType,jdbcType=INTEGER}
+        </if>
+        <if test="certificateStatus == null and enableCheck == null">
+            and q.certificate_status = 0
+        </if>
+        ORDER BY
+        q.create_time DESC
+    </select>
     <select id="getById" resultMap="ReturnCheckMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>

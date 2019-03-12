@@ -34,6 +34,11 @@ public class ListContractQualificationCriteriaDto implements Serializable {
     private Integer relevanceId;
 
     /**
+     * 租户id
+     */
+    private Integer tenantId;
+
+    /**
      * 证件状态(0-未审核。1-正常 2-审核未通过审核 4-不可用)
      */
     private Integer certificateStatus;
