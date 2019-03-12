@@ -47,26 +47,31 @@
     </select>
     <select id="listByCustomerIdAndStatus" resultMap="ReturnCheckMap"
             parameterType="com.jaagro.crm.api.dto.request.customer.ListCustomerQualificationCriteriaDto">
-        select
-        <include refid="Base_Column_List"/>
-        from customer_qualification
-        where enabled = 1
+        SELECT
+        q.*
+        FROM
+        customer_qualification q
+        LEFT JOIN customer c ON c.id = q.customer_id
+        WHERE
+        q.enabled = 1
+        AND c.tenant_id = #{tenantId}
         <if test="customerId != null">
-            and customer_id = #{customerId}
+            AND c.customer_id = #{customerId}
         </if>
         <if test="certificateType != null">
-            and certificate_type = #{certificateType}
+            AND q.certificate_type = #{certificateType}
         </if>
         <if test="certificateStatus != null">
-            and certificate_status = #{certificateStatus}
+            AND q.certificate_status = #{certificateStatus}
         </if>
         <if test="enableCheck != null">
-            and certificate_status != 3
+            AND q.certificate_status != 3
         </if>
         <if test="certificateStatus == null and enableCheck == null">
-            and certificate_status = 0
+            AND q.certificate_status = 0
         </if>
-        order by create_time desc
+        ORDER BY
+        q.create_time DESC
     </select>
     <select id="getDetailById" resultMap="ReturnCheckMap" parameterType="java.lang.Integer">
         select

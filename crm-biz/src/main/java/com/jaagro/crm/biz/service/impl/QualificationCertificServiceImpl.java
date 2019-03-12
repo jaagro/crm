@@ -217,6 +217,7 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
     @Override
     public Map<String, Object> listByCriteria(ListCustomerQualificationCriteriaDto dto) {
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
+        dto.setTenantId(userService.getCurrentUser().getTenantId());
         List<ReturnQualificationDto> returnQualificationDtoList = qualificationMapper.listByCustomerIdAndStatus(dto);
         if (returnQualificationDtoList.size() > 0) {
             for (ReturnQualificationDto qualificationReturnDto : returnQualificationDtoList) {
