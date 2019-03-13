@@ -47,9 +47,10 @@ public interface CustomerSiteMapperExt extends CustomerSiteMapper {
 
     /**
      * 获取所有的装卸货地，用于更新他们的经纬度
+     *
+     * @return
      * @Athor Gavin
      * 20181213
-     * @return
      */
     List<CustomerSiteReturnDto> listAllCustomerSite();
 

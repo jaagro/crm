@@ -266,6 +266,7 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public Map<String, Object> listByCriteria(ListContractCriteriaDto dto) {
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
+        dto.setTenantId(userService.getCurrentUser().getTenantId());
         List<ReturnContractDto> contracts = customerContractMapper.listByPage(dto);
         for (ReturnContractDto contractDto : contracts) {
             Customer customer = this.customerMapper.selectByPrimaryKey(contractDto.getCustomerId());
