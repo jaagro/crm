@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.constant.AccountType;
 import com.jaagro.crm.api.constant.AccountUserType;
+import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.constant.CustomerCategory;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
@@ -241,12 +242,14 @@ public class CustomerServiceImpl implements CustomerService {
         List<ShowCustomerDto> showCustomerDtos = new ArrayList<>();
         ListCustomerCriteriaDto listCustomerCriteriaDto = new ListCustomerCriteriaDto();
         UserInfo currentUser = userService.getCurrentUser();
+        List<ListCustomerDto> listCustomerDtos = null;
         if (currentUser != null && currentUser.getTenantId() != null) {
             listCustomerCriteriaDto
+                    .setCustomerStatus(AuditStatus.NORMAL_COOPERATION)
                     .setCustomerCategory(CustomerCategory.FARMS)
                     .setTenantId(currentUser.getTenantId());
+            listCustomerDtos = customerMapper.listByCriteriaDto(listCustomerCriteriaDto);
         }
-        List<ListCustomerDto> listCustomerDtos = customerMapper.listByCriteriaDto(listCustomerCriteriaDto);
         if (!CollectionUtils.isEmpty(listCustomerDtos)) {
             for (ListCustomerDto listCustomerDto : listCustomerDtos) {
                 ShowCustomerDto showCustomerDto = new ShowCustomerDto();
