@@ -42,6 +42,10 @@
         where customer_id = #{customerId}
     </delete>
     <select id="listCustomerIdByKeyWord" resultType="java.lang.Integer" parameterType="java.lang.String">
-        select customer_id from customer_contacts where CONCAT(contact,phone) like CONCAT('%',#{keyword},'%')
+        select distinct ct.id
+        from customer ct
+        inner join customer_contacts cc
+        on (ct.id=cc.customer_id)
+        where concat(ct.customer_name,cc.phone) like CONCAT('%',#{keyword},'%')
     </select>
 </mapper>
