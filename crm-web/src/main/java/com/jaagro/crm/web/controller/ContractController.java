@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.constant.ContractType;
+import com.jaagro.crm.api.constant.GoodsType;
 import com.jaagro.crm.api.constant.WeChatCustomerType;
 import com.jaagro.crm.api.dto.base.GetCustomerUserDto;
 import com.jaagro.crm.api.dto.request.contract.*;
@@ -588,6 +589,15 @@ public class ContractController {
                 }
                 if (StringUtils.isEmpty(priceDto.getUnloadSiteId())) {
                     return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同报价卸货地不能为空");
+                }
+                if (!StringUtils.isEmpty(priceDto.getGoodsType())) {
+                    return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同报价货物类型不能为空");
+                } else {
+                    if (GoodsType.FODDER.equals(priceDto.getGoodsType())) {
+                        if (StringUtils.isEmpty(priceDto.getFeedType())) {
+                            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "饲料合同饲料类型不能为空");
+                        }
+                    }
                 }
                 Boolean result = settlePriceService.createCustomerSettlePrice(priceDto);
                 if (!result) {
