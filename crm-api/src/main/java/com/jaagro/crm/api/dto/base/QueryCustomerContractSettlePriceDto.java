@@ -33,4 +33,9 @@ public class QueryCustomerContractSettlePriceDto implements Serializable {
      */
     private Integer truckTypeId;
 
+    /**
+     * 饲料类型
+     */
+    private Integer feedType;
+
 }

@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.constant.ContractType;
+import com.jaagro.crm.api.constant.GoodsType;
 import com.jaagro.crm.api.constant.WeChatCustomerType;
 import com.jaagro.crm.api.dto.base.GetCustomerUserDto;
 import com.jaagro.crm.api.dto.request.contract.*;
@@ -77,6 +78,8 @@ public class ContractController {
     private TruckTeamContractMapperExt truckTeamContractMapper;
     @Autowired
     private ContractQualificationMapperExt qualificationMapper;
+    @Autowired
+    private CurrentUserService userService;
 
     /**
      * 合同新增
@@ -378,6 +381,33 @@ public class ContractController {
     }
 
     /**
+     * 待审核合同资质分页[养殖户]
+     *
+     * @param dto
+     * @return
+     */
+    @ApiOperation("待审核合同资质分页[养殖户]")
+    @PostMapping("/listPlantContractQuaByCriteria")
+    public BaseResponse listPlantContractQuaByCriteria(@RequestBody ListContractQualificationCriteriaDto dto) {
+        PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
+        dto.setTenantId(userService.getCurrentUser().getTenantId());
+        List<ReturnCheckContractQualificationDto> qualificationDtos = qualificationMapper.listPlantQuaByCriteria(dto);
+        if (qualificationDtos.size() > 0) {
+            for (ReturnCheckContractQualificationDto checkContractQualificationDto : qualificationDtos
+            ) {
+                TruckTeamContractReturnDto contractReturnDto = checkContractQualificationDto.getTruckTeamContractReturnDto();
+                if (contractReturnDto != null) {
+                    TruckTeam truckTeam = this.truckTeamMapper.selectByPrimaryKey(contractReturnDto.getTruckTeamId());
+                    if (truckTeam != null) {
+                        contractReturnDto.setTruckTeamName(truckTeam.getTeamName());
+                    }
+                }
+            }
+        }
+        return BaseResponse.successInstance(new PageInfo<>(qualificationDtos));
+    }
+
+    /**
      * 合同资质待审核获取下一个
      *
      * @param
@@ -559,6 +589,15 @@ public class ContractController {
                 }
                 if (StringUtils.isEmpty(priceDto.getUnloadSiteId())) {
                     return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同报价卸货地不能为空");
+                }
+                if (!StringUtils.isEmpty(priceDto.getGoodsType())) {
+                    return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同报价货物类型不能为空");
+                } else {
+//                    if (GoodsType.FODDER.equals(priceDto.getGoodsType())) {
+//                        if (StringUtils.isEmpty(priceDto.getFeedType())) {
+//                            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "饲料合同饲料类型不能为空");
+//                        }
+//                    }
                 }
                 Boolean result = settlePriceService.createCustomerSettlePrice(priceDto);
                 if (!result) {
