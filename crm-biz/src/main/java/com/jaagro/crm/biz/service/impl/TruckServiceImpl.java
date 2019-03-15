@@ -361,7 +361,8 @@ public class TruckServiceImpl implements TruckService {
     @Cacheable
     public Map<String, Object> listTrucksWithDrivers(QueryTruckDto criteriaDto) {
         PageHelper.startPage(criteriaDto.getPageNum(), criteriaDto.getPageSize());
-        Integer depID = currentUserService.getCurrentUser().getDepartmentId();
+        //Integer depID = currentUserService.getCurrentUser().getDepartmentId();
+        Integer depID = criteriaDto.getNetWorkId();
         String province = null;
         String city = null;
         String county = null;

@@ -24,7 +24,7 @@ public class ListContractQualificationCriteriaDto implements Serializable {
     private int pageSize;
 
     /**
-     * 关联类型：1-客户合同 2-司机合同
+     * 关联类型：1-客户合同 2-司机合同 3-养殖客户合同
      */
     private Integer relevanceType;
 
@@ -32,6 +32,11 @@ public class ListContractQualificationCriteriaDto implements Serializable {
      * 关联id
      */
     private Integer relevanceId;
+
+    /**
+     * 租户id
+     */
+    private Integer tenantId;
 
     /**
      * 证件状态(0-未审核。1-正常 2-审核未通过审核 4-不可用)
