@@ -217,6 +217,7 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
     @Override
     public Map<String, Object> listByCriteria(ListCustomerQualificationCriteriaDto dto) {
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
+        dto.setTenantId(userService.getCurrentUser().getTenantId());
         List<ReturnQualificationDto> returnQualificationDtoList = qualificationMapper.listByCustomerIdAndStatus(dto);
         if (returnQualificationDtoList.size() > 0) {
             for (ReturnQualificationDto qualificationReturnDto : returnQualificationDtoList) {
@@ -236,6 +237,7 @@ public class QualificationCertificServiceImpl implements QualificationCertificSe
         }
         ListCustomerQualificationCriteriaDto dto = new ListCustomerQualificationCriteriaDto();
         dto
+                .setTenantId(userService.getCurrentUser().getTenantId())
                 .setCustomerId(customerId)
                 .setEnableCheck("查询详情");
         List<ReturnQualificationDto> certificReturnDtos = qualificationMapper.listByCustomerIdAndStatus(dto);

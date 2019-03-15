@@ -47,7 +47,7 @@
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.jaagro.crm.biz.mapper"  targetProject="E:\git\jaagro-platform-crm\crm-biz\src\main\java">
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
-        <table tableName="customer" domainObjectName="Aaa" enableCountByExample="false"
+        <table tableName="customer_contract_settle_price" domainObjectName="Aaa" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false"></table>
     </context>

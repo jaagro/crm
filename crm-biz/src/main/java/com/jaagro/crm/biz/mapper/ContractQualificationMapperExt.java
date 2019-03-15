@@ -46,6 +46,14 @@ public interface ContractQualificationMapperExt extends ContractQualificationMap
     List<ReturnCheckContractQualificationDto> listByCriteria(ListContractQualificationCriteriaDto dto);
 
     /**
+     * 养殖户合同资质证分页
+     *
+     * @param dto
+     * @return
+     */
+    List<ReturnCheckContractQualificationDto> listPlantQuaByCriteria(ListContractQualificationCriteriaDto dto);
+
+    /**
      * 根据id查询待审核合同资质详情
      *
      * @param id
