@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.constant.ContractType;
+import com.jaagro.crm.api.constant.CustomerCategory;
 import com.jaagro.crm.api.dto.request.contract.CreateContractDto;
 import com.jaagro.crm.api.dto.request.contract.CreateContractQualificationDto;
 import com.jaagro.crm.api.dto.request.contract.ListContractCriteriaDto;
@@ -33,10 +34,7 @@ import org.springframework.util.StringUtils;
 
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 客户合同service
@@ -211,12 +209,19 @@ public class ContractServiceImpl implements ContractService {
      */
     @Override
     public Map<String, Object> getById(Integer contractId) {
-        if (customerContractMapper.selectByPrimaryKey(contractId) == null) {
+        CustomerContract customerContract = customerContractMapper.selectByPrimaryKey(contractId);
+        if (customerContract == null) {
             return ServiceResult.error(ResponseStatusCode.ID_VALUE_ERROR.getCode(), "id: " + contractId + "不存在");
         }
         ReturnContractDto contractDto = customerContractMapper.getById(contractId);
         if (contractDto != null) {
-            List<ReturnContractQualificationDto> qualificationDtoList = contractQualificationMapper.listQualificationByContractIdAndType(contractDto.getId(), ContractType.CUSTOMER);
+            List<ReturnContractQualificationDto> qualificationDtoList = new ArrayList<>();
+            Customer customer = customerMapper.selectByPrimaryKey(customerContract.getCustomerId());
+            if (customer != null && customer.getCustomerCategory().equals(CustomerCategory.FARMS)) {
+                qualificationDtoList = contractQualificationMapper.listQualificationByContractIdAndType(contractDto.getId(), ContractType.BREED_CUSTOMER);
+            } else {
+                qualificationDtoList = contractQualificationMapper.listQualificationByContractIdAndType(contractDto.getId(), ContractType.CUSTOMER);
+            }
             if (!CollectionUtils.isEmpty(qualificationDtoList)) {
                 for (ReturnContractQualificationDto contractQualificationDto : qualificationDtoList
                 ) {
@@ -261,6 +266,7 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public Map<String, Object> listByCriteria(ListContractCriteriaDto dto) {
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
+        dto.setTenantId(userService.getCurrentUser().getTenantId());
         List<ReturnContractDto> contracts = customerContractMapper.listByPage(dto);
         for (ReturnContractDto contractDto : contracts) {
             Customer customer = this.customerMapper.selectByPrimaryKey(contractDto.getCustomerId());

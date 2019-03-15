@@ -129,4 +129,11 @@
         from customer
         where customer_status = 1
     </select>
+    <select id="listCustomerIdByName" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select
+        id
+        from customer
+        where customer_status = 1
+        <![CDATA[ and (customer_name like concat(#{customerName},'%') )]]>
+    </select>
 </mapper>

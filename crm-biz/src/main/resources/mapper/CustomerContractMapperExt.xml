@@ -32,17 +32,22 @@
 
     <select id="listByPage" parameterType="com.jaagro.crm.api.dto.request.contract.ListContractCriteriaDto"
             resultMap="DetailInfo">
-        select
-        <include refid="Base_Column_List"/>
-        from customer_contract
-        where contract_status != 3
+        SELECT
+        t.*
+        FROM
+        customer_contract t
+        left join customer c on c.id = t.customer_id
+        WHERE
+        t.contract_status != 3
         <if test="contractStatus != null and contractStatus != ''">
-            and contract_status = #{contractStatus}
+            and t.contract_status = #{contractStatus}
         </if>
         <if test="customerId != null">
-            and customer_id = #{customerId}
+            and t.customer_id = #{customerId}
         </if>
-        order by create_time desc
+        and c.tenant_id = #{tenantId}
+        ORDER BY
+        t.create_time DESC
     </select>
     <select id="getById" parameterType="java.lang.Integer" resultMap="DetailInfo">
         select
