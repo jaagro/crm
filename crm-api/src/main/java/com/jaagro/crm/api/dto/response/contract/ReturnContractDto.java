@@ -83,6 +83,11 @@ public class ReturnContractDto implements Serializable {
     private String remark;
 
     /**
+     * 剩余天数
+     */
+    private Integer remainingDays;
+
+    /**
      * 合同资质
      */
     private List<ReturnContractQualificationDto> qualifications;

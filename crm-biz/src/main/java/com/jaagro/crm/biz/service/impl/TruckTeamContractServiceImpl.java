@@ -12,6 +12,7 @@ import com.jaagro.crm.api.dto.response.contract.ReturnContractQualificationDto;
 import com.jaagro.crm.api.dto.response.truck.*;
 import com.jaagro.crm.api.service.ContractOilPriceService;
 import com.jaagro.crm.api.service.ContractQualificationService;
+import com.jaagro.crm.api.service.ContractService;
 import com.jaagro.crm.api.service.TruckTeamContractService;
 import com.jaagro.crm.biz.entity.*;
 import com.jaagro.crm.biz.mapper.*;
@@ -69,6 +70,8 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
     private CurrentUserService currentUserService;
     @Autowired
     private ContractQualificationMapperExt contractQualificationMapperExt;
+    @Autowired
+    private ContractService contractService;
 
 
     /**
@@ -94,7 +97,7 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
         if (!CollectionUtils.isEmpty(contractList)) {
             TruckTeamContract contract = contractList.get(0);
             if (contract != null) {
-                if (dto.getStartDate().getTime() < contract.getEndDate().getTime() || differentDays(contract.getEndDate(), dto.getStartDate()) > 1) {
+                if (dto.getStartDate().getTime() < contract.getEndDate().getTime() || contractService.differentDays(contract.getEndDate(), dto.getStartDate()) > 1) {
                     throw new RuntimeException("合同开始日期不能与上一份合同结束日期有空隙");
                 }
             }
@@ -118,23 +121,6 @@ public class TruckTeamContractServiceImpl implements TruckTeamContractService {
             }
         }
         return ServiceResult.toResult(truckTeamContract.getId());
-    }
-
-    /**
-     * date2比date1多的天数
-     *
-     * @param date1
-     * @param date2
-     * @return
-     */
-    public static int differentDays(Date date2, Date date1) {
-        try {
-            int a = (int) ((date1.getTime() - date2.getTime()) / (1000 * 3600 * 24));
-            return a;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return 1;
-        }
     }
 
     /**
