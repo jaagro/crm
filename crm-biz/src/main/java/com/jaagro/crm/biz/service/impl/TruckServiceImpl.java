@@ -362,7 +362,7 @@ public class TruckServiceImpl implements TruckService {
     public Map<String, Object> listTrucksWithDrivers(QueryTruckDto criteriaDto) {
         PageHelper.startPage(criteriaDto.getPageNum(), criteriaDto.getPageSize());
         //Integer depID = currentUserService.getCurrentUser().getDepartmentId();
-        Integer depID = criteriaDto.getNetWorkId();
+        Integer depID = criteriaDto.getNetworkId();
         String province = null;
         String city = null;
         String county = null;
