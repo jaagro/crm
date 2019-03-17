@@ -19,7 +19,7 @@ public class QueryTruckDto implements Serializable {
     /**
      * 车辆所属网点id
      */
-    private Integer netWorkId;
+    private Integer networkId;
     /**
      * 货物类型
      */
