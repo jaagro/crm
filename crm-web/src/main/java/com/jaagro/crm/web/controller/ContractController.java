@@ -592,12 +592,6 @@ public class ContractController {
                 }
                 if (StringUtils.isEmpty(priceDto.getGoodsType())) {
                     return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同报价货物类型不能为空");
-                } else {
-                    if (GoodsType.FODDER.equals(priceDto.getGoodsType())) {
-                        if (StringUtils.isEmpty(priceDto.getFeedType())) {
-                            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "饲料合同饲料类型不能为空");
-                        }
-                    }
                 }
                 Boolean result = settlePriceService.createCustomerSettlePrice(priceDto);
                 if (!result) {

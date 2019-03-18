@@ -59,11 +59,6 @@ public class CreateCustomerSettlePriceDto implements Serializable {
     private Integer goodsType;
 
     /**
-     * 饲料类型：1-散装 2-袋装 (仅饲料情况下)
-     */
-    private Integer feedType;
-
-    /**
      * 里程数
      */
     private BigDecimal mileage;
