@@ -46,7 +46,7 @@
             and t.customer_id = #{customerId}
         </if>
         ORDER BY
-        t.create_time DESC
+        t.create_time
     </select>
     <select id="getById" parameterType="java.lang.Integer" resultMap="DetailInfo">
         select
