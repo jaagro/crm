@@ -22,6 +22,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
@@ -98,47 +99,58 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                 if (customer == null) {
                     return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户不存在");
                 }
-                switch (customer.getCustomerType()) {
-                    //个体
-                    //如身份证正面审核成功 更改客户审核状态为审核通过
-                    case 1:
-                        if (customerQualification.getCertificateType() == 7) {
-                            if (customerQualification.getCertificateStatus() == 1) {
-                                UserInfo currentUser = this.userService.getCurrentUser();
-                                Integer currentUserId = currentUser == null ? null : currentUser.getId();
-                                customer
-                                        .setCustomerStatus(AuditStatus.NORMAL_COOPERATION)
-                                        .setModifyTime(new Date())
-                                        .setModifyUserId(currentUserId);
-                                this.customerMapper.updateByPrimaryKeySelective(customer);
-                                // 创建账户 add by yj 20181025
-                                accountService.createAccount(customer.getId(), AccountUserType.CUSTOMER, AccountType.CASH, currentUserId);
-                                // 如果有游客客户则使游客客户登录失效 add by yj 20181217
-                                invalidVisitorCustomerToken(customer.getId());
-                                break;
+                //运力客户
+                if (customer.getTenantId().equals(1)) {
+                    switch (customer.getCustomerType()) {
+                        //个体
+                        //如身份证正面审核成功 更改客户审核状态为审核通过
+                        case 1:
+                            if (customerQualification.getCertificateType() == 7) {
+                                if (customerQualification.getCertificateStatus() == 1) {
+                                    UserInfo currentUser = this.userService.getCurrentUser();
+                                    Integer currentUserId = currentUser == null ? null : currentUser.getId();
+                                    customer
+                                            .setCustomerStatus(AuditStatus.NORMAL_COOPERATION)
+                                            .setModifyTime(new Date())
+                                            .setModifyUserId(currentUserId);
+                                    this.customerMapper.updateByPrimaryKeySelective(customer);
+                                    // 创建账户 add by yj 20181025
+                                    accountService.createAccount(customer.getId(), AccountUserType.CUSTOMER, AccountType.CASH, currentUserId);
+                                    // 如果有游客客户则使游客客户登录失效 add by yj 20181217
+                                    invalidVisitorCustomerToken(customer.getId());
+                                    break;
+                                }
                             }
-                        }
-                        break;
-                    //企业
-                    //如营业执照审核成功 更改客户审核状态为审核通过
-                    default:
-                        if (customerQualification.getCertificateType() == 1) {
-                            if (customerQualification.getCertificateStatus() == 1) {
-                                UserInfo currentUser = this.userService.getCurrentUser();
-                                Integer currentUserId = currentUser == null ? null : currentUser.getId();
-                                customer
-                                        .setCustomerStatus(AuditStatus.NORMAL_COOPERATION)
-                                        .setModifyTime(new Date())
-                                        .setModifyUserId(this.userService.getCurrentUser().getId());
-                                this.customerMapper.updateByPrimaryKeySelective(customer);
-                                // 创建账户 add by yj 20181025
-                                accountService.createAccount(customer.getId(), AccountUserType.CUSTOMER, AccountType.CASH, currentUserId);
-                                // 如果有游客客户则使游客客户登录失效 add by yj 20181217
-                                invalidVisitorCustomerToken(customer.getId());
-                                break;
+                            break;
+                        //企业
+                        //如营业执照审核成功 更改客户审核状态为审核通过
+                        default:
+                            if (customerQualification.getCertificateType() == 1) {
+                                if (customerQualification.getCertificateStatus() == 1) {
+                                    UserInfo currentUser = this.userService.getCurrentUser();
+                                    Integer currentUserId = currentUser == null ? null : currentUser.getId();
+                                    customer
+                                            .setCustomerStatus(AuditStatus.NORMAL_COOPERATION)
+                                            .setModifyTime(new Date())
+                                            .setModifyUserId(this.userService.getCurrentUser().getId());
+                                    this.customerMapper.updateByPrimaryKeySelective(customer);
+                                    // 创建账户 add by yj 20181025
+                                    accountService.createAccount(customer.getId(), AccountUserType.CUSTOMER, AccountType.CASH, currentUserId);
+                                    // 如果有游客客户则使游客客户登录失效 add by yj 20181217
+                                    invalidVisitorCustomerToken(customer.getId());
+                                    break;
+                                }
                             }
-                        }
-                        break;
+                            break;
+                    }
+                } else {
+                    //养殖客户
+                    //资质不通过，则将客户修改为审核不通过
+                    customer
+                            .setCustomerStatus(AuditStatus.AUDIT_FAILED)
+                            .setModifyTime(new Date())
+                            .setModifyUserId(userService.getCurrentUser().getId());
+                    customerMapper.updateByPrimaryKeySelective(customer);
                 }
                 break;
 
@@ -264,25 +276,52 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                 if (contract == null) {
                     return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户合同不存在");
                 }
-                //判断 客户合同资质类型16、17、18 是否都以审核通过
-                if (qualification.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
-                    if (qualification.getCertificateType().equals(CertificateType.CONTTRACT_INDEX) || qualification.getCertificateType().equals(CertificateType.CONTTRACT_SCEAU) || qualification.getCertificateType().equals(CertificateType.CONTTRACT_PRICE)) {
-                        List<ContractQualification> contractQualifications = contractQualificationMapper.listCheckedByContract(qualification.getRelevanceId(), 1);
-                        if (contractQualifications.size() >= 3) {
-                            //合同资质均已审核通过，则修改合同状态为审核通过
-                            contract
-                                    .setContractStatus(AuditStatus.NORMAL_COOPERATION)
-                                    .setNewUpdateUser(userService.getCurrentUser().getId())
-                                    .setNewUpdateTime(new Date());
-                            contractMapper.updateByPrimaryKeySelective(contract);
-                            break;
+                Customer customer1 = customerMapper.selectByPrimaryKey(contract.getCustomerId());
+                //运力客户合同
+                if (customer1 != null && customer1.getTenantId().equals(1)) {
+                    //判断 客户合同资质类型16、17、18 是否都以审核通过
+                    if (qualification.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
+                        if (qualification.getCertificateType().equals(CertificateType.CONTTRACT_INDEX) || qualification.getCertificateType().equals(CertificateType.CONTTRACT_SCEAU) || qualification.getCertificateType().equals(CertificateType.CONTTRACT_PRICE)) {
+                            List<ContractQualification> contractQualifications = contractQualificationMapper.listCheckedByContract(qualification.getRelevanceId(), 1);
+                            if (contractQualifications.size() >= 3) {
+                                //合同资质均已审核通过，则修改合同状态为审核通过
+                                contract
+                                        .setContractStatus(AuditStatus.NORMAL_COOPERATION)
+                                        .setNewUpdateUser(userService.getCurrentUser().getId())
+                                        .setNewUpdateTime(new Date());
+                                contractMapper.updateByPrimaryKeySelective(contract);
+                                break;
+                            }
                         }
                     }
+                    break;
+                } else {
+                    //养殖客户合同
+                    if (qualification.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
+                        if (qualification.getCertificateType().equals(CertificateType.ELSE)) {
+                            List<ContractQualification> qualificationList = contractQualificationMapper.listYzCheckedByContract(qualification.getRelevanceId());
+                            //养殖户合同资质均已审核通过，则修改合同状态为审核通过
+                            if (CollectionUtils.isEmpty(qualificationList)) {
+                                contract
+                                        .setContractStatus(AuditStatus.NORMAL_COOPERATION)
+                                        .setNewUpdateUser(userService.getCurrentUser().getId())
+                                        .setNewUpdateTime(new Date());
+                                contractMapper.updateByPrimaryKeySelective(contract);
+                                break;
+                            }
+                        }
+                    } else {
+                        //合同资质不通过，将合同修改为审核不通过
+                        contract
+                                .setContractStatus(AuditStatus.AUDIT_FAILED);
+                        contractMapper.updateByPrimaryKeySelective(contract);
+                    }
+                    break;
                 }
-                break;
-            /**
-             * 运力合同
-             */
+
+                /**
+                 * 运力合同
+                 */
             case 4:
                 ContractQualification contractQualification = contractQualificationMapper.selectByPrimaryKey(dto.getReferencesId());
                 if (contractQualification == null) {
@@ -316,22 +355,22 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
         return ServiceResult.toResult("审核成功");
     }
 
-    private void invalidVisitorCustomerToken(Integer customerId){
+    private void invalidVisitorCustomerToken(Integer customerId) {
         BaseResponse<GetCustomerUserDto> response = userClientService.getCustomerUserByRelevanceId(customerId);
-        if (ResponseStatusCode.OPERATION_SUCCESS.getCode() == response.getStatusCode()){
-            if (response.getData() != null){
+        if (ResponseStatusCode.OPERATION_SUCCESS.getCode() == response.getStatusCode()) {
+            if (response.getData() != null) {
                 CustomerRegisterPurpose customerRegisterPurpose = customerRegisterPurposeMapperExt.selectByPhoneNumber(response.getData().getPhoneNumber());
-                if (customerRegisterPurpose != null){
-                    authClientService.invalidateToken(null,customerRegisterPurpose.getId().toString());
+                if (customerRegisterPurpose != null) {
+                    authClientService.invalidateToken(null, customerRegisterPurpose.getId().toString());
                 }
             }
         }
     }
 
-    private void invalidVisitorDriverToken(String phoneNumber){
+    private void invalidVisitorDriverToken(String phoneNumber) {
         SocialDriverRegisterPurpose socialDriverRegisterPurpose = socialDriverRegisterPurposeMapperExt.selectByPhoneNumber(phoneNumber);
-        if (socialDriverRegisterPurpose != null){
-            authClientService.invalidateToken(null,socialDriverRegisterPurpose.getId().toString());
+        if (socialDriverRegisterPurpose != null) {
+            authClientService.invalidateToken(null, socialDriverRegisterPurpose.getId().toString());
         }
     }
 }

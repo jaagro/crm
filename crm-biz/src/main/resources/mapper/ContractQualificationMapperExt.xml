@@ -128,6 +128,16 @@
         and certificate_status = 1
         and relevance_type = #{type,jdbcType=INTEGER}
     </select>
+    <select id="listYzCheckedByContract" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from contract_qualification
+        where
+        relevance_id = #{relevanceId,jdbcType=INTEGER}
+        and certificate_type = 80
+        and certificate_status = 0
+        and relevance_type = 1
+    </select>
     <select id="getByContractIdAndType" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>

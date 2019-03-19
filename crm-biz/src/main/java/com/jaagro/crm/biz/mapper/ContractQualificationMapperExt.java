@@ -87,6 +87,14 @@ public interface ContractQualificationMapperExt extends ContractQualificationMap
     List<ContractQualification> listCheckedByContract(@Param("relevanceId") Integer relevanceId, @Param("type") Integer type);
 
     /**
+     * 根据养殖合同id查询资质类型80是否都以审核通过
+     *
+     * @param relevanceId
+     * @return
+     */
+    List<ContractQualification> listYzCheckedByContract(@Param("relevanceId") Integer relevanceId);
+
+    /**
      * 查询某合同的某资质
      *
      * @param relevanceId
