@@ -115,7 +115,7 @@
         from customer_contract
         where customer_id = #{customerId,jdbcType=INTEGER}
         and contract_status = 1
-        <![CDATA[ and DATE_FORMAT( now( ), '%Y-%m-%d' ) > start_date ]]>
+        <![CDATA[ and DATE_FORMAT( now( ), '%Y-%m-%d' ) >= start_date ]]>
         <![CDATA[ and DATE_FORMAT( now( ), '%Y-%m-%d' ) <= end_date ]]>
         order by create_time desc
     </select>
