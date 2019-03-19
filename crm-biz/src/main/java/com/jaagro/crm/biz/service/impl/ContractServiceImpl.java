@@ -89,7 +89,7 @@ public class ContractServiceImpl implements ContractService {
         CustomerContract customerContract = new CustomerContract();
         BeanUtils.copyProperties(dto, customerContract);
         if (dto.getEndDate().before(new Date())) {
-            throw new RuntimeException("不可添加已过期的生效日期");
+            throw new RuntimeException("合同结束日期不合法");
         }
         UpdateContractDto updateContractDto = new UpdateContractDto();
         updateContractDto.setContractNumber(customerContract.getContractNumber());
