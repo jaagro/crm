@@ -206,6 +206,13 @@ public class TruckController {
         }
         return BaseResponse.successInstance(truckDto);
     }
+
+    /**
+     * @Athor: gavin
+     * @param productType
+     * @param feedType
+     * @return
+     */
     @ApiOperation("车型列表")
     @GetMapping("/listTruckType/{productType}/{feedType}")
     public BaseResponse<List<ListTruckTypeDto>> listTruckTypeByType(@PathVariable(value = "productType") String productType,@PathVariable(value = "feedType") String feedType) {
