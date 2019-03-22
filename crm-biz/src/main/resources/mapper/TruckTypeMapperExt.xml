@@ -25,5 +25,6 @@
         <if test="productName != null">
             and product_name = #{productName}
         </if>
+        order by product_name
     </select>
 </mapper>
