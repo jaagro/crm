@@ -170,9 +170,11 @@ public class SettleMileageServiceImpl implements SettleMileageService {
     public SettleMileageDto selectByCriteria(SettleMileageDto paramDto) {
         SettleMileageDto settleMileageDto = new SettleMileageDto();
         SettleMileage settleMileage = new SettleMileage();
-        BeanUtils.copyProperties(paramDto,settleMileage);
+        BeanUtils.copyProperties(paramDto, settleMileage);
         SettleMileage settleMileageDo = settleMileageMapperExt.selectByCriteria(settleMileage);
-        BeanUtils.copyProperties(settleMileageDo,settleMileageDto);
+        if (settleMileageDo != null) {
+            BeanUtils.copyProperties(settleMileageDo, settleMileageDto);
+        }
         return settleMileageDto;
     }
 
