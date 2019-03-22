@@ -18,7 +18,61 @@ import com.jaagro.crm.biz.service.UserClientService;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
-import org.springframework.beans.BeanUtils;
+import org.springframework.beans.case 3:
+                ContractQualification qualification = contractQualificationMapper.selectByPrimaryKey(dto.getReferencesId());
+                if (qualification == null) {
+                    return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户合同资质不存在");
+                }
+
+                CustomerContract contract = this.contractMapper.selectByPrimaryKey(qualification.getRelevanceId());
+                if (contract == null) {
+                    return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户合同不存在");
+                }
+
+                Customer customer1 = customerMapper.selectByPrimaryKey(contract.getCustomerId());
+                //运力客户合同
+                if (customer1 != null && customer1.getTenantId().
+
+                        equals(1)) {
+                    //判断 客户合同资质类型16、17、18 是否都以审核通过
+                    if (qualification.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
+                        if (qualification.getCertificateType().equals(CertificateType.CONTTRACT_INDEX) || qualification.getCertificateType().equals(CertificateType.CONTTRACT_SCEAU) || qualification.getCertificateType().equals(CertificateType.CONTTRACT_PRICE)) {
+                            List<ContractQualification> contractQualifications = contractQualificationMapper.listCheckedByContract(qualification.getRelevanceId(), 1);
+                            if (contractQualifications.size() >= 3) {
+                                //合同资质均已审核通过，则修改合同状态为审核通过
+                                contract
+                                        .setContractStatus(AuditStatus.NORMAL_COOPERATION)
+                                        .setNewUpdateUser(userService.getCurrentUser().getId())
+                                        .setNewUpdateTime(new Date());
+                                contractMapper.updateByPrimaryKeySelective(contract);
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                } else {
+                    //养殖客户合同
+                    if (qualification.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
+                        if (qualification.getCertificateType().equals(CertificateType.ELSE)) {
+                            List<ContractQualification> qualificationList = contractQualificationMapper.listYzCheckedByContract(qualification.getRelevanceId());
+                            //养殖户合同资质均已审核通过，则修改合同状态为审核通过
+                            if (CollectionUtils.isEmpty(qualificationList)) {
+                                contract
+                                        .setContractStatus(AuditStatus.NORMAL_COOPERATION)
+                                        .setNewUpdateUser(userService.getCurrentUser().getId())
+                                        .setNewUpdateTime(new Date());
+                                contractMapper.updateByPrimaryKeySelective(contract);
+                                break;
+                            }
+                        }
+                    } else {
+                        //合同资质不通过，将合同修改为审核不通过
+                        contract
+                                .setContractStatus(AuditStatus.AUDIT_FAILED);
+                        contractMapper.updateByPrimaryKeySelective(contract);
+                    }
+                    break;
+                };
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
