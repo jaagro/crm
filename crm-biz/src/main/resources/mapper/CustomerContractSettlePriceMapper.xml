@@ -24,12 +24,13 @@
     <result column="modify_user_id" property="modifyUserId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, customer_contract_id, load_site_id, load_site_name, unload_site_id, unload_site_name, 
-    truck_type_id, truck_type_name, goods_type, mileage, settle_price, unit, effective_time, 
-    invalid_time, history_flag, enable, create_time, create_user_id, modify_time, modify_user_id
+    id, customer_contract_id, load_site_id, load_site_name, unload_site_id, unload_site_name,
+    truck_type_id, truck_type_name, goods_type, mileage, settle_price, unit,
+    effective_time, invalid_time, history_flag, enable, create_time, create_user_id,
+    modify_time, modify_user_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from customer_contract_settle_price
     where id = #{id,jdbcType=INTEGER}
@@ -38,23 +39,23 @@
     delete from customer_contract_settle_price
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.CustomerContractSettlePrice" useGeneratedKeys="true" keyProperty="selectionId" keyColumn="selection_id">
-    insert into customer_contract_settle_price (id, customer_contract_id, load_site_id, 
-      load_site_name, unload_site_id, unload_site_name, 
-      truck_type_id, truck_type_name, goods_type, 
-      mileage, settle_price, unit, 
-      effective_time, invalid_time, history_flag, 
-      enable, create_time, create_user_id, 
-      modify_time, modify_user_id)
-    values (#{id,jdbcType=INTEGER}, #{customerContractId,jdbcType=INTEGER}, #{loadSiteId,jdbcType=INTEGER}, 
-      #{loadSiteName,jdbcType=VARCHAR}, #{unloadSiteId,jdbcType=INTEGER}, #{unloadSiteName,jdbcType=VARCHAR}, 
-      #{truckTypeId,jdbcType=INTEGER}, #{truckTypeName,jdbcType=VARCHAR}, #{goodsType,jdbcType=INTEGER}, 
-      #{mileage,jdbcType=DECIMAL}, #{settlePrice,jdbcType=DECIMAL}, #{unit,jdbcType=INTEGER}, 
-      #{effectiveTime,jdbcType=TIMESTAMP}, #{invalidTime,jdbcType=TIMESTAMP}, #{historyFlag,jdbcType=TINYINT}, 
-      #{enable,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, 
-      #{modifyTime,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=INTEGER})
+  <insert id="insert" parameterType="com.jaagro.crm.biz.entity.CustomerContractSettlePrice" useGeneratedKeys="true" keyProperty="selectionId" keyColumn="selection_id" >
+    insert into customer_contract_settle_price (id, customer_contract_id, load_site_id,
+      load_site_name, unload_site_id, unload_site_name,
+      truck_type_id, truck_type_name, goods_type, mileage, settle_price,
+      unit, effective_time, invalid_time,
+      history_flag, enable, create_time,
+      create_user_id, modify_time, modify_user_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{customerContractId,jdbcType=INTEGER}, #{loadSiteId,jdbcType=INTEGER},
+      #{loadSiteName,jdbcType=VARCHAR}, #{unloadSiteId,jdbcType=INTEGER}, #{unloadSiteName,jdbcType=VARCHAR},
+      #{truckTypeId,jdbcType=INTEGER}, #{truckTypeName,jdbcType=VARCHAR}, #{goodsType,jdbcType=INTEGER}, #{mileage,jdbcType=DECIMAL}, #{settlePrice,jdbcType=DECIMAL},
+      #{unit,jdbcType=INTEGER}, #{effectiveTime,jdbcType=TIMESTAMP}, #{invalidTime,jdbcType=TIMESTAMP},
+      #{historyFlag,jdbcType=TINYINT}, #{enable,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP},
+      #{createUserId,jdbcType=INTEGER}, #{modifyTime,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=INTEGER}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.CustomerContractSettlePrice" useGeneratedKeys="true" keyProperty="selectionId" keyColumn="selection_id">
+  <insert id="insertSelective" parameterType="com.jaagro.crm.biz.entity.CustomerContractSettlePrice" useGeneratedKeys="true" keyProperty="selectionId" keyColumn="selection_id" >
     insert into customer_contract_settle_price
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -181,7 +182,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.CustomerContractSettlePrice" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.jaagro.crm.biz.entity.CustomerContractSettlePrice" useGeneratedKeys="true" keyProperty="selectionId" keyColumn="selection_id" >
     update customer_contract_settle_price
     <set >
       <if test="customerContractId != null" >
@@ -244,7 +245,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.CustomerContractSettlePrice" >
+  <update id="updateByPrimaryKey" parameterType="com.jaagro.crm.biz.entity.CustomerContractSettlePrice" useGeneratedKeys="true" keyProperty="selectionId" keyColumn="selection_id" >
     update customer_contract_settle_price
     set customer_contract_id = #{customerContractId,jdbcType=INTEGER},
       load_site_id = #{loadSiteId,jdbcType=INTEGER},

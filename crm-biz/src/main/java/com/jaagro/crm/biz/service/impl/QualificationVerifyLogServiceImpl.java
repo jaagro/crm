@@ -22,6 +22,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
@@ -116,6 +117,17 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                                 // 如果有游客客户则使游客客户登录失效 add by yj 20181217
                                 invalidVisitorCustomerToken(customer.getId());
                                 break;
+                            } else {
+                                if (customer.getTenantId().equals(2)) {
+                                    //养殖客户
+                                    //资质不通过，则将客户修改为审核不通过
+                                    customer
+                                            .setCustomerStatus(AuditStatus.AUDIT_FAILED)
+                                            .setModifyTime(new Date())
+                                            .setModifyUserId(userService.getCurrentUser().getId());
+                                    customerMapper.updateByPrimaryKeySelective(customer);
+                                }
+                                break;
                             }
                         }
                         break;
@@ -136,6 +148,17 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                                 // 如果有游客客户则使游客客户登录失效 add by yj 20181217
                                 invalidVisitorCustomerToken(customer.getId());
                                 break;
+                            } else {
+                                if (customer.getTenantId().equals(2)) {
+                                    //养殖客户
+                                    //资质不通过，则将客户修改为审核不通过
+                                    customer
+                                            .setCustomerStatus(AuditStatus.AUDIT_FAILED)
+                                            .setModifyTime(new Date())
+                                            .setModifyUserId(userService.getCurrentUser().getId());
+                                    customerMapper.updateByPrimaryKeySelective(customer);
+                                }
+                                break;
                             }
                         }
                         break;
@@ -150,6 +173,7 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                 if (truckQualification == null) {
                     return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质证不存在");
                 }
+
                 UserInfo currentUser = userService.getCurrentUser();
                 Integer currentUserId = currentUser == null ? null : currentUser.getId();
                 //司机资质审核
@@ -260,40 +284,74 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                 if (qualification == null) {
                     return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户合同资质不存在");
                 }
+
                 CustomerContract contract = this.contractMapper.selectByPrimaryKey(qualification.getRelevanceId());
                 if (contract == null) {
                     return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户合同不存在");
                 }
-                //判断 客户合同资质类型16、17、18 是否都以审核通过
-                if (qualification.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
-                    if (qualification.getCertificateType().equals(CertificateType.CONTTRACT_INDEX) || qualification.getCertificateType().equals(CertificateType.CONTTRACT_SCEAU) || qualification.getCertificateType().equals(CertificateType.CONTTRACT_PRICE)) {
-                        List<ContractQualification> contractQualifications = contractQualificationMapper.listCheckedByContract(qualification.getRelevanceId(), 1);
-                        if (contractQualifications.size() >= 3) {
-                            //合同资质均已审核通过，则修改合同状态为审核通过
-                            contract
-                                    .setContractStatus(AuditStatus.NORMAL_COOPERATION)
-                                    .setNewUpdateUser(userService.getCurrentUser().getId())
-                                    .setNewUpdateTime(new Date());
-                            contractMapper.updateByPrimaryKeySelective(contract);
-                            break;
+
+                Customer customer1 = customerMapper.selectByPrimaryKey(contract.getCustomerId());
+                //运力客户合同
+                if (customer1 != null && customer1.getTenantId().
+
+                        equals(1)) {
+                    //判断 客户合同资质类型16、17、18 是否都以审核通过
+                    if (qualification.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
+                        if (qualification.getCertificateType().equals(CertificateType.CONTTRACT_INDEX) || qualification.getCertificateType().equals(CertificateType.CONTTRACT_SCEAU) || qualification.getCertificateType().equals(CertificateType.CONTTRACT_PRICE)) {
+                            List<ContractQualification> contractQualifications = contractQualificationMapper.listCheckedByContract(qualification.getRelevanceId(), 1);
+                            if (contractQualifications.size() >= 3) {
+                                //合同资质均已审核通过，则修改合同状态为审核通过
+                                contract
+                                        .setContractStatus(AuditStatus.NORMAL_COOPERATION)
+                                        .setNewUpdateUser(userService.getCurrentUser().getId())
+                                        .setNewUpdateTime(new Date());
+                                contractMapper.updateByPrimaryKeySelective(contract);
+                                break;
+                            }
                         }
                     }
+                    break;
+                } else {
+                    //养殖客户合同
+                    if (qualification.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
+                        if (qualification.getCertificateType().equals(CertificateType.ELSE)) {
+                            List<ContractQualification> qualificationList = contractQualificationMapper.listYzCheckedByContract(qualification.getRelevanceId());
+                            //养殖户合同资质均已审核通过，则修改合同状态为审核通过
+                            if (CollectionUtils.isEmpty(qualificationList)) {
+                                contract
+                                        .setContractStatus(AuditStatus.NORMAL_COOPERATION)
+                                        .setNewUpdateUser(userService.getCurrentUser().getId())
+                                        .setNewUpdateTime(new Date());
+                                contractMapper.updateByPrimaryKeySelective(contract);
+                                break;
+                            }
+                        }
+                    } else {
+                        //合同资质不通过，将合同修改为审核不通过
+                        contract
+                                .setContractStatus(AuditStatus.AUDIT_FAILED);
+                        contractMapper.updateByPrimaryKeySelective(contract);
+                    }
+                    break;
                 }
-                break;
-            /**
-             * 运力合同
-             */
+
+                /**
+                 * 运力合同
+                 */
             case 4:
                 ContractQualification contractQualification = contractQualificationMapper.selectByPrimaryKey(dto.getReferencesId());
                 if (contractQualification == null) {
                     return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "运力合同资质不存在");
                 }
+
                 TruckTeamContract truckContract = this.truckTeamContractMapper.selectByPrimaryKey(contractQualification.getRelevanceId());
                 if (truckContract == null) {
                     return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "运力合同不存在");
                 }
                 //判断 运力合同资质类型16、17、18 是否都以审核通过
-                if (contractQualification.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
+                if (contractQualification.getCertificateStatus().
+
+                        equals(AuditStatus.NORMAL_COOPERATION)) {
                     if (contractQualification.getCertificateType().equals(CertificateType.CONTTRACT_INDEX) || contractQualification.getCertificateType().equals(CertificateType.CONTTRACT_SCEAU) || contractQualification.getCertificateType().equals(CertificateType.CONTTRACT_PRICE)) {
                         List<ContractQualification> contractQualifications = contractQualificationMapper.listCheckedByContract(contractQualification.getRelevanceId(), 2);
                         if (contractQualifications.size() == 3) {
@@ -311,27 +369,29 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
             default:
                 break;
         }
-        verifyLog.setAuditor(this.userService.getCurrentUser().getId());
+        verifyLog.setAuditor(this.userService.getCurrentUser().
+
+                getId());
         this.verifyLogMapper.insertSelective(verifyLog);
         return ServiceResult.toResult("审核成功");
     }
 
-    private void invalidVisitorCustomerToken(Integer customerId){
+    private void invalidVisitorCustomerToken(Integer customerId) {
         BaseResponse<GetCustomerUserDto> response = userClientService.getCustomerUserByRelevanceId(customerId);
-        if (ResponseStatusCode.OPERATION_SUCCESS.getCode() == response.getStatusCode()){
-            if (response.getData() != null){
+        if (ResponseStatusCode.OPERATION_SUCCESS.getCode() == response.getStatusCode()) {
+            if (response.getData() != null) {
                 CustomerRegisterPurpose customerRegisterPurpose = customerRegisterPurposeMapperExt.selectByPhoneNumber(response.getData().getPhoneNumber());
-                if (customerRegisterPurpose != null){
-                    authClientService.invalidateToken(null,customerRegisterPurpose.getId().toString());
+                if (customerRegisterPurpose != null) {
+                    authClientService.invalidateToken(null, customerRegisterPurpose.getId().toString());
                 }
             }
         }
     }
 
-    private void invalidVisitorDriverToken(String phoneNumber){
+    private void invalidVisitorDriverToken(String phoneNumber) {
         SocialDriverRegisterPurpose socialDriverRegisterPurpose = socialDriverRegisterPurposeMapperExt.selectByPhoneNumber(phoneNumber);
-        if (socialDriverRegisterPurpose != null){
-            authClientService.invalidateToken(null,socialDriverRegisterPurpose.getId().toString());
+        if (socialDriverRegisterPurpose != null) {
+            authClientService.invalidateToken(null, socialDriverRegisterPurpose.getId().toString());
         }
     }
 }
