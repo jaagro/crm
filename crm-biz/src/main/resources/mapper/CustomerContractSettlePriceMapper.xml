@@ -11,7 +11,6 @@
     <result column="truck_type_id" property="truckTypeId" jdbcType="INTEGER" />
     <result column="truck_type_name" property="truckTypeName" jdbcType="VARCHAR" />
     <result column="goods_type" property="goodsType" jdbcType="INTEGER" />
-    <result column="feed_type" property="feedType" jdbcType="INTEGER" />
     <result column="mileage" property="mileage" jdbcType="DECIMAL" />
     <result column="settle_price" property="settlePrice" jdbcType="DECIMAL" />
     <result column="unit" property="unit" jdbcType="INTEGER" />
@@ -86,9 +85,6 @@
       <if test="goodsType != null" >
         goods_type,
       </if>
-      <if test="feedType != null" >
-        feed_type,
-      </if>
       <if test="mileage != null" >
         mileage,
       </if>
@@ -150,9 +146,6 @@
       </if>
       <if test="goodsType != null" >
         #{goodsType,jdbcType=INTEGER},
-      </if>
-      <if test="feedType != null" >
-        #{feedType,jdbcType=INTEGER},
       </if>
       <if test="mileage != null" >
         #{mileage,jdbcType=DECIMAL},
@@ -216,9 +209,6 @@
       <if test="goodsType != null" >
         goods_type = #{goodsType,jdbcType=INTEGER},
       </if>
-      <if test="feedType != null" >
-        feed_type = #{feedType,jdbcType=INTEGER},
-      </if>
       <if test="mileage != null" >
         mileage = #{mileage,jdbcType=DECIMAL},
       </if>
@@ -265,7 +255,6 @@
       truck_type_id = #{truckTypeId,jdbcType=INTEGER},
       truck_type_name = #{truckTypeName,jdbcType=VARCHAR},
       goods_type = #{goodsType,jdbcType=INTEGER},
-      feed_type = #{feedType,jdbcType=INTEGER},
       mileage = #{mileage,jdbcType=DECIMAL},
       settle_price = #{settlePrice,jdbcType=DECIMAL},
       unit = #{unit,jdbcType=INTEGER},
