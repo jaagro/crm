@@ -25,10 +25,11 @@ public interface CustomerContactsService {
     /**
      * 新增客户联系人列表
      *
-     * @param dtos
+     * @param contactsDtoList
+     * @param customerId
      * @return
      */
-    Map<String, Object> createCustomerContacts(List<CreateCustomerContactsDto> dtos, Integer CustomerId);
+    Map<String, Object> createCustomerContacts(List<CreateCustomerContactsDto> contactsDtoList, Integer customerId);
 
     /**
      * 修改单个客户联系人，注意新增updateDto
@@ -96,6 +97,7 @@ public interface CustomerContactsService {
 
     /**
      * 根据关键词查询客户Id集合
+     *
      * @param keyword
      * @return
      */
