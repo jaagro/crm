@@ -2,6 +2,7 @@ package com.jaagro.crm.biz.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.jaagro.crm.api.dto.base.CreateCustomerUserDto;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerContactsDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerContactsCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto;
@@ -12,6 +13,8 @@ import com.jaagro.crm.biz.entity.Customer;
 import com.jaagro.crm.biz.entity.CustomerContacts;
 import com.jaagro.crm.biz.mapper.CustomerContactsMapperExt;
 import com.jaagro.crm.biz.mapper.CustomerMapperExt;
+import com.jaagro.crm.biz.service.UserClientService;
+import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.springframework.beans.BeanUtils;
@@ -19,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -37,6 +41,9 @@ public class CustomerContactsServiceImpl implements CustomerContactsService {
     private CurrentUserService userService;
     @Autowired
     private CustomerMapperExt customerMapper;
+    @Autowired
+    private UserClientService userClientService;
+
 
     @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
@@ -52,15 +59,33 @@ public class CustomerContactsServiceImpl implements CustomerContactsService {
 
     @CacheEvict(cacheNames = "customer", allEntries = true)
     @Override
-    public Map<String, Object> createCustomerContacts(List<CreateCustomerContactsDto> dtos, Integer CustomerId) {
-        if (dtos != null && dtos.size() > 0) {
-            for (CreateCustomerContactsDto dto : dtos) {
+    @Transactional(rollbackFor = Exception.class)
+    public Map<String, Object> createCustomerContacts(List<CreateCustomerContactsDto> contactsDtoList, Integer customerId) {
+        Customer customer = customerMapper.selectByPrimaryKey(customerId);
+        if (contactsDtoList != null && contactsDtoList.size() > 0) {
+            for (CreateCustomerContactsDto dto : contactsDtoList) {
                 CustomerContacts customerContacts = new CustomerContacts();
                 BeanUtils.copyProperties(dto, customerContacts);
                 customerContacts
                         .setEnabled(true)
                         .setCreateUserId(this.userService.getCurrentUser().getId());
                 customerContactsMapper.insertSelective(customerContacts);
+                // 养殖客户
+                if (customer.getTenantId().equals(2)) {
+                    CreateCustomerUserDto customerUserDto = new CreateCustomerUserDto();
+                    customerUserDto
+                            .setCustomerType(20)
+                            .setRelevanceId(customer.getId())
+                            .setName(customer.getCustomerName())
+                            .setLoginName(customerContacts.getPhone())
+                            .setPhoneNumber(customerContacts.getPhone())
+                            .setCreateUserId(userService.getCurrentUser().getId())
+                            .setTenantId(userService.getCurrentUser().getTenantId());
+                    BaseResponse baseResponse = userClientService.createCustomerUser(customerUserDto);
+                    if (baseResponse.getStatusCode() != 200) {
+                        throw new RuntimeException(baseResponse.getStatusMsg());
+                    }
+                }
             }
         }
         return ServiceResult.toResult("客户联系人创建成功");

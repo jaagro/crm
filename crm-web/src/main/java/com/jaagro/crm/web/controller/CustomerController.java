@@ -193,7 +193,13 @@ public class CustomerController {
             }
         }
         customerId = contactsDtoList.get(0).getCustomerId();
-        return BaseResponse.service(this.customerContactsService.createCustomerContacts(contactsDtoList, customerId));
+        Map<String, Object> result;
+        try {
+            result = this.customerContactsService.createCustomerContacts(contactsDtoList, customerId);
+        } catch (Exception ex) {
+            return BaseResponse.errorInstance(ex.getMessage());
+        }
+        return BaseResponse.service(result);
     }
 
     /**
