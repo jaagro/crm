@@ -70,22 +70,6 @@ public class CustomerContactsServiceImpl implements CustomerContactsService {
                         .setEnabled(true)
                         .setCreateUserId(this.userService.getCurrentUser().getId());
                 customerContactsMapper.insertSelective(customerContacts);
-                // 养殖客户
-                if (customer.getTenantId().equals(2)) {
-                    CreateCustomerUserDto customerUserDto = new CreateCustomerUserDto();
-                    customerUserDto
-                            .setCustomerType(20)
-                            .setRelevanceId(customer.getId())
-                            .setName(customer.getCustomerName())
-                            .setLoginName(customerContacts.getPhone())
-                            .setPhoneNumber(customerContacts.getPhone())
-                            .setCreateUserId(userService.getCurrentUser().getId())
-                            .setTenantId(userService.getCurrentUser().getTenantId());
-                    BaseResponse baseResponse = userClientService.createCustomerUser(customerUserDto);
-                    if (baseResponse.getStatusCode() != 200) {
-                        throw new RuntimeException(baseResponse.getStatusMsg());
-                    }
-                }
             }
         }
         return ServiceResult.toResult("客户联系人创建成功");
@@ -125,6 +109,24 @@ public class CustomerContactsServiceImpl implements CustomerContactsService {
                 customerContacts
                         .setCreateUserId(userService.getCurrentUser().getId());
                 customerContactsMapper.insertSelective(customerContacts);
+
+                // 养殖客户
+                if (customer.getTenantId().equals(2)) {
+                    CreateCustomerUserDto customerUserDto = new CreateCustomerUserDto();
+                    customerUserDto
+                            .setCustomerType(20)
+                            .setRelevanceId(customer.getId())
+                            .setName(customer.getCustomerName())
+                            .setLoginName(customerContacts.getPhone())
+                            .setPhoneNumber(customerContacts.getPhone())
+                            .setCreateUserId(userService.getCurrentUser().getId())
+                            .setTenantId(userService.getCurrentUser().getTenantId());
+                    BaseResponse baseResponse = userClientService.createCustomerUser(customerUserDto);
+                    if (baseResponse.getStatusCode() != 200) {
+                        throw new RuntimeException(baseResponse.getStatusMsg());
+                    }
+                }
+
             }
         }
         return ServiceResult.toResult("客户联系人修改成功");
