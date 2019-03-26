@@ -129,11 +129,13 @@
         from customer
         where customer_status = 1
     </select>
-    <select id="listCustomerIdByName" parameterType="java.lang.String" resultType="java.lang.Integer">
+    <select id="listCustomerIdByName" parameterType="com.jaagro.crm.api.dto.base.ListCustomerIdCriteriaDto"
+            resultType="java.lang.Integer">
         select
         id
         from customer
-        where customer_status = 1
+        where customer_status != 3
         <![CDATA[ and (customer_name like concat(#{customerName},'%') )]]>
+        and tenant_id = #{tenantId}
     </select>
 </mapper>

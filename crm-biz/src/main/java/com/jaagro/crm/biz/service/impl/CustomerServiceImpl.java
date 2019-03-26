@@ -7,13 +7,15 @@ import com.jaagro.crm.api.constant.AccountType;
 import com.jaagro.crm.api.constant.AccountUserType;
 import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.constant.CustomerCategory;
+import com.jaagro.crm.api.dto.base.ListCustomerIdCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.*;
 import com.jaagro.crm.api.dto.response.customer.CustomerContactsReturnDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerReturnDto;
 import com.jaagro.crm.api.dto.response.customer.ListCustomerDto;
 import com.jaagro.crm.api.service.*;
 import com.jaagro.crm.biz.entity.Customer;
-import com.jaagro.crm.biz.mapper.*;
+import com.jaagro.crm.biz.mapper.CustomerContactsMapperExt;
+import com.jaagro.crm.biz.mapper.CustomerMapperExt;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
 import org.slf4j.Logger;
@@ -226,7 +228,11 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public List<Integer> listCustomerIdByName(String customerName) {
-        return customerMapper.listCustomerIdByName(customerName);
+        ListCustomerIdCriteriaDto listCustomerIdCriteriaDto = new ListCustomerIdCriteriaDto();
+        listCustomerIdCriteriaDto
+                .setCustomerName(customerName)
+                .setTenantId(userService.getCurrentUser().getTenantId());
+        return customerMapper.listCustomerIdByName(listCustomerIdCriteriaDto);
     }
 
     /**
