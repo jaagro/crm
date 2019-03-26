@@ -96,9 +96,6 @@ public class ContractController {
         if (this.customerMapper.selectByPrimaryKey(dto.getCustomerId()) == null) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户不存在");
         }
-        if (StringUtils.isEmpty(dto.getType())) {
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "合同类型不能为空");
-        }
         UpdateContractDto updateContractDto = new UpdateContractDto();
         updateContractDto.setContractNumber(dto.getContractNumber());
         if (this.customerContractMapper.getByUpdateDto(updateContractDto) != null) {
