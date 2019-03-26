@@ -39,7 +39,7 @@
         left join customer c on c.id = t.customer_id
         WHERE
         t.contract_status != 3
-        <if test="contractStatus != null and contractStatus != ''">
+        <if test="contractStatus != null">
             and t.contract_status = #{contractStatus}
         </if>
         <if test="customerId != null">
