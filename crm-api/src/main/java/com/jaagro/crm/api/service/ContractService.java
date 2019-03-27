@@ -6,6 +6,7 @@ import com.jaagro.crm.api.dto.request.contract.UpdateContractDto;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto;
 import com.jaagro.crm.api.dto.response.contract.ReturnContractDto;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -93,5 +94,14 @@ public interface ContractService {
      * @return
      */
     List<ShowCustomerContractDto> listShowCustomerContractByCustomerId(Integer customerId);
+
+    /**
+     * date2比date1多的天数
+     *
+     * @param date1
+     * @param date2
+     * @return
+     */
+    int differentDays(Date date2, Date date1);
 
 }

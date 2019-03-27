@@ -12,6 +12,9 @@
         AND load_site_id = #{loadSiteId}
         AND unload_site_id = #{unloadSiteId}
         AND truck_type_id = #{truckTypeId}
+        <if test="feedType != null">
+            AND feed_type = #{feedType}
+        </if>
     </select>
 
     <select id="getSectionWeightPrice" resultMap="BaseResultMap">

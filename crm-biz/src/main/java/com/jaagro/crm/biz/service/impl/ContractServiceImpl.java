@@ -21,6 +21,7 @@ import com.jaagro.crm.biz.mapper.*;
 import com.jaagro.crm.biz.service.OssSignUrlClientService;
 import com.jaagro.utils.ResponseStatusCode;
 import com.jaagro.utils.ServiceResult;
+import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -88,7 +89,7 @@ public class ContractServiceImpl implements ContractService {
         CustomerContract customerContract = new CustomerContract();
         BeanUtils.copyProperties(dto, customerContract);
         if (dto.getEndDate().before(new Date())) {
-            throw new RuntimeException("不可添加已过期的生效日期");
+            throw new RuntimeException("合同结束日期不合法");
         }
         UpdateContractDto updateContractDto = new UpdateContractDto();
         updateContractDto.setContractNumber(customerContract.getContractNumber());
@@ -120,23 +121,6 @@ public class ContractServiceImpl implements ContractService {
             }
         }
         return ServiceResult.toResult(customerContract.getId());
-    }
-
-    /**
-     * date2比date1多的天数
-     *
-     * @param date1
-     * @param date2
-     * @return
-     */
-    public static int differentDays(Date date2, Date date1) {
-        try {
-            int a = (int) ((date1.getTime() - date2.getTime()) / (1000 * 3600 * 24));
-            return a;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return 1;
-        }
     }
 
     @CacheEvict(cacheNames = "customer", allEntries = true)
@@ -273,6 +257,13 @@ public class ContractServiceImpl implements ContractService {
             if (customer != null) {
                 contractDto.setCustomerName(customer.getCustomerName());
             }
+            //剩余天数
+            int remainingDays = differentDays(new Date(), contractDto.getEndDate());
+            if (remainingDays > 0) {
+                contractDto.setRemainingDays(remainingDays);
+            } else {
+                contractDto.setRemainingDays(0);
+            }
         }
         return ServiceResult.toResult(new PageInfo<>(contracts));
     }
@@ -351,6 +342,24 @@ public class ContractServiceImpl implements ContractService {
                 }
             }
             return false;
+        }
+    }
+
+    /**
+     * date2比date1多的天数
+     *
+     * @param date1
+     * @param date2
+     * @return
+     */
+    @Override
+    public int differentDays(Date date2, Date date1) {
+        try {
+            int a = (int) ((date1.getTime() - date2.getTime()) / (1000 * 3600 * 24));
+            return a;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return 1;
         }
     }
 

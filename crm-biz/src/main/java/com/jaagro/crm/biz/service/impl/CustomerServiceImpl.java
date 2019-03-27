@@ -7,10 +7,7 @@ import com.jaagro.crm.api.constant.AccountType;
 import com.jaagro.crm.api.constant.AccountUserType;
 import com.jaagro.crm.api.constant.AuditStatus;
 import com.jaagro.crm.api.constant.CustomerCategory;
-import com.jaagro.crm.api.dto.request.customer.CreateCustomerDto;
-import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
-import com.jaagro.crm.api.dto.request.customer.ShowCustomerDto;
-import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
+import com.jaagro.crm.api.dto.request.customer.*;
 import com.jaagro.crm.api.dto.response.customer.CustomerContactsReturnDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerReturnDto;
 import com.jaagro.crm.api.dto.response.customer.ListCustomerDto;
@@ -252,6 +249,12 @@ public class CustomerServiceImpl implements CustomerService {
         }
         if (!CollectionUtils.isEmpty(listCustomerDtos)) {
             for (ListCustomerDto listCustomerDto : listCustomerDtos) {
+                if (listCustomerDto.getId() != null) {
+                    List<ShowCustomerContractDto> showCustomerContractDtos = contractService.listShowCustomerContractByCustomerId(listCustomerDto.getId());
+                    if (CollectionUtils.isEmpty(showCustomerContractDtos)) {
+                        continue;
+                    }
+                }
                 ShowCustomerDto showCustomerDto = new ShowCustomerDto();
                 BeanUtils.copyProperties(listCustomerDto, showCustomerDto);
                 showCustomerDtos.add(showCustomerDto);

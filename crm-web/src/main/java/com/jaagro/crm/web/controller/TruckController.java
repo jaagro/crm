@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -206,4 +207,37 @@ public class TruckController {
         return BaseResponse.successInstance(truckDto);
     }
 
+    /**
+     * @Athor: gavin
+     * @param productType
+     * @param feedType
+     * @return
+     */
+    @ApiOperation("车型列表")
+    @GetMapping("/listTruckType/{productType}/{feedType}")
+    public BaseResponse<List<ListTruckTypeDto>> listTruckTypeByType(@PathVariable(value = "productType") String productType,@PathVariable(value = "feedType") String feedType) {
+        List<ListTruckTypeDto> returnList =truckService.listTruckType(productType);
+        Iterator<ListTruckTypeDto> iterator = returnList.iterator();
+        while (iterator.hasNext()) {
+            ListTruckTypeDto listTruckTypeDto = iterator.next();
+
+            //如果是饲料类型
+            if("2".equals(productType)){
+                //袋装类型，则只返回袋装类型的车型
+                if("2".equals(feedType)){
+                    if(!listTruckTypeDto.getTypeName().contains("袋装")){
+                        iterator.remove();
+                    }
+                }else{
+                    //散装时去掉袋装类型车型
+                    if(listTruckTypeDto.getTypeName().contains("袋装")){
+                        iterator.remove();
+                    }
+                }
+
+            }
+
+        }
+        return BaseResponse.successInstance(returnList);
+    }
 }
