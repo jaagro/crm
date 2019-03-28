@@ -9,7 +9,7 @@ package com.jaagro.crm.api.constant;
 public final class CustomerCategory {
 
     /**
-     * 物流业务
+     * 运力业务
      */
     public static final Integer LOGISTICS = 1;
 
@@ -19,7 +19,7 @@ public final class CustomerCategory {
     public static final Integer FARMS = 20;
 
     /**
-     * 运力业务
+     * 物流业务
      */
     public static final Integer TRANSPORT = 30;
 
