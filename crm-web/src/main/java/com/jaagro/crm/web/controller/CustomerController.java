@@ -2,6 +2,7 @@ package com.jaagro.crm.web.controller;
 
 import com.jaagro.crm.api.dto.request.customer.*;
 import com.jaagro.crm.api.dto.response.customer.CustomerContactsReturnDto;
+import com.jaagro.crm.api.dto.response.customer.CustomerReturnDto;
 import com.jaagro.crm.api.service.CustomerContactsService;
 import com.jaagro.crm.api.service.CustomerService;
 import com.jaagro.crm.biz.entity.Customer;
@@ -12,6 +13,7 @@ import com.jaagro.utils.ResponseStatusCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import jdk.nashorn.internal.ir.annotations.Ignore;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
@@ -27,6 +29,7 @@ import java.util.Map;
  */
 @RestController
 @Api(value = "customer", description = "客户管理", produces = MediaType.APPLICATION_JSON_VALUE)
+@Slf4j
 public class CustomerController {
 
     @Autowired
@@ -163,6 +166,11 @@ public class CustomerController {
         return customerService.listNormalCustomer();
     }
 
+    @GetMapping("/getCustomerDetail/{id}")
+    public BaseResponse<CustomerReturnDto> getCustomerDetail(@PathVariable("id") Integer id){
+        log.info("O getCustomerDetail getCustomerDetail id={}",id);
+        return BaseResponse.successInstance(customerService.getCustomerDetail(id));
+    }
     //-------------------------------------------------客户联系人-------------------------------------------------------
 
     /**

@@ -4,6 +4,7 @@ import com.jaagro.crm.api.dto.request.customer.CreateCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
+import com.jaagro.crm.api.dto.response.customer.CustomerReturnDto;
 
 import java.util.List;
 import java.util.Map;
@@ -90,4 +91,11 @@ public interface CustomerService {
      * @return
      */
     List<ShowCustomerDto> listCustomerInfoByCurrentUser();
+
+    /**
+     * 获取客户详细信息
+     * @param id
+     * @return
+     */
+    CustomerReturnDto getCustomerDetail(Integer id);
 }
