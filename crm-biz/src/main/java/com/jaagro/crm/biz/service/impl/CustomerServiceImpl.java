@@ -268,4 +268,15 @@ public class CustomerServiceImpl implements CustomerService {
         }
         return showCustomerDtos;
     }
+
+    /**
+     * 获取客户详细信息
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public CustomerReturnDto getCustomerDetail(Integer id) {
+        return customerMapper.getById(id);
+    }
 }
