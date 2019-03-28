@@ -39,11 +39,20 @@
         left join customer c on c.id = t.customer_id
         WHERE
         t.contract_status != 3
-        <if test="contractStatus != null and contractStatus != ''">
+        <if test="contractStatus != null">
             and t.contract_status = #{contractStatus}
         </if>
         <if test="customerId != null">
             and t.customer_id = #{customerId}
+        </if>
+        <if test="tenantId != null">
+            and c.tenant_id = #{tenantId}
+        </if>
+        <if test="customerIds != null and customerIds.size() > 0">
+            and t.customer_id in
+            <foreach collection="customerIds" open="(" separator="," close=")" item="customerId">
+                ${customerId}
+            </foreach>
         </if>
         ORDER BY
         t.create_time DESC

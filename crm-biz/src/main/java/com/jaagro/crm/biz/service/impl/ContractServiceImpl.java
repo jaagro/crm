@@ -74,6 +74,8 @@ public class ContractServiceImpl implements ContractService {
     private CustomerSiteMapperExt siteMapperExt;
     @Autowired
     private TruckTypeMapperExt truckTypeMapperExt;
+    @Autowired
+    private CustomerService customerService;
 
     /**
      * 创建合同
@@ -251,6 +253,9 @@ public class ContractServiceImpl implements ContractService {
     public Map<String, Object> listByCriteria(ListContractCriteriaDto dto) {
         PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
         dto.setTenantId(userService.getCurrentUser().getTenantId());
+        if (!StringUtils.isEmpty(dto.getCustomerName())) {
+            dto.setCustomerIds(customerService.listCustomerIdByName(dto.getCustomerName()));
+        }
         List<ReturnContractDto> contracts = customerContractMapper.listByPage(dto);
         for (ReturnContractDto contractDto : contracts) {
             Customer customer = this.customerMapper.selectByPrimaryKey(contractDto.getCustomerId());

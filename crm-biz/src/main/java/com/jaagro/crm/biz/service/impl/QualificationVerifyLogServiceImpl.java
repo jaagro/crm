@@ -99,58 +99,69 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                 if (customer == null) {
                     return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户不存在");
                 }
-                //运力客户
-                if (customer.getTenantId().equals(1)) {
-                    switch (customer.getCustomerType()) {
-                        //个体
-                        //如身份证正面审核成功 更改客户审核状态为审核通过
-                        case 1:
-                            if (customerQualification.getCertificateType() == 7) {
-                                if (customerQualification.getCertificateStatus() == 1) {
-                                    UserInfo currentUser = this.userService.getCurrentUser();
-                                    Integer currentUserId = currentUser == null ? null : currentUser.getId();
+                switch (customer.getCustomerType()) {
+                    //个体
+                    //如身份证正面审核成功 更改客户审核状态为审核通过
+                    case 1:
+                        if (customerQualification.getCertificateType() == 7) {
+                            if (customerQualification.getCertificateStatus() == 1) {
+                                UserInfo currentUser = this.userService.getCurrentUser();
+                                Integer currentUserId = currentUser == null ? null : currentUser.getId();
+                                customer
+                                        .setCustomerStatus(AuditStatus.NORMAL_COOPERATION)
+                                        .setModifyTime(new Date())
+                                        .setModifyUserId(currentUserId);
+                                this.customerMapper.updateByPrimaryKeySelective(customer);
+                                // 创建账户 add by yj 20181025
+                                accountService.createAccount(customer.getId(), AccountUserType.CUSTOMER, AccountType.CASH, currentUserId);
+                                // 如果有游客客户则使游客客户登录失效 add by yj 20181217
+                                invalidVisitorCustomerToken(customer.getId());
+                                break;
+                            } else {
+                                if (customer.getTenantId().equals(2)) {
+                                    //养殖客户
+                                    //资质不通过，则将客户修改为审核不通过
                                     customer
-                                            .setCustomerStatus(AuditStatus.NORMAL_COOPERATION)
+                                            .setCustomerStatus(AuditStatus.AUDIT_FAILED)
                                             .setModifyTime(new Date())
-                                            .setModifyUserId(currentUserId);
-                                    this.customerMapper.updateByPrimaryKeySelective(customer);
-                                    // 创建账户 add by yj 20181025
-                                    accountService.createAccount(customer.getId(), AccountUserType.CUSTOMER, AccountType.CASH, currentUserId);
-                                    // 如果有游客客户则使游客客户登录失效 add by yj 20181217
-                                    invalidVisitorCustomerToken(customer.getId());
-                                    break;
+                                            .setModifyUserId(userService.getCurrentUser().getId());
+                                    customerMapper.updateByPrimaryKeySelective(customer);
                                 }
+                                break;
                             }
-                            break;
-                        //企业
-                        //如营业执照审核成功 更改客户审核状态为审核通过
-                        default:
-                            if (customerQualification.getCertificateType() == 1) {
-                                if (customerQualification.getCertificateStatus() == 1) {
-                                    UserInfo currentUser = this.userService.getCurrentUser();
-                                    Integer currentUserId = currentUser == null ? null : currentUser.getId();
+                        }
+                        break;
+                    //企业
+                    //如营业执照审核成功 更改客户审核状态为审核通过
+                    default:
+                        if (customerQualification.getCertificateType() == 1) {
+                            if (customerQualification.getCertificateStatus() == 1) {
+                                UserInfo currentUser = this.userService.getCurrentUser();
+                                Integer currentUserId = currentUser == null ? null : currentUser.getId();
+                                customer
+                                        .setCustomerStatus(AuditStatus.NORMAL_COOPERATION)
+                                        .setModifyTime(new Date())
+                                        .setModifyUserId(this.userService.getCurrentUser().getId());
+                                this.customerMapper.updateByPrimaryKeySelective(customer);
+                                // 创建账户 add by yj 20181025
+                                accountService.createAccount(customer.getId(), AccountUserType.CUSTOMER, AccountType.CASH, currentUserId);
+                                // 如果有游客客户则使游客客户登录失效 add by yj 20181217
+                                invalidVisitorCustomerToken(customer.getId());
+                                break;
+                            } else {
+                                if (customer.getTenantId().equals(2)) {
+                                    //养殖客户
+                                    //资质不通过，则将客户修改为审核不通过
                                     customer
-                                            .setCustomerStatus(AuditStatus.NORMAL_COOPERATION)
+                                            .setCustomerStatus(AuditStatus.AUDIT_FAILED)
                                             .setModifyTime(new Date())
-                                            .setModifyUserId(this.userService.getCurrentUser().getId());
-                                    this.customerMapper.updateByPrimaryKeySelective(customer);
-                                    // 创建账户 add by yj 20181025
-                                    accountService.createAccount(customer.getId(), AccountUserType.CUSTOMER, AccountType.CASH, currentUserId);
-                                    // 如果有游客客户则使游客客户登录失效 add by yj 20181217
-                                    invalidVisitorCustomerToken(customer.getId());
-                                    break;
+                                            .setModifyUserId(userService.getCurrentUser().getId());
+                                    customerMapper.updateByPrimaryKeySelective(customer);
                                 }
+                                break;
                             }
-                            break;
-                    }
-                } else {
-                    //养殖客户
-                    //资质不通过，则将客户修改为审核不通过
-                    customer
-                            .setCustomerStatus(AuditStatus.AUDIT_FAILED)
-                            .setModifyTime(new Date())
-                            .setModifyUserId(userService.getCurrentUser().getId());
-                    customerMapper.updateByPrimaryKeySelective(customer);
+                        }
+                        break;
                 }
                 break;
 
@@ -162,6 +173,7 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                 if (truckQualification == null) {
                     return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "资质证不存在");
                 }
+
                 UserInfo currentUser = userService.getCurrentUser();
                 Integer currentUserId = currentUser == null ? null : currentUser.getId();
                 //司机资质审核
@@ -272,10 +284,12 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                 if (qualification == null) {
                     return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户合同资质不存在");
                 }
+
                 CustomerContract contract = this.contractMapper.selectByPrimaryKey(qualification.getRelevanceId());
                 if (contract == null) {
                     return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户合同不存在");
                 }
+
                 Customer customer1 = customerMapper.selectByPrimaryKey(contract.getCustomerId());
                 //运力客户合同
                 if (customer1 != null && customer1.getTenantId().equals(1)) {

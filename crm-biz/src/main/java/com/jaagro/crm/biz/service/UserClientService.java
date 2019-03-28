@@ -1,14 +1,12 @@
 package com.jaagro.crm.biz.service;
 
 import com.jaagro.constant.UserInfo;
+import com.jaagro.crm.api.dto.base.CreateCustomerUserDto;
 import com.jaagro.crm.api.dto.base.GetCustomerUserDto;
 import com.jaagro.crm.api.dto.response.department.DepartmentReturnDto;
 import com.jaagro.utils.BaseResponse;
 import org.springframework.cloud.netflix.feign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -93,4 +91,12 @@ public interface UserClientService {
     @GetMapping("/getUserInfo")
     UserInfo getUserInfo(@RequestParam("key") Object key, @RequestParam("userType") String userType, @RequestParam("loginType") String loginType);
 
+    /**
+     * 新增养殖户app登录用户
+     *
+     * @param userDto
+     * @return
+     */
+    @PostMapping("/customerUser")
+    BaseResponse createCustomerUser(@RequestBody CreateCustomerUserDto userDto);
 }
