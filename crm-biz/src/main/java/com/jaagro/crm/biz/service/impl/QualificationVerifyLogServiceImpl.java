@@ -292,9 +292,7 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
 
                 Customer customer1 = customerMapper.selectByPrimaryKey(contract.getCustomerId());
                 //运力客户合同
-                if (customer1 != null && customer1.getTenantId().
-
-                        equals(1)) {
+                if (customer1 != null && customer1.getTenantId().equals(1)) {
                     //判断 客户合同资质类型16、17、18 是否都以审核通过
                     if (qualification.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
                         if (qualification.getCertificateType().equals(CertificateType.CONTTRACT_INDEX) || qualification.getCertificateType().equals(CertificateType.CONTTRACT_SCEAU) || qualification.getCertificateType().equals(CertificateType.CONTTRACT_PRICE)) {
@@ -343,15 +341,12 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
                 if (contractQualification == null) {
                     return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "运力合同资质不存在");
                 }
-
                 TruckTeamContract truckContract = this.truckTeamContractMapper.selectByPrimaryKey(contractQualification.getRelevanceId());
                 if (truckContract == null) {
                     return ServiceResult.error(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "运力合同不存在");
                 }
                 //判断 运力合同资质类型16、17、18 是否都以审核通过
-                if (contractQualification.getCertificateStatus().
-
-                        equals(AuditStatus.NORMAL_COOPERATION)) {
+                if (contractQualification.getCertificateStatus().equals(AuditStatus.NORMAL_COOPERATION)) {
                     if (contractQualification.getCertificateType().equals(CertificateType.CONTTRACT_INDEX) || contractQualification.getCertificateType().equals(CertificateType.CONTTRACT_SCEAU) || contractQualification.getCertificateType().equals(CertificateType.CONTTRACT_PRICE)) {
                         List<ContractQualification> contractQualifications = contractQualificationMapper.listCheckedByContract(contractQualification.getRelevanceId(), 2);
                         if (contractQualifications.size() == 3) {
@@ -369,9 +364,7 @@ public class QualificationVerifyLogServiceImpl implements QualificationVerifyLog
             default:
                 break;
         }
-        verifyLog.setAuditor(this.userService.getCurrentUser().
-
-                getId());
+        verifyLog.setAuditor(this.userService.getCurrentUser().getId());
         this.verifyLogMapper.insertSelective(verifyLog);
         return ServiceResult.toResult("审核成功");
     }

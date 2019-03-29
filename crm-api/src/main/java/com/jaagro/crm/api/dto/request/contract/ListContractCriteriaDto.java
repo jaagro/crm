@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author baiyiran
@@ -27,6 +28,16 @@ public class ListContractCriteriaDto implements Serializable {
      * 客户Id
      */
     private Integer customerId;
+
+    /**
+     * 客户姓名
+     */
+    private String customerName;
+
+    /**
+     * 客户Id列表
+     */
+    private List<Integer> customerIds;
 
     /**
      * 租户Id

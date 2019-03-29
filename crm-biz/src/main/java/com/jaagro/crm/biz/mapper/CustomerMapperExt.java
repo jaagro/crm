@@ -1,5 +1,6 @@
 package com.jaagro.crm.biz.mapper;
 
+import com.jaagro.crm.api.dto.base.ListCustomerIdCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerDto;
 import com.jaagro.crm.api.dto.request.customer.UpdateCustomerDto;
@@ -7,7 +8,6 @@ import com.jaagro.crm.api.dto.response.customer.CustomerReturnDto;
 import com.jaagro.crm.api.dto.response.customer.ListCustomerDto;
 import com.jaagro.crm.api.dto.response.customer.ReturnCustomerDto;
 import com.jaagro.crm.biz.entity.Customer;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -73,8 +73,8 @@ public interface CustomerMapperExt extends CustomerMapper {
     /**
      * 根据客户名称查询客户id集合
      *
-     * @param customerName
+     * @param listCustomerIdCriteriaDto
      * @return
      */
-    List<Integer> listCustomerIdByName(String customerName);
+    List<Integer> listCustomerIdByName(ListCustomerIdCriteriaDto listCustomerIdCriteriaDto);
 }
