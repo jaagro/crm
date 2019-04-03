@@ -127,7 +127,7 @@ public class CustomerContactsServiceImpl implements CustomerContactsService {
                 }
             }
             BaseResponse baseResponse = userClientService.createCustomerUser(userDtoList);
-            if (!"200".equals(baseResponse.getStatusMsg())) {
+            if (!"200".equals(baseResponse.getStatusCode())) {
                 throw new RuntimeException(baseResponse.getStatusMsg());
             }
         }
