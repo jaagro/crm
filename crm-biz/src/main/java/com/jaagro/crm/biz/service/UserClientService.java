@@ -98,5 +98,5 @@ public interface UserClientService {
      * @return
      */
     @PostMapping("/customerUser")
-    BaseResponse createCustomerUser(@RequestBody CreateCustomerUserDto userDto);
+    BaseResponse createCustomerUser(@RequestBody List<CreateCustomerUserDto> userDto);
 }
