@@ -26,7 +26,7 @@ public class JaagroPlatformCrmApplicationTests {
     public void mybatisGenerator() throws Exception {
         List<String> warnings = new ArrayList<String>();
         boolean overwrite = true;
-        File configFile = new File("/Users/gavinwang/Documents/workspace/jaagro-platform-crm/crm-biz/src/main/resources/mybatis/generatorConfig.xml");
+        File configFile = new File("/Users/gaoxin/Downloads/JavaApp/jaagro-platform-crm/crm-biz/src/main/resources/mybatis/generatorConfig.xml");
         ConfigurationParser cp = new ConfigurationParser(warnings);
         Configuration config = cp.parseConfiguration(configFile);
         DefaultShellCallback callback = new DefaultShellCallback(overwrite);
