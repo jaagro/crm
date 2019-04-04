@@ -358,7 +358,6 @@ public class TruckServiceImpl implements TruckService {
      * @Author gavin
      */
     @Override
-    @Cacheable
     public Map<String, Object> listTrucksWithDrivers(QueryTruckDto criteriaDto) {
         PageHelper.startPage(criteriaDto.getPageNum(), criteriaDto.getPageSize());
         //Integer depID = currentUserService.getCurrentUser().getDepartmentId();

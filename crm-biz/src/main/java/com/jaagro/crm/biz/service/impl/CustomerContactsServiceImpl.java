@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -90,6 +91,7 @@ public class CustomerContactsServiceImpl implements CustomerContactsService {
         if (contractDtos != null && contractDtos.size() > 0) {
             //删除联系人
             this.customerContactsMapper.deleteByCustomerId(contractDtos.get(0).getCustomerId());
+            List<CreateCustomerUserDto> userDtoList = new ArrayList<>();
             for (UpdateCustomerContactsDto contractDto : contractDtos) {
                 if (StringUtils.isEmpty(contractDto.getCustomerId())) {
                     return ServiceResult.error("联系人客户id不能为空");
@@ -121,12 +123,12 @@ public class CustomerContactsServiceImpl implements CustomerContactsService {
                             .setPhoneNumber(customerContacts.getPhone())
                             .setCreateUserId(userService.getCurrentUser().getId())
                             .setTenantId(userService.getCurrentUser().getTenantId());
-                    BaseResponse baseResponse = userClientService.createCustomerUser(customerUserDto);
-                    if (baseResponse.getStatusCode() != 200) {
-                        throw new RuntimeException(baseResponse.getStatusMsg());
-                    }
+                    userDtoList.add(customerUserDto);
                 }
-
+            }
+            BaseResponse baseResponse = userClientService.createCustomerUser(userDtoList);
+            if (!"200".equals(baseResponse.getStatusCode())) {
+                throw new RuntimeException(baseResponse.getStatusMsg());
             }
         }
         return ServiceResult.toResult("客户联系人修改成功");
