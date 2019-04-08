@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jaagro.crm.biz.mapper.TenantPurposeMapperExt">
+    <select id="listTenantPurpose" resultType="com.jaagro.crm.api.dto.request.league.TenantPurposeDto"
+            parameterType="com.jaagro.crm.api.dto.request.league.TenantPuroseCerteria">
+        select
+        <include refid="Base_Column_List"/>
+        from tenant_purpose
+        <where>
+            enable=1
+            <if test="companyName!=null">
+                and company_name like concat('%',#{companyName},'%')
+            </if>
+            <if test="customerInfoKey!=null">
+                and concat(contract_name,phone_number) like CONCAT('%',#{customerInfoKey},'%')
+            </if>
+            <if test="status!=null">
+                and status=#{status}
+            </if>
+        </where>
+    </select>
+</mapper>
