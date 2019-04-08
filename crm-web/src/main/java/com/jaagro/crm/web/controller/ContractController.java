@@ -172,8 +172,8 @@ public class ContractController {
     @GetMapping("/listContractByCustomerId/{customerId}")
     public BaseResponse listByCustomerId(@PathVariable("customerId") Integer customerId) {
         List<ShowCustomerContractDto> result = contractService.listShowCustomerContractByCustomerId(customerId);
-        if (StringUtils.isEmpty(result)) {
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查无数据");
+        if (CollectionUtils.isEmpty(result)) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_EMPTY.getCode(), "查无数据");
         }
         return BaseResponse.successInstance(result);
     }
