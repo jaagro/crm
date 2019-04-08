@@ -419,7 +419,7 @@ public class ContractController {
         /**
          * 客户合同
          */
-        if (relevanceType == 1) {
+        if (relevanceType == 1 || relevanceType == 3) {
             CustomerContract customerContract = this.customerContractMapper.selectByPrimaryKey(relevanceId);
             if (customerContract == null) {
                 return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户合同不存在");
