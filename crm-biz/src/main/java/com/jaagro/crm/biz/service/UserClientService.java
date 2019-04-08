@@ -3,6 +3,7 @@ package com.jaagro.crm.biz.service;
 import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.dto.base.CreateCustomerUserDto;
 import com.jaagro.crm.api.dto.base.GetCustomerUserDto;
+import com.jaagro.crm.api.dto.base.UpdateCustomerUserDto;
 import com.jaagro.crm.api.dto.response.department.DepartmentReturnDto;
 import com.jaagro.utils.BaseResponse;
 import org.springframework.cloud.netflix.feign.FeignClient;
@@ -98,5 +99,14 @@ public interface UserClientService {
      * @return
      */
     @PostMapping("/customerUser")
-    BaseResponse createCustomerUser(@RequestBody List<CreateCustomerUserDto> userDto);
+    BaseResponse createCustomerUser(@RequestBody CreateCustomerUserDto userDto);
+
+    /**
+     * 修改养殖户app登录用户
+     *
+     * @param customerUserDto
+     * @return
+     */
+    @PostMapping("/updateCustomerUser")
+    BaseResponse updateCustomerUser(@RequestBody UpdateCustomerUserDto customerUserDto);
 }

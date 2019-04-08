@@ -15,6 +15,11 @@ import java.io.Serializable;
 public class UpdateCustomerContactsDto implements Serializable {
 
     /**
+     * 主键ID
+     */
+    private Integer id;
+
+    /**
      * 外键关联客户ID(References customer)
      */
     private Integer customerId;
