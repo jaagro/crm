@@ -519,6 +519,8 @@ public class ContractController {
         // 1-客户资质 2-运力资质 3-客户合同 4-运力合同
         if (dto.getRelevanceType() == 1) {
             logDto.setCertificateType(3);
+        } else if (dto.getRelevanceType() == 3) {
+            logDto.setCertificateType(3);
         } else {
             logDto.setCertificateType(4);
         }
