@@ -163,7 +163,7 @@ public class CustomerContactsServiceImpl implements CustomerContactsService {
                     //修改
                     CustomerContacts customerContacts = new CustomerContacts();
                     BeanUtils.copyProperties(contractDto, customerContacts);
-                    customerContactsMapper.updateByPrimaryKey(customerContacts);
+                    customerContactsMapper.updateByPrimaryKeySelective(customerContacts);
                     // 养殖客户
                     if (customer.getTenantId().equals(2)) {
                         //修改登录账号
