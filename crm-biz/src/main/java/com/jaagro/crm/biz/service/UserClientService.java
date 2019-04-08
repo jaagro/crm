@@ -109,4 +109,13 @@ public interface UserClientService {
      */
     @PostMapping("/updateCustomerUser")
     BaseResponse updateCustomerUser(@RequestBody UpdateCustomerUserDto customerUserDto);
+
+    /**
+     * 根据联系人id删除登录账号
+     *
+     * @param standbyId
+     * @return
+     */
+    @GetMapping("/deleteByStandbyId/{standbyId}")
+    BaseResponse deleteByStandbyId(@PathVariable("standbyId") Integer standbyId);
 }

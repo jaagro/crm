@@ -205,6 +205,10 @@ public class CustomerContactsServiceImpl implements CustomerContactsService {
         }
         CustomerContacts customerContacts = this.customerContactsMapper.selectByPrimaryKey(id);
         customerContacts.setEnabled(false);
+        customerContactsMapper.updateByPrimaryKeySelective(customerContacts);
+
+        //删除 登录账号
+        userClientService.deleteByStandbyId(customerContacts.getId());
         return ServiceResult.toResult("客户联系人停用成功");
     }
 
