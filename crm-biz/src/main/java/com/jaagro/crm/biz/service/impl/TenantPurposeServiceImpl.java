@@ -11,6 +11,7 @@ import com.jaagro.crm.api.enums.TenantPurposeStatusEnum;
 import com.jaagro.crm.api.service.TenantPurposeService;
 import com.jaagro.crm.biz.entity.TenantPurpose;
 import com.jaagro.crm.biz.mapper.TenantPurposeMapperExt;
+import com.jaagro.crm.biz.service.VerificationCodeClientService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,8 @@ public class TenantPurposeServiceImpl implements TenantPurposeService {
     private StringRedisTemplate redisTemplate;
     @Autowired
     private TenantPurposeMapperExt tenantPurposeMapper;
+    @Autowired
+    private VerificationCodeClientService verificationCodeClientService;
 
     /**
      * 新增养殖户体验意向
@@ -40,11 +43,8 @@ public class TenantPurposeServiceImpl implements TenantPurposeService {
      */
     @Override
     public void insertTenantPurpose(CreateTenantPurposeDto dto) {
-        String verificationCodeRedis = redisTemplate.opsForValue().get(dto.getPhoneNumber());
-        if (verificationCodeRedis == null) {
-            throw new RuntimeException("验证码过期或手机号不正确");
-        }
-        if (!dto.getVerificationCode().equals(verificationCodeRedis)) {
+        boolean existMessage = verificationCodeClientService.existMessage(dto.getPhoneNumber(), dto.getVerificationCode());
+        if (!existMessage) {
             throw new RuntimeException("验证码输入有误");
         }
         TenantPurpose tenantPurpose = new TenantPurpose();
