@@ -8,6 +8,7 @@ import com.jaagro.crm.api.dto.response.customer.CustomerReturnDto;
 import com.jaagro.crm.api.dto.response.customer.ListCustomerDto;
 import com.jaagro.crm.api.dto.response.customer.ReturnCustomerDto;
 import com.jaagro.crm.biz.entity.Customer;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -77,4 +78,12 @@ public interface CustomerMapperExt extends CustomerMapper {
      * @return
      */
     List<Integer> listCustomerIdByName(ListCustomerIdCriteriaDto listCustomerIdCriteriaDto);
+
+    /**
+     * 根据tenantId 获取客户列表
+     *
+     * @param tenantId
+     * @return
+     */
+    List<ShowCustomerDto> listCustomerByTenantId(@Param("tenantId") Integer tenantId);
 }
