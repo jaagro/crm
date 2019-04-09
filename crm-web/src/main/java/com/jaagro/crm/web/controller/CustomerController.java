@@ -344,7 +344,7 @@ public class CustomerController {
      * @param
      * @return
      */
-    @Ignore
+    @ApiOperation("根据当前登录人获取")
     @GetMapping("/listCustomerByTenantId")
     public BaseResponse listCustomerByTenantId() {
         return BaseResponse.successInstance(customerService.listCustomerByTenantId());
