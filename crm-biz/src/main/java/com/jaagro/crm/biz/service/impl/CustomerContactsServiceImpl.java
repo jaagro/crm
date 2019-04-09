@@ -3,6 +3,7 @@ package com.jaagro.crm.biz.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.dto.base.CreateCustomerUserDto;
+import com.jaagro.crm.api.dto.base.UpdateCustomerUserDto;
 import com.jaagro.crm.api.dto.request.customer.CreateCustomerContactsDto;
 import com.jaagro.crm.api.dto.request.customer.ListCustomerContactsCriteriaDto;
 import com.jaagro.crm.api.dto.request.customer.ShowCustomerContractDto;
@@ -91,7 +92,6 @@ public class CustomerContactsServiceImpl implements CustomerContactsService {
         if (contractDtos != null && contractDtos.size() > 0) {
             //删除联系人
             this.customerContactsMapper.deleteByCustomerId(contractDtos.get(0).getCustomerId());
-            List<CreateCustomerUserDto> userDtoList = new ArrayList<>();
             for (UpdateCustomerContactsDto contractDto : contractDtos) {
                 if (StringUtils.isEmpty(contractDto.getCustomerId())) {
                     return ServiceResult.error("联系人客户id不能为空");
@@ -111,24 +111,75 @@ public class CustomerContactsServiceImpl implements CustomerContactsService {
                 customerContacts
                         .setCreateUserId(userService.getCurrentUser().getId());
                 customerContactsMapper.insertSelective(customerContacts);
-
-                // 养殖客户
-                if (customer.getTenantId().equals(2)) {
-                    CreateCustomerUserDto customerUserDto = new CreateCustomerUserDto();
-                    customerUserDto
-                            .setCustomerType(20)
-                            .setRelevanceId(customer.getId())
-                            .setName(customer.getCustomerName())
-                            .setLoginName(customerContacts.getPhone())
-                            .setPhoneNumber(customerContacts.getPhone())
-                            .setCreateUserId(userService.getCurrentUser().getId())
-                            .setTenantId(userService.getCurrentUser().getTenantId());
-                    userDtoList.add(customerUserDto);
-                }
             }
-            BaseResponse baseResponse = userClientService.createCustomerUser(userDtoList);
-            if (baseResponse.getStatusCode() != 200) {
-                throw new RuntimeException(baseResponse.getStatusMsg());
+        }
+        return ServiceResult.toResult("客户联系人修改成功");
+    }
+
+
+    @CacheEvict(cacheNames = "customer", allEntries = true)
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Map<String, Object> updateCustomerUserContacts(List<UpdateCustomerContactsDto> contactsDtoList) {
+        if (contactsDtoList != null && contactsDtoList.size() > 0) {
+            for (UpdateCustomerContactsDto contractDto : contactsDtoList) {
+                Customer customer = this.customerMapper.selectByPrimaryKey(contractDto.getCustomerId());
+                if (customer == null) {
+                    return ServiceResult.error("客户不存在");
+                }
+                if (StringUtils.isEmpty(contractDto.getId())) {
+                    if (StringUtils.isEmpty(contractDto.getPhone())) {
+                        return ServiceResult.error("联系人电话不能为空");
+                    }
+                    if (StringUtils.isEmpty(contractDto.getContact())) {
+                        return ServiceResult.error("联系人姓名不能为空");
+                    }
+                    //新增
+                    CustomerContacts customerContacts = new CustomerContacts();
+                    BeanUtils.copyProperties(contractDto, customerContacts);
+                    customerContacts
+                            .setEnabled(true)
+                            .setCreateUserId(this.userService.getCurrentUser().getId());
+                    customerContactsMapper.insertSelective(customerContacts);
+                    // 养殖客户
+                    if (customer.getTenantId().equals(2)) {
+                        CreateCustomerUserDto customerUserDto = new CreateCustomerUserDto();
+                        customerUserDto
+                                .setCustomerType(20)
+                                .setStandbyId(customerContacts.getId())
+                                .setRelevanceId(customer.getId())
+                                .setName(customerContacts.getContact())
+                                .setLoginName(customerContacts.getPhone())
+                                .setPhoneNumber(customerContacts.getPhone())
+                                .setCreateUserId(userService.getCurrentUser().getId())
+                                .setTenantId(userService.getCurrentUser().getTenantId());
+                        //新增登录账号
+                        BaseResponse baseResponse = userClientService.createCustomerUser(customerUserDto);
+                        if (baseResponse.getStatusCode() != 200) {
+                            throw new RuntimeException(baseResponse.getStatusMsg());
+                        }
+                    }
+                } else {
+                    //修改
+                    CustomerContacts customerContacts = new CustomerContacts();
+                    BeanUtils.copyProperties(contractDto, customerContacts);
+                    customerContactsMapper.updateByPrimaryKeySelective(customerContacts);
+                    // 养殖客户
+                    if (customer.getTenantId().equals(2)) {
+                        //修改登录账号
+                        UpdateCustomerUserDto updateCustomerUserDto = new UpdateCustomerUserDto();
+                        updateCustomerUserDto
+                                .setName(contractDto.getContact())
+                                .setPhoneNumber(contractDto.getPhone())
+                                .setLoginName(contractDto.getPhone())
+                                .setStandbyId(contractDto.getId());
+                        //修改登录账号
+                        BaseResponse baseResponse = userClientService.updateCustomerUser(updateCustomerUserDto);
+                        if (baseResponse.getStatusCode() != 200) {
+                            throw new RuntimeException(baseResponse.getStatusMsg());
+                        }
+                    }
+                }
             }
         }
         return ServiceResult.toResult("客户联系人修改成功");
@@ -154,6 +205,10 @@ public class CustomerContactsServiceImpl implements CustomerContactsService {
         }
         CustomerContacts customerContacts = this.customerContactsMapper.selectByPrimaryKey(id);
         customerContacts.setEnabled(false);
+        customerContactsMapper.updateByPrimaryKeySelective(customerContacts);
+
+        //删除 登录账号
+        userClientService.deleteByStandbyId(customerContacts.getId());
         return ServiceResult.toResult("客户联系人停用成功");
     }
 

@@ -167,8 +167,8 @@ public class CustomerController {
     }
 
     @GetMapping("/getCustomerDetail/{id}")
-    public BaseResponse<CustomerReturnDto> getCustomerDetail(@PathVariable("id") Integer id){
-        log.info("O getCustomerDetail getCustomerDetail id={}",id);
+    public BaseResponse<CustomerReturnDto> getCustomerDetail(@PathVariable("id") Integer id) {
+        log.info("O getCustomerDetail getCustomerDetail id={}", id);
         return BaseResponse.successInstance(customerService.getCustomerDetail(id));
     }
     //-------------------------------------------------客户联系人-------------------------------------------------------
@@ -219,12 +219,31 @@ public class CustomerController {
     @ApiOperation("客户联系人修改")
     @PostMapping("/updateCustomerContacts")
     public BaseResponse updateCustomerContacts(@RequestBody List<UpdateCustomerContactsDto> contactsDtoList) {
-        if (contactsDtoList != null && contactsDtoList.size() > 0) {
+        try {
             this.customerContactsService.updateCustomerContacts(contactsDtoList);
-            return BaseResponse.successInstance("修改成功");
-        } else {
-            return BaseResponse.errorInstance("修改失败");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return BaseResponse.errorInstance(ex.getMessage());
         }
+        return BaseResponse.successInstance("修改成功");
+    }
+
+    /**
+     * 客户联系人修改
+     *
+     * @param contactsDtoList
+     * @return
+     */
+    @ApiOperation("养殖客户联系人修改")
+    @PostMapping("/updateCustomerUserContacts")
+    public BaseResponse updateCustomerUserContacts(@RequestBody List<UpdateCustomerContactsDto> contactsDtoList) {
+        try {
+            this.customerContactsService.updateCustomerUserContacts(contactsDtoList);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return BaseResponse.errorInstance(ex.getMessage());
+        }
+        return BaseResponse.successInstance("修改成功");
     }
 
     /**
@@ -317,5 +336,17 @@ public class CustomerController {
     @GetMapping("/listCustomerInfoByCurrentUser")
     public BaseResponse listCustomerInfoByCurrentUser() {
         return BaseResponse.successInstance(customerService.listCustomerInfoByCurrentUser());
+    }
+
+    /**
+     * 获取当前登录人养殖客户信息
+     *
+     * @param
+     * @return
+     */
+    @ApiOperation("根据当前登录人获取")
+    @GetMapping("/listCustomerByTenantId")
+    public BaseResponse listCustomerByTenantId() {
+        return BaseResponse.successInstance(customerService.listCustomerByTenantId());
     }
 }
