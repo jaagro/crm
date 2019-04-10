@@ -2,6 +2,7 @@ package com.jaagro.crm.api.service;
 
 import com.github.pagehelper.PageInfo;
 import com.jaagro.crm.api.dto.request.league.CreateTenantPurposeDto;
+import com.jaagro.crm.api.dto.request.league.PurposeDisposeDto;
 import com.jaagro.crm.api.dto.request.league.TenantPuroseCerteria;
 import com.jaagro.crm.api.dto.request.league.TenantPurposeDetailsDto;
 
@@ -39,7 +40,7 @@ public interface TenantPurposeService {
     /**
      * 养殖意向处理
      *
-     * @param tenantPurposeId
+     * @param purposeDisposeDto
      */
-    void tenantPurposeDispose(Integer tenantPurposeId);
+    void tenantPurposeDispose(PurposeDisposeDto purposeDisposeDto);
 }
