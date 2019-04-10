@@ -1,10 +1,7 @@
 package com.jaagro.crm.web.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.jaagro.crm.api.dto.request.league.CreateLeagueDto;
-import com.jaagro.crm.api.dto.request.league.CreateTenantPurposeDto;
-import com.jaagro.crm.api.dto.request.league.ListLeagueCerteriaDto;
-import com.jaagro.crm.api.dto.request.league.TenantPuroseCerteria;
+import com.jaagro.crm.api.dto.request.league.*;
 import com.jaagro.crm.api.dto.response.league.ListLeagueDto;
 import com.jaagro.crm.api.service.LeagueService;
 import com.jaagro.crm.api.service.TenantPurposeService;
@@ -128,12 +125,12 @@ public class LeagueController {
     }
 
     @ApiOperation(value = "养殖意向处理")
-    @PostMapping(value = "/tenantPurposeDispose/{tenantPurposeId}")
-    public BaseResponse tenantPurposeDispose(@PathVariable("tenantPurposeId") Integer tenantPurposeId) {
-        if (tenantPurposeId == null) {
+    @PostMapping(value = "/tenantPurposeDispose")
+    public BaseResponse tenantPurposeDispose(@RequestBody PurposeDisposeDto purposeDisposeDto) {
+        if (purposeDisposeDto.getTenantPurposeId() == null) {
             return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "养殖意向id不能为空");
         }
-        tenantPurposeService.tenantPurposeDispose(tenantPurposeId);
+        tenantPurposeService.tenantPurposeDispose(purposeDisposeDto);
         return BaseResponse.successInstance(ResponseStatusCode.OPERATION_SUCCESS);
     }
 }
