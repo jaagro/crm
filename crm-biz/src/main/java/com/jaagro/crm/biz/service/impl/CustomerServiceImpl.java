@@ -279,4 +279,18 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerReturnDto getCustomerDetail(Integer id) {
         return customerMapper.getById(id);
     }
+
+    /**
+     * 根据tenantId 获取客户列表
+     *
+     * @return
+     */
+    @Override
+    public List<ShowCustomerDto> listCustomerByTenantId() {
+        UserInfo currentUser = userService.getCurrentUser();
+        if (currentUser != null) {
+            return customerMapper.listCustomerByTenantId(currentUser.getTenantId());
+        }
+        return null;
+    }
 }
