@@ -245,7 +245,7 @@ public class TruckTeamContractController {
     @GetMapping("/getTruckTeamContractById/{id}")
     public TruckTeamContractReturnDto getTruckTeamContractById(@PathVariable("id") Integer id){
         Map<String, Object> result = truckTeamContractService.getById(id);
-        TruckTeamContractReturnDto truckTeamContractReturnDto = (TruckTeamContractReturnDto)result.get(ServiceKey.data);
+        TruckTeamContractReturnDto truckTeamContractReturnDto = (TruckTeamContractReturnDto)result.get(ServiceKey.data.name());
         return truckTeamContractReturnDto;
     }
 }
