@@ -100,10 +100,5 @@ public interface CustomerService {
      */
     CustomerReturnDto getCustomerDetail(Integer id);
 
-    /**
-     * 根据tenantId 获取客户列表
-     *
-     * @return
-     */
-    List<ShowCustomerDto> listCustomerByTenantId();
+
 }

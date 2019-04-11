@@ -79,11 +79,4 @@ public interface CustomerMapperExt extends CustomerMapper {
      */
     List<Integer> listCustomerIdByName(ListCustomerIdCriteriaDto listCustomerIdCriteriaDto);
 
-    /**
-     * 根据tenantId 获取客户列表
-     *
-     * @param tenantId
-     * @return
-     */
-    List<ShowCustomerDto> listCustomerByTenantId(@Param("tenantId") Integer tenantId);
 }

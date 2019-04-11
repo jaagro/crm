@@ -138,12 +138,5 @@
         <![CDATA[ and (customer_name like concat(#{customerName},'%') )]]>
         and tenant_id = #{tenantId}
     </select>
-    <select id="listCustomerByTenantId" resultType="com.jaagro.crm.api.dto.request.customer.ShowCustomerDto"
-            parameterType="java.lang.Integer">
-          select
-        *
-        from customer
-        where customer_status = 1
-        and tenant_id = #{tenantId}
-    </select>
+
 </mapper>
