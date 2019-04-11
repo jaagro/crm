@@ -337,16 +337,4 @@ public class CustomerController {
     public BaseResponse listCustomerInfoByCurrentUser() {
         return BaseResponse.successInstance(customerService.listCustomerInfoByCurrentUser());
     }
-
-    /**
-     * 获取当前登录人养殖客户信息
-     *
-     * @param
-     * @return
-     */
-    @ApiOperation("根据当前登录人获取")
-    @GetMapping("/listCustomerByTenantId")
-    public BaseResponse listCustomerByTenantId() {
-        return BaseResponse.successInstance(customerService.listCustomerByTenantId());
-    }
 }
