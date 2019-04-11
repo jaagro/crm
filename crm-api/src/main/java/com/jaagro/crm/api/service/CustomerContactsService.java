@@ -48,6 +48,14 @@ public interface CustomerContactsService {
     Map<String, Object> updateCustomerContacts(List<UpdateCustomerContactsDto> dtos);
 
     /**
+     * 修改客户联系人列表
+     *
+     * @param dtos
+     * @return
+     */
+    Map<String, Object> updateCustomerUserContacts(List<UpdateCustomerContactsDto> dtos);
+
+    /**
      * 获取单条记录
      *
      * @param id

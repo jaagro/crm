@@ -85,7 +85,7 @@
         select
         <include refid="Base_Column_List"/>
         from customer_contract
-        where contract_status != 3
+        where contract_status in (0,1)
         <if test="customerId != null">
             and customer_id = #{customerId}
         </if>

@@ -1,10 +1,10 @@
 package com.jaagro.crm.web.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.jaagro.crm.api.dto.request.league.CreateLeagueDto;
-import com.jaagro.crm.api.dto.request.league.ListLeagueCerteriaDto;
+import com.jaagro.crm.api.dto.request.league.*;
 import com.jaagro.crm.api.dto.response.league.ListLeagueDto;
 import com.jaagro.crm.api.service.LeagueService;
+import com.jaagro.crm.api.service.TenantPurposeService;
 import com.jaagro.crm.web.vo.league.ListLeagueVo;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,6 +38,9 @@ public class LeagueController {
 
     @Autowired
     private LeagueService leagueService;
+
+    @Autowired
+    private TenantPurposeService tenantPurposeService;
 
     @ApiOperation(value = "新增销售机会")
     @PostMapping(value = "/league", consumes = "application/json")
@@ -83,4 +87,50 @@ public class LeagueController {
         return BaseResponse.successInstance(pageInfo);
     }
 
+    @ApiOperation(value = "新增养殖意向")
+    @PostMapping(value = "/insertTenantPurpose")
+    public BaseResponse insertTenantPurpose(@RequestBody CreateTenantPurposeDto dto) {
+        if (StringUtils.isEmpty(dto.getContractName())) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "联系人不能为空");
+        }
+        if (StringUtils.isEmpty(dto.getPhoneNumber())) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "手机号码不能为空");
+        }
+        if (StringUtils.isEmpty(dto.getVerificationCode())) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "验证码不能为空");
+        }
+        tenantPurposeService.insertTenantPurpose(dto);
+        return BaseResponse.successInstance(ResponseStatusCode.OPERATION_SUCCESS);
+    }
+
+    @ApiOperation(value = "养殖意向列表管理")
+    @PostMapping(value = "/listTenantPurpose")
+    public BaseResponse listTenantPurpose(@RequestBody TenantPuroseCerteria certeriaDto) {
+        if (StringUtils.isEmpty(certeriaDto.getPageNum())) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "pageNum不能为空");
+        }
+        if (StringUtils.isEmpty(certeriaDto.getPageSize())) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "pageSize不能为空");
+        }
+        return BaseResponse.successInstance(tenantPurposeService.listTenantPurpose(certeriaDto));
+    }
+
+    @ApiOperation(value = "养殖意向详情")
+    @PostMapping(value = "/tenantPurposeDetails/{tenantPurposeId}")
+    public BaseResponse tenantPurposeDetails(@PathVariable("tenantPurposeId") Integer tenantPurposeId) {
+        if (tenantPurposeId == null) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "养殖意向id不能为空");
+        }
+        return BaseResponse.successInstance(tenantPurposeService.tenantPurposeDetails(tenantPurposeId));
+    }
+
+    @ApiOperation(value = "养殖意向处理")
+    @PostMapping(value = "/tenantPurposeDispose")
+    public BaseResponse tenantPurposeDispose(@RequestBody PurposeDisposeDto purposeDisposeDto) {
+        if (purposeDisposeDto.getTenantPurposeId() == null) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "养殖意向id不能为空");
+        }
+        tenantPurposeService.tenantPurposeDispose(purposeDisposeDto);
+        return BaseResponse.successInstance(ResponseStatusCode.OPERATION_SUCCESS);
+    }
 }

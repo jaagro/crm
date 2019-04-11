@@ -94,8 +94,11 @@ public interface CustomerService {
 
     /**
      * 获取客户详细信息
+     *
      * @param id
      * @return
      */
     CustomerReturnDto getCustomerDetail(Integer id);
+
+
 }
