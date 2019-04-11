@@ -66,6 +66,11 @@ public class CreateContractDto implements Serializable {
     private String remark;
 
     /**
+     * 结算类型(1-按提货重量计价,2-按卸货重量计价)
+     */
+    private Integer settleType;
+
+    /**
      * 合同资质证件照
      */
     private List<CreateContractQualificationDto> qualificationDtos;

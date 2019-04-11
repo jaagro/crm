@@ -22,6 +22,7 @@ import com.jaagro.crm.biz.mapper.TruckTeamMapperExt;
 import com.jaagro.crm.biz.service.UserClientService;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
+import com.jaagro.utils.ServiceKey;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -238,5 +239,13 @@ public class TruckTeamContractController {
 
         return truckTeamContractService.getTruckTeamContractByTruckTeamId(truckTeamId);
 
+    }
+
+    @ApiOperation("根据车队合同id查询车队合同")
+    @GetMapping("/getTruckTeamContractById/{id}")
+    public TruckTeamContractReturnDto getTruckTeamContractById(@PathVariable Integer id){
+        Map<String, Object> result = truckTeamContractService.getById(id);
+        TruckTeamContractReturnDto truckTeamContractReturnDto = (TruckTeamContractReturnDto)result.get(ServiceKey.data);
+        return truckTeamContractReturnDto;
     }
 }

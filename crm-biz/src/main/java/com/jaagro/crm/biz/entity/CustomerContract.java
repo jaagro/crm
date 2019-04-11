@@ -6,13 +6,10 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * @author tony
- */
 @Data
 @Accessors(chain = true)
-public class CustomerContract implements Serializable {
-    private static final long serialVersionUID = -6165501853448661949L;
+public class CustomerContract implements Serializable{
+    private static final long serialVersionUID = -8837367037698695264L;
     /**
      * 合同ID
      */
@@ -24,7 +21,7 @@ public class CustomerContract implements Serializable {
     private Integer customerId;
 
     /**
-     * 合同状态: 1-正常 2-终止
+     * 合同状态
      */
     private Integer contractStatus;
 
@@ -69,6 +66,11 @@ public class CustomerContract implements Serializable {
     private String contractNumber;
 
     /**
+     * 结算类型(1-按提货重量计价,2-按卸货重量计价)
+     */
+    private Integer settleType;
+
+    /**
      * 备注
      */
     private String remark;
@@ -97,4 +99,5 @@ public class CustomerContract implements Serializable {
      * 
      */
     private Integer version;
+
 }
