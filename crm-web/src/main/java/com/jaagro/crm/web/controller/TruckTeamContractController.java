@@ -243,7 +243,7 @@ public class TruckTeamContractController {
 
     @ApiOperation("根据车队合同id查询车队合同")
     @GetMapping("/getTruckTeamContractById/{id}")
-    public TruckTeamContractReturnDto getTruckTeamContractById(@PathVariable Integer id){
+    public TruckTeamContractReturnDto getTruckTeamContractById(@PathVariable("id") Integer id){
         Map<String, Object> result = truckTeamContractService.getById(id);
         TruckTeamContractReturnDto truckTeamContractReturnDto = (TruckTeamContractReturnDto)result.get(ServiceKey.data);
         return truckTeamContractReturnDto;
