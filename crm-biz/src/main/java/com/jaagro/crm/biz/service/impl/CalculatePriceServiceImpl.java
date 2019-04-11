@@ -123,11 +123,11 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
                         if (null != customerContractSettleTruckRule) {
                             minLoadWeight = customerContractSettleTruckRule.getMinLoad();
                         }
-                        compare = calculatePaymentDto.getUnloadWeight().compareTo(minLoadWeight);
+                        compare = calculatePaymentDto.getCustomerCalWeight().compareTo(minLoadWeight);
                         if (compare == -1) {
                             calculateWeight = minLoadWeight;
                         } else {
-                            calculateWeight = calculatePaymentDto.getUnloadWeight();
+                            calculateWeight = calculatePaymentDto.getCustomerCalWeight();
                         }
                         //结算金额 = 结算重量（吨）✕ 区间重量单价（元/吨）
                         paymentMoney = calculateWeight.multiply(unitPrice).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -178,14 +178,14 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
                     }
                     if (minLoadWeight != null && minLoadWeight.compareTo(new BigDecimal(0.00)) != 0) {
                         //当实际装载量 < 最小装载量时，结算单价=原结算单价*常用结算量 / 最小装载量；最小装载量设置为零时不限最小装载量
-                        compare = calculatePaymentDto.getUnloadWeight().compareTo(minLoadWeight);
+                        compare = calculatePaymentDto.getCustomerCalWeight().compareTo(minLoadWeight);
                         if (compare == -1) {
                             unitPrice = unitPrice.multiply(normalWeight).divide(minLoadWeight, 6, BigDecimal.ROUND_HALF_UP);
 
                         }
                     }
                     //结算金额 = 结算重量（吨）✕ 结算单价（元/吨）
-                    paymentMoney = calculatePaymentDto.getUnloadWeight().multiply(unitPrice).setScale(2, BigDecimal.ROUND_HALF_UP);
+                    paymentMoney = calculatePaymentDto.getCustomerCalWeight().multiply(unitPrice).setScale(2, BigDecimal.ROUND_HALF_UP);
                     map.put(calculatePaymentDto.getWaybillId(), paymentMoney);
                     returnList.add(map);
                     log.info("O calculatePaymentFromCustomer 饲料结算 end");
@@ -217,7 +217,7 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
                     }
 
                     //结算金额=里程数（公里）✕ 数量（头）✕ 结算基数（元/头/公里）
-                    paymentMoney = actualMileage.multiply(new BigDecimal(calculatePaymentDto.getUnloadQuantity())).multiply(unitPrice).setScale(2, BigDecimal.ROUND_HALF_UP);
+                    paymentMoney = actualMileage.multiply(new BigDecimal(calculatePaymentDto.getCustomerCalQuantity())).multiply(unitPrice).setScale(2, BigDecimal.ROUND_HALF_UP);
                     map.put(calculatePaymentDto.getWaybillId(), paymentMoney);
                     returnList.add(map);
                     log.info("O calculatePaymentFromCustomer 仔猪结算 end");
@@ -357,8 +357,8 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
                         continue;
                     }
                     if (ProductType.FODDER.equals(calculatePaymentDto.getProductType())) {
-                        BigDecimal settleWeight = calculatePaymentDto.getUnloadWeight();
-                        if (calculatePaymentDto.getUnloadWeight() != null && effectiveSection.getSettlePrice() != null) {
+                        BigDecimal settleWeight = calculatePaymentDto.getDriverCalWeight();
+                        if (calculatePaymentDto.getDriverCalWeight() != null && effectiveSection.getSettlePrice() != null) {
                             if (settleWeight.compareTo(driverContractSettleRule.getMinSettleWeight()) < 0) {
                                 settleWeight = driverContractSettleRule.getMinSettleWeight();
                             }
