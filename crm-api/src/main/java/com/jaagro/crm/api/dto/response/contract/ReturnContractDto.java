@@ -22,6 +22,8 @@ public class ReturnContractDto implements Serializable {
      */
     private Integer id;
 
+
+
     /**
      * 客户ID
      */
@@ -86,6 +88,11 @@ public class ReturnContractDto implements Serializable {
      * 剩余天数
      */
     private Integer remainingDays;
+
+    /**
+     * 结算类型(1-按提货重量计价,2-按卸货重量计价)
+     */
+    private Integer settleType;
 
     /**
      * 合同资质

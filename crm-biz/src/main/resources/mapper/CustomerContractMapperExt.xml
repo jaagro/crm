@@ -27,7 +27,7 @@
         <result column="contract_number" property="contractNumber" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Show_Column">
-        id, contract_number, type
+        id, contract_number, settle_type, type
     </sql>
 
     <select id="listByPage" parameterType="com.jaagro.crm.api.dto.request.contract.ListContractCriteriaDto"

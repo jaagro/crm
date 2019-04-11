@@ -32,23 +32,23 @@
         <!-- 生成的java bean包路径
         targetProject：目标工程
         -->
-        <javaModelGenerator targetPackage="com.jaagro.crm.biz.entity" targetProject="E:\git\jaagro-platform-crm\crm-biz\src\main\java">
+        <javaModelGenerator targetPackage="com.jaagro.crm.biz.entity" targetProject="D:\workSpace\jaagro-platform-crm\crm-biz\src\main\java">
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
             <property name="" value=""/>
         </javaModelGenerator>
 
         <!-- 生成 mapper.xml文件路径 -->
-        <sqlMapGenerator targetPackage="mapper"  targetProject="E:\git\jaagro-platform-crm\crm-biz\src\main\resources">
+        <sqlMapGenerator targetPackage="mapper"  targetProject="D:\workSpace\jaagro-platform-crm\crm-biz\src\main\resources">
             <property name="enableSubPackages" value="true" />
         </sqlMapGenerator>
 
         <!-- 生成 dao 接口的包路径 -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.jaagro.crm.biz.mapper"  targetProject="E:\git\jaagro-platform-crm\crm-biz\src\main\java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.jaagro.crm.biz.mapper"  targetProject="D:\workSpace\jaagro-platform-crm\crm-biz\src\main\java">
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
-        <table tableName="customer_contract_settle_price" domainObjectName="Aaa" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
+        <table tableName="truck_team_contract" domainObjectName="TruckTeamContract" enableCountByExample="false"
+               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="true"
                selectByExampleQueryId="false"></table>
     </context>
 </generatorConfiguration>

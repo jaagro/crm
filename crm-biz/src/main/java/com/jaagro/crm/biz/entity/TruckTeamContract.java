@@ -3,16 +3,11 @@ package com.jaagro.crm.biz.entity;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.io.Serializable;
 import java.util.Date;
 
-/**
- * @author tony
- */
 @Data
 @Accessors(chain = true)
-public class TruckTeamContract implements Serializable {
-    private static final long serialVersionUID = -1553939985741704500L;
+public class TruckTeamContract {
     /**
      * 主键车队合同表ID
      */
@@ -29,7 +24,7 @@ public class TruckTeamContract implements Serializable {
     private String contractNumber;
 
     /**
-     * 业务类型(1 毛鸡运输 2 饲料运输 3 母猪运输 4 公猪运输 5 仔猪运输 6 生猪运输)
+     * 业务类型(1 饲料运输 2 毛鸡运输 3 母猪运输 4 公猪运输 5 仔猪运输 6 生猪运输)
      */
     private Integer bussinessType;
 
@@ -49,9 +44,14 @@ public class TruckTeamContract implements Serializable {
     private Date endDate;
 
     /**
-     * 合同状态(0-待审核 1-审核通过)
+     * 合同状态
      */
     private Integer contractStatus;
+
+    /**
+     * 结算类型(1-按提货重量计价,2-按卸货重量计价)
+     */
+    private Integer settleType;
 
     /**
      * 备注信息
@@ -77,4 +77,5 @@ public class TruckTeamContract implements Serializable {
      * 修改人
      */
     private Integer modifyUserId;
+
 }
