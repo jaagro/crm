@@ -172,8 +172,8 @@ public class ContractController {
     @GetMapping("/listContractByCustomerId/{customerId}")
     public BaseResponse listByCustomerId(@PathVariable("customerId") Integer customerId) {
         List<ShowCustomerContractDto> result = contractService.listShowCustomerContractByCustomerId(customerId);
-        if (StringUtils.isEmpty(result)) {
-            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "查无数据");
+        if (CollectionUtils.isEmpty(result)) {
+            return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_EMPTY.getCode(), "查无数据");
         }
         return BaseResponse.successInstance(result);
     }
@@ -419,7 +419,7 @@ public class ContractController {
         /**
          * 客户合同
          */
-        if (relevanceType == 1) {
+        if (relevanceType == 1 || relevanceType == 3) {
             CustomerContract customerContract = this.customerContractMapper.selectByPrimaryKey(relevanceId);
             if (customerContract == null) {
                 return BaseResponse.errorInstance(ResponseStatusCode.QUERY_DATA_ERROR.getCode(), "客户合同不存在");
@@ -518,6 +518,8 @@ public class ContractController {
                 .setReferencesId(dto.getId());
         // 1-客户资质 2-运力资质 3-客户合同 4-运力合同
         if (dto.getRelevanceType() == 1) {
+            logDto.setCertificateType(3);
+        } else if (dto.getRelevanceType() == 3) {
             logDto.setCertificateType(3);
         } else {
             logDto.setCertificateType(4);

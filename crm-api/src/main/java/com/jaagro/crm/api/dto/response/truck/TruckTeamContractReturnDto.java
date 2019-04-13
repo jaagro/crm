@@ -65,6 +65,11 @@ public class TruckTeamContractReturnDto implements Serializable {
     private String notes;
 
     /**
+     * 结算类型(1-按提货重量计价,2-按卸货重量计价)
+     */
+    private Integer settleType;
+
+    /**
      * 资质证件照
      */
     private List<ReturnContractQualificationDto> qualificationDtoList;

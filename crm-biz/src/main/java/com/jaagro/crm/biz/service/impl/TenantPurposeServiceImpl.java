@@ -2,15 +2,13 @@ package com.jaagro.crm.biz.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.jaagro.crm.api.dto.request.league.CreateTenantPurposeDto;
-import com.jaagro.crm.api.dto.request.league.TenantPuroseCerteria;
-import com.jaagro.crm.api.dto.request.league.TenantPurposeDetailsDto;
-import com.jaagro.crm.api.dto.request.league.TenantPurposeDto;
+import com.jaagro.crm.api.dto.request.league.*;
 import com.jaagro.crm.api.enums.ScaleEnum;
 import com.jaagro.crm.api.enums.TenantPurposeStatusEnum;
 import com.jaagro.crm.api.service.TenantPurposeService;
 import com.jaagro.crm.biz.entity.TenantPurpose;
 import com.jaagro.crm.biz.mapper.TenantPurposeMapperExt;
+import com.jaagro.crm.biz.service.VerificationCodeClientService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +30,8 @@ public class TenantPurposeServiceImpl implements TenantPurposeService {
     private StringRedisTemplate redisTemplate;
     @Autowired
     private TenantPurposeMapperExt tenantPurposeMapper;
+    @Autowired
+    private VerificationCodeClientService verificationCodeClientService;
 
     /**
      * 新增养殖户体验意向
@@ -40,11 +40,8 @@ public class TenantPurposeServiceImpl implements TenantPurposeService {
      */
     @Override
     public void insertTenantPurpose(CreateTenantPurposeDto dto) {
-        String verificationCodeRedis = redisTemplate.opsForValue().get(dto.getPhoneNumber());
-        if (verificationCodeRedis == null) {
-            throw new RuntimeException("验证码过期或手机号不正确");
-        }
-        if (!dto.getVerificationCode().equals(verificationCodeRedis)) {
+        boolean existMessage = verificationCodeClientService.existMessage(dto.getPhoneNumber(), dto.getVerificationCode());
+        if (!existMessage) {
             throw new RuntimeException("验证码输入有误");
         }
         TenantPurpose tenantPurpose = new TenantPurpose();
@@ -92,14 +89,15 @@ public class TenantPurposeServiceImpl implements TenantPurposeService {
     /**
      * 养殖意向处理
      *
-     * @param tenantPurposeId
+     * @param purposeDisposeDto
      */
     @Override
-    public void tenantPurposeDispose(Integer tenantPurposeId) {
+    public void tenantPurposeDispose(PurposeDisposeDto purposeDisposeDto) {
         TenantPurpose tenantPurpose = new TenantPurpose();
         tenantPurpose
                 .setStatus(TenantPurposeStatusEnum.DONE.getCode())
-                .setId(tenantPurposeId);
+                .setId(purposeDisposeDto.getTenantPurposeId())
+                .setNotes(purposeDisposeDto.getNotes());
         tenantPurposeMapper.updateByPrimaryKeySelective(tenantPurpose);
     }
 }

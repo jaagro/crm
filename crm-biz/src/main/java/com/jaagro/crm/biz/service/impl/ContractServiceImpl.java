@@ -217,6 +217,16 @@ public class ContractServiceImpl implements ContractService {
                     contractQualificationDto.setCertificateImageUrl(urlList.get(0).toString());
                 }
                 contractDto.setQualifications(qualificationDtoList);
+            } else {
+                if (!CollectionUtils.isEmpty(contractDto.getQualifications())) {
+                    for (ReturnContractQualificationDto contractQualificationDto : contractDto.getQualifications()
+                    ) {
+                        //替换资质证照地址
+                        String[] strArray = {contractQualificationDto.getCertificateImageUrl()};
+                        List<URL> urlList = ossSignUrlClientService.listSignedUrl(strArray);
+                        contractQualificationDto.setCertificateImageUrl(urlList.get(0).toString());
+                    }
+                }
             }
         }
         //结算装卸货地

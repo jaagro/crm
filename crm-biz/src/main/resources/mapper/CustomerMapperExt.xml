@@ -49,7 +49,7 @@
     </resultMap>
 
     <sql id="show_column">
-        id,tenant_id, customer_name,customer_type,enable_direct_order,city,province,county,address
+        id,tenant_id, customer_name,customer_type,customer_status,enable_direct_order,city,province,county,address
     </sql>
 
     <select id="getById" parameterType="java.lang.Integer" resultMap="DetailInfo">
@@ -138,4 +138,5 @@
         <![CDATA[ and (customer_name like concat(#{customerName},'%') )]]>
         and tenant_id = #{tenantId}
     </select>
+
 </mapper>

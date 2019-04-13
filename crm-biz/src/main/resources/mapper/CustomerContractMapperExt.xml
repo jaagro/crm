@@ -27,7 +27,7 @@
         <result column="contract_number" property="contractNumber" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Show_Column">
-        id, contract_number, type
+        id, contract_number, settle_type, type
     </sql>
 
     <select id="listByPage" parameterType="com.jaagro.crm.api.dto.request.contract.ListContractCriteriaDto"
@@ -85,7 +85,7 @@
         select
         <include refid="Base_Column_List"/>
         from customer_contract
-        where contract_status != 3
+        where contract_status in (0,1)
         <if test="customerId != null">
             and customer_id = #{customerId}
         </if>
