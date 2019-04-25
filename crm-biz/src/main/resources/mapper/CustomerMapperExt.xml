@@ -128,6 +128,9 @@
         <include refid="show_column"></include>
         from customer
         where customer_status = 1
+        <if test="tenantId != null">
+            AND tenant_id = #{tenantId}
+        </if>
     </select>
     <select id="listCustomerIdByName" parameterType="com.jaagro.crm.api.dto.base.ListCustomerIdCriteriaDto"
             resultType="java.lang.Integer">

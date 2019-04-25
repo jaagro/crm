@@ -211,16 +211,6 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
-     * 查询正常合作的全部客户
-     *
-     * @return
-     */
-    @Override
-    public List<ShowCustomerDto> listNormalCustomer() {
-        return customerMapper.listNormalCustomer();
-    }
-
-    /**
      * 根据客户名称查询客户id集合
      *
      * @param customerName
@@ -278,6 +268,17 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerReturnDto getCustomerDetail(Integer id) {
         return customerMapper.getById(id);
+    }
+
+    /**
+     * 查看正常合作的用户
+     *
+     * @param tenantId
+     * @return
+     */
+    @Override
+    public List<ShowCustomerDto> listNormalCustomerByTenantId(Integer tenantId) {
+        return customerMapper.listNormalCustomer(tenantId);
     }
 
 

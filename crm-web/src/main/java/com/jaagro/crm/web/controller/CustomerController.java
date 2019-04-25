@@ -1,5 +1,6 @@
 package com.jaagro.crm.web.controller;
 
+import com.jaagro.constant.UserInfo;
 import com.jaagro.crm.api.dto.request.customer.*;
 import com.jaagro.crm.api.dto.response.customer.CustomerContactsReturnDto;
 import com.jaagro.crm.api.dto.response.customer.CustomerReturnDto;
@@ -8,6 +9,7 @@ import com.jaagro.crm.api.service.CustomerService;
 import com.jaagro.crm.biz.entity.Customer;
 import com.jaagro.crm.biz.entity.CustomerContacts;
 import com.jaagro.crm.biz.mapper.*;
+import com.jaagro.crm.biz.service.impl.CurrentUserService;
 import com.jaagro.utils.BaseResponse;
 import com.jaagro.utils.ResponseStatusCode;
 import io.swagger.annotations.Api;
@@ -44,7 +46,8 @@ public class CustomerController {
     private CustomerContactsMapperExt customerContactsMapper;
     @Autowired
     private CustomerQualificationMapperExt qualificationMapper;
-
+    @Autowired
+    private CurrentUserService currentUserService;
 
     /**
      * 新增客户
@@ -163,7 +166,23 @@ public class CustomerController {
     @Ignore
     @GetMapping("/listNormalCustomer")
     public List<ShowCustomerDto> listNormalCustomer() {
-        return customerService.listNormalCustomer();
+        UserInfo currentUser = currentUserService.getCurrentUser();
+        Integer tenantId = null;
+        if (currentUser != null){
+            tenantId = currentUser.getTenantId();
+        }
+        return customerService.listNormalCustomerByTenantId(tenantId);
+    }
+
+    /**
+     * 查询正常合作的全部客户，提供给feign
+     *
+     * @return
+     */
+    @Ignore
+    @GetMapping("/listNormalCustomerByTenantId/{tenantId}")
+    public List<ShowCustomerDto> listNormalCustomerByTenantId(@PathVariable("tenantId") Integer tenantId) {
+        return customerService.listNormalCustomerByTenantId(tenantId);
     }
 
     @GetMapping("/getCustomerDetail/{id}")

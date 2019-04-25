@@ -71,13 +71,6 @@ public interface CustomerService {
     List<ShowCustomerDto> listAllCustomer();
 
     /**
-     * 查询正常合作的全部客户
-     *
-     * @return
-     */
-    List<ShowCustomerDto> listNormalCustomer();
-
-    /**
      * 根据客户名称查询客户id集合
      *
      * @param customerName
@@ -100,5 +93,10 @@ public interface CustomerService {
      */
     CustomerReturnDto getCustomerDetail(Integer id);
 
-
+    /**
+     * 查看正常合作的用户
+     * @param tenantId
+     * @return
+     */
+    List<ShowCustomerDto> listNormalCustomerByTenantId(Integer tenantId);
 }

@@ -9,6 +9,7 @@ import com.jaagro.crm.api.dto.response.customer.ListCustomerDto;
 import com.jaagro.crm.api.dto.response.customer.ReturnCustomerDto;
 import com.jaagro.crm.biz.entity.Customer;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -68,8 +69,9 @@ public interface CustomerMapperExt extends CustomerMapper {
      * 查询正常合作的全部客户
      *
      * @return
+     * @param tenantId
      */
-    List<ShowCustomerDto> listNormalCustomer();
+    List<ShowCustomerDto> listNormalCustomer(@Param("tenantId") Integer tenantId);
 
     /**
      * 根据客户名称查询客户id集合
